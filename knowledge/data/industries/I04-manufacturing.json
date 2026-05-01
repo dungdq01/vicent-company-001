@@ -1,0 +1,349 @@
+{
+  "id": "I04",
+  "name": "Manufacturing",
+  "slug": "manufacturing",
+  "category": "industry",
+  "icon": "Factory",
+  "color": "#FFD54F",
+  "depthLevel": 2,
+  "overview": {
+    "description": "Việt Nam là trung tâm sản xuất hàng đầu Đông Nam Á, với ngành sản xuất & chế biến chiếm ~24–25% GDP (2024–2025). Làn sóng FDI China+1 đã biến Việt Nam thành cứ điểm xuất khẩu điện tử và giày dép toàn cầu, với Samsung (6 nhà máy, doanh thu 62,5 tỷ USD năm 2024), Intel (nhà máy lắp ráp & kiểm tra chip lớn nhất thế giới tại TP.HCM), LG, Nike và Honda dẫn đầu về quy mô và mức độ tự động hóa. Tổng FDI vào ngành sản xuất & chế biến đạt 25,58 tỷ USD năm 2024, chiếm 66,9% tổng vốn FDI giải ngân.\n\nThị trường Industry 4.0 tại Việt Nam đạt 658,8 triệu USD năm 2024 và dự kiến tăng lên 5,16 tỷ USD vào năm 2033 (CAGR 25,7%). Tuy nhiên, ngành sản xuất Việt Nam mang đặc điểm lưỡng phân rõ rệt: các nhà máy FDI (Samsung, Intel, LG) vận hành ở mức trưởng thành AI L2–L3 với nền tảng công nghệ toàn cầu, trong khi hơn 70.000 nhà sản xuất nội địa vẫn ở mức L0–L1 — không có dữ liệu cảm biến, không có MES, không có hạ tầng OT để triển khai AI.\n\nCơ hội AI trọng tâm nằm ở hệ sinh thái nhà cung cấp Tier 2/3 của FDI (300+ nhà cung cấp Samsung chưa được phục vụ bởi platform toàn cầu), các nhà sản xuất nội địa tầm trung chịu áp lực chi phí lao động tăng 8–10%/năm, và hai khách hàng Smartlog hiện hữu — Baconco (phân bón) và PTSC (dịch vụ dầu khí) — có nhu cầu AI cụ thể và cấp thiết về tuân thủ quy định, bảo trì dự đoán, và tự động hóa tài liệu kiểm tra.",
+    "marketSizeVietnam": "Thị trường Industry 4.0 Việt Nam: 658,8 triệu USD (2024) → 5,16 tỷ USD (2033), CAGR 25,7%. Ngành sản xuất chiếm ~24–25% GDP; FDI vào sản xuất & chế biến đạt 25,58 tỷ USD (2024). Xuất khẩu điện tử 72,6 tỷ USD, dệt may & giày dép 37 tỷ USD+ năm 2024.",
+    "marketSizeSEA": "Thị trường sản xuất SEA ~2,5 nghìn tỷ USD; thị trường nhà máy thông minh SEA tăng trưởng CAGR 12–15% (2024–2030). Việt Nam dẫn đầu Indonesia về độ trưởng thành AI điện tử, nhưng thua Thái Lan về chiều sâu tự động hóa ô tô và Malaysia về AI bán dẫn frontend.",
+    "aiMaturity": "L2",
+    "aiAppetite": "high",
+    "keyQuestions": [
+      "Nhà máy của bạn thuộc tầng nào: FDI lớn, FDI tầm trung, nội địa tầm trung hay SME — mỗi tầng có lộ trình AI và ưu tiên đầu tư hoàn toàn khác nhau?",
+      "Hệ thống OT (PLC, SCADA) của nhà máy có hỗ trợ OPC-UA không, hay cần middleware để kết nối dữ liệu từ sàn sản xuất lên AI platform?",
+      "Dữ liệu lỗi sản xuất của bạn đang được lưu trữ ở đâu và theo định dạng nào — có đủ ảnh lỗi đã được gán nhãn để huấn luyện mô hình Computer Vision không?",
+      "Quy trình bảo trì hiện tại là phản ứng sau sự cố hay theo lịch định kỳ — và có lịch sử dừng máy được ghi nhận kỹ thuật số không?",
+      "Nhà máy có đang xuất khẩu sang EU/Mỹ và chịu áp lực tuân thủ HACCP, RoHS, ISO 9001 với yêu cầu hồ sơ truy xuất nguồn gốc không?"
+    ],
+    "whenToUse": [
+      "Khi nhà máy có tỉ lệ lỗi thoát (defect escape rate) > 2% và đang sử dụng kiểm tra thủ công — Visual QC AI có ROI rõ ràng trong 6–18 tháng",
+      "Khi tỉ lệ dừng máy không kế hoạch vượt 8% thời gian sản xuất và chi phí sửa chữa khẩn cấp > 5.000 USD/lần — PdM có ROI 12–18 tháng",
+      "Khi nhà máy là nhà sản xuất hóa chất/thực phẩm Nhóm I/II theo Nghị định 08/2022 và cần giám sát phát thải liên tục bắt buộc",
+      "Khi nhà sản xuất là nhà cung cấp Tier 2/3 của Samsung, Nike, hoặc LG và đang đối mặt với yêu cầu kiểm tra chất lượng đầu vào ngày càng nghiêm ngặt từ khách hàng FDI",
+      "Khi đội QA dành > 30% thời gian cho tài liệu CAPA/NCR và hồ sơ truy xuất nguồn gốc thủ công cho xuất khẩu EU/Mỹ"
+    ]
+  },
+  "domainKnowledge": {
+    "keyEntities": [
+      "BOM (Bill of Materials) — Danh mục nguyên vật liệu với cấu trúc phân cấp theo sản phẩm",
+      "Work Order (Lệnh sản xuất) — Đơn vị lập lịch và theo dõi tiến độ sản xuất",
+      "Defect (Lỗi sản phẩm) — Phân loại lỗi theo mã code chuẩn (solder bridge, scratch, missing component)",
+      "Sensor Tag — Tên định danh OPC-UA cho mỗi điểm đo (ví dụ: Line1.Motor3.Vibration_RMS)",
+      "Asset / Equipment — Thiết bị sản xuất với ID, thông số kỹ thuật, và lịch sử bảo trì",
+      "Shift (Ca làm việc) — Ca A/B/C với ranh giới thời gian rõ ràng ảnh hưởng đến dữ liệu time-series",
+      "Lot / Batch — Lô sản xuất với truy xuất nguồn gốc đầy đủ từ nguyên liệu đến thành phẩm",
+      "CCP (Critical Control Point) — Điểm kiểm soát quan trọng trong HACCP cho thực phẩm/hóa chất",
+      "Work Center / Production Line — Dây chuyền sản xuất với năng lực và ràng buộc lịch trình",
+      "NCR/CAPA (Non-Conformance Report / Corrective Action) — Hồ sơ không phù hợp và hành động khắc phục",
+      "OEE (Overall Equipment Effectiveness) — Chỉ số hiệu quả thiết bị tổng thể = Availability × Performance × Quality",
+      "RUL (Remaining Useful Life) — Tuổi thọ còn lại dự đoán của thiết bị"
+    ],
+    "keyProcesses": [
+      "SMT Line (Surface Mount Technology) — Quy trình lắp ráp bảng mạch: in paste → đặt linh kiện → hàn reflow → AOI",
+      "QC Checkpoint (Điểm kiểm tra chất lượng) — IQC, IPQC, OQC với tiêu chuẩn AQL",
+      "PdM Trigger (Kích hoạt bảo trì dự đoán) — Phát hiện bất thường cảm biến → tạo lệnh bảo trì chủ động",
+      "Batch Production Cycle (Chu kỳ sản xuất theo lô) — Đặc trưng hóa chất/thực phẩm: cân nguyên liệu → xử lý → kiểm tra chất lượng → đóng gói",
+      "HACCP Monitoring (Giám sát HACCP) — Theo dõi CCP liên tục: nhiệt độ, pH, áp lực với giới hạn tới hạn",
+      "Production Scheduling (Lập lịch sản xuất) — Phân bổ công việc vào máy/dây chuyền có xét đến ràng buộc: changeover, nguyên liệu, hạn giao hàng",
+      "OT/IT Integration Sprint — Giai đoạn 0 đặc thù sản xuất: đàm phán mạng, cấu hình firewall DMZ, thiết lập OPC-UA gateway",
+      "Defect Annotation Sprint — Thu thập và gán nhãn 500–2.000+ ảnh lỗi/loại trước khi huấn luyện Computer Vision",
+      "NDT Inspection (Kiểm tra không phá hủy) — UT, X-ray cho mối hàn kết cấu ngoài khơi tại PTSC",
+      "Emissions Monitoring (Giám sát phát thải) — Liên tục theo Nghị định 08/2022: SO2, NOx, bụi, pH, COD"
+    ],
+    "dataTypes": [
+      "Sensor time-series — Chuỗi thời gian cảm biến OT: rung động (5–50 kHz), nhiệt độ (1 Hz), áp lực (1–10 Hz), cường độ dòng điện",
+      "Defect images — Ảnh lỗi có nhãn từ camera industrial (Cognex, Basler, Keyence); phân vùng S3/MinIO theo plant/line/product/date",
+      "OPC-UA tags — Dữ liệu PLC/SCADA qua chuẩn OPC-UA: tag path, giá trị kỹ thuật, quality code (Good/Bad/Uncertain)",
+      "Machine event log — Sự kiện máy: MACHINE_START, ALARM_ACTIVE, FAULT, MAINTENANCE_START với timestamp UTC",
+      "Work order data — Lệnh sản xuất từ ERP (SAP, Odoo): mã lệnh, BOM, số lượng, lịch trình, trạng thái thực tế",
+      "Quality inspection records — Kết quả kiểm tra: pass/fail, mã lỗi, ID sản phẩm, ID ca làm việc, ID operator",
+      "Maintenance history — Lịch sử bảo trì: loại bảo trì (phòng ngừa/khắc phục), thời gian dừng, nguyên nhân, linh kiện thay thế",
+      "Process parameters — Thông số quy trình: nhiệt độ lò (reflow oven), tốc độ drum granulator, tốc độ băng tải, tốc độ phun",
+      "Emissions sensor data — Dữ liệu phát thải liên tục: stack SO2/NOx/bụi, nước thải pH/COD theo Nghị định 08/2022",
+      "Inspection documents — Hồ sơ kiểm tra: chứng chỉ vật liệu, hồ sơ hàn, báo cáo kiểm tra chiều đo (PDF/ảnh → NLP extraction)"
+    ],
+    "typicalDataVolume": "Rất cao và không đồng nhất theo loại dữ liệu. Dây chuyền PCB: 4–8 camera tạo ra 200K–500K ảnh/ca, 100–500 GB/ngày. Cảm biến rung tần số cao (50 kHz) tạo ra dữ liệu raw ~100 MB/sensor/giờ. Nhà máy FDI lớn: TB/ngày tổng hợp. Tuy nhiên, SME nội địa: gần bằng không — không có cảm biến, không có MES, chỉ có sổ sách giấy.",
+    "dataQuality": "Phụ thuộc hoàn toàn vào tầng nhà máy: FDI lớn (Samsung, Intel) 8/10 — MES đầy đủ, OPC-UA, dữ liệu chất lượng inline. FDI tầm trung (nhà cung cấp T1) 5/10 — ERP cơ bản, dữ liệu chất lượng bán số. Nội địa tầm trung 2–3/10 — ERP kế toán, kiểm tra trên giấy, không có cảm biến. SME nội địa 1/10 — hoàn toàn giấy. Thách thức đặc thù VN: nhãn lỗi không nhất quán (40–60% noise), khoảng trống dữ liệu giữa ca, sự phân mảnh định dạng log của 5–10 nhà cung cấp thiết bị khác nhau."
+  },
+  "painPoints": [
+    {
+      "problem": "Kiểm tra chất lượng thủ công bằng mắt thường — tỉ lệ bỏ sót lỗi 5–8%, chi phí nhân công 3 ca kiểm tra/trạm ~14.760 USD/năm, độ chính xác chỉ 85–92% so với AI 97–99%",
+      "severity": 9,
+      "aiSolvable": true,
+      "mapsToBaseline": ["B03", "B12"]
+    },
+    {
+      "problem": "Dừng máy không kế hoạch — văn hóa bảo trì phản ứng sau sự cố; SME Việt Nam mất 8–15% thời gian sản xuất vì sự cố đột xuất (cao hơn chuẩn toàn cầu 5–8%); chi phí 2.000–8.000 USD/giờ dừng",
+      "severity": 8,
+      "aiSolvable": true,
+      "mapsToBaseline": ["B05", "B08", "B10"]
+    },
+    {
+      "problem": "Chi phí lao động tăng liên tục 8–10%/năm — lương sản xuất bình quân 332 USD/tháng Q1/2025, tăng từ mức 200 USD năm 2018; lợi thế so với Trung Quốc đang thu hẹp từ 50% xuống 35%",
+      "severity": 9,
+      "aiSolvable": true,
+      "mapsToBaseline": ["B03", "B07"]
+    },
+    {
+      "problem": "Sa mạc dữ liệu SME — chỉ ~500/70.000+ nhà sản xuất có tích hợp IoT; chi phí triển khai nhà máy thông minh trung bình 500.000 USD vượt quá lợi nhuận hàng năm của hầu hết SME",
+      "severity": 8,
+      "aiSolvable": true,
+      "mapsToBaseline": ["B08"]
+    },
+    {
+      "problem": "Lập lịch sản xuất thủ công — hơn 70% nhà sản xuất nội địa dùng Excel hoặc ERP-lite không có constraint solver; độ tuân thủ lịch 55–70% so với chuẩn toàn cầu 85%",
+      "severity": 7,
+      "aiSolvable": true,
+      "mapsToBaseline": ["B09", "B06"]
+    },
+    {
+      "problem": "Khoảng cách AI giữa FDI và nội địa — các platform AI của Samsung/Intel là độc quyền, không lan tỏa cho hệ sinh thái nhà cung cấp; 300+ nhà cung cấp Tier 2/3 không được phục vụ",
+      "severity": 8,
+      "aiSolvable": true,
+      "mapsToBaseline": ["B02", "B01"]
+    },
+    {
+      "problem": "Lãng phí năng lượng và áp lực phát thải — chi phí điện công nghiệp tăng; Nghị định 08/2022 siết chặt yêu cầu giám sát phát thải liên tục cho nhà máy hóa chất/thực phẩm",
+      "severity": 7,
+      "aiSolvable": true,
+      "mapsToBaseline": ["B05", "B08", "B09"]
+    },
+    {
+      "problem": "Gánh nặng tài liệu tuân thủ thủ công — CAPA/NCR, hồ sơ HACCP, chứng nhận xuất khẩu EU chiếm 30–40% thời gian đội QA; nhập liệu giấy chậm và dễ sai sót",
+      "severity": 6,
+      "aiSolvable": true,
+      "mapsToBaseline": ["B01", "B12"]
+    }
+  ],
+  "regulations": [
+    {
+      "name": "Nghị định 08/2022/NĐ-CP (Bảo vệ Môi trường)",
+      "description": "Quy định chi tiết về đánh giá tác động môi trường (EIA), giám sát phát thải liên tục (CEMS) bắt buộc cho cơ sở sản xuất Nhóm I. Nhà máy hóa chất, luyện thép, chế biến thực phẩm lớn phải lắp hệ thống quan trắc tự động, truyền dữ liệu về Sở TN&MT theo thời gian thực.",
+      "impact": "high"
+    },
+    {
+      "name": "Luật Chất lượng Sản phẩm, Hàng hóa (2007, sửa đổi)",
+      "description": "Bắt buộc ghi nhãn chất lượng, quy trình thu hồi sản phẩm, và truy xuất nguồn gốc (traceability) cho hàng hóa sản xuất tại Việt Nam. AI tự động hóa hồ sơ truy xuất nguồn gốc trực tiếp đáp ứng yêu cầu này.",
+      "impact": "medium"
+    },
+    {
+      "name": "Thông tư 38/2018/TT-BNNPTNT (MARD — Truy xuất nguồn gốc thực phẩm)",
+      "description": "Bắt buộc truy xuất nguồn gốc cho sản phẩm thực phẩm trên thị trường nội địa. Nhà xuất khẩu thực phẩm sang EU/Mỹ phải đáp ứng yêu cầu truy xuất nguồn gốc HACCP/FDA. AI batch tracking và document automation (B01) là giải pháp tuân thủ trực tiếp.",
+      "impact": "high"
+    },
+    {
+      "name": "Luật Bảo vệ Dữ liệu Cá nhân (PDPL 2025, hiệu lực 1/1/2026)",
+      "description": "Áp dụng cho AI sản xuất xử lý dữ liệu nhân viên: nhận diện khuôn mặt (PPE compliance), dữ liệu operator liên kết với ID cá nhân, dữ liệu chuyên cần/năng suất theo ca. Hạn chế chuyển dữ liệu cá nhân ra ngoài Việt Nam. MAESTRO phải mặc định triển khai on-premise hoặc private cloud cho use case liên quan đến dữ liệu nhân viên.",
+      "impact": "high"
+    },
+    {
+      "name": "Nghị quyết 23-NQ/TW (2018, gia hạn) — Mục tiêu Công nghiệp Quốc gia 2030",
+      "description": "Mục tiêu ngành công nghiệp vượt 40% GDP; sản phẩm công nghệ cao chiếm ≥45% giá trị sản xuất; Việt Nam vào top 3 ASEAN về năng lực cạnh tranh công nghiệp. Tạo ra nhu cầu có hỗ trợ chính sách cho AI và Industry 4.0.",
+      "impact": "medium"
+    },
+    {
+      "name": "Quyết định 749/QĐ-TTg (Chuyển đổi số quốc gia 2025–2030)",
+      "description": "Mục tiêu 70% SME được tiếp cận nền tảng số; các chương trình đồng tài trợ của MOIT/DOIT tỉnh cho triển khai AI tại SME. Đây là kênh chiến lược để MAESTRO giảm rào cản chi phí triển khai tại nhà sản xuất SME nội địa.",
+      "impact": "medium"
+    }
+  ],
+  "priorityBaselines": {
+    "high": ["B03", "B05", "B08"],
+    "medium": ["B01", "B06", "B09", "B12"],
+    "low": ["B02", "B10", "B07", "B13", "B04", "B11", "B15"]
+  },
+  "competitiveLandscape": [
+    {
+      "competitor": "Siemens Insights Hub (MindSphere) + PTC ThingWorx + SAP Digital Manufacturing",
+      "strengths": "Được lựa chọn bởi trụ sở toàn cầu Samsung, LG, Toyota; tích hợp sâu với ERP S/4HANA và hệ thống điều khiển Siemens; thương hiệu mạnh và track record dài hạn tại FDI factories",
+      "weaknesses": "Giá khởi điểm 50.000–200.000 USD/năm — không phù hợp SME; chỉ có giao diện tiếng Anh/Đức/Hàn; không xử lý quy định nội địa VN (PDPL, Nghị định 08); không phục vụ nhà cung cấp Tier 2/3"
+    },
+    {
+      "competitor": "FPT Software (Industry 4.0 & AI Consulting)",
+      "strengths": "Thương hiệu mạnh trong doanh nghiệp VN; quy mô 80.000 nhân viên; quan hệ sẵn có với Samsung, LG; có năng lực tư vấn IoT và thí điểm Digital Twin",
+      "weaknesses": "Công ty dịch vụ — không có sản phẩm AI pre-built; mỗi dự án là phát triển tùy chỉnh (chi phí cao, thời gian dài); không có baseline library như MAESTRO; triển khai chậm hơn 3× so với MAESTRO"
+    },
+    {
+      "competitor": "Viettel Solutions (IIoT + Smart Factory Platform)",
+      "strengths": "Lợi thế hạ tầng viễn thông: NB-IoT, mạng 5G private cho khu công nghiệp; mạnh trong các dự án chính phủ và khu công nghiệp nhà nước",
+      "weaknesses": "Chiều sâu AI hạn chế — nền tảng kết nối, không phải AI analytics; không có mô hình computer vision hay PdM pre-built. Cơ hội đối tác: Viettel connectivity + MAESTRO AI layer"
+    },
+    {
+      "competitor": "CMC Technology (ERP/MES Implementation)",
+      "strengths": "Chuyên gia triển khai SAP và Oracle tại VN; quan hệ sâu với đội IT của nhà máy lớn; hiểu biết về tích hợp ERP",
+      "weaknesses": "Tập trung vào hạ tầng IT và ERP — không phải công ty sản phẩm AI; không có baseline AI. Cơ hội đối tác: CMC là System Integrator, MAESTRO là AI product layer"
+    },
+    {
+      "competitor": "Landing AI (Andrew Ng) + Cognex ViDi",
+      "strengths": "Công nghệ visual inspection AI tiên tiến nhất thế giới; LandingLens đạt 98%+ độ chính xác; Cognex ViDi chỉ cần 5 ảnh để huấn luyện",
+      "weaknesses": "Giá cao (SaaS enterprise); không có hỗ trợ tiếng Việt; không tích hợp với hệ sinh thái ERP Việt Nam (MISA, FAST); không có giải pháp PdM hay scheduling — chỉ vision"
+    }
+  ],
+  "aiUseCases": [
+    {
+      "useCase": "Kiểm tra Chất Lượng Thị Giác (Visual Quality Inspection)",
+      "baseline": "B03",
+      "feasibility": "high",
+      "roiEstimate": "Thay thế 2–4 nhân viên kiểm tra/trạm; hoàn vốn 1,6–2,9 năm tại nhà máy 2–3 ca. Giảm tỉ lệ lỗi thoát từ 5–8% xuống < 1%; mỗi 1% cải thiện năng suất tại dây chuyền 100 triệu sản phẩm/năm = 1–5 triệu USD/năm. Chi phí lắp đặt: 20.000–80.000 USD/trạm.",
+      "implementationMonths": "3–6 tháng",
+      "vietnamContext": "Ứng dụng ROI cao nhất cho nhà sản xuất điện tử nội địa Tier 2/3. Nhà cung cấp Samsung phải đáp ứng ngưỡng 97–99% phát hiện lỗi trong kiểm tra đầu vào — không thể đạt bằng tay. Camera Hikvision Industrial (200–2.000 USD) cung cấp 80% tính năng với 30% chi phí Cognex cho SME."
+    },
+    {
+      "useCase": "Bảo Trì Dự Đoán (Predictive Maintenance — PdM)",
+      "baseline": "B05",
+      "feasibility": "high",
+      "roiEstimate": "Giảm 25–50% thời gian dừng máy không kế hoạch; cải thiện MTBF 20–40%; ROI 10:1 trong 3 năm (benchmark GE Predix). Baconco: hoàn vốn 12–18 tháng cho 5–10 thiết bị (lắp đặt 20.000–40.000 USD). PTSC: hoàn vốn 6–12 tháng cho thiết bị hậu quả cao.",
+      "implementationMonths": "6–9 tháng",
+      "vietnamContext": "Chi phí dừng máy đột xuất tại nhà máy tầm trung VN: 2.000–8.000 USD/giờ. SME Việt Nam mất 8–15% thời gian sản xuất vì sự cố đột xuất — cao hơn chuẩn toàn cầu. Thách thức đặc thù: cần Data Access Sprint IT/OT (3–5 tuần) và lịch cửa sổ dừng máy để lắp cảm biến."
+    },
+    {
+      "useCase": "Giám Sát Tuân Thủ Nghị Định 08/2022 (Emissions Compliance Monitoring)",
+      "baseline": "B08",
+      "feasibility": "high",
+      "roiEstimate": "Chi phí phạt vi phạm + rủi ro pháp lý cao hơn nhiều so với giải pháp tự động. Upsell tạo ra dữ liệu quy trình có giá trị. Ước tính 20.000–40.000 USD/nhà máy Nhóm I năm đầu.",
+      "implementationMonths": "2–4 tháng",
+      "vietnamContext": "Bắt buộc với nhà sản xuất hóa chất, luyện thép, thực phẩm lớn Nhóm I. Baconco là trường hợp đặc thù: nhà sản xuất phân bón NPK tại Phú Mỹ — vừa cần tuân thủ Nghị định 08 vừa là khách hàng logistics Smartlog. Điểm vào chiến lược: bán công cụ tuân thủ tạo ra dữ liệu quy trình."
+    },
+    {
+      "useCase": "Tự Động Hóa Báo Cáo Kiểm Tra (Inspection Report Automation)",
+      "baseline": "B01",
+      "feasibility": "high",
+      "roiEstimate": "Giảm 40–60% thời gian chuẩn bị tài liệu kiểm tra. PTSC: ước tính 40.000–80.000 USD năm 1. Không cần vượt biên OT/IT — ROI nhanh nhất trong các use case sản xuất.",
+      "implementationMonths": "2–4 tháng",
+      "vietnamContext": "PTSC tạo ra khối lượng lớn hồ sơ kiểm tra kết cấu (API 510/570, ASME, chứng chỉ vật liệu, hồ sơ hàn). AI trích xuất từ ảnh + PDF và lắp ráp báo cáo giảm đáng kể gánh nặng cho đội kiểm tra. Tương tự pattern BOL/customs OCR đã triển khai thành công tại I06 Smartlog."
+    },
+    {
+      "useCase": "Giám Sát An Toàn Lao Động — Tuân Thủ PPE",
+      "baseline": "B03",
+      "feasibility": "high",
+      "roiEstimate": "ROI trực tiếp về bảo hiểm và tránh phạt vi phạm ISO 45001. Chi phí hệ thống camera PPE: 15.000–40.000 USD. PTSC xưởng chế tạo Vũng Tàu: ưu tiên an toàn HSE cao nhất.",
+      "implementationMonths": "2–3 tháng",
+      "vietnamContext": "Xưởng chế tạo PTSC với hàn, mài, nâng hạ nặng — PPE compliance monitoring là yêu cầu ISO 45001. Platform thương mại hóa sẵn trên NVIDIA Metropolis. Không cần vượt biên OT/IT."
+    },
+    {
+      "useCase": "Tối Ưu Lịch Sản Xuất (Production Scheduling Optimization)",
+      "baseline": "B09",
+      "feasibility": "medium",
+      "roiEstimate": "Nâng độ tuân thủ lịch từ 60% lên 80%; cải thiện OTD 20–25%; giảm WIP 15–30%. OEE tại nhà sản xuất nội địa: tăng 3–8 điểm phần trăm.",
+      "implementationMonths": "7–10 tháng",
+      "vietnamContext": "Chỉ khả thi cho ~5–10% nhà sản xuất nội địa đang dùng SAP B1, Oracle, hoặc Odoo production đầy đủ. Yêu cầu tích hợp ERP API (nhạy cảm với IT team), mapping ràng buộc nhà máy (3–4 tuần-người), và quan trọng nhất: sự tin tưởng của người lập lịch — đây là rào cản hành vi lớn nhất."
+    },
+    {
+      "useCase": "Tự Động Hóa Tài Liệu Tuân Thủ Xuất Khẩu (Export Compliance Documentation)",
+      "baseline": "B01",
+      "feasibility": "medium",
+      "roiEstimate": "Giảm 40–60% thời gian đội QA cho CAPA/NCR; truy xuất nguồn gốc lô hàng cho xuất khẩu EU/Mỹ; ROI 150–300% năm đầu. SaaS 20.000–40.000 USD/năm.",
+      "implementationMonths": "3–5 tháng",
+      "vietnamContext": "Nhà xuất khẩu thực phẩm (Vinamilk, Masan) cần hồ sơ HACCP/FDA đầy đủ. Nhà xuất khẩu điện tử cần chứng nhận RoHS/REACH. Nhà cung cấp ô tô cần tài liệu IATF 16949. AI tự động hóa documentation là use case tuân thủ bắt buộc cho nhà xuất khẩu tăng trưởng."
+    },
+    {
+      "useCase": "Digital Twin Xưởng Chế Tạo PTSC (Factory Digital Twin — Phase 3)",
+      "baseline": "B13",
+      "feasibility": "medium",
+      "roiEstimate": "Benchmark Siemens/PepsiCo: tăng thông lượng 20%, giảm capex 10–15%. Giá trị PTSC: giám sát sức khỏe kết cấu nền tảng ngoài khơi với chi phí sự cố 100K–1M USD/lần. Ước tính 200.000–400.000 USD năm 2–3.",
+      "implementationMonths": "12–18 tháng",
+      "vietnamContext": "Xưởng chế tạo PTSC Vũng Tàu là điểm khởi đầu. Cần nền tảng sensor data đủ mạnh từ Giai đoạn 1–2 trước khi Digital Twin khả thi. Chi phí Asset DT: 10.000–100.000 USD; Process DT: 100.000–500.000 USD; Factory DT toàn phần: 500.000–2 triệu USD."
+    }
+  ],
+  "dataReadiness": {
+    "overallScore": 3,
+    "byTier": {
+      "fdiFull": 8,
+      "fdiMid": 5,
+      "domesticMid": 3,
+      "sme": 1
+    },
+    "strengths": [
+      "Nhà máy FDI lớn có MES đầy đủ (SAP ME, Siemens Opcenter), ERP S/4HANA, AOI/SPI inline — AI-ready ngay lập tức",
+      "AOI (Automated Optical Inspection) đã triển khai sẵn tại Samsung Tier 1 suppliers — dữ liệu ảnh lỗi tích lũy theo thời gian",
+      "Dữ liệu sensor môi trường (nhiệt độ, áp lực) có tại nhà máy thực phẩm lớn (Masan, Vinamilk) cho HACCP compliance",
+      "ERP transactional data (đơn hàng, BOM, tồn kho) có tại hầu hết nhà xuất khẩu sử dụng SAP B1 hoặc Oracle NetSuite",
+      "Chương trình Samsung Smart Factory Cooperation 2025 đã nâng cấp một phần hệ thống cho 100+ nhà cung cấp"
+    ],
+    "gaps": [
+      "70.000+ nhà sản xuất nội địa gần như không có dữ liệu OT — không có cảm biến, không có MES, không có lịch sử bảo trì kỹ thuật số",
+      "Nhãn lỗi không nhất quán tại nhà máy nội địa: 40–60% noise trong dữ liệu defect — không thể huấn luyện mô hình CV đáng tin cậy",
+      "Khoảng trống dữ liệu ca làm việc: 15–30 phút bàn giao ca mất dữ liệu; ca đêm nhập dữ liệu theo lô sáng hôm sau",
+      "Phân mảnh định dạng log thiết bị: 5–10 nhà cung cấp thiết bị/dây chuyền với định dạng log độc quyền khác nhau (Fuji, Koh Young, Heller, Teradyne)",
+      "PLC cũ (Mitsubishi FX3U, Siemens S7-300 vintage 1990s–2000s) không hỗ trợ OPC-UA — cần middleware tốn kém 5.000–15.000 USD/nhà máy",
+      "Không có truy xuất nguồn gốc linh kiện đầu vào từ Trung Quốc — phá vỡ lot genealogy chain",
+      "Lịch sử bảo trì trên sổ giấy hoặc Excel tại >90% nhà sản xuất nội địa — không thể dùng cho supervised PdM"
+    ],
+    "quickWins": [
+      "Lắp đặt 2–4 cảm biến rung/nhiệt độ trên thiết bị quan trọng nhất — bắt đầu thu thập dữ liệu baseline 90 ngày trước khi triển khai AI",
+      "Thiết lập Label Studio để annotation nhãn lỗi ngay khi bắt đầu thu thập ảnh kiểm tra — giải quyết bottleneck annotation trước khi cần",
+      "Chuẩn hóa bộ mã lỗi (defect taxonomy) với QA team trước khi triển khai AI vision — 2–3 ngày workshop, impact lớn",
+      "Số hóa nhật ký bảo trì vào spreadsheet có cấu trúc ngay cả trước khi có CMMS — là nền tảng cho supervised PdM",
+      "Kiểm tra xem PLC nào hỗ trợ OPC-UA native (Siemens S7-1500 có; S7-300 cần add-on) để lên kế hoạch chi phí tích hợp chính xác"
+    ]
+  },
+  "implementationRoadmap": {
+    "phase1": {
+      "duration": "0–6 tháng",
+      "initiatives": [
+        "Visual QC pilot: 1 dây chuyền, 1–3 loại lỗi, camera + edge AI (Jetson Orin), chế độ alert-only — không tích hợp PLC (tránh OT/IT phức tạp trong PoC)",
+        "Giám sát tuân thủ Nghị định 08/2022 cho Baconco: cảm biến phát thải + dashboard real-time — điểm vào tuân thủ bắt buộc tạo dữ liệu quy trình",
+        "Tự động hóa báo cáo kiểm tra cho PTSC: AI trích xuất từ ảnh/PDF + lắp ráp báo cáo (B01) — không cần OT/IT",
+        "PdM MVP Baconco/PTSC: 3–5 thiết bị quan trọng, cảm biến rung + nhiệt độ, health dashboard + cảnh báo Zalo",
+        "Tái sử dụng từ I06/I13: B05 anomaly engine, IoT pipeline từ I13 OBD-II telemetry, PDPL 2025 framework, Vietnamese NLP stack (B04)"
+      ]
+    },
+    "phase2": {
+      "duration": "6–18 tháng",
+      "initiatives": [
+        "Mở rộng Visual QC sang nhiều dây chuyền; tích hợp PLC reject mechanism (vượt biên OT/IT); bắt đầu active learning loop tái huấn luyện model",
+        "Tối ưu lịch sản xuất cho Tier 2 suppliers có SAP B1/Odoo: constraint-based scheduling (OR-Tools), tích hợp ERP API",
+        "AI năng lượng & phát thải cho nhà máy lớn (Hoa Phat, Masan): phát hiện bất thường tiêu thụ điện + tối ưu hóa",
+        "Tài liệu tuân thủ xuất khẩu SaaS (B01+B12): HACCP batch records, RoHS/REACH certificates — mô hình SaaS 20.000–40.000 USD/năm",
+        "Kênh khu công nghiệp: đối tác VSIP/Becamex/Amata — gói nhà máy thông minh cho tenant KCN",
+        "Digital Twin PTSC starter: xưởng chế tạo Vũng Tàu, giám sát thiết bị nặng theo thời gian thực (B08+B13)"
+      ]
+    },
+    "phase3": {
+      "duration": "18+ tháng",
+      "initiatives": [
+        "Gói chuẩn bị dữ liệu SME (Data Readiness Bundle 5.000–15.000 USD): IoT sensor kit + Grafana + basic anomaly — land-and-expand mechanism cho thị trường SME năm 2027–2028",
+        "Khai thác cơ hội MOIT/DOIT: chương trình Decision 749 đồng tài trợ AI cho SME — kênh triển khai số lượng lớn",
+        "Tác nhân bảo trì tự trị (B15): AI tự động theo dõi, đặt lịch, và thực hiện maintenance workflow — mở rộng từ PdM alert sang tác nhân chủ động",
+        "Digital Twin PTSC đầy đủ: giám sát sức khỏe kết cấu nền tảng ngoài khơi, simulation-driven optimization",
+        "Điều phối đa tác nhân (B11): tối ưu hóa đa nhà máy/đa dây chuyền cho tập đoàn sản xuất lớn",
+        "Kết nối I04 ↔ I06: tích hợp đầu ra sản xuất Baconco với dự báo logistics Smartlog — giải pháp end-to-end factory-to-delivery"
+      ]
+    }
+  },
+  "smartlogOpportunity": {
+    "clients": ["Baconco", "PTSC"],
+    "baconcoPlay": "Baconco sản xuất phân bón NPK và hóa chất nông nghiệp tại Phú Mỹ — là khách hàng logistics Smartlog với quan hệ tài khoản ấm sẵn có. AI plays cụ thể: (1) Phát hiện bất thường theo lô (B05) — granulation/coating parameters; (2) Kiểm tra kích thước hạt và độ đồng đều bằng Camera Vision (B03); (3) Giám sát phát thải bắt buộc theo Nghị định 08/2022 Nhóm I (B05+B08) — điểm vào chiến lược với nhu cầu không tùy chọn; (4) PdM thiết bị nặng: granulator, dryer, conveyor. Chiến lược tiếp cận: đề xuất Giai đoạn 1 là công cụ tuân thủ Nghị định 08 — vừa bắt buộc vừa tạo ra dữ liệu quy trình cho AI giai đoạn sau.",
+    "ptscPlay": "PTSC (Tổng công ty Dịch vụ Kỹ thuật Dầu khí PetroVietnam) vận hành xưởng chế tạo kết cấu ngoài khơi tại Vũng Tàu — là khách hàng Smartlog với nhu cầu AI cấp thiết về HSE và hiệu quả vận hành. AI plays cụ thể: (1) Tự động hóa báo cáo kiểm tra (B01+B04) — API 510/570, ASME; giảm 40–60% thời gian chuẩn bị hồ sơ; điểm vào tối thiểu phụ thuộc hạ tầng; (2) Giám sát an toàn PPE (B03) — fabrication yard với hàn/mài/nâng hạ nặng; (3) PdM thiết bị nặng (B05+B06) — máy CNC, cẩu, thiết bị kiểm tra áp lực; (4) Digital Twin nền tảng ngoài khơi (B13) — Giai đoạn 3. Chiến lược: bắt đầu với báo cáo kiểm tra (không cần OT/IT) + PPE monitoring — hai use case không cần data foundation.",
+    "integrationPoint": "Điểm tích hợp nhà máy → logistics là cầu nối chiến lược độc đáo của MAESTRO: (1) Dữ liệu theo dõi lô sản xuất Baconco (trạng thái hoàn thành, thời gian dự kiến) tích hợp với I06 Smartlog để kích hoạt lịch vận chuyển; (2) Lịch giao nguyên liệu thời gian thực từ I06 làm đầu vào cho lịch sản xuất theo lô Baconco — giảm gián đoạn do thiếu nguyên liệu; (3) Cảnh báo hoàn thành lô qua Zalo kích hoạt đội pickup logistics Smartlog — use case cross-module không có analogue tại I06 hay I13.",
+    "revenueEstimate": "Baconco: 30.000–60.000 USD Năm 1 (tuân thủ + PdM cơ bản), 100.000–150.000 USD Năm 2 (vision QC + PdM đầy đủ). PTSC: 40.000–80.000 USD Năm 1 (báo cáo kiểm tra + PPE), 200.000–400.000 USD Năm 2–3 (PdM đầy đủ + Digital Twin). Tổng cộng 2 khách hàng Smartlog: 70.000–140.000 USD Năm 1; 300.000–550.000 USD Năm 2–3 (cộng dồn)."
+  },
+  "relatedNodes": [
+    {
+      "nodeId": "I06",
+      "relationship": "supply_chain",
+      "description": "Đầu ra sản xuất (thành phẩm, lô hàng) của I04 là đầu vào trực tiếp của I06 Logistics & Chuỗi Cung Ứng. Điểm tích hợp MAESTRO: hoàn thành lô Baconco kích hoạt lịch vận chuyển Smartlog; lịch giao nguyên liệu (I06) ảnh hưởng đến lịch sản xuất theo lô (I04). Pattern tái sử dụng: B05 anomaly detection, PDPL 2025 framework, Vietnamese NLP stack."
+    },
+    {
+      "nodeId": "I13",
+      "relationship": "adjacent",
+      "description": "I13 Vận Tải & Giao Thông chia sẻ pattern IoT/telematics với I04 sản xuất (cả hai có OT hardware trong loop). Tái sử dụng từ I13: kiến trúc IoT telemetry pipeline, pattern PdM cho thiết bị di động, OBD-II connector có thể điều chỉnh cho industrial sensor gateway."
+    },
+    {
+      "nodeId": "I08",
+      "relationship": "adjacent",
+      "description": "I08 Xây Dựng & Hạ Tầng chia sẻ pattern IoT sensor monitoring, NDT inspection, và digital twin với sản xuất công nghiệp nặng. PTSC chế tạo kết cấu ngoài khơi có điểm giao nhau với inspection AI của ngành xây dựng."
+    }
+  ],
+  "metadata": {
+    "createdAt": "2026-04-03",
+    "updatedAt": "2026-04-03T00:00:00Z",
+    "version": "2.0",
+    "status": "draft",
+    "researchAgents": ["R-α", "R-β", "R-γ", "R-D04", "R-DE", "R-PM", "R-σ"]
+  }
+}

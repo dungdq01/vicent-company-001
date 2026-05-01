@@ -1,0 +1,673 @@
+{
+  "id": "B14",
+  "name": "Speech & Audio AI",
+  "type": "baseline",
+  "slug": "speech-audio-ai",
+  "tagline": "Xây dựng hệ thống xử lý giọng nói và âm thanh bằng AI — sử dụng Whisper, wav2vec 2.0, VITS, HiFi-GAN, pyannote-audio và SpeechBrain — phục vụ nhận dạng giọng nói, tổng hợp tiếng nói, phân tích cuộc gọi và trợ lý giọng nói tại thị trường Việt Nam",
+  "category": "baseline",
+  "icon": "Mic",
+  "color": "#AB47BC",
+  "depthLevel": 3,
+  "selectedAgents": ["R-alpha", "R-beta", "R-gamma", "R-MLE", "R-DE", "R-DLE", "R-AE", "R-BE", "R-FE", "R-DO", "R-SE", "R-QA", "R-SA", "R-D09", "R-D10", "R-sigma"],
+  "description": "Speech & Audio AI (Trí tuệ nhân tạo cho giọng nói và âm thanh) là lĩnh vực xây dựng hệ thống chuyển đổi giọng nói thành văn bản (ASR), tổng hợp giọng nói từ văn bản (TTS), nhận dạng người nói, phát hiện hoạt động giọng nói (VAD), tăng cường chất lượng âm thanh, tách nguồn âm thanh, phát hiện cảm xúc từ giọng nói, sao chép giọng nói và tạo sinh âm nhạc. B14 kết nối B04 (NLP — xử lý văn bản từ output ASR), B08 (Conversational AI — trợ lý giọng nói), B09 (Generative AI — tạo sinh âm thanh/nhạc), B02 (Document AI — phiên âm cuộc họp thành tài liệu), B07 (Anomaly Detection — phát hiện bất thường qua âm thanh công nghiệp). Whisper (OpenAI, 2022) đã dân chủ hoá ASR với 680,000 giờ dữ liệu đa ngôn ngữ. Thị trường toàn cầu nhận dạng giọng nói ước tính $30-35B năm 2027. TRL 7, mature — công nghệ production-ready toàn cầu nhưng tiếng Việt vẫn còn thách thức đáng kể về dữ liệu và độ chính xác.",
+  "description_paragraphs": [
+    "Speech & Audio AI bao gồm các sub-fields chính: Automatic Speech Recognition — ASR (chuyển giọng nói thành văn bản), Text-to-Speech — TTS (tổng hợp giọng nói từ văn bản), Speaker Recognition/Verification (nhận dạng và xác minh danh tính qua giọng nói), Voice Activity Detection — VAD (phát hiện giọng nói trong luồng âm thanh), Speech Enhancement & Noise Reduction (tăng cường và khử nhiễu), Music Information Retrieval — MIR (trích xuất thông tin từ nhạc), Audio Classification/Tagging (phân loại sự kiện âm thanh), Speech Emotion Recognition — SER (nhận dạng cảm xúc từ giọng nói), Voice Conversion/Cloning (sao chép và chuyển đổi giọng nói), Audio Generation (tạo sinh nhạc và hiệu ứng âm thanh), Source Separation (tách nguồn âm thanh), và Speech Translation (dịch giọng nói liên ngôn ngữ). Nền tảng toán học bao gồm Short-Time Fourier Transform (STFT), mel-frequency cepstral coefficients (MFCCs), Connectionist Temporal Classification (CTC) loss, attention-based encoder-decoder, self-supervised contrastive learning (wav2vec 2.0), và masked prediction (HuBERT). Conformer (CNN + Transformer) là kiến trúc encoder chuẩn cho ASR production.",
+    "Tại Việt Nam, B14 có điểm khả thi 6.4/10 (CONDITIONAL GO) với Technical Feasibility cao (8/10): Whisper large-v3 hỗ trợ 99 ngôn ngữ bao gồm tiếng Việt, faster-whisper cho real-time, Conformer đã production-proven. Tuy nhiên Data Availability là điểm yếu lớn nhất (5/10): VIVOS chỉ có 15 giờ dữ liệu tiếng Việt, VLSP datasets bị hạn chế truy cập, FPT.AI sở hữu corpus riêng ước tính 10,000+ giờ — data moat không thể sao chép ngắn hạn. Vietnam Market Fit trung bình (6/10): nhu cầu tồn tại nhưng FPT.AI thống trị thị trường, Viettel AI mạnh thứ hai, VinAI (PhoWhisper) dẫn về nghiên cứu. Cạnh tranh trực tiếp với FPT.AI trên ASR tiếng Việt tổng quát là chiến lược thua cuộc.",
+    "Chiến lược triển khai: KHÔNG xây dựng sản phẩm ASR tiếng Việt tổng quát — FPT.AI có lợi thế dữ liệu, thương hiệu và kênh phân phối không thể sao chép. THAY VÀO ĐÓ, xây dựng nền tảng phân tích giọng nói (Speech Analytics Platform) sử dụng PhoWhisper hoặc FPT.AI API làm backbone ASR, thêm giá trị qua: speaker diarization (pyannote-audio), nhận dạng cảm xúc (SER), phân loại ý định, giám sát tuân thủ, tóm tắt hội thoại (LLM-powered). Nhắm mục tiêu call center và dịch vụ khách hàng — phân khúc sẵn sàng chi trả nhất. Phân biệt qua mô hình miền chuyên biệt (từ vựng ngân hàng, bảo hiểm, viễn thông). Điều kiện full GO: ít nhất 1 khách hàng pilot (call center hoặc doanh nghiệp), kỹ sư speech ML có kinh nghiệm ASR tiếng Việt, WER < 18% trên domain mục tiêu với PhoWhisper fine-tuning, chi phí GPU < $0.015/phút."
+  ],
+  "aliases": [
+    "Trí tuệ nhân tạo cho giọng nói và âm thanh",
+    "Speech AI",
+    "Audio AI",
+    "Nhận dạng giọng nói",
+    "Automatic Speech Recognition",
+    "Text-to-Speech",
+    "Tổng hợp giọng nói",
+    "Voice AI",
+    "Xử lý tín hiệu giọng nói",
+    "Speech Processing"
+  ],
+  "maturity_level": "mature",
+  "trl": 7,
+  "core_concepts": [
+    {
+      "name": "Spectrogram & Mel-Spectrogram (Phổ tần số và phổ Mel)",
+      "definition": "Biểu diễn trực quan nội dung tần số của âm thanh theo thời gian, tính qua Short-Time Fourier Transform (STFT) với tham số: cửa sổ 25ms, bước nhảy 10ms, 512-1024 điểm FFT. Mel-spectrogram áp dụng bộ lọc mel (thường 80 hoặc 128 filters) nén tần số cao nơi tai người phân biệt kém hơn. Thang mel: m = 2595 * log10(1 + f/700). Log-mel spectrograms là đầu vào chuẩn cho mọi mô hình speech/audio hiện đại, thay thế MFCC thủ công. Lựa chọn số mel bins, kích thước cửa sổ và bước nhảy tạo đánh đổi phân giải cơ bản: cửa sổ lớn cho phân giải tần số tốt hơn nhưng phân giải thời gian kém hơn (nguyên lý bất định).",
+      "difficulty": "Beginner",
+      "prerequisites": ["Xử lý tín hiệu số cơ bản", "Biến đổi Fourier"]
+    },
+    {
+      "name": "ASR Pipeline: Audio → Features → Model → Text (Quy trình nhận dạng giọng nói)",
+      "definition": "Pipeline ASR cổ điển gồm 4 giai đoạn: (1) Xử lý tín hiệu — pre-emphasis, framing, windowing, FFT, mel filterbank; (2) Mô hình âm học — ánh xạ feature frames sang phoneme/character posteriors (trước đây GMM-HMM, nay neural); (3) Mô hình ngôn ngữ — cung cấp ngữ cảnh P(W) để rescore giả thuyết; (4) Bộ giải mã — tìm kiếm trong không gian giả thuyết kết hợp bằng Viterbi hoặc beam search. Hệ thống end-to-end hiện đại gộp giai đoạn 2-4 thành mạng neural duy nhất nhưng sự phân tách khái niệm vẫn hữu ích. Bài toán tìm kiếm giải mã vẫn NP-hard tổng quát, beam search với pruning là thiết yếu.",
+      "difficulty": "Intermediate",
+      "prerequisites": ["Spectrogram & mel-spectrogram", "Deep learning cơ bản"]
+    },
+    {
+      "name": "CTC Decoding & Beam Search (Giải mã CTC và tìm kiếm chùm)",
+      "definition": "CTC (Connectionist Temporal Classification, Graves 2006) giải quyết vấn đề căn chỉnh: cho chuỗi đầu vào X = (x_1,...,x_T) và chuỗi nhãn Y = (y_1,...,y_U) với U ≤ T, giới thiệu blank token (ε) và ánh xạ nhiều-một B gộp ký tự lặp và xóa blank. P_CTC(Y|X) = Σ Π P(π_t|x_t) tổng qua mọi alignments hợp lệ, tính hiệu quả bằng thuật toán forward-backward. Greedy decoding: argmax mỗi frame rồi gộp — nhanh nhưng suboptimal. Beam search: duy trì B giả thuyết tốt nhất. Prefix beam search xử lý đúng topology CTC. Shallow fusion tích hợp language model: score = log P_CTC(Y|X) + β * log P_LM(Y).",
+      "difficulty": "Intermediate",
+      "prerequisites": ["Xác suất thống kê", "Sequence modeling"]
+    },
+    {
+      "name": "Attention-Based Encoder-Decoder (Mã hoá-giải mã dựa trên attention)",
+      "definition": "Mô hình ASR chủ đạo 2016-2022, tiêu biểu là Listen-Attend-Spell (LAS). Encoder (bidirectional LSTM hoặc Conformer) xử lý toàn bộ utterance; decoder (unidirectional LSTM hoặc Transformer) tạo tokens tự hồi quy attending vào encoder outputs. Attention tính context vector: α_{i,j} = softmax(Score(s_{i-1}, h_j)), c_i = Σ α_{i,j} * h_j. Ưu điểm so với CTC: decoder ngầm học language model và mô hình hoá output dependencies. Nhược điểm: cần toàn bộ utterance trước khi giải mã (không streaming), attention có thể thất bại trên utterance dài (attention drift, lặp, nhảy). Joint CTC-attention training: L = λ * L_CTC + (1-λ) * L_attn kết hợp ổn định alignment của CTC với sức mạnh mô hình hoá của attention.",
+      "difficulty": "Intermediate",
+      "prerequisites": ["CTC cơ bản", "Transformer architecture", "Sequence-to-sequence"]
+    },
+    {
+      "name": "End-to-End ASR: Whisper Paradigm (ASR đầu cuối: Mô hình Whisper)",
+      "definition": "Whisper (OpenAI, 2022) chứng minh rằng scale encoder-decoder Transformer đơn giản, huấn luyện trên 680,000 giờ dữ liệu web giám sát yếu đa ngôn ngữ, đạt robustness vượt trội. Thiết kế: log-mel spectrogram đầu vào (80 bins, chunks 30 giây), Transformer encoder-decoder chuẩn, huấn luyện đa tác vụ với task tokens (transcribe, translate, timestamps, language ID). Không có kiến trúc chuyên biệt — scale và đa dạng dữ liệu thay thế engineering. Whisper xác lập rằng scale và đa dạng dữ liệu quan trọng hơn đổi mới kiến trúc cho ASR robust. Các phiên bản sau (Whisper v3, Distil-Whisper, Faster-Whisper) tập trung vào hiệu quả và giảm độ trễ.",
+      "difficulty": "Intermediate",
+      "prerequisites": ["Transformer architecture", "ASR pipeline cơ bản"]
+    },
+    {
+      "name": "TTS Pipeline: Text → Mel → Waveform (Quy trình tổng hợp giọng nói)",
+      "definition": "TTS neural hiện đại hoạt động hai giai đoạn: (1) Mô hình âm học — chuyển văn bản (hoặc phonemes) thành mel spectrograms, xử lý ánh xạ một-nhiều (cùng văn bản có thể nói nhiều cách) qua attention, dự đoán duration, hoặc phương pháp flow-based; (2) Vocoder — chuyển mel spectrograms thành dạng sóng miền thời gian. Mô hình âm học phải giải nhiều bài toán: grapheme-to-phoneme, dự đoán prosody (pitch, energy, duration), căn chỉnh attention. Mô hình duration-based (FastSpeech 2) dùng duration predictor tường minh, tránh lỗi attention. Mô hình flow-based và diffusion-based (VITS, NaturalSpeech 2) mô hình biến thiên ngẫu nhiên trong giọng nói tự nhiên hơn mô hình xác định.",
+      "difficulty": "Intermediate",
+      "prerequisites": ["Deep learning cơ bản", "Spectrogram"]
+    },
+    {
+      "name": "Neural Vocoders: HiFi-GAN (Bộ tổng hợp dạng sóng neural)",
+      "definition": "Vocoders chuyển mel spectrograms thành dạng sóng — giai đoạn cuối cùng và quan trọng về cảm nhận của TTS. HiFi-GAN (Kong et al., 2020) đạt tổng hợp thời gian thực với chất lượng gần con người, sử dụng transposed convolutions và multi-scale/multi-period discriminators. Multi-Receptive Field Fusion (MRF) cho mỗi layer bắt patterns ở nhiều scale. Multi-Period Discriminator (MPD) hoạt động trên waveform subsampled theo chu kỳ (2,3,5,7,11). Multi-Scale Discriminator (MSD) trên raw và downsampled waveforms. BigVGAN (2023) mở rộng với Snake activation functions và tổng quát hoá tốt hơn. Vocoder thường là bottleneck về độ trễ TTS.",
+      "difficulty": "Advanced",
+      "prerequisites": ["GAN cơ bản", "Xử lý tín hiệu âm thanh"]
+    },
+    {
+      "name": "Speaker Diarization (Phân đoạn người nói)",
+      "definition": "Trả lời câu hỏi 'ai nói khi nào' — phân đoạn luồng âm thanh đa người nói thành vùng đồng nhất theo người nói. Pipeline cổ điển: (1) VAD loại bỏ im lặng; (2) phân đoạn thành cửa sổ ngắn; (3) trích xuất speaker embeddings mỗi segment; (4) phân cụm (agglomerative, spectral, k-means). Hướng tiếp cận hiện đại: End-to-End Neural Diarization (EEND, Fujita et al., 2019) đặt diarization thành bài toán phân loại đa nhãn mức frame — mỗi frame nhận nhãn binary theo người nói, xử lý giọng nói chồng chéo tự nhiên. Pyannote 3.x kết hợp segmentation models với embedding-based clustering đạt hiệu suất mạnh trên cuộc họp và hội thoại.",
+      "difficulty": "Advanced",
+      "prerequisites": ["Speaker embeddings", "Clustering", "VAD"]
+    },
+    {
+      "name": "Voice Activity Detection — VAD (Phát hiện hoạt động giọng nói)",
+      "definition": "Bài toán phân loại nhị phân: mỗi frame âm thanh được gắn nhãn speech hoặc non-speech. Dù có vẻ đơn giản, VAD robust trong điều kiện nhiễu, vang, far-field vẫn là thách thức. Silero VAD (2021) phổ biến hoá mô hình lightweight ONNX-deployable đạt chính xác xuất sắc: ~2MB ONNX, chạy CPU thời gian thực, xử lý frames 30-64ms. Silero VAD vượt trội WebRTC VAD (default trước đó). VAD là thành phần tiền xử lý thiết yếu cho ASR, diarization, và hệ thống truyền thông — false negatives cắt từ, false positives lãng phí tính toán. Adaptive threshold và hangover schemes (mở rộng vùng speech vài frames) là hậu xử lý chuẩn.",
+      "difficulty": "Beginner",
+      "prerequisites": ["Xử lý tín hiệu cơ bản"]
+    },
+    {
+      "name": "Self-Supervised Speech Models: wav2vec 2.0, HuBERT, WavLM (Mô hình giọng nói tự giám sát)",
+      "definition": "Học tự giám sát đã biến đổi xử lý giọng nói tương tự BERT cho NLP. Các mô hình học biểu diễn giọng nói phổ quát từ corpus âm thanh không gắn nhãn lớn (60,000+ giờ), rồi fine-tune trên downstream tasks với ít dữ liệu gắn nhãn. wav2vec 2.0 (2020): contrastive learning trên latent features bị mask — đạt ASR near-SOTA với chỉ 10 phút dữ liệu gắn nhãn. HuBERT (2021): offline clustering pseudo-labels với iterative refinement — đơn giản hơn, matching hoặc vượt wav2vec 2.0. WavLM (2022): mở rộng HuBERT với denoising objectives — xuất sắc trên speaker-related và noise-robust tasks. Các mô hình phục vụ như foundation models cho speech: một mô hình pre-trained cung cấp features cho ASR, speaker verification, emotion recognition qua SUPERB benchmark.",
+      "difficulty": "Advanced",
+      "prerequisites": ["Transformer architecture", "Contrastive learning", "BERT concepts"]
+    },
+    {
+      "name": "Streaming vs. Offline ASR (ASR trực tuyến và ngoại tuyến)",
+      "definition": "Offline ASR xử lý toàn bộ utterance — encoder thấy đủ ngữ cảnh, cho phép bidirectional encoding, global attention, và language model rescoring. Tối đa accuracy nhưng độ trễ bằng thời lượng utterance. Streaming ASR phải trả kết quả từng phần với độ trễ giới hạn (thường < 200ms). Yêu cầu: (1) causal hoặc chunk-wise encoders; (2) loss functions tương thích streaming (CTC, RNN-Transducer); (3) endpointer models phát hiện biên utterance. RNN-Transducer (RNN-T) là kiến trúc streaming thống trị, dùng production bởi Google, Apple, Meta. Conformer-Transducer với chunk-wise attention cung cấp đánh đổi thực tế giữa streaming và offline.",
+      "difficulty": "Advanced",
+      "prerequisites": ["ASR pipeline", "RNN/Transformer", "CTC"]
+    },
+    {
+      "name": "Voice Cloning & Zero-Shot TTS (Sao chép giọng nói và TTS không cần huấn luyện)",
+      "definition": "Voice cloning tổng hợp giọng nói theo giọng mục tiêu từ audio enrollment hạn chế. Zero-shot TTS tạo giọng nói theo người nói chưa thấy từ một utterance tham chiếu duy nhất — không cần fine-tuning. Hệ thống chính: VALL-E (Microsoft, 2023): coi TTS như language modeling trên discrete audio tokens (EnCodec), 3 giây prompt; XTTS (Coqui, 2023): GPT-like conditioned trên speaker embeddings; NaturalSpeech 3 (Microsoft, 2024): factorized diffusion với disentangled speech attributes; Fish Speech / CosyVoice (2024-2025): open-source multilingual zero-shot TTS. Cân nhắc đạo đức tối quan trọng: voice cloning cho phép deepfake audio, lừa đảo mạo danh, tổng hợp không đồng ý. Speaker verification watermarks và phát hiện giọng nói tổng hợp là hướng nghiên cứu đối phó.",
+      "difficulty": "Advanced",
+      "prerequisites": ["TTS pipeline", "Neural codec", "Language modeling"]
+    }
+  ],
+  "algorithms": [
+    {
+      "name": "Whisper (OpenAI, 2022-2024)",
+      "category": "Encoder-decoder Transformer ASR đa ngôn ngữ huấn luyện giám sát yếu quy mô lớn",
+      "complexity": "Từ Tiny (39M tham số) đến Large-v3 (1.55B). Encoder xử lý chunks log-mel spectrogram 30 giây; decoder tạo tokens tự hồi quy. Hỗ trợ 99 ngôn ngữ, dịch sang tiếng Anh, và dự đoán timestamp.",
+      "pros": ["Robust với nhiễu, giọng vùng miền, domains; khả năng đa ngôn ngữ zero-shot", "Đơn giản — không cần kiến trúc chuyên biệt, dữ liệu quyết định", "Hỗ trợ tiếng Việt out-of-the-box", "Distil-Whisper giảm 2x, Faster-Whisper tăng tốc 4x"],
+      "cons": ["Chunking 30 giây gây artifacts tại biên", "Không streaming trong bản gốc", "Hallucination trên im lặng hoặc nhạc", "WER tiếng Việt 15-20% clean, 25-35% noisy — kém xa tiếng Anh 5-8%"],
+      "use_cases": ["Phiên âm cuộc họp đa ngôn ngữ", "Phụ đề tự động", "Call center transcription", "Baseline ASR cho fine-tuning domain-specific"],
+      "key_papers": ["Radford, A. et al. (2022). Robust Speech Recognition via Large-Scale Weak Supervision. ICML 2023."]
+    },
+    {
+      "name": "wav2vec 2.0 / HuBERT / WavLM (Self-Supervised Foundation Models)",
+      "category": "Mô hình nền tảng giọng nói tự giám sát với CNN feature encoder + Transformer context encoder",
+      "complexity": "CNN feature encoder (7 lớp conv ánh xạ 16kHz waveform sang 50Hz latent features) + Transformer context encoder (12 hoặc 24 layers). wav2vec 2.0: contrastive loss với codebook; HuBERT: cross-entropy trên offline cluster targets; WavLM: HuBERT + denoising.",
+      "pros": ["ASR competitive với chỉ 10 phút dữ liệu gắn nhãn", "Universal speech encoder cho nhiều tasks (ASR, speaker ID, emotion, intent)", "WavLM Large đạt SUPERB score tốt nhất", "Khả thi cho ngôn ngữ ít tài nguyên như tiếng Việt"],
+      "cons": ["Cần GPU cho fine-tuning", "Pre-trained chủ yếu trên tiếng Anh — cần adaptation cho tiếng Việt", "Inference chậm hơn Whisper cho ASR thuần", "Cần dữ liệu gắn nhãn cho downstream fine-tuning"],
+      "use_cases": ["ASR ngôn ngữ ít tài nguyên", "Speaker verification", "Speech emotion recognition", "Multi-task speech processing"],
+      "key_papers": ["Baevski, A. et al. (2020). wav2vec 2.0. NeurIPS 2020.", "Hsu, W. et al. (2021). HuBERT. IEEE/ACM TASLP 2021.", "Chen, S. et al. (2022). WavLM. IEEE JSTSP 2022."]
+    },
+    {
+      "name": "Conformer (Google, 2020)",
+      "category": "Kiến trúc CNN + Transformer cho ASR encoding",
+      "complexity": "Mỗi Conformer block: FFN(1/2) → MHSA → Conv → FFN(1/2) → LayerNorm. Multi-Head Self-Attention với relative positional encoding. Depthwise separable convolution với GLU activation. Convolutions bắt patterns cục bộ (phonetic), self-attention bắt dependencies toàn cục.",
+      "pros": ["Kiến trúc encoder chuẩn cho ASR production toàn cầu", "Vượt trội pure Transformers và pure CNN trên speech benchmarks", "1.9%/3.9% WER trên LibriSpeech test-clean/other không LM", "Variants: E-Branchformer, Squeezeformer, Zipformer"],
+      "cons": ["Phức tạp hơn Transformer thuần", "Cần GPU cho training", "Hyperparameter tuning cho conv kernel sizes", "Không inherently streaming — cần modification"],
+      "use_cases": ["Production ASR encoder tại Google, Meta", "Streaming ASR (Conformer-Transducer)", "Foundation model encoder", "Multilingual ASR"],
+      "key_papers": ["Gulati, A. et al. (2020). Conformer: Convolution-augmented Transformer for Speech Recognition. Interspeech 2020."]
+    },
+    {
+      "name": "RNN-T / Transducer (Streaming ASR)",
+      "category": "Kiến trúc streaming ASR thống trị với encoder + prediction network + joint network",
+      "complexity": "Encoder (Conformer/LSTM) xử lý audio frame-by-frame. Prediction network (LSTM/embedding) xử lý labels đã emit. Joint network kết hợp hai outputs: P(y|t,u) = softmax(W * tanh(W_enc * h_t + W_pred * h_u + b)). RNN-T loss marginalize qua mọi valid alignments trên 2D lattice.",
+      "pros": ["Inherently streaming — xử lý audio left-to-right, emit tokens ngay khi confident", "Prediction network cung cấp implicit language modeling", "FastEmit regularization cho lower latency", "Stateless Transducer đơn giản và song song hoá được"],
+      "cons": ["Training phức tạp hơn CTC", "RNN-T loss memory-intensive", "Cần careful tuning cho latency-accuracy trade-off", "Chất lượng thấp hơn offline attention models"],
+      "use_cases": ["On-device ASR (Google Pixel)", "Voice assistants real-time", "Live captioning", "Streaming transcription"],
+      "key_papers": ["Graves, A. (2012). Sequence Transduction with Recurrent Neural Networks. ICML Workshop.", "Yu, C. et al. (2021). FastEmit. ICASSP 2021."]
+    },
+    {
+      "name": "VITS (End-to-End TTS)",
+      "category": "TTS đầu cuối kết hợp VAE, normalizing flows và adversarial training",
+      "complexity": "Variational posterior với normalizing flows mô hình biến thiên ngẫu nhiên trong giọng nói. Monotonic Alignment Search (MAS) cho unsupervised duration extraction. Inference một giai đoạn: text → waveform trực tiếp (không cần vocoder riêng). Adversarial training với multi-period discriminator.",
+      "pros": ["End-to-end: text trực tiếp sang waveform, loại bỏ vocoder artifacts", "Chất lượng matching hệ thống hai giai đoạn", "MAS algorithm được tái sử dụng rộng rãi", "Piper TTS (Home Assistant) dựa trên VITS"],
+      "cons": ["Training phức tạp (VAE + flow + GAN)", "Cần dữ liệu single-speaker chất lượng cao", "Khó kiểm soát prosody fine-grained", "Inference chậm hơn non-autoregressive models"],
+      "use_cases": ["TTS production open-source", "Voice assistants", "Audiobook generation", "Accessibility applications"],
+      "key_papers": ["Kim, J. et al. (2021). VITS: Conditional Variational Autoencoder with Adversarial Learning for End-to-End TTS. ICML 2021."]
+    },
+    {
+      "name": "HiFi-GAN / BigVGAN (Neural Vocoders)",
+      "category": "Vocoders dựa trên GAN chuyển mel spectrogram thành waveform",
+      "complexity": "HiFi-GAN: generator dùng transposed convolutions upsampling với Multi-Receptive Field Fusion (MRF). Training: Multi-Period Discriminator (MPD, chu kỳ 2,3,5,7,11) + Multi-Scale Discriminator (MSD, raw/2x/4x downsampled). Loss: L_adv + λ_fm * L_fm + λ_mel * L_mel. BigVGAN: Snake activation (periodic inductive bias) + anti-aliased composition.",
+      "pros": ["HiFi-GAN v1 tổng hợp > 100x real-time trên GPU", "Chất lượng gần con người", "BigVGAN tổng quát hoá tốt cho unseen speakers, ngôn ngữ", "Widely deployed — vocoder phổ biến nhất"],
+      "cons": ["Cần GPU cho training", "GAN training instability", "Fine-tuning cần cho domain-specific quality", "Artifacts trên out-of-distribution mel spectrograms"],
+      "use_cases": ["Vocoder cho mọi TTS system", "Voice conversion", "Speech enhancement", "Audio super-resolution"],
+      "key_papers": ["Kong, J. et al. (2020). HiFi-GAN. NeurIPS 2020.", "Lee, S. et al. (2023). BigVGAN. ICLR 2023."]
+    },
+    {
+      "name": "ECAPA-TDNN (Speaker Recognition)",
+      "category": "Kiến trúc speaker embedding state-of-the-art mở rộng x-vectors",
+      "complexity": "Squeeze-Excitation (SE) blocks cho channel-wise attention. Multi-scale Res2Net cho multi-scale temporal patterns. Attentive Statistics Pooling: α_t = softmax(v^T * tanh(W*h_t + b)), μ = Σα_t*h_t, σ = sqrt(Σα_t*(h_t-μ)²). Trained với AAM-Softmax loss. < 1% EER trên VoxCeleb.",
+      "pros": ["State-of-the-art speaker verification", "< 1% EER trên VoxCeleb benchmarks", "Attentive pooling tập trung vào frames phân biệt speaker", "Production-ready cho voice biometrics"],
+      "cons": ["Cần large-scale speaker data cho training", "Sensitive với channel mismatch (điện thoại vs microphone)", "Cross-lingual speaker verification khó hơn", "Spoofing attacks (voice cloning) đe doạ"],
+      "use_cases": ["Voice biometrics (xác thực ngân hàng)", "Speaker diarization", "Access control bằng giọng nói", "Forensic speaker identification"],
+      "key_papers": ["Desplanques, B. et al. (2020). ECAPA-TDNN. Interspeech 2020."]
+    },
+    {
+      "name": "Demucs (Music Source Separation)",
+      "category": "Tách nguồn nhạc thành stems (vocals, drums, bass, other)",
+      "complexity": "HTDemucs (2022): Transformer layers thay LSTM tại bottleneck, cross-domain attention giữa waveform và spectrogram paths. Hoạt động trên raw waveform input, output separated source waveforms. Training: L1 loss trên waveforms với data augmentation. > 9 dB SDR trên vocals (MUSDB18).",
+      "pros": ["Tách nguồn tốt nhất — > 9 dB SDR vocals", "Open-source (Meta)", "Xử lý 4 stems: vocals, drums, bass, other", "Thực tế cho karaoke, remixing, production"],
+      "cons": ["Cần GPU cho real-time processing", "Chất lượng giảm trên nhạc phức tạp", "Artifacts trên nguồn overlapping nhiều", "Không real-time trên CPU"],
+      "use_cases": ["Karaoke generation", "Music remixing và production", "Vocal isolation cho analysis", "Background music removal"],
+      "key_papers": ["Rouard, S. et al. (2022). Hybrid Transformers for Music Source Separation. ICASSP 2023."]
+    },
+    {
+      "name": "AudioLM / MusicGen (Audio Generation)",
+      "category": "Tạo sinh âm thanh bằng language modeling trên discrete audio tokens",
+      "complexity": "AudioLM: tạo audio coherent bằng modeling hierarchical discrete tokens — semantic tokens (w2v-BERT, high-level) rồi acoustic tokens (SoundStream, fine-grained). MusicGen (Meta): single-stage autoregressive Transformer trên EnCodec tokens với codebook delay pattern cho generation song song qua codebooks. Hỗ trợ text và melody conditioning.",
+      "pros": ["AudioLM tạo audio dài coherent không cần text conditioning", "MusicGen open-source, thực tế, text + melody conditioning", "Codec language model paradigm thống nhất text và audio generation", "Chất lượng nhạc đáng kể cho creative applications"],
+      "cons": ["Autoregressive generation chậm", "Chất lượng chưa matching nhạc sĩ chuyên nghiệp", "Copyright concerns cho generated music", "Cần GPU mạnh cho generation"],
+      "use_cases": ["Text-to-music generation", "Background music cho content creators", "Sound effects generation", "Audio continuation và in-painting"],
+      "key_papers": ["Borsos, Z. et al. (2023). AudioLM. IEEE/ACM TASLP 2023.", "Copet, J. et al. (2023). MusicGen. arXiv 2023."]
+    },
+    {
+      "name": "Silero VAD",
+      "category": "Voice Activity Detection lightweight, production-ready",
+      "complexity": "Single-pass inference: xử lý frames 30-64ms tuần tự với internal RNN state. ~2MB ONNX, chạy CPU thời gian thực. Output: xác suất speech mỗi frame; threshold (thường 0.5) cho quyết định binary. Hỗ trợ 8kHz và 16kHz.",
+      "pros": ["Cực nhẹ (~2MB), chạy CPU real-time", "Chính xác vượt trội WebRTC VAD", "ONNX export — deploy mọi nơi", "Tích hợp sẵn trong Whisper pipelines, pyannote"],
+      "cons": ["Đôi khi miss speech rất nhỏ giọng", "Không phân biệt speech types (singing vs talking)", "Fixed architecture — không fine-tunable dễ dàng", "Performance giảm trên far-field audio"],
+      "use_cases": ["Tiền xử lý cho ASR — giảm GPU cost bằng cách chỉ xử lý speech segments", "Real-time communication", "Wake word detection preprocessing", "Audio recording segmentation"],
+      "key_papers": ["Silero Team. (2021). Silero VAD: pre-trained enterprise-grade Voice Activity Detector. GitHub."]
+    },
+    {
+      "name": "XTTS / Fish Speech / CosyVoice (Multilingual TTS)",
+      "category": "TTS đa ngôn ngữ zero-shot với voice cloning",
+      "complexity": "XTTS v2: GPT-based architecture conditioned trên speaker embeddings từ 6 giây reference audio, 17 ngôn ngữ, VQ-VAE audio tokens + HiFi-GAN decoder. Fish Speech: VQGAN + Transformer, zero-shot voice cloning từ reference ngắn, mạnh cho ngôn ngữ châu Á. CosyVoice (Alibaba): flow-matching based zero-shot TTS, mạnh Mandarin.",
+      "pros": ["Zero-shot voice cloning từ vài giây audio", "Đa ngôn ngữ bao gồm tiếng Việt", "Open-source", "Fish Speech/CosyVoice mạnh cho ngôn ngữ châu Á"],
+      "cons": ["Chất lượng tiếng Việt chưa được kiểm chứng đầy đủ", "Rủi ro deepfake và lạm dụng", "Autoregressive — chậm hơn non-AR models", "Speaker similarity không hoàn hảo"],
+      "use_cases": ["Voice cloning cho content creation", "Multilingual dubbing", "Personalized voice assistants", "Audiobook với giọng tùy chọn"],
+      "key_papers": ["Casanova, E. et al. (2023). XTTS. arXiv 2023."]
+    }
+  ],
+  "tech_stack": {
+    "asr_engines": {
+      "recommended": {"recommended": "Faster-Whisper + PhoWhisper", "rationale": "Faster-Whisper (CTranslate2) cho 4x tăng tốc inference Whisper với INT8 quantization. PhoWhisper (VinAI) fine-tuned Whisper cho tiếng Việt — baseline tốt nhất cho Vietnamese ASR open-source. Kết hợp: PhoWhisper cho accuracy, faster-whisper cho tốc độ. Silero VAD tiền xử lý giảm GPU cost."},
+      "alternatives": {"recommended": "FPT.AI Speech API / Google Cloud STT / Azure Speech", "rationale": "FPT.AI cho Vietnamese ASR tốt nhất (WER 8-12%). Google/Azure cho đa ngôn ngữ và streaming. Dùng API khi cần production quality mà không muốn tự host GPU."}
+    },
+    "tts_engines": {
+      "recommended": {"recommended": "VITS + HiFi-GAN (Piper TTS)", "rationale": "VITS end-to-end TTS, Piper TTS (Home Assistant) dựa trên VITS, lightweight, chạy CPU. HiFi-GAN vocoder phổ biến nhất. Coqui TTS framework cho training và inference. Cho tiếng Việt: cần dữ liệu single-speaker chất lượng cao 10+ giờ."},
+      "alternatives": {"recommended": "XTTS v2 / Fish Speech / FPT.AI TTS", "rationale": "XTTS v2 cho zero-shot voice cloning đa ngôn ngữ. Fish Speech cho ngôn ngữ châu Á. FPT.AI TTS cho tiếng Việt production quality tốt nhất."}
+    },
+    "speech_processing": {
+      "recommended": {"recommended": "SpeechBrain + pyannote-audio", "rationale": "SpeechBrain (Mila): all-in-one speech toolkit — ASR, speaker verification, separation, enhancement. PyTorch-based, modular, well-documented. pyannote-audio: state-of-the-art speaker diarization và VAD. Kết hợp cho full speech pipeline."},
+      "alternatives": {"recommended": "ESPnet / NeMo / Kaldi", "rationale": "ESPnet cho research ASR/TTS. NVIDIA NeMo cho production-grade speech models (Conformer-Transducer). Kaldi cho legacy systems và reference implementations."}
+    },
+    "audio_processing": {
+      "recommended": {"recommended": "torchaudio + librosa", "rationale": "torchaudio: PyTorch-native audio processing — I/O, transforms (STFT, mel spectrogram, MFCC), augmentation. librosa: audio analysis library — feature extraction, visualization, time-frequency transforms. Kết hợp: torchaudio cho training pipelines, librosa cho EDA và analysis."},
+      "alternatives": {"recommended": "soundfile / pydub / ffmpeg / sox", "rationale": "soundfile cho audio I/O. pydub cho audio manipulation đơn giản. ffmpeg cho format conversion. sox cho command-line audio processing."}
+    },
+    "model_serving": {
+      "recommended": {"recommended": "Faster-Whisper + Triton Inference Server", "rationale": "Faster-Whisper (CTranslate2) cho optimized Whisper inference. Triton (NVIDIA) cho multi-model serving, batching, streaming. ONNX Runtime cho lightweight deployment. Kết hợp: Triton serve multiple speech models (ASR + diarization + VAD) trên shared GPUs."},
+      "alternatives": {"recommended": "BentoML / FastAPI + WebSocket / gRPC", "rationale": "BentoML cho model packaging. FastAPI + WebSocket cho streaming ASR API. gRPC cho low-latency inter-service communication."}
+    },
+    "data_annotation": {
+      "recommended": {"recommended": "Label Studio + Praat", "rationale": "Label Studio (open-source) cho audio transcription annotation workflows. Praat cho phonetic analysis và detailed speech annotation. Kết hợp: Label Studio cho team annotation, Praat cho expert phonetic analysis. Cần annotators native tiếng Việt từ cả 3 vùng miền (Bắc/Trung/Nam)."},
+      "alternatives": {"recommended": "Audacity / ELAN / Amazon SageMaker Ground Truth", "rationale": "Audacity cho audio editing và manual inspection. ELAN cho multi-tier linguistic annotation. SageMaker Ground Truth cho managed annotation workflows."}
+    },
+    "gpu_infrastructure": {
+      "recommended": {"recommended": "NVIDIA T4 / A10G + INT8 quantization", "rationale": "T4 ($0.50-1.00/hr cloud) cho Whisper large-v3 real-time. A10G cho batch processing nhanh hơn. INT8 quantization (CTranslate2) giảm cost 3-4x. Silero VAD giảm GPU processing bằng cách chỉ xử lý speech segments. Target: GPU utilization > 70% để break even."},
+      "alternatives": {"recommended": "CPU inference (Whisper tiny/base) / cloud APIs", "rationale": "Whisper tiny/base chạy CPU cho low-quality, low-cost use cases. Cloud APIs (FPT.AI, Google) cho pay-per-minute khi volume thấp."}
+    },
+    "vietnamese_specific": {
+      "recommended": {"recommended": "PhoWhisper + underthesea + Vietnamese phoneme tools", "rationale": "PhoWhisper (VinAI): fine-tuned Whisper cho tiếng Việt — baseline ASR tốt nhất open-source. underthesea/VnCoreNLP cho NLP downstream sau ASR (word segmentation, NER). Vietnamese phoneme tools cho TTS grapheme-to-phoneme. VIVOS dataset (15 giờ) cho evaluation. Cần xử lý 6 thanh điệu (ngang, sắc, huyền, hỏi, ngã, nặng) và 3 vùng giọng (Bắc/Trung/Nam)."},
+      "alternatives": {"recommended": "VLSP datasets / FPT.AI Speech API", "rationale": "VLSP competition datasets cho additional Vietnamese speech data (hạn chế truy cập). FPT.AI Speech API cho production Vietnamese ASR/TTS khi cần quality tốt nhất."}
+    }
+  },
+  "feasibility_score": {
+    "overall_score": 6.4,
+    "verdict": "CONDITIONAL GO",
+    "verdict_vi": "Tiến hành có điều kiện",
+    "summary": "Speech & Audio AI là lĩnh vực trưởng thành toàn cầu (TRL 7) nhưng đặt ra thách thức cạnh tranh khó khăn tại Việt Nam. FPT.AI thống trị với data moat (10,000+ giờ proprietary), thương hiệu và kênh phân phối không thể sao chép ngắn hạn. Cạnh tranh trực tiếp trên ASR tiếng Việt tổng quát là chiến lược thua cuộc. Cơ hội nằm ở speech analytics platform và giải pháp chuyên ngành (call center, industrial voice, medical dictation) nơi domain expertise và tích hợp quan trọng hơn raw ASR accuracy. Điều kiện: phải có pilot customer, kỹ sư speech ML, WER < 18% trên domain mục tiêu, và chi phí GPU < $0.015/phút.",
+    "dimensions": {
+      "technical_feasibility": {"score": 8, "rationale": "Whisper large-v3 hỗ trợ 99 ngôn ngữ bao gồm tiếng Việt. faster-whisper cho real-time. Conformer architectures production-proven. Tooling xuất sắc: SpeechBrain, pyannote-audio, torchaudio. Open-source ecosystem (Whisper, VITS, HiFi-GAN, Silero VAD) đã hạ thấp rào cản gia nhập đáng kể."},
+      "market_demand": {"score": 7, "rationale": "Call center AI, voice assistants, subtitling, education đều tăng trưởng. Digital economy push của Việt Nam tạo nhu cầu. Nhưng willingness to pay cho AI speech tại Việt Nam vẫn chưa chắc chắn. Call center analytics ước tính TAM $80-120M — phân khúc sẵn sàng nhất."},
+      "data_availability": {"score": 5, "rationale": "Achilles heel: VIVOS chỉ có 15 giờ. VLSP datasets hạn chế truy cập. FPT.AI sở hữu corpus proprietary 10,000+ giờ — data moat không thể sao chép. Thu thập domain-specific Vietnamese speech data tốn kém ($200K-500K) và chậm (6-12 tháng). PhoWhisper (VinAI) fine-tuned trên undisclosed data."},
+      "implementation_risk": {"score": 6, "rationale": "Vietnamese ASR WER 15-25% — chưa đủ cho verbatim transcription nhưng chấp nhận được cho analytics. GPU costs cho real-time streaming ASR có thể vượt revenue. Voice deepfake/cloning risks và regulatory attention tăng. Team cần speech ML expertise chuyên sâu — không phải 'just another ML project'."},
+      "vietnam_market_fit": {"score": 6, "rationale": "Nhu cầu tồn tại nhưng FPT.AI sở hữu thị trường. Price sensitivity cao. Nhiều doanh nghiệp đã dùng FPT.AI Speech API — switching costs thực tế. Viettel AI mạnh thứ hai với backing từ telco lớn nhất. Cơ hội chỉ tồn tại ở niches chuyên biệt và speech analytics layer."}
+    },
+    "conditions": [
+      "Đảm bảo ít nhất 1 khách hàng pilot (call center hoặc doanh nghiệp) cam kết trả phí trước khi đầu tư sâu",
+      "Thuê hoặc hợp tác với ít nhất 1 kỹ sư speech ML có kinh nghiệm ASR tiếng Việt",
+      "Đạt WER < 18% trên domain mục tiêu với PhoWhisper fine-tuning trên domain-specific data",
+      "Xác định rõ ràng differentiation ngoài raw transcription (analytics, compliance monitoring, conversation intelligence)",
+      "Chi phí GPU ước tính < $0.015/phút tại projected volume — sử dụng faster-whisper INT8 + Silero VAD",
+      "KHÔNG xây dựng general-purpose Vietnamese ASR — sử dụng PhoWhisper hoặc FPT.AI API làm backbone",
+      "Thu thập domain-specific Vietnamese speech data (ít nhất 100 giờ) từ vertical mục tiêu với consent",
+      "Xử lý cả 3 vùng giọng Việt Nam (Bắc/Trung/Nam) trong evaluation và testing"
+    ]
+  },
+  "industry_applications": [
+    {
+      "industry": "Phân tích cuộc gọi (Call Center Analytics)",
+      "use_case": "Nền tảng phân tích thông minh cho call center — transcription, diarization, emotion detection, compliance monitoring, conversation summarization",
+      "description": "Call center analytics là phân khúc sẵn sàng chi trả nhất tại Việt Nam: ngân hàng (VPBank, TPBank, Techcombank) và viễn thông (Viettel, VNPT, MobiFone) đang mua ngay. Pipeline: ASR (PhoWhisper/FPT.AI API) → speaker diarization (pyannote-audio) → NLP downstream (intent classification, entity extraction, sentiment analysis) → LLM summarization → compliance scoring. KHÔNG cần verbatim transcription — topic detection và sentiment analysis tolerant WER 15-20%. Differentiate qua domain vocabulary models (từ vựng ngân hàng, bảo hiểm, viễn thông). TAM ước tính $80-120M tại Việt Nam.",
+      "priority": "P0",
+      "market_size_vn": "USD 80-120M (call center AI + analytics VN)",
+      "technical_complexity": "Medium-High",
+      "vietnam_readiness": "High"
+    },
+    {
+      "industry": "Phụ đề và media (Subtitling & Media)",
+      "use_case": "Tạo phụ đề tự động cho video YouTube, TikTok, livestream và phim — hỗ trợ đa ngôn ngữ",
+      "description": "Nhu cầu phụ đề tự động tăng mạnh từ content creators Việt Nam (YouTube, TikTok, Facebook). Pipeline: Whisper/PhoWhisper cho ASR → WhisperX cho forced alignment và timestamps → dịch (cho multilingual subtitles). Whisper hỗ trợ 99 ngôn ngữ out-of-the-box. WER 15-20% chấp nhận được cho phụ đề (người xem bổ sung bằng ngữ cảnh hình ảnh). Livestream cần streaming ASR (latency < 500ms). Tiềm năng SaaS model cho creators.",
+      "priority": "P1",
+      "market_size_vn": "USD 15-30M (subtitling + media AI VN)",
+      "technical_complexity": "Medium",
+      "vietnam_readiness": "Medium"
+    },
+    {
+      "industry": "Giáo dục và học ngôn ngữ (Education & Language Learning)",
+      "use_case": "Đánh giá phát âm, hội thoại AI cho luyện nói tiếng Anh, và hỗ trợ học tập bằng giọng nói",
+      "description": "Pronunciation assessment: so sánh phát âm học viên với reference bằng forced alignment và phoneme-level scoring. Conversational AI cho luyện nói: ASR → NLU → dialogue management → TTS với feedback phát âm. Đặc thù Việt Nam: lỗi phát âm tiếng Anh phổ biến của người Việt (th/s, r/l, final consonants, stress patterns). Speaker-adaptive models cho personalized feedback. Willingness to pay thấp — cần freemium model.",
+      "priority": "P2",
+      "market_size_vn": "USD 30-50M (edtech + language learning VN)",
+      "technical_complexity": "Medium-High",
+      "vietnam_readiness": "Medium"
+    },
+    {
+      "industry": "Trợ lý giọng nói (Voice Assistants)",
+      "use_case": "Voice interface cho smart home, automotive, và enterprise applications bằng tiếng Việt",
+      "description": "Trợ lý giọng nói tiếng Việt cho smart home (điều khiển thiết bị), automotive (hands-free navigation), và enterprise (voice commands trong kho bãi, nhà máy). Yêu cầu: wake word detection (always-on VAD), streaming ASR (latency < 200ms), NLU, TTS response. Thách thức: far-field ASR (echo cancellation, beamforming), noise robustness trong môi trường công nghiệp, xử lý tiếng Việt tonal. Ecosystem fragmentation tại Việt Nam — thiếu platform thống nhất.",
+      "priority": "P2",
+      "market_size_vn": "USD 20-40M (voice assistant + smart home VN)",
+      "technical_complexity": "High",
+      "vietnam_readiness": "Low-Medium"
+    },
+    {
+      "industry": "Phát hiện bất thường qua âm thanh (Audio Anomaly Detection)",
+      "use_case": "Giám sát thiết bị công nghiệp, phát hiện lỗi máy móc qua phân tích âm thanh — predictive maintenance bằng sound",
+      "description": "Audio-based anomaly detection cho manufacturing (Samsung Vietnam, Foxconn): phát hiện lỗi máy móc từ âm thanh hoạt động (bearing failures, motor issues, vibration anomalies). Pipeline: microphone array → mel spectrogram features → classification/anomaly detection (PANNs, AST, BEATs pretrained audio models). DCASE challenge community drives research. Không cần ASR — chỉ audio classification. Ưu điểm so với sensor truyền thống: non-contact, không cần lắp đặt sensor trên mỗi máy. Kết hợp B07 (Anomaly Detection).",
+      "priority": "P2",
+      "market_size_vn": "USD 10-20M (industrial audio monitoring VN)",
+      "technical_complexity": "Medium",
+      "vietnam_readiness": "Medium"
+    },
+    {
+      "industry": "Y tế — phiên âm y khoa (Medical Dictation)",
+      "use_case": "Phiên âm tự động ghi chú lâm sàng từ đọc chính tả của bác sĩ bằng tiếng Việt",
+      "description": "Bác sĩ đọc ghi chú lâm sàng → ASR chuyển thành văn bản có cấu trúc (SOAP notes). Yêu cầu WER rất thấp cho thuật ngữ y khoa — cần domain-specific fine-tuning với vocabulary y tế tiếng Việt. Rào cản: dữ liệu y tế nhạy cảm (HIPAA-equivalent), thị trường nhỏ, bác sĩ Việt Nam quen ghi tay. Tiềm năng dài hạn khi digitization y tế tăng. Kết hợp B02 (Document AI) cho structured output.",
+      "priority": "P3",
+      "market_size_vn": "USD 10-20M (medical AI VN)",
+      "technical_complexity": "High",
+      "vietnam_readiness": "Low"
+    }
+  ],
+  "case_studies": [
+    {
+      "title": "FPT.AI Speech — Vietnamese ASR/TTS incumbent thống trị thị trường",
+      "industry": "Đa ngành / Multi-industry",
+      "problem": "Doanh nghiệp Việt Nam (ngân hàng, viễn thông, chính phủ) cần ASR và TTS tiếng Việt chất lượng production cho call center automation, voice assistants, và IVR systems.",
+      "solution": "FPT.AI xây dựng 10+ năm R&D speech tiếng Việt với corpus proprietary ước tính 10,000+ giờ. Production-grade Vietnamese ASR (WER 8-12%) và TTS APIs. Tích hợp vào FPT enterprise ecosystem (FPT.AI Platform, FPT Cloud, FPT Telecom).",
+      "results": "Thống trị thị trường Vietnamese speech AI. Được dùng bởi ngân hàng lớn, viễn thông, cơ quan chính phủ. Brand trust cao nhất — 'nobody gets fired for choosing FPT.AI'. Data moat không thể sao chép bởi new entrants.",
+      "tech_stack": "Proprietary ASR/TTS models, FPT Cloud infrastructure, enterprise APIs",
+      "lessons": "Data moat là competitive advantage quan trọng nhất trong speech AI. First-mover advantage + enterprise distribution channels tạo lock-in. Cạnh tranh trực tiếp với incumbent có data moat là chiến lược thua cuộc — phải differentiate qua vertical expertise hoặc analytics layer."
+    },
+    {
+      "title": "PhoWhisper (VinAI) — Fine-tuned Whisper cho tiếng Việt",
+      "industry": "Nghiên cứu / Research",
+      "problem": "Whisper large-v3 hỗ trợ tiếng Việt nhưng WER 15-20% — chưa tối ưu. Cần model ASR mở chuyên biệt cho tiếng Việt.",
+      "solution": "VinAI fine-tune Whisper trên Vietnamese speech data (undisclosed corpus) tạo PhoWhisper — model ASR tiếng Việt open-source tốt nhất. Nhiều kích thước (tiny, base, small, medium, large). Published kết quả và weights.",
+      "results": "Cải thiện WER đáng kể so với Whisper vanilla trên tiếng Việt. Trở thành baseline mặc định cho Vietnamese ASR open-source. Cộng đồng sử dụng rộng rãi. Tuy nhiên, data dùng để fine-tune không công khai — không thể replicate chính xác.",
+      "tech_stack": "Whisper architecture, PyTorch, Vietnamese speech data (undisclosed)",
+      "lessons": "Fine-tuning foundation models (Whisper) trên target language data là approach hiệu quả nhất cho low-resource ASR. Data quality quan trọng hơn data quantity. Open-source model weights + closed data vẫn tạo giá trị lớn cho cộng đồng."
+    },
+    {
+      "title": "Whisper + pyannote-audio — Meeting transcription pipeline",
+      "industry": "Doanh nghiệp / Enterprise",
+      "problem": "Phiên âm cuộc họp cần cả transcription và speaker attribution — ai nói gì khi nào. Single ASR model không giải quyết được.",
+      "solution": "Pipeline kết hợp: Silero VAD → pyannote-audio speaker diarization → Whisper/faster-whisper ASR → WhisperX forced alignment → LLM summarization. Open-source hoàn toàn. WhisperX align transcript với diarization output để gán speaker cho mỗi utterance.",
+      "results": "Pipeline production-ready cho meeting transcription. Chất lượng diarization tốt cho 2-6 speakers. WhisperX alignment cải thiện speaker attribution accuracy. LLM summarization tạo meeting minutes tự động. Được dùng rộng rãi trong 2024-2026.",
+      "tech_stack": "faster-whisper, pyannote-audio, WhisperX, Silero VAD, LLM (GPT-4/Claude)",
+      "lessons": "Giá trị không nằm ở raw transcription mà ở pipeline tích hợp (diarization + alignment + summarization). Open-source components kết hợp tạo sản phẩm competitive. Speaker diarization là differentiator quan trọng — đa số ASR APIs không cung cấp."
+    }
+  ],
+  "key_papers": [
+    {
+      "title": "WaveNet: A Generative Model for Raw Audio",
+      "authors": "Aaron van den Oord, Sander Dieleman, Heiga Zen, Karen Simonyan, Oriol Vinyals, Alex Graves, Nal Kalchbrenner, Andrew Senior, Koray Kavukcuoglu",
+      "year": 2016,
+      "venue": "arXiv (SSW9)",
+      "contribution": "Mô hình đầu tiên tạo sinh dạng sóng âm thanh thô tự hồi quy ở mức sample sử dụng dilated causal convolutions. Chất lượng gần con người cho TTS. Nền tảng cho toàn bộ neural audio synthesis: Parallel WaveNet, WaveRNN, WaveGlow, HiFi-GAN. Hạn chế gốc: 1000x chậm hơn real-time.",
+      "url": "https://arxiv.org/abs/1609.03499"
+    },
+    {
+      "title": "Tacotron 2: Natural TTS Synthesis by Conditioning WaveNet on Mel Spectrogram Predictions",
+      "authors": "Jonathan Shen, Ruoming Pang, Ron J. Weiss, Mike Schuster, Navdeep Jaitly, Zongheng Yang, Zhifeng Chen, Yu Zhang, Yuxuan Wang, RJ Skerry-Ryan, et al.",
+      "year": 2018,
+      "venue": "ICASSP 2018",
+      "contribution": "Phân rã TTS thành mel spectrogram prediction (attention-based seq2seq) + vocoder (WaveNet), đạt MOS 4.53 vs 4.58 con người trên single-speaker English — hệ thống đầu tiên tiếp cận naturalness mức con người. Xác lập mô hình TTS hai giai đoạn thống trị cho đến VITS.",
+      "url": "https://arxiv.org/abs/1712.05884"
+    },
+    {
+      "title": "wav2vec 2.0: A Framework for Self-Supervised Learning of Speech Representations",
+      "authors": "Alexei Baevski, Yuhao Zhou, Abdelrahman Mohamed, Michael Auli",
+      "year": 2020,
+      "venue": "NeurIPS 2020",
+      "contribution": "Chứng minh pre-training tự giám sát trên speech không gắn nhãn (contrastive learning trên masked latent features) cho ASR competitive với chỉ 10 phút dữ liệu gắn nhãn. Khai sinh mô hình nền tảng giọng nói tự giám sát. Catalyze HuBERT, WavLM, data2vec. Làm ASR ngôn ngữ ít tài nguyên khả thi.",
+      "url": "https://arxiv.org/abs/2006.11477"
+    },
+    {
+      "title": "HuBERT: Self-Supervised Speech Representation Learning by Masked Prediction of Hidden Units",
+      "authors": "Wei-Ning Hsu, Benjamin Bolte, Yao-Hung Hubert Tsai, Kushal Lakhotia, Ruslan Salakhutdinov, Abdelrahman Mohamed",
+      "year": 2021,
+      "venue": "IEEE/ACM TASLP 2021",
+      "contribution": "Thay thế contrastive learning bằng offline clustering targets và masked prediction (giống BERT). Đơn giản hơn, iterative target refinement, hiệu suất bằng hoặc vượt wav2vec 2.0. Discrete units từ HuBERT trở thành chuẩn speech tokenization cho generative speech models (GSLM, AudioLM, VALL-E).",
+      "url": "https://arxiv.org/abs/2106.07447"
+    },
+    {
+      "title": "Conformer: Convolution-augmented Transformer for Speech Recognition",
+      "authors": "Anmol Gulati, James Qin, Chung-Cheng Chiu, Niki Parmar, Yu Zhang, Jiahui Yu, Wei Han, Shibo Wang, Zhengdong Zhang, Yonghui Wu, Ruoming Pang",
+      "year": 2020,
+      "venue": "Interspeech 2020",
+      "contribution": "Đề xuất Conformer block kết hợp multi-head self-attention với depthwise separable convolution trong macaron-style FFN sandwich. SOTA WER trên LibriSpeech (1.9%/3.9% test-clean/other không LM). Trở thành kiến trúc encoder chuẩn cho ASR production toàn cầu 2022-2026.",
+      "url": "https://arxiv.org/abs/2005.08100"
+    },
+    {
+      "title": "Robust Speech Recognition via Large-Scale Weak Supervision (Whisper)",
+      "authors": "Alec Radford, Jong Wook Kim, Tao Xu, Greg Brockman, Christine McLeavey, Ilya Sutskever",
+      "year": 2022,
+      "venue": "ICML 2023",
+      "contribution": "Huấn luyện encoder-decoder Transformer trên 680,000 giờ weakly-supervised multilingual web audio. Robustness vượt trội qua domains, giọng vùng miền, và ngôn ngữ không cần fine-tuning. Chứng minh data scale thay thế architectural innovation. Whisper trở thành ASR open-source phổ biến nhất. Thay đổi kỳ vọng người dùng về ASR robustness.",
+      "url": "https://arxiv.org/abs/2212.04356"
+    },
+    {
+      "title": "VITS: Conditional Variational Autoencoder with Adversarial Learning for End-to-End Text-to-Speech",
+      "authors": "Jaehyeon Kim, Jungil Kong, Juhee Son",
+      "year": 2021,
+      "venue": "ICML 2021",
+      "contribution": "TTS end-to-end đầu tiên tạo waveforms trực tiếp từ text với chất lượng matching hệ thống hai giai đoạn. Kết hợp VAE posterior, normalizing flows, adversarial training. Monotonic Alignment Search (MAS) cho unsupervised duration extraction. VITS và variants trở thành kiến trúc mặc định cho TTS open-source.",
+      "url": "https://arxiv.org/abs/2106.06103"
+    },
+    {
+      "title": "AudioLM: A Language Modeling Approach to Audio Generation",
+      "authors": "Zalán Borsos, Raphaël Marinier, Damien Vincent, Eugene Kharitonov, Olivier Pietquin, Matt Sharber, Dominik Roblek, Olivier Teboul, David Grangier, Marco Tagliasacchi, Neil Zeghidour",
+      "year": 2023,
+      "venue": "IEEE/ACM TASLP 2023",
+      "contribution": "Đặt nền tảng 'audio as language' — tạo sinh audio coherent bằng language modeling trên hierarchical discrete tokens (semantic từ w2v-BERT + acoustic từ SoundStream). Coarse-to-fine generation cho long-form audio mạch lạc. Paradigm được VALL-E, MusicLM, SpeechGPT áp dụng. Chứng minh speech có thể coi như 'ngoại ngữ' cho LLMs.",
+      "url": "https://arxiv.org/abs/2209.03143"
+    },
+    {
+      "title": "HiFi-GAN: Generative Adversarial Networks for Efficient and High Fidelity Speech Synthesis",
+      "authors": "Jungil Kong, Jaehyeon Kim, Jaekyoung Bae",
+      "year": 2020,
+      "venue": "NeurIPS 2020",
+      "contribution": "Vocoder GAN-based đạt tổng hợp real-time (> 100x real-time trên GPU) với chất lượng gần con người. Multi-Period và Multi-Scale Discriminators cho đánh giá đa tần số. Multi-Receptive Field Fusion cho multi-scale pattern capture. Trở thành vocoder được deploy phổ biến nhất.",
+      "url": "https://arxiv.org/abs/2010.05646"
+    },
+    {
+      "title": "ECAPA-TDNN: Emphasized Channel Attention, Propagation and Aggregation in TDNN Based Speaker Verification",
+      "authors": "Brecht Desplanques, Jenthe Thienpondt, Kris Demuynck",
+      "year": 2020,
+      "venue": "Interspeech 2020",
+      "contribution": "Kiến trúc speaker embedding state-of-the-art mở rộng x-vectors với Squeeze-Excitation blocks, multi-scale Res2Net, và Attentive Statistics Pooling. < 1% EER trên VoxCeleb. Production deployments cho voice biometrics và diarization.",
+      "url": "https://arxiv.org/abs/2005.07143"
+    }
+  ],
+  "cross_domain_connections": [
+    {
+      "target": "B04",
+      "connection_type": "critical_downstream",
+      "description": "NLP (B04) là downstream pipeline quan trọng nhất cho ASR output. Punctuation restoration, NER, intent classification, sentiment analysis đều hoạt động trên text từ ASR. Error propagation từ ASR sang NLP là thách thức liên tục. Inverse text normalization (ITN) chuyển output ASR sang dạng viết. End-to-end spoken language understanding (SLU) bypass lỗi ASR bằng cách dự đoán intent/entities trực tiếp từ speech features. Multimodal LLMs (2025-2026) đang sáp nhập boundary ASR-NLP."
+    },
+    {
+      "target": "B08",
+      "connection_type": "integration",
+      "description": "Conversational AI (B08) là deployment volume lớn nhất của speech AI: voice assistants (Alexa, Google Assistant, Siri) kết hợp ASR + NLU + dialogue management + TTS real-time. Thách thức: far-field ASR (echo cancellation, beamforming), wake word detection (always-on VAD), ultra-low latency streaming ASR, TTS prosody tự nhiên. Full-duplex dialogue models (Moshi, GPT-4o voice mode) đại diện sự hội tụ conversational AI và speech processing."
+    },
+    {
+      "target": "B09",
+      "connection_type": "synergy",
+      "description": "Generative AI (B09) bao gồm audio generation: MusicLM/MusicGen cho text-to-music, AudioLDM/Stable Audio cho text-to-sound-effects, VALL-E/XTTS cho voice generation. Cùng paradigms generative (autoregressive, diffusion, flow-matching) áp dụng qua modalities. Codec language models thống nhất text và audio generation. Ethical concerns chung: deepfake audio, copyright nhạc generated, consent voice cloning."
+    },
+    {
+      "target": "B02",
+      "connection_type": "integration",
+      "description": "Document AI (B02) kết nối qua speech-to-document workflows: phiên âm cuộc họp với diarization và summarization, medical dictation, legal transcription. ASR feeds document structuring pipelines. Whisper + pyannote + LLM summarization là pipeline phổ biến 2025 cho automated meeting minutes. Real-time captioning và accessibility applications bridge speech và document output."
+    },
+    {
+      "target": "B07",
+      "connection_type": "niche_application",
+      "description": "Anomaly Detection (B07) áp dụng audio processing cho industrial monitoring: phát hiện lỗi máy từ âm thanh (bearing failures, motor issues), security (gunshot detection, glass break), healthcare (cough detection, respiratory monitoring), environmental monitoring (wildlife acoustics). Models dùng mel spectrogram features với classification/anomaly detection heads. DCASE challenge community drives intersection. Pretrained audio models (PANNs, AST, BEATs) cung cấp feature extractors cho audio anomaly tasks."
+    }
+  ],
+  "bestPractices": [
+    "KHÔNG xây dựng general-purpose Vietnamese ASR — FPT.AI có data moat 10,000+ giờ không thể sao chép. Dùng PhoWhisper hoặc FPT.AI API làm ASR backbone, thêm giá trị qua speech analytics layer (diarization, emotion detection, compliance monitoring, conversation intelligence).",
+    "Dùng Silero VAD trước mọi ASR processing để giảm GPU cost — chỉ xử lý speech segments, bỏ qua silence. Với streaming, VAD tiết kiệm 30-50% GPU compute. Kết hợp với faster-whisper INT8 quantization cho cost-effective inference.",
+    "Bắt đầu với faster-whisper + PhoWhisper cho ASR — không train acoustic model từ đầu. Đầu tư vào post-ASR intelligence: giá trị nằm ở việc bạn làm gì với text, không phải bản phiên âm.",
+    "Xây dựng data flywheel: mỗi deployment tại khách hàng nên (với consent) cải thiện domain-specific models. Thu thập domain vocabulary, pronunciation patterns, và correction feedback. Data flywheel là cách duy nhất xây dựng competitive advantage dài hạn.",
+    "Lập kế hoạch cho dialect handling: tiếng Việt Bắc/Trung/Nam cần ít nhất accent-aware preprocessing. Evaluation phải bao gồm speakers từ cả 3 vùng. 6 thanh điệu (ngang, sắc, huyền, hỏi, ngã, nặng) ảnh hưởng nghĩa — tonal accuracy là critical.",
+    "Implement voice authentication và synthetic speech detection cho mọi voice cloning deployment. Watermarking audio generated. Tuân thủ quy định về deepfake đang tăng. Không deploy voice cloning mà không có safeguards.",
+    "Pipeline production speech cần: VAD → ASR → post-processing (punctuation, ITN) → downstream NLP. Mỗi component cần monitoring riêng. Latency budget: allocate rõ ràng cho từng stage (VAD: 5ms, ASR: 100-200ms, post-processing: 50ms)."
+  ],
+  "antiPatterns": [
+    "Cạnh tranh trực tiếp với FPT.AI trên general Vietnamese ASR accuracy. FPT.AI có 10+ năm R&D, 10,000+ giờ data, enterprise distribution channels, brand trust. New entrant không thể replicate data moat ngắn hạn. Đây là chiến lược thua cuộc chắc chắn.",
+    "Train acoustic model từ đầu khi có Whisper/PhoWhisper. Thu thập và label hàng nghìn giờ speech data tốn $200K-500K và 6-12 tháng. Fine-tune PhoWhisper trên domain-specific data hiệu quả hơn nhiều. 'Buy, don't build' cho ASR base model.",
+    "Bỏ qua GPU economics. Whisper large-v3 cần T4/A10G GPU (~$0.50-1.00/hr). Khách hàng Việt Nam kỳ vọng $0.01-0.02/phút (matching FPT.AI). GPU utilization phải > 70% để break even. Tính toán unit economics TRƯỚC khi build.",
+    "Coi speech AI như 'just another ML project'. Signal processing fundamentals matter — spectrograms, sampling rates, windowing, acoustic features. Thuê ít nhất 1 kỹ sư có kinh nghiệm speech/audio ML chuyên sâu. Không có expertise → lỗi cơ bản tốn thời gian.",
+    "Deploy voice cloning mà không có safeguards. Voice deepfake cho phép lừa đảo mạo danh, tống tiền bằng giọng nói giả. Regulatory backlash đang tăng. Phải có watermarking, voice authentication, usage monitoring, và consent verification.",
+    "Assume WER tiếng Anh = WER tiếng Việt. Whisper English WER 5-8%, Vietnamese WER 15-20% clean, 25-35% noisy. Verbatim transcription tiếng Việt chưa production-ready cho nhiều use cases. Target use cases tolerant of higher WER (analytics, keyword spotting, intent detection)."
+  ],
+  "pipeline": {
+    "stages": [
+      {
+        "name": "Audio Ingestion & Preprocessing (Thu thập và tiền xử lý âm thanh)",
+        "description": "Thu thập audio từ nhiều nguồn: call recordings, microphone streams, media files, WebRTC. Chuẩn hoá: sample rate (16kHz cho speech, 44.1kHz cho music), mono/stereo, format conversion (WAV, FLAC, MP3 → WAV). Noise assessment: SNR estimation, clipping detection. VAD (Silero VAD) phân đoạn speech segments, loại bỏ silence để giảm processing cost. Pre-emphasis filter cho speech. Chunking cho long audio (30 giây cho Whisper).",
+        "tools": ["Silero VAD", "ffmpeg", "torchaudio", "librosa", "soundfile"],
+        "inputs": "Raw audio files hoặc streams (đa format, đa sample rate)",
+        "outputs": "Audio chuẩn hoá 16kHz mono WAV + speech segments timestamps + metadata"
+      },
+      {
+        "name": "Speech Recognition — ASR (Nhận dạng giọng nói)",
+        "description": "Chuyển speech segments thành text. Offline: faster-whisper/PhoWhisper cho batch processing, xử lý chunks 30 giây. Streaming: Conformer-Transducer hoặc streaming Whisper cho real-time. Language detection tự động (Whisper built-in). Timestamp prediction cho word-level alignment (WhisperX). Post-processing: punctuation restoration, inverse text normalization (ITN), capitalization. Domain-specific vocabulary boosting cho vertical applications.",
+        "tools": ["faster-whisper", "PhoWhisper", "WhisperX", "CTranslate2", "NVIDIA NeMo"],
+        "inputs": "Speech segments 16kHz mono WAV",
+        "outputs": "Transcript text + word-level timestamps + language ID + confidence scores"
+      },
+      {
+        "name": "Speaker Analysis (Phân tích người nói)",
+        "description": "Speaker diarization: pyannote-audio phân đoạn 'ai nói khi nào'. Speaker embedding extraction (ECAPA-TDNN) cho speaker verification. Alignment: WhisperX kết hợp ASR transcript với diarization output để gán speaker cho mỗi utterance. Speaker clustering cho unknown speakers. Optional: speaker identification (match với database đã đăng ký).",
+        "tools": ["pyannote-audio", "SpeechBrain", "ECAPA-TDNN", "WhisperX"],
+        "inputs": "Audio + ASR transcript + timestamps",
+        "outputs": "Speaker-attributed transcript + speaker embeddings + diarization segments"
+      },
+      {
+        "name": "Speech Intelligence (Trí tuệ giọng nói)",
+        "description": "Post-ASR analysis tạo giá trị business: Speech Emotion Recognition (SER) cho sentiment analysis, intent classification cho routing, keyword/topic detection, compliance monitoring (phát hiện vi phạm script), conversation summarization (LLM-powered). Vietnamese NLP downstream: word segmentation (underthesea), NER cho tên riêng Việt Nam. Domain-specific models cho từ vựng chuyên ngành (ngân hàng, bảo hiểm, y tế).",
+        "tools": ["SpeechBrain (SER)", "underthesea", "LLM APIs (GPT-4/Claude)", "scikit-learn", "transformers"],
+        "inputs": "Speaker-attributed transcript + audio features",
+        "outputs": "Emotion labels + intents + topics + compliance scores + conversation summary"
+      },
+      {
+        "name": "TTS & Audio Generation (Tổng hợp giọng nói và tạo sinh âm thanh)",
+        "description": "Text-to-Speech cho response generation: VITS/Piper TTS cho lightweight on-device, XTTS cho zero-shot voice cloning, FPT.AI TTS API cho Vietnamese quality tốt nhất. Prosody control: pitch, speed, emotion. Audio generation: MusicGen cho background music, sound effects generation. Vietnamese TTS cần grapheme-to-phoneme với 6 tones handling.",
+        "tools": ["VITS / Piper TTS", "XTTS v2", "FPT.AI TTS API", "HiFi-GAN", "MusicGen"],
+        "inputs": "Text + speaker reference audio (optional) + prosody parameters",
+        "outputs": "Synthesized speech audio + generated music/effects"
+      },
+      {
+        "name": "Deployment & Monitoring (Triển khai và giám sát)",
+        "description": "Model serving: Triton Inference Server cho multi-model (ASR + diarization + VAD) trên shared GPUs. API: FastAPI + WebSocket cho streaming, REST cho batch. Monitoring: WER tracking trên sample audits, latency P99, GPU utilization, throughput (concurrent streams). Cost tracking: $/phút processing. A/B testing new models. Scaling: auto-scale GPU instances theo demand.",
+        "tools": ["Triton Inference Server", "FastAPI", "Grafana + Prometheus", "Docker / Kubernetes", "ONNX Runtime"],
+        "inputs": "Production audio streams + model artifacts + deployment config",
+        "outputs": "Production API endpoints + monitoring dashboards + cost reports + quality metrics"
+      }
+    ]
+  },
+  "learning_resources": [
+    {
+      "title": "Speech and Language Processing (Dan Jurafsky & James H. Martin, 3rd Ed. Draft)",
+      "type": "book",
+      "url": "https://web.stanford.edu/~jurafsky/slp3/",
+      "level": "Beginner to Intermediate",
+      "description": "Sách giáo trình NLP/Speech chuẩn. Chương ASR, TTS, và speech processing cung cấp nền tảng lý thuyết vững chắc. Free online. KHỞI ĐẦU TỐT NHẤT cho speech AI beginners."
+    },
+    {
+      "title": "Whisper Documentation & Repository",
+      "type": "documentation",
+      "url": "https://github.com/openai/whisper",
+      "level": "Beginner to Intermediate",
+      "description": "Official Whisper repo: model sizes, usage, supported languages. Điểm khởi đầu cho mọi ASR project. Kết hợp faster-whisper cho production deployment."
+    },
+    {
+      "title": "SpeechBrain Documentation & Tutorials",
+      "type": "documentation",
+      "url": "https://speechbrain.github.io/",
+      "level": "Intermediate",
+      "description": "All-in-one speech toolkit: ASR, speaker verification, separation, enhancement, TTS. PyTorch-based, modular. Tutorials từ basic đến advanced. Recipes cho nhiều tasks và datasets."
+    },
+    {
+      "title": "pyannote-audio Documentation",
+      "type": "documentation",
+      "url": "https://github.com/pyannote/pyannote-audio",
+      "level": "Intermediate",
+      "description": "State-of-the-art speaker diarization và VAD. Tutorials cho diarization pipeline, speaker embedding extraction. Essential cho multi-speaker audio processing."
+    },
+    {
+      "title": "Hugging Face Audio Course",
+      "type": "course",
+      "url": "https://huggingface.co/learn/audio-course",
+      "level": "Beginner to Intermediate",
+      "description": "Course miễn phí bao gồm audio processing, ASR, TTS, music classification. Hands-on với transformers library. Thực hành tốt nhất cho người mới bắt đầu speech AI."
+    },
+    {
+      "title": "ESPnet Documentation & Recipes",
+      "type": "documentation",
+      "url": "https://espnet.github.io/espnet/",
+      "level": "Intermediate to Advanced",
+      "description": "End-to-end speech processing toolkit: ASR, TTS, speech translation, speaker diarization. Recipes cho hàng trăm datasets. Research-grade nhưng có production recipes."
+    },
+    {
+      "title": "NVIDIA NeMo Speech Documentation",
+      "type": "documentation",
+      "url": "https://docs.nvidia.com/nemo-framework/user-guide/latest/nemotoolkit/asr/intro.html",
+      "level": "Intermediate to Advanced",
+      "description": "Production-grade speech models: Conformer-Transducer, Citrinet, FastConformer. Pre-trained models cho nhiều ngôn ngữ. Triton deployment guides. Enterprise-focused."
+    },
+    {
+      "title": "librosa Documentation",
+      "type": "documentation",
+      "url": "https://librosa.org/doc/latest/",
+      "level": "Beginner",
+      "description": "Audio analysis library: feature extraction (mel spectrogram, MFCC, chroma), visualization, time-frequency transforms. Essential cho audio EDA và feature engineering."
+    },
+    {
+      "title": "Coqui TTS Documentation",
+      "type": "documentation",
+      "url": "https://tts.readthedocs.io/",
+      "level": "Intermediate",
+      "description": "TTS framework: VITS, Tacotron 2, XTTS, HiFi-GAN vocoders. Training recipes cho custom voices. Multi-language support. Điểm khởi đầu tốt cho TTS development."
+    },
+    {
+      "title": "The SUPERB Benchmark (Speech processing Universal PERformance Benchmark)",
+      "type": "benchmark",
+      "url": "https://superbbenchmark.org/",
+      "level": "Intermediate to Advanced",
+      "description": "Benchmark đánh giá self-supervised speech models trên 10+ tasks: ASR, speaker ID, emotion, intent, etc. Hiểu landscape speech foundation models. Leaderboard cho model comparison."
+    },
+    {
+      "title": "DCASE Challenge (Detection and Classification of Acoustic Scenes and Events)",
+      "type": "competition",
+      "url": "https://dcase.community/",
+      "level": "Intermediate",
+      "description": "Community và challenge cho audio classification, sound event detection, anomaly detection. Datasets, baselines, và top solutions. Essential cho audio classification và anomaly detection applications."
+    },
+    {
+      "title": "PhoWhisper (VinAI) Repository",
+      "type": "documentation",
+      "url": "https://github.com/VinAIResearch/PhoWhisper",
+      "level": "Intermediate",
+      "description": "Fine-tuned Whisper cho tiếng Việt — baseline ASR Việt tốt nhất open-source. Nhiều model sizes. Điểm khởi đầu bắt buộc cho Vietnamese ASR projects."
+    }
+  ],
+  "risks": [
+    {
+      "id": "R1",
+      "name": "Vietnamese ASR WER 15-25% — không đủ cho nhiều production use cases",
+      "description": "WER tiếng Việt 15-20% trên clean speech, 25-35% trên noisy/accented speech — so với 5-8% tiếng Anh. 1 trong 5 từ sai. Cho verbatim legal transcription hoặc medical dictation, mức này không chấp nhận được. FPT.AI đạt WER 8-12% nhờ data moat 10,000+ giờ. Cải thiện WER cần domain-specific data mà thu thập tốn kém và chậm.",
+      "severity": "High",
+      "probability": "High",
+      "mitigation": "Target use cases tolerant of higher WER: keyword spotting, intent detection, call analytics summaries thay vì verbatim transcription. Fine-tune PhoWhisper trên domain-specific data. Data augmentation (speed perturbation, noise injection, SpecAugment)."
+    },
+    {
+      "id": "R2",
+      "name": "FPT.AI competitive response — giảm giá hoặc bundle, khiến cạnh tranh không kinh tế",
+      "description": "FPT.AI có thể giảm giá speech API hoặc bundle vào enterprise deals lớn hơn, khiến new entrant không thể cạnh tranh về giá. FPT.AI có cross-subsidy capability từ FPT Corporation. Switching costs cho enterprises đã dùng FPT.AI Speech API.",
+      "severity": "High",
+      "probability": "Medium",
+      "mitigation": "Differentiate trên vertical expertise và integration, KHÔNG giá. Xây dựng speech analytics layer mà FPT.AI không cung cấp. Lock-in qua domain-specific models và workflow integration."
+    },
+    {
+      "id": "R3",
+      "name": "Thiếu dữ liệu Vietnamese speech để cải thiện beyond PhoWhisper baseline",
+      "description": "VIVOS: 15 giờ. VLSP: hạn chế. PhoWhisper: data undisclosed. Xây dựng corpus tiếng Việt từ đầu: $200K-500K, 6-12 tháng, cần recording studios, speakers từ 3 vùng miền, linguist transcription. Thiếu data = không thể vượt qua PhoWhisper/FPT.AI.",
+      "severity": "High",
+      "probability": "High",
+      "mitigation": "Partner với verticals cụ thể (bệnh viện, nhà máy) cho domain data collection. Data augmentation: speed perturbation, noise injection, SpecAugment. Data flywheel: mỗi deployment thu thập thêm data (with consent)."
+    },
+    {
+      "id": "R4",
+      "name": "GPU costs cho real-time streaming ASR vượt revenue tại thị trường Việt Nam giá nhạy cảm",
+      "description": "Whisper large-v3 cần T4/A10G GPU (~$0.50-1.00/hr). Khách hàng Việt Nam kỳ vọng $0.01-0.02/phút (matching FPT.AI). Tại margins đó, GPU utilization phải > 70% để break even. Price sensitivity cao tại Việt Nam.",
+      "severity": "Medium",
+      "probability": "Medium",
+      "mitigation": "faster-whisper INT8 quantization giảm cost 3-4x. Silero VAD chỉ processing speech segments. Batch processing khi real-time không cần thiết. Whisper tiny/base cho low-cost use cases."
+    },
+    {
+      "id": "R5",
+      "name": "Voice cloning/deepfake abuse tạo backlash quy định",
+      "description": "Voice cloning cho phép: lừa đảo mạo danh qua điện thoại, tống tiền bằng giọng nói giả, tạo tin giả bằng audio. Regulatory attention toàn cầu đang tăng — EU AI Act, Việt Nam Nghị định về deepfake. Deployment voice cloning mà không có safeguards tạo legal và reputation risk.",
+      "severity": "Medium",
+      "probability": "Medium",
+      "mitigation": "Implement watermarking, voice authentication checks, usage monitoring. Synthetic speech detection. Consent verification cho voice cloning. Stay ahead of regulations. Transparent disclosure khi audio là synthetic."
+    },
+    {
+      "id": "R6",
+      "name": "Team thiếu speech/audio ML expertise — đây là subfield chuyên biệt",
+      "description": "Speech AI yêu cầu kiến thức signal processing (STFT, mel filterbanks, sampling theory), acoustic modeling, phonetics — không phải typical ML skills. Team ML tổng quát thiếu nền tảng này sẽ mắc lỗi cơ bản (wrong sample rate, bad windowing, misunderstood WER metrics). 'Just another ML project' mindset dẫn đến failure.",
+      "severity": "High",
+      "probability": "Medium",
+      "mitigation": "Thuê ít nhất 1 kỹ sư speech có kinh nghiệm. Không coi đây là 'just another ML project'. Signal processing fundamentals training cho team. Start với pre-trained models (Whisper, PhoWhisper) để giảm nhu cầu expertise ban đầu."
+    }
+  ],
+  "related_nodes": ["B04", "B08", "B09", "B02", "B07"],
+  "metadata": {
+    "status": "reviewed",
+    "version": "1.0",
+    "createdAt": "2026-03-31",
+    "updatedAt": "2026-03-31",
+    "researchedBy": ["R-alpha", "R-beta", "R-gamma", "R-MLE", "R-DE", "R-DLE", "R-AE", "R-BE", "R-FE", "R-DO", "R-SE", "R-QA", "R-SA", "R-D09", "R-D10", "R-sigma"],
+    "consolidatedBy": "R-sigma (Ms. Scribe)",
+    "normalizedAt": "2026-03-31",
+    "normalizedBy": "R-sigma",
+    "phase": "Phase 0",
+    "module": "B14",
+    "reviewedBy": null,
+    "approvedBy": null,
+    "notes": "Consolidated bởi R-sigma (Ms. Scribe). Overall feasibility 6.4/10 CONDITIONAL GO — mature globally nhưng cạnh tranh khó tại Việt Nam. JSON field names English, values Vietnamese (có dấu) per language rule. Technical terms giữ English. 16 agents nghiên cứu. Chiến lược: KHÔNG cạnh tranh trực tiếp FPT.AI trên general Vietnamese ASR. Thay vào đó xây dựng speech analytics platform sử dụng PhoWhisper/FPT.AI API làm backbone, thêm giá trị qua diarization, emotion detection, compliance monitoring, conversation intelligence. Call center analytics là P0 use case ($80-120M TAM). Data availability (5/10) là Achilles heel — VIVOS chỉ 15 giờ, FPT.AI có 10,000+ giờ proprietary. GPU economics phải tính trước khi build. Voice cloning cần safeguards. Cần ít nhất 1 speech ML expert — không phải 'just another ML project'."
+  }
+}

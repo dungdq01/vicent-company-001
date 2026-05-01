@@ -1,0 +1,161 @@
+{
+  "id": "B01-I06",
+  "name": "Dự Báo Khối Lượng Vận Chuyển",
+  "slug": "logistics-shipment-forecasting",
+  "category": "matrix",
+  "baselineId": "B01",
+  "industryId": "I06",
+  "icon": "TrendingUp",
+  "color": "#00C8A0",
+
+  "overview": {
+    "description": "Dự báo khối lượng vận chuyển là điểm giao giữa kỹ thuật Forecasting & Time Series (B01) và ngành Logistics & Supply Chain (I06). Đây không phải một bài toán đơn lẻ mà là một họ bài toán dự báo đa mục tiêu — bao gồm shipment count, weight, CBM, revenue và route-level demand — mỗi biến mục tiêu phục vụ một quyết định vận hành khác nhau, từ lên lịch tài xế và bố trí nhân sự hub đến lập kế hoạch đội xe và cam kết hợp đồng năng lực. Kiến trúc giải pháp đúng đắn phải phân chia rõ ba horizon lập kế hoạch: vận hành (1–7 ngày), chiến thuật (1–4 tuần), và chiến lược (1–3 tháng) với mô hình và kỹ thuật phù hợp từng tầng.",
+    "businessValue": "Cải thiện độ chính xác dự báo từ WMAPE 40% (baseline thủ công) xuống 20% (mô hình AI) mang lại lợi ích định lượng được trực tiếp: giảm 5–10% chuyến xe rỗng (tiết kiệm VND 1.65 tỷ/năm cho 3PL quy mô Smartlog), giảm chi phí overtime lên đến 25% trong giai đoạn đỉnh Tết, tránh tiền phạt vi phạm SLA (1–3% giá trị lô hàng với khách hàng công nghiệp), và cắt giảm phí premium nhà thầu phụ đặt muộn. Ngoài ra, dự báo chính xác cho phép Smartlog định giá spot rate linh hoạt, đàm phán hợp đồng năng lực tốt hơn, và thực hiện demand shaping (chiết khấu off-peak) để tối ưu hóa tỷ lệ sử dụng đội xe mà không tăng năng lực.",
+    "typicalClient": "Khách hàng điển hình của Smartlog phù hợp với ứng dụng này gồm: nhà phân phối FMCG vừa-lớn (Mondelez Vietnam, Unilever distribution) với 500–5,000 lô hàng/ngày và mùa vụ Tết rõ ràng; công ty 3PL nội địa quy mô trung bình với 30–100 xe và 10–50 khách hàng thường xuyên; nhà phân phối hàng công nghiệp B2B (phân bón, dầu khí, vật liệu xây dựng) với đơn hàng lumpy theo chu kỳ sản xuất. Điểm chung: từ 500 lô hàng/ngày trở lên để đảm bảo đủ mật độ dữ liệu huấn luyện, và ít nhất một chu kỳ Tết đầy đủ trong lịch sử dữ liệu."
+  },
+
+  "industryAdaptation": {
+    "domainFeatures": [
+      "Đặc trưng đếm ngược Tết Nguyên Đán (days_until_tet, days_since_tet) — đỉnh 3–4x baseline trong 7–10 ngày trước Tết, không thể xử lý bằng phân rã mùa vụ tiêu chuẩn, phải mô hình hóa như thành phần cộng tách biệt",
+      "Flag sự kiện double-day TikTok/Shopee/Lazada (10/10, 11/11, 12/12) — đỉnh 2–5x, tập trung trong 24–48 giờ, cần kết hợp với khối lượng trễ từ sự kiện cùng kỳ năm trước",
+      "Phân khúc ngành khách hàng (customer_industry_segment): FMCG / Công nghiệp B2B / Thương mại điện tử / Cold chain — đặc trưng có giá trị cải thiện WMAPE cao nhất (15–25%), quyết định hình dạng mẫu nhu cầu hoàn toàn",
+      "Tỷ lệ lấp đầy đội xe tuần trước (fleet_fill_rate_lag1w) — chỉ báo ràng buộc phía cung; nếu >95% thì nhu cầu thực tế có thể cao hơn quan sát được (logistics stock-out bias)",
+      "Chỉ số mật độ tuyến đường (route_density_index) — số điểm giao hàng hoạt động mỗi tuyến mỗi ngày; giảm đột ngột là chỉ báo sớm sụt giảm khối lượng",
+      "Tỷ lệ sử dụng khu vực staging kho (warehouse_staging_utilization) — leading indicator cho đỉnh khối lượng; staging đầy ngày thứ Hai báo hiệu giao hàng cao ngày thứ Ba",
+      "Tỷ lệ đặt trước nhà thầu phụ (subcontractor_booking_rate) — tỷ lệ năng lực xe nhà thầu đã đặt trước; cao báo hiệu đỉnh khối lượng đang đến",
+      "Lịch khuyến mãi khách hàng (promo_calendar_flag) — đặc trưng quan trọng nhất cho FMCG; Mondelez tăng 20–30% khối lượng vào thứ Ba đầu sau cuối tháng",
+      "Mùa bão Miền Trung (typhoon_flag_by_province) — gián đoạn tuyến Đà Nẵng-Huế-Quảng Nam; cần hệ số phục hồi 1.3–1.8x tuần sau gián đoạn",
+      "Chu kỳ thu hoạch nông nghiệp (crop_calendar_by_province) — cho khách hàng agri-logistics: lúa Đồng bằng sông Cửu Long (Tháng 12–1), cà phê Tây Nguyên (Tháng 10–3)"
+    ],
+    "dataSchema": {
+      "primaryKey": ["shipment_date", "origin_hub_id", "destination_province_id", "customer_id", "service_type"],
+      "target": "shipment_count (khuyến nghị bắt đầu), weight_kg và cbm (thứ cấp, thêm sau khi count model ổn định)",
+      "granularity": "Daily × Origin-Destination (cấp tỉnh) × Khách hàng",
+      "typicalVolume": "500–50,000 lô hàng/ngày cho 3PL mid-market; Smartlog est. ~50,000 lô/tháng tổng. Lưu ý: sử dụng destination_province_id, không dùng địa chỉ thô — chuẩn hóa địa chỉ Việt Nam quá không ổn định ở cấp phường/xã"
+    },
+    "businessRules": [
+      "Ràng buộc năng lực đội xe: Khi dự báo vượt năng lực đội xe (tổng weight hoặc CBM), pipeline phải xuất tín hiệu capacity gap — max(0, forecast_demand - available_fleet_capacity) — để kích hoạt đặt nhà thầu phụ hoặc demand shaping, không thay đổi bản thân dự báo",
+      "Ngưỡng SLA: Dự báo thiếu (underforecast) dẫn đến thiếu tài xế → trễ đón hàng → vi phạm SLA → tiền phạt 1–3% giá trị lô hàng cho khách hàng công nghiệp B2B; WMAPE > 30% kích hoạt override thủ công làm vô hiệu hóa hệ thống",
+      "Xử lý tắt hoạt động Tết: Khoảng trống dữ liệu 5–7 ngày Tết phải được xử lý tường minh (không điền bằng zero và không để mô hình tự suy luận); giai đoạn Tết cần huấn luyện với Huber loss để giảm ảnh hưởng của outlier nhập liệu kém chất lượng",
+      "Điều kiện tiên quyết dữ liệu lịch sử Tết: Bất kỳ mô hình nào không bao gồm ít nhất một chu kỳ Tết đầy đủ trong dữ liệu huấn luyện không được triển khai cho dự báo giai đoạn Tết — đây là điều kiện cứng, không phải tùy chọn",
+      "Định tuyến mô hình tuyến thưa: Nếu tuyến OD có >40% ngày zero trong 90 ngày vừa qua, sử dụng Croston/TSB thay vì LightGBM; không áp dụng LightGBM phổ quát cho toàn bộ mạng",
+      "Điều kiện tiên quyết chọn phân khúc khách hàng: Không xây dựng mô hình chung cho tất cả phân khúc khách hàng; phân khúc theo ít nhất bốn loại (FMCG, Công nghiệp B2B, Thương mại điện tử, Cold chain) hoặc dùng đặc trưng tương tác phân khúc mạnh",
+      "Tính đủ điều kiện demand shaping: Demand shaping (chiết khấu off-peak) chỉ áp dụng cho phân khúc thương mại điện tử và SME shipper; không áp dụng cho khách hàng FMCG/công nghiệp B2B có lịch sản xuất cố định"
+    ],
+    "kpis": {
+      "primary": "WMAPE (Weighted Mean Absolute Percentage Error) — ưu tiên vì MAPE không xác định trên tuyến zero-volume và bị méo bởi đỉnh bất thường trên tuyến khối lượng thấp",
+      "secondary": [
+        "Bias (sai số có hướng, ký hiệu) — dự báo thiếu liên tục nguy hiểm hơn dự báo thừa; theo dõi riêng biệt để phát hiện lệch hướng hệ thống",
+        "Coverage rate trên prediction interval — dự báo P90 phải bao hàm actual 90% thời gian; dùng reliability diagrams để xác minh hiệu chỉnh phân vị",
+        "Cold-start WMAPE cho route mới — theo dõi riêng accuracy trong 60 ngày đầu của tuyến/khách hàng mới; ngưỡng chấp nhận được cao hơn (< 40%) so với tuyến trưởng thành",
+        "Tỷ lệ bắt trúng sự kiện Tết/double-day — % sự kiện có dự báo trong ±20% so với thực tế; phát hiện lỗi mô hình mà WMAPE trung bình che khuất"
+      ],
+      "business": [
+        "Tỷ lệ xe tải chạy rỗng giảm — mục tiêu giảm 5–10% empty truck-days/tháng; tương đương VND 137–275 triệu/tháng cho đội xe 50 xe",
+        "OTD (On-Time Delivery) cải thiện — bố trí nhân sự chủ động từ dự báo 7 ngày giúp tăng OTD 3–8 điểm phần trăm",
+        "Chi phí overtime giảm — mục tiêu giảm 10–25% chi phí overtime, đặc biệt trong giai đoạn pre-Tết (chiếm 40–50% overtime năm)",
+        "Tỷ lệ vi phạm SLA giảm — mục tiêu giảm 30% vi phạm SLA có nguyên nhân từ sai lệch dự báo; giá trị VND cao nhất với khách hàng PTSC/Baconco"
+      ]
+    }
+  },
+
+  "algorithmRecommendation": {
+    "tier1_mvp": {
+      "primary": "LightGBM với quantile regression (đầu ra P10/P50/P90)",
+      "secondary": "Prophet (thành phần Tết — áp dụng như additive correction post-processing, không dùng standalone)",
+      "intermittent": "Croston/TSB qua Nixtla statsforecast (cho tuyến >40% ngày zero)",
+      "rationale": "LightGBM hoạt động tốt với chất lượng dữ liệu 4/10: kiến trúc tree-based chịu đựng được đặc trưng thiếu, diễn giải được qua SHAP values (quan trọng cho việc xây dựng niềm tin trưởng vận hành), chạy trên laptop không cần GPU. Yêu cầu tối thiểu 52 tuần lịch sử sạch và ít nhất một chu kỳ Tết đầy đủ trong dữ liệu huấn luyện. Đầu ra dạng CSV/Google Sheets — không API serving, không dashboard ở tier này."
+    },
+    "tier2_production": {
+      "primary": "LightGBM + DeepAR ensemble — LightGBM cho tuyến >20 lô/tuần, DeepAR (SageMaker hosted) cho tuyến trung bình 5–20 lô/tuần",
+      "coldStart": "Chronos-2 (foundation model, zero-shot) — cho khách hàng mới hoặc tuyến mới < 60 quan sát; bàn giao sang Tier 1/2 model tại ngưỡng 60 quan sát",
+      "reconciliation": "MinT (bottom-up cho cấu trúc phân cấp tỉnh đơn giản)",
+      "rationale": "Yêu cầu ≥18 tháng dữ liệu và pipeline dữ liệu sạch. Chi phí GPU DeepAR được biện minh khi có ≥3 khách hàng. Apache Airflow DAG trigger tuần tự động. Feature store dùng SQL views trên PostgreSQL — chưa dùng Feast (defer sang Tier 3 theo B01-learnings.md do rủi ro overrun 2–4x timeline). Đầu ra lên dashboard Metabase/Superset + cảnh báo email khi dự báo vượt 20% mức trung bình."
+    },
+    "tier3_platform": {
+      "primary": "Chronos-2 fine-tuned trên dữ liệu logistics tích lũy của Smartlog + mô hình nền tùy chỉnh theo chiều dọc logistics Việt Nam",
+      "reconciliation": "FlowRec (cho mạng hub-transit phức tạp) — cải thiện 3–40x so với MinT trên dữ liệu logistics dạng đồ thị có hướng; yêu cầu đồ thị mạng có phiên bản ổn định với cạnh timestamp-effective",
+      "rationale": "Quy mô SaaS đa người thuê: versioning mô hình theo khách hàng, pipeline đặc trưng riêng biệt, hạ tầng serving dùng chung. Tái huấn luyện tự động hàng tháng với walk-forward cross-validation gate. Tích hợp Evidently AI để phát hiện drift (dùng chung hạ tầng với module B07 Anomaly Detection). Feast feature store được đưa vào ở tier này sau khi spike proof-of-concept xác nhận."
+    }
+  },
+
+  "referenceSolutions": [
+    {
+      "company": "Mondelez Vietnam (Smartlog client)",
+      "approach": "LightGBM + lịch khuyến mãi + Holt-Winters Tết multiplier, dự báo nhu cầu phân phối FMCG theo SKU cho 200K điểm bán lẻ, phân kênh MT/GT",
+      "results": "Dự kiến giảm WMAPE từ 35–40% (manual forecast) xuống 15–25% (LightGBM + Tet component) — phù hợp benchmark FMCG Việt Nam; tiết kiệm tương đương giảm overtime pre-Tết 15–25%"
+    },
+    {
+      "company": "Amazon Logistics (DeepAR origin)",
+      "approach": "Huấn luyện một mô hình autoregressive RNN duy nhất trên hàng trăm chuỗi thời gian liên quan đồng thời, xử lý cold-start bằng pooling qua các chuỗi liên quan; phát hành thương mại qua AWS SageMaker; mở rộng thành Chronos-2 (2025) với khả năng dự báo universal và zero-shot",
+      "results": "State-of-the-art cho nền tảng logistics multi-route lượng cao; giải pháp chuẩn cho bài toán joint forecasting đa tuyến — trực tiếp áp dụng cho bài toán đa khách hàng đa tuyến của Smartlog"
+    },
+    {
+      "company": "Maersk Tankers",
+      "approach": "Xây dựng 20 mô hình ML riêng biệt theo 20 phân khúc thị trường để dự báo giá cước và tối ưu hóa vị trí đội tàu; tập dữ liệu lịch sử 5 năm, quy trình validation theo sprint; không dùng một mô hình chung cho toàn bộ mạng",
+      "results": "Xác nhận kiến trúc mô hình phân khúc (segment-specific models) — không có silver bullet; độ chính xác dự báo cước đủ để pre-commit vị trí đội tàu, cải thiện trực tiếp lợi suất doanh thu; bài học trực tiếp cho Smartlog: mô hình theo phân khúc khách hàng, không mô hình chung"
+    },
+    {
+      "company": "GHN (Giao Hàng Nhanh)",
+      "approach": "Dự báo khối lượng inbound cho lên lịch nhân sự hub trong giai đoạn đỉnh (TikTok flash sale, 11/11, pre-Tết) ở độ phân giải 6–12 giờ; lợi thế dữ liệu platform-native hàng triệu lô hàng/ngày",
+      "results": "Use case vận hành có giá trị cao nhất của GHN: lên lịch lao động hub chủ động thay vì phản ứng; Smartlog không thể nhân rộng lợi thế khối lượng dữ liệu của GHN nhưng có thể sao chép use case cho khách hàng lớn có lịch giao hàng xác định (Mondelez, Baconco)"
+    }
+  ],
+
+  "effortEstimation": {
+    "mvp": "6–10 tuần | 2–3 người (0.5 FTE ML engineer + 0.25 FTE data engineer + 0.25 FTE logistics analyst nội bộ Smartlog) | LightGBM + Prophet (Tết) + Croston (tuyến thưa) | 1 khách hàng (Mondelez Vietnam), 1 danh mục hàng, horizon 7 ngày, đầu ra Google Sheets",
+    "production": "3–6 tháng từ MVP | 3–5 người (2 ML engineer + 1 data engineer + 1 logistics analyst + 0.5 PM) | Pipeline Airflow tự động + DeepAR + dashboard Metabase | 3+ khách hàng, đa tuyến, cảnh báo email tự động",
+    "enterprise": "12+ tháng từ Production | Full ML team (5–8 người) | Multi-tenant SaaS + Chronos-2 fine-tuned + FlowRec reconciliation + Feast feature store | Foundation model tùy chỉnh logistics Việt Nam, tái huấn luyện tự động, phát hiện drift"
+  },
+
+  "roiEstimate": {
+    "scenario": "3PL quy mô Smartlog (~50,000 lô/tháng, 30–80 xe), cải thiện WMAPE từ 40% → 20% (Tier 1 MVP → Tier 2 Production)",
+    "annualBenefit": "~VND 3.08 tỷ/năm (VND 1.65B giảm xe rỗng + VND 240M giảm overtime + VND 900M tránh phạt SLA + VND 288M tránh phí nhà thầu phụ premium)",
+    "investment": "VND 700M - 1 tỷ (nhân lực 2–3 FTE × 9 tháng + hạ tầng AWS/GCP Year 1)",
+    "paybackMonths": "6–9 tháng từ khi Tier 2 đi vào sản xuất",
+    "confidence": "MEDIUM — cỡ độ lớn chính xác; con số chính xác cần xác nhận với dữ liệu vận hành thực tế Smartlog (chi phí xe-ngày, chi phí overtime, điều khoản phạt SLA theo hợp đồng từng khách hàng)"
+  },
+
+  "pilotRecommendation": {
+    "client": "Mondelez Vietnam (FMCG, Smartlog hiện đang phục vụ) — lý do: mẫu nhu cầu dễ xử lý nhất bằng ML, lịch khuyến mãi có thể chia sẻ, đỉnh Tết rõ ràng và có thể đo lường, tạo case study thuyết phục cho FMCG khác",
+    "scope": "1 danh mục hàng quà Tết (bánh quy/chocolate gift pack), tuyến HCMC Distribution Center → Nam Bộ GT (general trade) channels, dự báo 7 ngày rolling, cập nhật hàng tuần, đầu ra Google Sheets",
+    "duration": "8 tuần",
+    "successCriteria": "WMAPE < 30% trên horizon 7 ngày cho 5 tuyến có khối lượng cao nhất (cải thiện so với baseline naive 35–50% và baseline dispatcher thủ công 25–40%)",
+    "pricing": "VND 15–25 triệu/tháng flat fee (pilot phase 3–6 tháng đầu); chuyển sang per-lane pricing VND 500K–2M/tuyến OD/tháng khi pipeline ổn định và khách hàng xác nhận giá trị"
+  },
+
+  "relatedNodes": [
+    {
+      "nodeId": "B01",
+      "relationship": "baseline",
+      "description": "Forecasting & Time Series — baseline mẹ; cung cấp thuật toán cốt lõi (LightGBM, Prophet, DeepAR, Croston, Chronos-2, MinT reconciliation) và kiến trúc 3 tầng"
+    },
+    {
+      "nodeId": "I06",
+      "relationship": "industry",
+      "description": "Logistics & Supply Chain — ngành mẹ; cung cấp bối cảnh domain (Tet seasonality, TikTok double-days, COD dynamics, địa chỉ Việt Nam), điểm sẵn sàng dữ liệu 4/10, và danh sách use case ưu tiên"
+    },
+    {
+      "nodeId": "B06-I06",
+      "relationship": "downstream",
+      "description": "Route Optimization sử dụng forecast output làm input — dự báo shipment count 1–7 ngày phía trước là đầu vào cho bài toán VRPTW (Vehicle Routing Problem with Time Windows); forecast phân phối xác suất (P10/P50/P90) nâng cao chất lượng quyết định tối ưu hóa dưới bất định"
+    },
+    {
+      "nodeId": "B07-I06",
+      "relationship": "monitoring",
+      "description": "Anomaly Detection giám sát forecast accuracy và SLA breach — phát hiện drift mô hình qua residual monitoring, phát hiện sự kiện bất thường (đỉnh không được dự báo, gián đoạn tuyến đột ngột); dùng chung hạ tầng Evidently AI với B01-I06 Tier 3"
+    }
+  ],
+
+  "metadata": {
+    "createdAt": "2026-04-03T00:00:00Z",
+    "updatedAt": "2026-04-03T00:00:00Z",
+    "version": "1.0",
+    "status": "draft",
+    "researchAgents": ["R-α", "R-γ", "R-σ"],
+    "prerequisites": {
+      "B01": "GO",
+      "I06": "GO"
+    }
+  }
+}

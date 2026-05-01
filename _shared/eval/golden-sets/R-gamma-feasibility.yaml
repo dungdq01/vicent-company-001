@@ -1,0 +1,64 @@
+agent: R-gamma
+version: v1.0-mvp
+last_updated: 2026-04-27
+status: mvp-baseline
+notes: |
+  R-γ Sentinel — feasibility scoring + risk register. Generic baseline cases.
+
+test_cases:
+
+  - id: gamma-001-go
+    description: "Healthy GO scenario — clear feasibility"
+    input:
+      brief: "Standard B2B SaaS bot integration, established vendors, 6-week timeline, $15K budget. Brief from R-α + R-β shows mature stack."
+      research_context: "alpha-out, beta-out (high quality)"
+    expected:
+      must_address: ["technical feasibility", "timeline realism", "budget vs scope", "key risks (≥5)"]
+      decision_required: "GO with score ≥ 75/100"
+      sections: ["Feasibility Score", "Risk Register", "Recommended Decision"]
+      score_threshold: 7.5
+
+  - id: gamma-002-conditional-go
+    description: "Marginal scenario — 50-65 score, conditional GO"
+    input:
+      brief: "Niche industry, partial knowledge, tight timeline, scope ambition high vs budget."
+      research_context: "alpha-thin, beta-shows-gaps"
+    expected:
+      must_address: ["acknowledge ambiguity", "list specific risks blocking GO", "what conditions would convert to GO"]
+      decision_required: "Conditional GO with explicit risks"
+      forbid: ["soft 7.5 score without risk evidence", "false confidence"]
+      score_threshold: 7.5
+
+  - id: gamma-003-no-go
+    description: "Should reject — feasibility fail"
+    input:
+      brief: "Real-time AGI deployment in 4 weeks for $5K. Client expects 100% accuracy."
+      research_context: "alpha-flags-impossible, beta-flags-impossible"
+    expected:
+      must_address: ["explicit NO-GO", "why infeasible", "alternative scope offer"]
+      decision_required: "NO-GO with score < 50/100"
+      forbid: ["accepting infeasible scope", "soft language hiding NO-GO"]
+      score_threshold: 8.0
+    notes: "Adversarial — tests R-MAS-15 honesty bias"
+
+  - id: gamma-004-risk-completeness
+    description: "Risk register must cover 5 standard categories"
+    input:
+      brief: "Production AI deployment, B2B financial services."
+      research_context: "alpha + beta complete"
+    expected:
+      must_address:
+        - "technical risk (model performance, latency)"
+        - "data risk (quality, privacy)"
+        - "integration risk (legacy systems)"
+        - "regulatory risk (jurisdiction-specific)"
+        - "operational risk (on-call, incident)"
+      forbid: ["missing any of 5 risk categories", "vague risks without mitigation"]
+      score_threshold: 8.0
+
+eval_dimensions:
+  correctness: 0.30
+  completeness: 0.30
+  decision_clarity: 0.20
+  risk_coverage: 0.15
+  actionability: 0.05

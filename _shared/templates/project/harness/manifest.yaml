@@ -1,0 +1,106 @@
+# Harness Manifest — Project {PROJECT_ID}
+# Spec: _shared/rules/80-harness-rules.md (R-HRN-02, R-HRN-03, R-HRN-04)
+# Owner: R-AE (filled at P3 Architecture)
+# Profile must match _meta.json.harness_profile
+
+version: 1.0
+project_id: "{PROJECT_ID}"
+profile: L1                    # L0 Sandbox | L1 Standard | L2 Critical (R-HRN-01)
+last_updated: "{YYYY-MM-DD}"
+
+# --- Control loop (R-HRN-02) -----------------------------------------------
+control_loop:
+  pattern: "observe-plan-act-evaluate-reflect"
+  checkpoint_every_n_turns: 10
+  max_turns_per_run: 200
+  drift_check_every_n_turns: 20      # R-HRN-07
+  eval_recheck_every_n_turns: 50     # R-HRN-07
+  allowed_transitions:                # state machine (extend per phase)
+    - { from: "init",       to: "planning" }
+    - { from: "planning",   to: "executing" }
+    - { from: "executing",  to: "evaluating" }
+    - { from: "evaluating", to: "reflecting" }
+    - { from: "reflecting", to: "planning" }     # loop
+    - { from: "reflecting", to: "done" }
+    - { from: "*",          to: "escalated" }    # escape hatch
+    - { from: "*",          to: "drift_detected" }
+
+# --- Tool budget (R-HRN-03) ------------------------------------------------
+tools:
+  whitelist:                         # ≤ 20 tools (R-HRN-03)
+    - file_read
+    - file_write
+    - web_search
+    # add per agent skill card
+  max_calls_per_turn: 5
+  schema_validation: pydantic        # mandatory
+  envelope_required: true            # R-HRN-08 structured error envelope
+
+# --- Memory tiers (R-HRN-04) -----------------------------------------------
+memory:
+  scratchpad:
+    scope: turn
+  working:
+    scope: run
+    compact_at_pct: 70               # mandatory threshold
+    compact_model: "claude-haiku-4-5" # eval-judge family different from generator (R-QAL-13)
+  long_term:
+    scope: cross_session
+    storage: "projects/{PROJECT_ID}/harness/memory/"
+    format: "append-only-md"
+    transferable_only: true          # R-QAL-10
+
+# --- KV-cache target (R-HRN-10) --------------------------------------------
+cache:
+  hit_rate_target: 0.70
+  yellow_threshold: 0.50
+  stable_prefix_includes:
+    - rules_preamble
+    - tool_schemas
+    - skill_card_system_prompt
+
+# --- Cost cap + progressive alert (R-MAS-07 + R-QAL-04 + Tier A #8) --------
+cost:
+  per_run_usd_cap: 2.50
+  per_turn_usd_cap: 0.30
+  hard_block_at_pct: 100             # no soft warnings — block at 100%
+
+  # Progressive alerts MID-RUN (NEW v1.1):
+  alert_thresholds:
+    info_at_pct: 50                  # log info, no notify
+    warn_at_pct: 75                  # notify driver Slack/Discord
+    halt_at_pct: 90                  # halt next dispatch, ask driver "continue?"
+    block_at_pct: 100                # hard block (R-MAS-07)
+
+  # Daily/monthly tracker
+  daily_total_cap_usd: 50            # per project per day
+  monthly_total_cap_usd: 500         # per project per month
+  daily_alert_at_pct: 75
+  monthly_alert_at_pct: 75
+
+# --- Sandbox (R-HRN-09) — required for L2, optional L0/L1 ------------------
+sandbox:
+  enabled: false                     # set true for L2 Critical
+  network_egress: deny               # whitelist domains in guardrails.yaml
+  filesystem_mount: "ro"             # rw only for designated workspace
+  timeout_per_call_seconds: 300
+
+# --- Observability (R-HRN-12) ----------------------------------------------
+observability:
+  trace_sink: "projects/{PROJECT_ID}/harness/traces/"
+  helicone_enabled: true
+  required_fields:
+    - turn_id
+    - run_id
+    - agent_id
+    - input_tokens
+    - output_tokens
+    - cache_read_tokens
+    - cost_usd
+    - latency_ms
+    - state_before
+    - state_after
+    - tools_called
+
+# --- Local rules (R-HRN-06 permanent-fix loop) -----------------------------
+local_rules: []                      # appended automatically when permanent-fixes.md adds rule

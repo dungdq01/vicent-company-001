@@ -1,0 +1,100 @@
+{
+  "id": "I16",
+  "name": "Pharmaceutical & Life Sciences",
+  "slug": "pharmaceutical-life-sciences",
+  "category": "industry",
+  "icon": "FlaskConical",
+  "color": "#FF8F00",
+  "depthLevel": 1,
+  "overview": {
+    "description": "Vietnam's pharma sector is growing with 200+ manufacturers and a $6B+ drug market. AI use cases span drug discovery support, clinical trial optimization, pharmacovigilance, and supply chain integrity.",
+    "marketSizeVietnam": "~$6B pharmaceutical market; 60% of drugs imported; local generics growing",
+    "marketSizeSEA": "~$40B pharma market; clinical trials shifting from China to SEA post-COVID",
+    "aiMaturity": "L2",
+    "aiAppetite": "medium"
+  },
+  "domainKnowledge": {
+    "keyEntities": [
+      "Drugs",
+      "Clinical trials",
+      "Patients",
+      "Compounds",
+      "Adverse events",
+      "Regulatory filings"
+    ],
+    "keyProcesses": [
+      "Drug discovery",
+      "Clinical trials",
+      "Regulatory submission",
+      "Manufacturing",
+      "Pharmacovigilance"
+    ],
+    "dataTypes": [
+      "Molecular data",
+      "Clinical trial data",
+      "EHR data",
+      "Adverse event reports",
+      "Lab results"
+    ],
+    "typicalDataVolume": "Low to medium — structured clinical data; molecular data growing with local R&D",
+    "dataQuality": "High for regulated clinical data; variable for adverse event monitoring"
+  },
+  "painPoints": [
+    {
+      "problem": "Drug discovery is slow and expensive; AI can accelerate compound screening",
+      "severity": 9,
+      "aiSolvable": true,
+      "mapsToBaseline": [
+        "B15",
+        "B09"
+      ]
+    },
+    {
+      "problem": "Clinical trial patient matching and enrollment is inefficient",
+      "severity": 7,
+      "aiSolvable": true,
+      "mapsToBaseline": [
+        "B13",
+        "B12"
+      ]
+    },
+    {
+      "problem": "Adverse event signal detection from pharmacovigilance data is manual",
+      "severity": 8,
+      "aiSolvable": true,
+      "mapsToBaseline": [
+        "B07",
+        "B04"
+      ]
+    }
+  ],
+  "regulations": [],
+  "priorityBaselines": {
+    "high": [
+      "B15",
+      "B07"
+    ],
+    "medium": [
+      "B09",
+      "B13"
+    ],
+    "low": [
+      "B02",
+      "B12"
+    ]
+  },
+  "competitiveLandscape": [],
+  "relatedNodes": [
+    {
+      "nodeId": "I03",
+      "relationship": "adjacent",
+      "description": "Pharma and healthcare share clinical data and patient outcome modeling."
+    }
+  ],
+  "metadata": {
+    "createdAt": "2026-04-03",
+    "updatedAt": "2026-04-03",
+    "version": "0.1",
+    "status": "skeleton"
+  }
+}

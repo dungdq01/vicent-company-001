@@ -1,0 +1,496 @@
+# Round 2 — Fixes & Re-Run Protocol Supplement
+
+**Version:** 1.0  
+**Date:** 2026-04-01  
+**Applies to:** `docs/round-2-research-plan.md` + `docs/SOP-AGENT-PROCESS.md §5.5 Workflow D`  
+**Status:** Apply immediately before starting Round 2
+
+> File này bổ sung 7 fixes cho round-2-research-plan.md và mở rộng Workflow D trigger conditions.  
+> Sau khi apply, merge nội dung vào files gốc rồi archive file này.
+
+---
+
+## PART A — 7 FIXES CHO round-2-research-plan.md
+
+### Fix 1: 🔴 Module Names — Sai tên 3 modules
+
+**Location:** Section "No Re-Run Needed"
+
+```
+SAI (hiện tại):                       ĐÚNG (per CONVENTIONS.md §5):
+─────────────────────────────────────────────────────────────────
+B08 Time Series              →        B08 Conversational AI & Chatbots
+B12 Federated Learning       →        B12 Search & RAG
+B13 Edge AI                  →        B13 Tabular ML & Predictive Analytics
+```
+
+**Action:** Replace tên sai bằng canonical names. Cross-check tất cả module names trong file với CONVENTIONS.md §5 registry.
+
+---
+
+### Fix 2: 🔴 Thêm Step 0 — Validate "No Re-Run" modules trước khi bắt đầu
+
+**Location:** Thêm trước "EXECUTION ORDER" section
+
+**Lý do:** Round 1 γ scoring formula không consistent. Modules ghi "✅ GO, score ≥ 7.0" có thể thực tế < 7.0 sau recalculation. Cần verify trước khi assume chúng pass.
+
+```markdown
+## STEP 0 — SCORE VALIDATION (chạy TRƯỚC mọi Tier)
+
+⚠️ Round 1 scores có thể inaccurate — γ scoring formula không consistent.
+Trước khi bắt đầu bất kỳ Tier nào, γ phải quick-validate ALL 6 "No Re-Run" modules.
+
+PROCESS:
+  1. γ đọc feasibility-report.md của từng module (6 modules)
+  2. Extract raw dimension scores (Tech, Market, Data, Risk)
+  3. Recalculate overall với CORRECT formula:
+     Overall = Tech × 0.30 + Market × 0.30 + Data × 0.20 + (10 - Risk) × 0.20
+  4. Apply verdict thresholds:
+     GO: ≥ 7.0 AND no dimension < 5
+     CONDITIONAL GO: 5.0–6.9
+     NO-GO: < 5.0
+
+OUTCOMES:
+  - Score vẫn ≥ 7.0 → confirm GO, không re-run
+  - Score drops to 6.8–6.9 → promote to Tier C (re-score)
+  - Score drops to 6.0–6.7 → promote to Tier B (targeted re-research)
+  - Score drops < 6.0 → promote to Tier A (full re-research)
+
+Update round-2-research-plan.md MODULE ASSIGNMENTS nếu có promotions.
+
+DURATION: ~30 min total (5 min per module, score validation only)
+AGENT: γ only. σ NOT needed at this step.
+```
+
+---
+
+### Fix 3: 🟠 Thêm Scoring Calibration Reference
+
+**Location:** Thêm sau MODULE ASSIGNMENTS section
+
+```markdown
+## SCORING CALIBRATION
+
+γ re-scoring trong Round 2 PHẢI dùng calibration anchors để consistent across modules.
+
+REFERENCES:
+  - Weights + thresholds: R-γ skill card §Scoring Formula
+  - Dimension anchors: xem bảng dưới đây
+
+CALIBRATION ANCHORS (γ reference khi scoring):
+
+Technical Feasibility (1-10):
+  10: Mature, proven at scale, multiple production deployments
+      Ví dụ: LightGBM for tabular prediction, YOLO for object detection
+  7:  Production-ready nhưng cần expertise, vài gotchas
+      Ví dụ: TFT for multi-horizon forecasting, RAG pipeline
+  4:  Experimental, ít production cases, chưa stabilize
+      Ví dụ: Physics-Informed Neural Networks, autonomous agents
+  1:  Purely theoretical, chưa có implementation viable
+
+Market Demand (1-10):
+  10: Every enterprise needs this, active buying cycle
+      Ví dụ: RAG/chatbot, demand forecasting, fraud detection
+  7:  Strong demand trong specific verticals, growing market
+      Ví dụ: Computer Vision cho manufacturing, OCR cho logistics
+  4:  Niche demand, early adopters only, market chưa educated
+      Ví dụ: Knowledge Graph standalone, digital twin for SMEs
+  1:  No clear buyer, solution looking for problem
+
+Data Availability (1-10):
+  10: Client luôn có data sẵn, quality tốt, volume đủ
+      Ví dụ: Transaction data (retail), network logs (telecom)
+  7:  Data có nhưng cần cleaning/integration, medium volume
+      Ví dụ: Medical records (structured nhưng siloed)
+  4:  Data sparse, expensive to collect, privacy constraints
+      Ví dụ: Agricultural sensor data, rare disease datasets
+  1:  Hầu như không có data, phải build from scratch
+
+Implementation Risk (1-10, 10 = RISKIEST):
+  10: Extremely risky — novel tech, no precedent, regulatory minefield
+  7:  Significant risk — complex integration, data quality unknown
+  4:  Moderate risk — proven approach, manageable complexity
+  1:  Very low risk — well-established, plug-and-play solutions
+
+Note: Risk is INVERTED in formula: Risk_inv = 10 - Risk_score.
+High risk (10) → Risk_inv = 0 → drags overall DOWN.
+Low risk (1) → Risk_inv = 9 → boosts overall UP.
+```
+
+---
+
+### Fix 4: 🟠 Thêm Gap Lists cho Tier B Modules
+
+**Location:** Expand Tier B entries
+
+```markdown
+### B14 Speech & Audio — Detailed Gap List
+
+α dispatch với EXPLICIT gaps:
+  □ SOTA section: Update với Whisper v4, SeamlessM4T, MMS (Meta), 
+    XTTS v2 developments (2024-2026)
+  □ Sources: Current 6 sources → need ≥10. Add recent conference papers 
+    (INTERSPEECH 2025, ICASSP 2025)
+  □ Vietnam context: Add Vietnamese speech resources — VLSP datasets, 
+    Vivos corpus, FPT.AI speech API, Zalo AI challenge results
+  □ Concepts: Add "Speaker Diarization" (hiện thiếu) — who spoke when
+  □ Concepts: Add "Voice Activity Detection (VAD)" — foundational but missing
+  □ Algorithms: Add Whisper v4 fine-tuning approach comparison
+  □ Cross-domain: Strengthen connection B14→B08 
+    (Speech as input layer for Conversational AI)
+
+### B05 Recommendation Systems — Detailed Gap List
+
+α dispatch với EXPLICIT gaps:
+  □ Competitive landscape: γ section quá thin — cần thêm ≥2 competitors 
+    với pricing + strengths/weaknesses
+  □ SOTA: Add LLM-based recommendation (LLM as ranker, prompt-based 
+    personalization) — trend mới 2024-2026
+  □ Algorithms: Add "LLM-augmented recommendation" as emerging category
+  □ Use cases: Strengthen non-retail use cases (healthcare treatment rec, 
+    education course rec) — hiện quá focus retail
+  □ Mini examples: Example 2 quá generic — need specific production scenario
+```
+
+---
+
+### Fix 5: 🟠 Adjust Time Estimates
+
+**Location:** Replace EXECUTION ORDER duration estimates
+
+```markdown
+## EXECUTION ORDER (revised estimates)
+
+Phase 1 — Quick wins (Tier C):
+  Step 0: γ validate 6 "No Re-Run" modules      → ~30 min
+  B02 weight bug recalc (γ only)                  → ~20 min
+  B01, B03, B04 re-score (γ + σ each)            → ~30 min each = ~1.5h
+  Phase 1 total: ~2h
+
+Phase 2 — Targeted (Tier B):
+  B14 Speech & Audio (α gaps + γ + σ)            → ~3h (α web search heavy)
+  B05 Recommendation (α gaps + γ + σ)            → ~3h
+  Phase 2 total: ~6h
+
+Phase 3 — Full re-research (Tier A):
+  B15 Simulation (full α→β→γ→L2→σ)              → ~6-8h (2-3 sessions)
+  B11 Knowledge Graph (full pipeline)             → ~6-8h (2-3 sessions)
+  B10 Agentic AI (full pipeline)                  → ~6-8h (2-3 sessions)
+  Phase 3 total: ~18-24h
+
+Phase 4 — Cross-module consistency (after all):  → ~2h
+  σ reads ALL 15 final-reports + JSONs
+  Check: terminology, scoring calibration, edges, boundary rules
+  Output: consistency-report.md + updated graph.json
+
+GRAND TOTAL: ~28-34h (~10-12 sessions)
+```
+
+---
+
+### Fix 6: 🟡 Thêm Phase 4 — Cross-Module Consistency Check
+
+**Location:** Thêm sau Phase 3 trong EXECUTION ORDER
+
+```markdown
+## PHASE 4 — CROSS-MODULE CONSISTENCY (after all re-runs complete)
+
+TRIGGER: Tất cả 9 re-run modules đã pass MODULE-TEST-PROTOCOL.
+
+AGENT: σ (primary) + Manager (review)
+
+σ READS: ALL 15 final-reports + ALL 15 JSONs (cả re-run và untouched)
+
+CHECK:
+  □ Terminology consistent across modules (cùng tool = cùng description)
+  □ Scoring calibrated (similar capabilities → similar score ranges)
+  □ Related nodes bidirectional (B01→B07 exists → B07→B01 cũng phải có)
+  □ Boundary rules present trong Cross-Domain Connections
+    (B01 vs B13, B04 vs B09, B07 vs B13, B12 vs B14...)
+  □ No contradictory claims between modules
+    (B01 nói "LightGBM best for tabular" vs B13 nói "XGBoost best")
+  □ Color palette consistent (CONVENTIONS.md §7)
+  □ ID format consistent (B01 not B1, I06 not I6)
+  □ graph.json has no orphan nodes, no missing edges
+
+OUTPUT:
+  docs/reports/round-2-consistency-report.md
+  data/graph.json (final, verified)
+
+PASS: Tất cả checks pass → Round 2 COMPLETE
+FAIL: List specific issues → fix individually → re-check
+```
+
+---
+
+### Fix 7: 🟡 Thêm Rollback Plan
+
+**Location:** Thêm section cuối file
+
+```markdown
+## ROLLBACK PLAN
+
+Nếu Round 2 re-run làm module WORSE (agent introduce hallucination,
+score DROP so với Round 1, content quality giảm):
+
+DETECTION:
+  - MODULE-TEST-PROTOCOL score post-Round-2 < score post-Round-1
+  - Manager review thấy content quality giảm
+  - σ flags regression trong consolidation
+
+RESPONSE:
+  1. STOP re-run cho module đó
+  2. Git revert affected files to Round 1 commit:
+     git checkout HEAD~N -- docs/reports/{MODULE_ID}/
+     git checkout HEAD~N -- data/baselines/{MODULE_ID}.json
+  3. Log reason trong Progress Tracker:
+     "B11: Reverted to R1 — R2 α output introduced hallucinated papers"
+  4. Options:
+     a) Accept Round 1 output as-is (good enough)
+     b) Manager manual fix specific issues
+     c) Defer to Round 3 with different approach/prompt
+  5. KHÔNG attempt Round 2 lần 2 cho cùng module (max 2 attempts rule)
+```
+
+---
+
+## PART B — WORKFLOW D TRIGGER EXPANSION
+
+### Thay thế D.0 trong SOP-AGENT-PROCESS.md §5.5
+
+```markdown
+### D.0 Trigger Conditions (EXPANDED)
+
+Workflow D áp dụng khi Manager quyết định re-run BẤT KỲ module nào,
+vì BẤT KỲ lý do nào. Không yêu cầu score < 7.0 hay test failure.
+
+COMMON TRIGGERS (không giới hạn):
+
+  a) QUALITY FIX — Score < 7.0, CRITICAL failures, content gaps, formula bugs
+     Scope: Tier A / B / C tùy severity
+     
+  b) QUALITY UPGRADE — Module đã GO nhưng muốn improve
+     Ví dụ: B06 score 8.4 nhưng muốn thêm SOTA mới, deep hơn
+     Scope: Thường Tier B hoặc Tier D (single-agent)
+     
+  c) CONTENT REFRESH — SOTA outdated, industry context thay đổi
+     Ví dụ: 6 tháng sau, cần update B09 Generative AI với latest models
+     Scope: α re-research → σ re-consolidate (Tier B)
+     
+  d) TARGETED UPDATE — Chỉ muốn 1 agent cụ thể re-research
+     Ví dụ: Muốn R-MLE re-research B01 từ góc ML Engineer mới
+     Scope: Tier D (single-agent)
+     
+  e) SPOT CHECK — Verify quality bất kỳ lúc nào
+     Ví dụ: Trước khi demo cho client, muốn kiểm tra B01 quality
+     Scope: Chạy MODULE-TEST-PROTOCOL only, trigger Tier nếu fail
+     
+  f) CROSS-MODULE UPDATE — Insight từ module khác ảnh hưởng module này
+     Ví dụ: B13 research phát hiện technique applicable cho B01
+     Scope: α update cross-domain section → σ update (Tier D)
+
+KHÔNG dùng Workflow D khi:
+  - Module chưa có Round 1 output → dùng Workflow A
+  - Chỉ cần fix typo/formatting → Manager direct edit, không cần workflow
+
+MANAGER CÓ TOÀN QUYỀN:
+  - Trigger Workflow D cho bất kỳ module nào, bất kỳ lúc nào
+  - Chọn bất kỳ scope nào (Tier A / B / C / D)
+  - Chọn bất kỳ agent nào để re-run
+  - Không cần justify bằng score hay test failure
+```
+
+---
+
+### Thêm Tier D vào D.4 trong SOP
+
+```markdown
+### D.4 — TIER D (thêm vào cuối D.4 existing tiers)
+
+TIER D — Single-Agent Re-Run (Manager-initiated, bất kỳ lý do):
+  Primary trigger: Manager muốn 1 hoặc vài agents cụ thể re-research
+  Score requirement: KHÔNG CÓ — áp dụng cho mọi score level
+  
+  Run: Manager chọn agent(s) cụ thể → σ (update affected sections only)
+  
+  Cascade: Workflow D cascade rules vẫn áp dụng:
+    - Nếu re-run α → Manager quyết định β/γ có cần re-run không (D.3 heuristic)
+    - Nếu re-run Layer 2 agent → KHÔNG trigger Layer 1
+    - σ LUÔN re-run sau bất kỳ agent nào
+  
+  Examples:
+    "B06 GO nhưng muốn R-MLE deep hơn về ML engineering practices"
+    → dispatch R-MLE only → σ update Layer 2 section
+    
+    "B01 GO nhưng SOTA đã 6 tháng, cần refresh"
+    → dispatch α only (SOTA section) → σ update research findings section
+    
+    "B09 GO nhưng muốn thêm domain expert R-D01 Retail perspective"  
+    → dispatch R-D01 only → σ integrate new notes
+
+  File handling:
+    - Re-run agent overwrites own file only
+    - Other agents' files untouched
+    - σ partial update: only sections affected by re-run agent
+    - Memory: σ APPENDS "Tier D update" note
+```
+
+---
+
+### Thêm vào D.5 File Handling
+
+```markdown
+TIER D (single-agent):
+  docs/reports/{MODULE_ID}/{AGENT}-report.md    ← re-run agent overwrites own file
+  OR docs/reports/{MODULE_ID}/{ROLE_ID}-notes.md ← Layer 2 agent overwrites own file
+  docs/reports/{MODULE_ID}/final-report.md       ← σ updates affected section only
+  data/baselines/{id}.json                       ← σ updates per D.6 Rule 4
+  docs/memory/{MODULE_ID}-learnings.md           ← σ APPENDS Tier D update note
+```
+
+---
+
+### Thêm vào D.6 σ Consolidation Rules
+
+```markdown
+RULE 5 — Tier D consolidation:
+  σ chỉ update section tương ứng với agent re-run:
+    α re-run → update § Research Findings
+    β re-run → update § Technical Implementation  
+    γ re-run → update § Feasibility Assessment + verdict
+    Layer 2 re-run → update § Practical Notes (chỉ sub-section của role đó)
+  σ KHÔNG re-write sections không bị ảnh hưởng.
+  σ APPENDS note trong Debate Log: "Tier D update: {agent} re-researched on {date}"
+```
+
+---
+
+### Thêm vào D.7 Verification
+
+```markdown
+Tier D: Layer 0 + Layer 1 (affected files only) + Layer 3 (affected agent §L3.x) + Layer 4.2
+  Chỉ verify agent đã re-run + σ output. Không re-check toàn bộ module.
+```
+
+---
+
+## PART C — SOP MINOR FIXES (from previous review)
+
+### Fix SOP-1: Section 8.1 Module ID Ranges
+
+```
+REPLACE:
+  Baselines:  B01, B02, ..., B12
+  Industries: I01, I02, ..., I12
+
+WITH:
+  Baselines:  B01, B02, ..., B15
+  Industries: I01, I02, ..., I20
+  Matrix:     B01-I01, B01-I02, ... (up to B15-I20)
+```
+
+---
+
+### Fix SOP-2: D.0 Language-Only Fix Path
+
+```
+Thêm vào D.0 "KHÔNG dùng Workflow D khi":
+
+  - Language issues only → dispatch σ single task:
+    σ rewrite final-report.md + JSON content fields (English → Vietnamese)
+    Không trigger α/β/γ re-run
+    Không cần full Workflow D — direct σ task (Workflow B style)
+```
+
+---
+
+### Fix SOP-3: D.7 Max Attempts
+
+```
+Thêm vào cuối D.7:
+
+MAX ATTEMPTS:
+  - Attempt 1: Workflow D re-run theo assigned tier
+  - Attempt 2: Fix specific failures from attempt 1 only
+  - Attempt 3: KHÔNG CÓ. Manager manual fix hoặc defer to next round.
+  Rationale: Nếu 2 lần vẫn fail cùng chỗ → root cause là prompt/skill card,
+  không phải agent effort. Fix root cause thay vì retry.
+```
+
+---
+
+### Fix SOP-4: Step A3 Bước 3.6 — Verdict Thresholds Inline
+
+```
+Thêm vào Bước 3.6 Verdict:
+
+  Verdict thresholds (reference: R-γ skill card §Scoring Formula):
+    GO:              overall ≥ 7.0 AND no dimension < 5
+    CONDITIONAL GO:  overall 5.0–6.9 OR any dimension < 5 with mitigation plan
+    NO-GO:           overall < 5.0 OR ≥2 dimensions < 4
+```
+
+---
+
+### Fix SOP-5: Bước 4.7 — Checklist Authority Note
+
+```
+Thêm đầu Bước 4.7:
+
+  NOTE: Quality checklist dưới đây là SUBSET của MODULE-TEST-PROTOCOL.md.
+  Nếu conflict giữa checklist này và MODULE-TEST-PROTOCOL →
+  MODULE-TEST-PROTOCOL.md là authoritative.
+```
+
+---
+
+### Fix SOP-6: Section 6.5 Memory Lifecycle — Align với Workflow D
+
+```
+REPLACE:
+  UPDATE: Ms. Scribe appends when module is upgraded (L1→L2→L3)
+  DELETE: Never — memory is append-only
+
+WITH:
+  UPDATE:
+    - Workflow A completion: Ms. Scribe creates initial memory
+    - Workflow D Tier B/C: Ms. Scribe APPENDS round-N section
+    - Workflow D Tier A: Ms. Scribe FULL REWRITE (content changed significantly)
+    - Workflow D Tier D: Ms. Scribe APPENDS update note
+  DELETE: Never explicitly. Tier A full-rewrite replaces content
+          (git history preserves all previous versions).
+```
+
+---
+
+## APPLY CHECKLIST
+
+Sau khi review file này, apply changes theo thứ tự:
+
+```
+□ 1. round-2-research-plan.md — Fix 1 (module names)
+□ 2. round-2-research-plan.md — Fix 2 (Step 0 validation)
+□ 3. round-2-research-plan.md — Fix 3 (calibration anchors)
+□ 4. round-2-research-plan.md — Fix 4 (Tier B gap lists)
+□ 5. round-2-research-plan.md — Fix 5 (time estimates)
+□ 6. round-2-research-plan.md — Fix 6 (Phase 4 consistency)
+□ 7. round-2-research-plan.md — Fix 7 (rollback plan)
+□ 8. SOP §5.5 D.0 — Replace trigger conditions (Part B)
+□ 9. SOP §5.5 D.4 — Add Tier D (Part B)
+□ 10. SOP §5.5 D.5 — Add Tier D file handling (Part B)
+□ 11. SOP §5.5 D.6 — Add Rule 5 Tier D consolidation (Part B)
+□ 12. SOP §5.5 D.7 — Add Tier D verification + max attempts (Part B)
+□ 13. SOP §8.1 — Fix module ID ranges (Part C, Fix SOP-1)
+□ 14. SOP D.0 — Add language-only fix path (Part C, Fix SOP-2)
+□ 15. SOP D.7 — Add max attempts (Part C, Fix SOP-3)
+□ 16. SOP Step A3 Bước 3.6 — Add verdict thresholds (Part C, Fix SOP-4)
+□ 17. SOP Bước 4.7 — Add authority note (Part C, Fix SOP-5)
+□ 18. SOP §6.5 — Align memory lifecycle (Part C, Fix SOP-6)
+
+After all applied → archive this file to docs/archive/
+```
+
+---
+
+*Round 2 Fixes & Re-Run Protocol Supplement v1.0*
+*Apply → merge into source files → archive this file*

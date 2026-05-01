@@ -1,0 +1,6 @@
+{
+  "_comment": "Active paths ledger per W10 + R-ORC-09. Engine writes/reads atomically. Single source of truth for cross-project state.",
+  "_schema_version": "1.0",
+  "_last_updated": "2026-04-27T00:00:00Z",
+  "active_paths": []
+}

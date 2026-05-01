@@ -1,0 +1,682 @@
+{
+  "id": "B13",
+  "name": "Tabular ML & Predictive Analytics",
+  "type": "baseline",
+  "slug": "tabular-ml-predictive-analytics",
+  "tagline": "Xây dựng hệ thống học máy trên dữ liệu bảng và phân tích dự đoán — sử dụng XGBoost, LightGBM, CatBoost, AutoML và deep learning cho tabular data — phục vụ chấm điểm tín dụng, dự báo nhu cầu, phát hiện rời bỏ và kiểm soát chất lượng tại thị trường Việt Nam",
+  "category": "baseline",
+  "icon": "Table",
+  "color": "#8D6E63",
+  "depthLevel": 3,
+  "selectedAgents": ["R-alpha", "R-beta", "R-gamma", "R-MLE", "R-DE", "R-DA", "R-DBE", "R-BE", "R-FE", "R-DO", "R-SE", "R-QA", "R-SA", "R-D02", "R-D15", "R-sigma"],
+  "description": "Tabular ML & Predictive Analytics (Học máy trên dữ liệu bảng và phân tích dự đoán) là lĩnh vực xây dựng mô hình dự đoán trên dữ liệu có cấu trúc dạng bảng — rows là observations, columns là features. Đây là dạng ML phổ biến nhất trong doanh nghiệp: 80%+ dữ liệu doanh nghiệp là tabular (CRM, ERP, databases, spreadsheets). B13 kết nối B01 (ML Fundamentals — nền tảng lý thuyết), B07 (Time Series — dự báo chuỗi thời gian trên tabular data), B05 (Data Engineering — pipelines chuẩn bị dữ liệu), B06 (MLOps — triển khai và giám sát models), B12 (Search & RAG — kết hợp structured retrieval). Gradient Boosted Decision Trees (XGBoost, LightGBM, CatBoost) thống trị tabular ML suốt thập kỷ qua, chiến thắng phần lớn Kaggle competitions trên structured data. Thị trường toàn cầu predictive analytics vượt $28B năm 2026 (CAGR 21%). TRL 9, mature — công nghệ production-ready, battle-tested, không cần GPU.",
+  "description_paragraphs": [
+    "Tabular ML là giao điểm giữa thống kê truyền thống, machine learning và kỹ thuật đặc trưng (feature engineering), tập trung xây dựng mô hình dự đoán trên dữ liệu có cấu trúc dạng bảng. Lĩnh vực bao gồm các sub-fields: Feature Engineering (tạo và biến đổi đặc trưng — encoding, scaling, interaction features, polynomial features), Missing Value Handling (xử lý dữ liệu thiếu — imputation, indicator variables), Class Imbalance (xử lý mất cân bằng nhãn — SMOTE, class weights, threshold tuning), Gradient Boosted Decision Trees (XGBoost, LightGBM, CatBoost — dominant algorithms), AutoML (tự động hoá model selection, hyperparameter tuning, feature engineering), Explainability (SHAP, LIME, permutation importance — giải thích mô hình), Calibration (hiệu chỉnh xác suất dự đoán — Platt scaling, isotonic regression), Feature Stores (hệ thống quản lý features cho ML — Feast, Tecton), Tabular Deep Learning (TabNet, FT-Transformer, TabPFN — deep learning cho tabular data), và Entity Embeddings (học biểu diễn cho categorical features). Nền tảng toán học bao gồm gradient boosting (additive modeling qua functional gradient descent), decision tree splitting (Gini impurity, information gain), regularization (L1/L2, tree constraints), cross-validation (k-fold, stratified, time-series split), và Shapley values cho model interpretation.",
+    "Tại Việt Nam, B13 có điểm khả thi 8.5/10 (CONDITIONAL GO) với Technical Feasibility cao nhất (9/10): XGBoost, LightGBM, CatBoost đều open-source, battle-tested, không cần GPU — chạy trên bất kỳ máy chủ nào. Vietnam Market Fit xuất sắc (9/10): ngân hàng (credit scoring — VPBank, TPBank, FE Credit đều dùng ML), bảo hiểm (insurance risk pricing — Bảo Việt, Manulife Vietnam), viễn thông (churn prediction — Viettel, VNPT, MobiFone), bán lẻ (demand forecasting — Thế Giới Di Động, Bách Hoá Xanh), sản xuất (quality control — Samsung Vietnam, Foxconn). Market Demand mạnh (8/10): mọi doanh nghiệp có dữ liệu bảng đều có bài toán dự đoán. Data Availability khả quan (8/10): doanh nghiệp Việt Nam có dữ liệu structured phong phú trong CRM, ERP, databases. Implementation Risk trung bình (7/10): model drift, data quality issues, và thiếu feature engineering discipline là rủi ro chính — quản lý được nhưng non-trivial.",
+    "Chiến lược triển khai: bắt đầu với credit scoring và churn prediction — hai bài toán có ROI rõ ràng nhất và dữ liệu sẵn có. Dùng LightGBM làm baseline model (nhanh, chính xác, ít hyperparameter tuning). Feature engineering quyết định 80% chất lượng model — đầu tư vào feature store (Feast) và feature pipeline hơn là thử model mới. AutoML (AutoGluon) cho rapid prototyping, nhưng production models cần human oversight cho feature selection và business logic. SHAP values bắt buộc cho mọi model — ngân hàng Việt Nam cần giải thích được quyết định cho cơ quan quản lý (NHNN). Điều kiện full GO: ít nhất 1 model production tại khách hàng trả phí với AUC > 0.80, feature store hoạt động với < 100ms latency cho online serving, monitoring pipeline phát hiện model drift trong < 24 giờ."
+  ],
+  "aliases": [
+    "Học máy trên dữ liệu bảng",
+    "Tabular ML",
+    "Predictive Analytics",
+    "Phân tích dự đoán",
+    "Structured Data ML",
+    "Gradient Boosting",
+    "Credit Scoring ML",
+    "Chấm điểm tín dụng",
+    "AutoML",
+    "Học máy tự động"
+  ],
+  "maturity_level": "mature",
+  "trl": 9,
+  "core_concepts": [
+    {
+      "name": "Feature Engineering (Kỹ thuật đặc trưng)",
+      "definition": "Quá trình tạo, biến đổi và chọn lọc đặc trưng đầu vào cho mô hình từ dữ liệu thô. Bao gồm: encoding categorical variables (one-hot, target encoding, ordinal encoding), scaling numerical features (StandardScaler, MinMaxScaler, RobustScaler), tạo interaction features (A*B, A/B), polynomial features, aggregation features (mean, std, count theo nhóm), time-based features (day of week, month, lag features), và domain-specific features. Feature engineering quyết định 80% chất lượng model — model tốt nhất với features kém sẽ thua model trung bình với features tốt. Xu hướng 2024-2026: automated feature engineering (Featuretools, tsfresh) bổ sung nhưng không thay thế domain expertise.",
+      "difficulty": "Intermediate",
+      "prerequisites": ["Thống kê mô tả", "Pandas/SQL cơ bản"]
+    },
+    {
+      "name": "Missing Values Handling (Xử lý dữ liệu thiếu)",
+      "definition": "Chiến lược xử lý giá trị thiếu — vấn đề phổ biến nhất trong dữ liệu doanh nghiệp thực tế. Phân loại: MCAR (Missing Completely At Random), MAR (Missing At Random), MNAR (Missing Not At Random — informative missingness). Phương pháp: deletion (listwise, pairwise — mất dữ liệu), simple imputation (mean, median, mode — bias estimate), model-based imputation (KNN, IterativeImputer/MICE — tốt nhất cho MAR), indicator variables (thêm cột is_missing — bắt informative missingness). XGBoost và LightGBM xử lý missing values native (học hướng split tối ưu cho missing) — ưu thế lớn so với deep learning. CẢNH BÁO: missingness pattern thường chứa thông tin dự đoán quan trọng — đừng impute mù quáng.",
+      "difficulty": "Beginner",
+      "prerequisites": ["Thống kê cơ bản"]
+    },
+    {
+      "name": "Class Imbalance (Mất cân bằng nhãn)",
+      "definition": "Khi phân bố nhãn lệch nghiêm trọng (fraud detection: 0.1% positive, churn: 5-15%, credit default: 2-5%). Model tối ưu accuracy sẽ dự đoán toàn majority class. Giải pháp cấp dữ liệu: oversampling (SMOTE, ADASYN — tạo synthetic samples cho minority), undersampling (random, Tomek links, NearMiss), hybrid (SMOTEENN). Giải pháp cấp algorithm: class_weight='balanced', scale_pos_weight trong XGBoost, focal loss. Giải pháp cấp quyết định: threshold tuning trên precision-recall curve, cost-sensitive learning. Metric đúng: AUC-ROC, AUC-PR (ưu tiên khi extreme imbalance), F1-score — KHÔNG BAO GIỜ dùng accuracy cho imbalanced data.",
+      "difficulty": "Intermediate",
+      "prerequisites": ["Classification cơ bản", "Metrics đánh giá"]
+    },
+    {
+      "name": "Cross-Validation (Đánh giá chéo)",
+      "definition": "Kỹ thuật ước lượng model performance trên unseen data bằng cách chia training data thành k folds và train/evaluate k lần. K-Fold CV: chia data thành k phần, mỗi lần dùng 1 phần làm validation, k-1 phần làm training. Stratified K-Fold: duy trì tỷ lệ nhãn trong mỗi fold — bắt buộc cho imbalanced data. Group K-Fold: đảm bảo cùng nhóm (customer, session) không xuất hiện trong cả train và validation — ngăn data leakage. Time-Series Split: validation luôn sau training theo thời gian — bắt buộc cho dữ liệu có temporal dependency. Repeated K-Fold: chạy k-fold nhiều lần với random splits khác nhau, lấy trung bình — ổn định hơn. k=5 là standard, k=10 cho dataset nhỏ. Nested CV cho hyperparameter tuning + unbiased performance estimation.",
+      "difficulty": "Beginner",
+      "prerequisites": ["Train/test split cơ bản"]
+    },
+    {
+      "name": "Gradient Boosted Decision Trees — GBDT (Cây quyết định tăng cường gradient)",
+      "definition": "Ensemble method xây dựng chuỗi decision trees tuần tự, mỗi tree fit residuals (negative gradient) của tổng các trees trước đó. F_m(x) = F_{m-1}(x) + η * h_m(x), trong đó h_m fit pseudo-residuals r_im = -∂L(y_i, F_{m-1}(x_i))/∂F_{m-1}(x_i). Là functional gradient descent trong function space. XGBoost (2016): regularized objective, approximate split finding, sparsity-aware, histogram-based. LightGBM (2017): GOSS (Gradient-based One-Side Sampling) + EFB (Exclusive Feature Bundling) — nhanh hơn 10-20x XGBoost trên large datasets. CatBoost (2018): ordered target statistics cho categorical features, ordered boosting giảm prediction shift. GBDT thống trị tabular ML suốt thập kỷ — chiến thắng phần lớn Kaggle competitions trên structured data.",
+      "difficulty": "Intermediate",
+      "prerequisites": ["Decision trees", "Gradient descent", "Ensemble methods"]
+    },
+    {
+      "name": "AutoML (Học máy tự động)",
+      "definition": "Tự động hoá toàn bộ hoặc một phần ML pipeline: data preprocessing, feature engineering, model selection, hyperparameter optimization, ensemble construction. AutoGluon (Amazon, 2020): multi-layer stacking + ensembling, đạt performance cạnh tranh với chuyên gia ML trong < 4 giờ trên phần lớn tabular benchmarks. H2O AutoML: GBM + GLM + DL + stacking, production-ready. FLAML (Microsoft): cost-effective hyperparameter tuning. Auto-sklearn: Bayesian optimization + meta-learning. Optuna: framework hyperparameter optimization linh hoạt nhất. AutoML xuất sắc cho rapid prototyping và baseline — nhưng production models thường cần human oversight cho feature selection, business constraints, và fairness requirements.",
+      "difficulty": "Intermediate",
+      "prerequisites": ["ML pipeline cơ bản", "Hyperparameter tuning"]
+    },
+    {
+      "name": "Explainability — SHAP Values (Giải thích mô hình bằng giá trị Shapley)",
+      "definition": "SHAP (SHapley Additive exPlanations) dựa trên Shapley values từ cooperative game theory: contribution của mỗi feature là trung bình marginal contribution qua tất cả possible coalitions. φ_i = Σ_{S⊆N\\{i}} |S|!(|N|-|S|-1)!/|N|! * [f(S∪{i}) - f(S)]. Tính chất: Efficiency (Σφ_i = f(x) - E[f(x)]), Symmetry, Linearity, Dummy. TreeSHAP (Lundberg 2020): tính exact Shapley values cho tree models trong O(TLD²) thay vì exponential — breakthrough thực tế. Global explanations: SHAP summary plots, feature importance. Local explanations: giải thích từng prediction. SHAP bắt buộc cho financial models tại Việt Nam — NHNN yêu cầu giải thích quyết định tín dụng. LIME là alternative nhưng SHAP có nền tảng lý thuyết mạnh hơn.",
+      "difficulty": "Intermediate",
+      "prerequisites": ["GBDT", "Xác suất thống kê"]
+    },
+    {
+      "name": "Probability Calibration (Hiệu chỉnh xác suất)",
+      "definition": "Đảm bảo xác suất dự đoán phản ánh đúng tần suất thực tế: khi model dự đoán 70% probability, 70% trường hợp đó thực sự positive. Quan trọng cho credit scoring (PD — Probability of Default), insurance pricing, medical diagnosis. Đo lường: reliability diagram (calibration curve), Expected Calibration Error (ECE), Brier score. Phương pháp: Platt scaling (logistic regression trên logits — đơn giản, hiệu quả cho binary), isotonic regression (non-parametric — flexible hơn, cần nhiều data hơn), temperature scaling (chia logits cho T). Random Forest thường well-calibrated; XGBoost/LightGBM cần calibration. CẢNH BÁO: calibrate trên held-out set, KHÔNG trên training data.",
+      "difficulty": "Intermediate",
+      "prerequisites": ["Classification", "Xác suất cơ bản"]
+    },
+    {
+      "name": "Feature Stores (Kho đặc trưng)",
+      "definition": "Hệ thống tập trung quản lý, lưu trữ và phục vụ ML features cho cả training và inference. Giải quyết: feature consistency (cùng logic cho training và serving), feature reuse (team khác dùng lại features đã tính), time-travel (lấy feature values tại thời điểm quá khứ cho training — tránh data leakage), và online serving (< 100ms latency cho real-time prediction). Architecture: offline store (batch features — data warehouse/lake), online store (real-time features — Redis, DynamoDB), feature registry (metadata, lineage, documentation). Feast (open-source, Linux Foundation): lightweight, phù hợp bắt đầu. Tecton: managed, enterprise-grade. Hopsworks: end-to-end ML platform với feature store tích hợp. Feature stores là infrastructure investment — justify khi có 3+ models sharing features.",
+      "difficulty": "Advanced",
+      "prerequisites": ["Data engineering cơ bản", "ML pipeline"]
+    },
+    {
+      "name": "Data Leakage (Rò rỉ dữ liệu)",
+      "definition": "Khi thông tin từ tương lai hoặc từ target variable rò rỉ vào training features, tạo model performance ảo cao nhưng thất bại trong production. Dạng phổ biến: target leakage (feature được tính từ target — ví dụ: 'đã trả nợ' trong credit scoring model), temporal leakage (dùng dữ liệu tương lai trong training — ví dụ: features tính từ data sau thời điểm prediction), group leakage (cùng customer xuất hiện trong cả train và test). Phát hiện: check feature importance bất thường (feature quá mạnh thường là leakage), validate trên truly out-of-time data, business logic review. Phòng ngừa: strict temporal splitting, group-aware CV, feature engineering pipeline tách biệt cho train/serve, feature store với point-in-time correctness.",
+      "difficulty": "Intermediate",
+      "prerequisites": ["Cross-validation", "Feature engineering"]
+    },
+    {
+      "name": "Tabular Deep Learning (Học sâu cho dữ liệu bảng)",
+      "definition": "Áp dụng deep learning architectures cho tabular data — lĩnh vực mà GBDT vẫn thống trị. TabNet (Arik & Pfister, 2021): attention-based feature selection, interpretable, sequential attention. FT-Transformer (Gorishniy et al., 2021): Feature Tokenizer + Transformer — mỗi feature thành token, self-attention học feature interactions. TabPFN (Hollmann et al., 2023): Prior-Data Fitted Network — meta-learned Transformer, zero-shot prediction trên datasets nhỏ (< 10K rows, < 100 features) mà KHÔNG cần training. NODE (Popov et al., 2020): differentiable oblivious decision trees. Grinsztajn et al. (2022) benchmark: GBDT vẫn vượt deep learning trên phần lớn tabular tasks, đặc biệt medium-sized datasets. Deep learning chiến thắng khi: very large datasets (>1M rows), nhiều categorical features với high cardinality, hoặc cần end-to-end learning.",
+      "difficulty": "Advanced",
+      "prerequisites": ["Deep learning cơ bản", "GBDT", "Transformer architecture"]
+    },
+    {
+      "name": "Entity Embeddings (Nhúng thực thể cho biến phân loại)",
+      "definition": "Học biểu diễn vector dense cho categorical features thay vì one-hot encoding. Guo & Berkhahn (2016): entity embeddings cho categorical variables trong neural networks, giành giải 3 Kaggle Rossmann Store Sales competition. Mỗi category được ánh xạ tới vector trong không gian liên tục: embed(category) = W[category_index]. Embeddings học được quan hệ semantic giữa categories (ví dụ: ngày trong tuần gần nhau trong embedding space). Ưu điểm so với one-hot: giảm dimensionality cho high-cardinality features (zip codes, product IDs), transfer learning giữa tasks, xử lý unseen categories. CatBoost sử dụng ordered target statistics — approach khác nhưng cùng mục tiêu: xử lý categoricals hiệu quả.",
+      "difficulty": "Intermediate",
+      "prerequisites": ["Neural networks cơ bản", "Categorical encoding"]
+    }
+  ],
+  "algorithms": [
+    {
+      "name": "XGBoost (eXtreme Gradient Boosting)",
+      "category": "Gradient boosted decision trees với regularization",
+      "complexity": "Training: O(K * N * D * log(N)) với K trees, N samples, D features. Histogram-based: O(K * N * D * B) với B bins. Approximate split finding giảm computational cost. GPU training support.",
+      "pros": ["Regularized objective (L1 + L2 trên leaf weights) giảm overfitting", "Sparsity-aware split finding — xử lý missing values native", "Column subsampling giống Random Forest — giảm correlation giữa trees", "Chiến thắng hầu hết Kaggle tabular competitions 2014-2020"],
+      "cons": ["Chậm hơn LightGBM trên large datasets (level-wise growth)", "Hyperparameter tuning phức tạp hơn LightGBM", "Memory consumption cao hơn cho large datasets", "Categorical feature handling kém hơn CatBoost"],
+      "use_cases": ["Credit scoring", "Fraud detection", "Churn prediction", "Insurance risk modeling"],
+      "key_papers": ["Chen, T. & Guestrin, C. (2016). XGBoost: A Scalable Tree Boosting System. KDD 2016."]
+    },
+    {
+      "name": "LightGBM (Light Gradient Boosting Machine)",
+      "category": "High-performance gradient boosting với GOSS và EFB",
+      "complexity": "Training: O(K * N' * D' * B) với GOSS sampling N' < N và EFB bundling D' < D. Histogram-based splitting. Leaf-wise growth — tìm leaf với max gain, nhanh hơn level-wise.",
+      "pros": ["10-20x nhanh hơn XGBoost trên large datasets nhờ GOSS + EFB", "Leaf-wise growth đạt lower loss với ít iterations hơn", "Native categorical feature support (optimal split)", "Memory-efficient histogram-based algorithm"],
+      "cons": ["Leaf-wise growth dễ overfitting trên small datasets", "Cần tuning num_leaves, min_data_in_leaf cẩn thận", "Categorical handling không mạnh bằng CatBoost cho high-cardinality", "Ít stable hơn XGBoost cho noisy data"],
+      "use_cases": ["Large-scale tabular ML (>1M rows)", "Real-time prediction serving", "Demand forecasting", "Click-through rate prediction"],
+      "key_papers": ["Ke, G. et al. (2017). LightGBM: A Highly Efficient Gradient Boosting Decision Tree. NeurIPS 2017."]
+    },
+    {
+      "name": "CatBoost (Categorical Boosting)",
+      "category": "Gradient boosting tối ưu cho categorical features",
+      "complexity": "Ordered boosting: O(K * N * D * B) với permutation-based training. Ordered target statistics: O(N * C) với C categorical features. Symmetric (oblivious) trees: nhanh hơn inference.",
+      "pros": ["Ordered target statistics — xử lý categorical features tốt nhất, không cần encoding thủ công", "Ordered boosting giảm prediction shift (overfitting trên residuals)", "Symmetric trees cho inference nhanh hơn", "Ít hyperparameter tuning nhất trong 3 GBDT frameworks"],
+      "cons": ["Training chậm hơn LightGBM do ordered boosting", "Symmetric tree restriction có thể limit expressiveness", "Ít phổ biến hơn XGBoost/LightGBM trong community", "GPU memory usage cao"],
+      "use_cases": ["Datasets với nhiều categorical features (e-commerce, marketing)", "Quick baseline với minimal tuning", "Insurance risk modeling", "Recommendation features"],
+      "key_papers": ["Prokhorenkova, L. et al. (2018). CatBoost: unbiased boosting with categorical features. NeurIPS 2018."]
+    },
+    {
+      "name": "Random Forest",
+      "category": "Bagging ensemble of decision trees",
+      "complexity": "Training: O(K * N * D' * log(N)) với K trees, D' = sqrt(D) features sampled per split. Embarrassingly parallel — linear speedup với cores. Inference: O(K * depth).",
+      "pros": ["Robust, ít overfitting — bagging + feature subsampling", "Well-calibrated probabilities out-of-the-box", "Ít hyperparameter tuning (n_estimators, max_depth)", "Parallelizable training — tận dụng multi-core CPUs"],
+      "cons": ["Accuracy thường thấp hơn GBDT 1-3% trên tabular benchmarks", "Prediction chậm hơn single GBDT model", "Không capture complex interactions tốt bằng boosting", "Memory usage cao với nhiều trees sâu"],
+      "use_cases": ["Baseline model nhanh và robust", "Feature importance estimation", "Datasets nhỏ-trung (< 100K rows)", "Khi cần model ổn định và interpretable"],
+      "key_papers": ["Breiman, L. (2001). Random Forests. Machine Learning, 45(1), 5-32."]
+    },
+    {
+      "name": "Logistic Regression",
+      "category": "Linear model cho classification với regularization",
+      "complexity": "Training: O(N * D) per iteration, convergence trong O(1/ε) iterations. Inference: O(D) — cực nhanh. L1 (Lasso) cho feature selection, L2 (Ridge) cho regularization, ElasticNet cho kết hợp.",
+      "pros": ["Interpretable — coefficients là log-odds, dễ giải thích cho stakeholders", "Baseline chuẩn cho mọi classification task", "Well-calibrated probabilities native", "Inference cực nhanh — phù hợp real-time serving quy mô lớn"],
+      "cons": ["Không capture non-linear relationships (cần feature engineering thủ công)", "Accuracy thấp hơn đáng kể so với GBDT trên complex data", "Sensitive tới multicollinearity và outliers", "Feature engineering burden cao — model đơn giản, features phải phức tạp"],
+      "use_cases": ["Credit scoring baseline (Basel III compliant)", "A/B test analysis", "High-throughput real-time serving", "Regulatory-required interpretable models"],
+      "key_papers": ["Cox, D.R. (1958). The regression analysis of binary sequences. Journal of the Royal Statistical Society."]
+    },
+    {
+      "name": "TabNet",
+      "category": "Attention-based deep learning cho tabular data",
+      "complexity": "Sequential attention mechanism chọn features tại mỗi decision step. Sparse feature selection qua sparsemax. Architecture: encoder (feature selection + processing) + decoder (reconstruction cho self-supervised pre-training).",
+      "pros": ["Interpretable — attention masks cho thấy features nào được dùng cho từng prediction", "Self-supervised pre-training trên unlabeled data", "End-to-end learning không cần feature engineering thủ công", "Competitive với GBDT trên large datasets"],
+      "cons": ["Training chậm hơn GBDT 5-10x", "Cần GPU, hyperparameter tuning phức tạp", "Không consistently vượt GBDT trên medium-sized datasets", "Reproducibility issues do initialization sensitivity"],
+      "use_cases": ["Large datasets (>100K rows) với cần interpretability", "Semi-supervised learning (nhiều unlabeled data)", "End-to-end learning với minimal feature engineering", "Research và benchmarking"],
+      "key_papers": ["Arik, S.Ö. & Pfister, T. (2021). TabNet: Attentive Interpretable Tabular Learning. AAAI 2021."]
+    },
+    {
+      "name": "FT-Transformer (Feature Tokenizer + Transformer)",
+      "category": "Transformer architecture cho tabular data",
+      "complexity": "Mỗi feature (numerical và categorical) tokenize thành embedding vector. Tập hợp embeddings xử lý bởi standard Transformer encoder. O(D² * N) per layer với D features. Complexity tăng quadratic với số features.",
+      "pros": ["Tận dụng Transformer's self-attention cho feature interactions", "Vượt trội GBDT trên một số large datasets", "Unified handling cho numerical và categorical features", "Transfer learning potential giữa datasets"],
+      "cons": ["Cần GPU cho training và inference", "Quadratic scaling với số features", "Overfitting trên small datasets", "Inference chậm hơn đáng kể so với GBDT"],
+      "use_cases": ["Large-scale tabular data (>500K rows)", "Datasets với complex feature interactions", "Multi-task learning trên tabular data", "Research benchmarking"],
+      "key_papers": ["Gorishniy, Y. et al. (2021). Revisiting Deep Learning Models for Tabular Data. NeurIPS 2021."]
+    },
+    {
+      "name": "TabPFN (Prior-Data Fitted Network)",
+      "category": "Meta-learned Transformer cho zero-shot tabular prediction",
+      "complexity": "Pre-trained Transformer trên synthetic datasets. Inference: forward pass duy nhất, O(N² * D) — KHÔNG cần training trên target dataset. Giới hạn: < 10K rows, < 100 features, < 10 classes.",
+      "pros": ["Zero-shot: prediction trong < 1 giây mà KHÔNG cần training", "Competitive với tuned GBDT trên small datasets (< 3K rows)", "Uncertainty estimation tích hợp (Bayesian posterior)", "Breakthrough cho rapid prototyping"],
+      "cons": ["Giới hạn dataset size (< 10K rows, < 100 features)", "Không scale cho production datasets lớn", "Accuracy giảm trên large datasets so với tuned GBDT", "Computational cost tại inference (quadratic trong N)"],
+      "use_cases": ["Rapid prototyping và baseline nhanh", "Small datasets (clinical trials, rare events)", "AutoML meta-feature computation", "Few-shot learning trên tabular data"],
+      "key_papers": ["Hollmann, N. et al. (2023). TabPFN: A Transformer That Solves Small Tabular Classification Problems in a Second. ICLR 2023."]
+    },
+    {
+      "name": "AutoGluon-Tabular",
+      "category": "AutoML framework với multi-layer stacking",
+      "complexity": "Ensemble: trains multiple base models (LightGBM, CatBoost, XGBoost, Random Forest, ExtraTrees, Neural Network, KNN), multi-layer stacking, weighted ensemble selection. Resource-aware — adapts theo time budget.",
+      "pros": ["Consistently top performance trên AutoML benchmarks", "Multi-layer stacking ensemble vượt trội single models", "Resource-aware — adapts theo time/memory constraints", "Minimal configuration — 3 dòng code cho competitive results"],
+      "cons": ["Ensemble inference chậm hơn single model", "Model size lớn (nhiều base models)", "Khó deploy in production so với single GBDT", "Debugging ensemble decisions phức tạp"],
+      "use_cases": ["Rapid prototyping và competitive baselines", "Kaggle competitions", "Benchmark new models/features", "Khi thiếu ML expertise cho manual tuning"],
+      "key_papers": ["Erickson, N. et al. (2020). AutoGluon-Tabular: Robust and Accurate AutoML for Structured Data. ICML 2020 AutoML Workshop."]
+    },
+    {
+      "name": "H2O AutoML",
+      "category": "Enterprise AutoML platform",
+      "complexity": "Sequential model training: GLM → Random Forest → GBM (XGBoost, H2O GBM) → Deep Learning → Stacked Ensemble. Automatic preprocessing, hyperparameter search, model selection.",
+      "pros": ["Production-ready enterprise platform", "Java-based — scalable, distributed training", "Automatic stacking ensemble", "Extensive model interpretation (SHAP, PDP, ICE)"],
+      "cons": ["Java dependency — integration overhead với Python ecosystem", "Ít flexible hơn AutoGluon cho custom pipelines", "Community edition limitations", "Performance thường thua AutoGluon trên benchmarks"],
+      "use_cases": ["Enterprise ML platforms", "Regulated industries (banking, insurance)", "Teams cần turnkey AutoML solution", "Production deployment với monitoring"],
+      "key_papers": ["H2O.ai. (2020). H2O AutoML: Scalable Automatic Machine Learning. H2O.ai Technical Report."]
+    },
+    {
+      "name": "Stacking / Blending Ensembles",
+      "category": "Meta-learning ensemble method",
+      "complexity": "Level 0: train K diverse base models với k-fold CV, collect out-of-fold predictions. Level 1: meta-learner (thường Logistic Regression hoặc LightGBM) train trên Level 0 predictions. Multi-level stacking: repeat.",
+      "pros": ["Consistently cải thiện 0.5-2% so với single best model", "Diversity reduces variance — different model biases cancel out", "Flexible — bất kỳ model nào làm base learner", "Standard approach cho Kaggle top solutions"],
+      "cons": ["Training time tăng K-fold per base model", "Risk overfitting nếu meta-learner quá phức tạp", "Deployment complexity — cần serve nhiều models", "Diminishing returns sau 3-5 diverse base models"],
+      "use_cases": ["Kaggle competitions", "Khi cần squeeze thêm 0.5-1% performance", "Ensemble diverse model types", "Production ensembles đơn giản (2-3 models)"],
+      "key_papers": ["Wolpert, D.H. (1992). Stacked Generalization. Neural Networks, 5(2), 241-259."]
+    },
+    {
+      "name": "NODE (Neural Oblivious Decision Ensembles)",
+      "category": "Differentiable oblivious decision trees",
+      "complexity": "Oblivious decision trees (cùng split feature tại mỗi level) differentiable qua entmoid activations. Multi-layer architecture giống deep forest. End-to-end gradient-based optimization.",
+      "pros": ["Kết hợp inductive bias của decision trees với end-to-end learning", "Competitive với GBDT trên nhiều benchmarks", "Differentiable — tích hợp trong neural network pipelines", "Oblivious trees cho inference nhanh"],
+      "cons": ["Phức tạp hơn GBDT trong implementation", "Cần GPU cho training", "Ít adoption trong production", "Hyperparameter sensitivity"],
+      "use_cases": ["Research — bridge GBDT và deep learning", "End-to-end differentiable pipelines", "Tabular representation learning", "Multi-modal architectures cần tabular component"],
+      "key_papers": ["Popov, S. et al. (2020). Neural Oblivious Decision Ensembles for Deep Learning on Tabular Data. ICLR 2020."]
+    }
+  ],
+  "tech_stack": {
+    "data_processing": {
+      "recommended": {"recommended": "pandas + polars", "rationale": "pandas là standard cho data manipulation (15+ năm ecosystem). polars (Rust-based) cho 5-10x speedup trên large datasets (>1M rows) với lazy evaluation. Kết hợp: pandas cho EDA/prototyping, polars cho production pipelines. DuckDB cho SQL analytics trên local files."},
+      "alternatives": {"recommended": "Spark / Dask / Vaex / Modin", "rationale": "Spark cho distributed processing (>100M rows). Dask cho parallel pandas. Vaex cho out-of-core processing. Modin cho drop-in pandas replacement."}
+    },
+    "training_frameworks": {
+      "recommended": {"recommended": "LightGBM + scikit-learn", "rationale": "LightGBM cho GBDT training (nhanh nhất, production-proven). scikit-learn cho preprocessing (pipelines, transformers, cross-validation), metrics, và baseline models. Ecosystem Python phong phú nhất. XGBoost và CatBoost cài thêm khi cần."},
+      "alternatives": {"recommended": "XGBoost / CatBoost / AutoGluon / H2O", "rationale": "XGBoost cho regularized boosting. CatBoost cho datasets nhiều categoricals. AutoGluon cho AutoML competitive. H2O cho enterprise AutoML platform."}
+    },
+    "experiment_tracking": {
+      "recommended": {"recommended": "MLflow", "rationale": "Open-source experiment tracking, model registry, model serving. Apache 2.0. Log hyperparameters, metrics, artifacts. Compare runs. Model versioning. Tích hợp mọi ML framework. Databricks-backed, community lớn nhất. Self-hosted hoặc managed (Databricks)."},
+      "alternatives": {"recommended": "Weights & Biases / Neptune / ClearML / DVC", "rationale": "W&B cho visualization tốt nhất (commercial). Neptune cho team collaboration. ClearML cho open-source full-stack. DVC cho data versioning + experiment tracking."}
+    },
+    "model_serving": {
+      "recommended": {"recommended": "BentoML + FastAPI", "rationale": "BentoML cho model packaging, containerization, serving — batch và online. FastAPI cho custom API endpoints. Kết hợp: BentoML package model, FastAPI wrap business logic. ONNX Runtime cho optimized inference (2-5x speedup cho tree models)."},
+      "alternatives": {"recommended": "Seldon Core / KServe / TensorFlow Serving / Triton", "rationale": "Seldon cho Kubernetes-native. KServe cho serverless inference. TF Serving cho TensorFlow models. Triton cho multi-framework serving."}
+    },
+    "monitoring": {
+      "recommended": {"recommended": "Evidently AI + Grafana", "rationale": "Evidently (Apache 2.0) cho data drift detection, model quality monitoring, target drift. Tích hợp MLflow. Grafana cho dashboards và alerting. Kết hợp: Evidently phát hiện drift, Grafana visualize và alert."},
+      "alternatives": {"recommended": "NannyML / Whylabs / Arize / Great Expectations", "rationale": "NannyML cho performance estimation mà không cần ground truth. Whylabs cho data profiling. Arize cho full observability. Great Expectations cho data quality validation."}
+    },
+    "explainability": {
+      "recommended": {"recommended": "SHAP", "rationale": "SHAP (MIT) là standard cho model interpretation. TreeSHAP cho exact Shapley values trên tree models. Summary plots, dependence plots, force plots, waterfall plots. Bắt buộc cho financial models tại Việt Nam (NHNN compliance). 20K+ GitHub stars."},
+      "alternatives": {"recommended": "LIME / InterpretML / Alibi / ELI5", "rationale": "LIME cho local explanations. InterpretML (Microsoft) cho interpretable models + explanation methods. Alibi cho counterfactual explanations. ELI5 cho lightweight feature importance."}
+    },
+    "orchestration": {
+      "recommended": {"recommended": "Airflow + Feast", "rationale": "Airflow cho workflow orchestration — batch training, feature computation, model retraining schedules. Feast (Linux Foundation) cho feature store — offline/online serving, point-in-time correctness, feature sharing. Kết hợp: Airflow orchestrate, Feast serve features."},
+      "alternatives": {"recommended": "Prefect / Dagster / Tecton / Hopsworks", "rationale": "Prefect cho modern workflow orchestration. Dagster cho data-aware pipelines. Tecton cho managed feature store. Hopsworks cho end-to-end ML platform."}
+    },
+    "vietnamese_specific": {
+      "recommended": {"recommended": "Vietnamese data preprocessing + domain adapters", "rationale": "Vietnamese ID/address parsing (CCCD, CMND format handling). Vietnamese date formats (dd/mm/yyyy vs mm/dd/yyyy — source of data errors). Currency handling (VND — large numbers, no decimals). Province/district encoding (63 tỉnh/thành, 700+ quận/huyện — standardization cần thiết). MISA/Fast ERP data connectors cho enterprise data extraction."},
+      "alternatives": {"recommended": "underthesea / VnCoreNLP cho text features", "rationale": "Khi tabular data chứa text columns (customer feedback, product descriptions), Vietnamese NLP tools cần cho feature extraction. Sentiment scoring, keyword extraction, NER trên text columns."}
+    }
+  },
+  "feasibility_score": {
+    "overall_score": 8.5,
+    "verdict": "CONDITIONAL GO",
+    "verdict_vi": "Tiến hành có điều kiện",
+    "summary": "Baseline trưởng thành nhất với TRL 9 — XGBoost/LightGBM/CatBoost đã production-proven suốt thập kỷ. Không cần GPU, chạy trên bất kỳ máy chủ nào. Thị trường Việt Nam rõ ràng: credit scoring (VPBank, TPBank, FE Credit), insurance (Bảo Việt, Manulife), churn prediction (Viettel, VNPT), demand forecasting (TGDĐ, BHX). 'Conditional' vì data quality và feature engineering discipline tại doanh nghiệp Việt Nam vẫn là thách thức — không phải vấn đề công nghệ, mà là quy trình. Rủi ro là organizational problems, không phải technical problems.",
+    "dimensions": {
+      "technical_feasibility": {"score": 9, "rationale": "XGBoost, LightGBM, CatBoost — open-source, battle-tested, không cần GPU. scikit-learn ecosystem trưởng thành nhất trong ML. AutoML (AutoGluon, H2O) cho competitive results với minimal expertise. SHAP cho explainability. Stack hoàn toàn mature và production-ready."},
+      "market_demand": {"score": 8, "rationale": "Mọi doanh nghiệp có dữ liệu bảng đều có bài toán dự đoán. Credit scoring là use case phổ biến nhất — ngân hàng Việt Nam đang chuyển từ rule-based sang ML-based. Churn prediction, demand forecasting, insurance pricing — demand existing và growing. Thị trường predictive analytics Việt Nam ước tính $30-80M."},
+      "data_availability": {"score": 8, "rationale": "Doanh nghiệp Việt Nam có dữ liệu structured phong phú trong CRM, ERP, core banking systems. Thách thức: data quality (missing values, inconsistencies), data access (silos giữa departments), feature engineering expertise. Dữ liệu có nhưng cần effort chuẩn bị đáng kể."},
+      "implementation_risk": {"score": 7, "rationale": "Model drift trong production (concept drift, data drift). Data quality issues tại doanh nghiệp Việt Nam (inconsistent formats, missing documentation). Feature engineering discipline thiếu — many teams skip EDA và feature validation. Regulatory compliance cho financial models (NHNN). Manageable nhưng cần discipline."},
+      "vietnam_market_fit": {"score": 9, "rationale": "Timing hoàn hảo. Ngân hàng Việt Nam đang đầu tư mạnh vào ML-based credit scoring (NHNN khuyến khích). Insurance industry đang digitize. Telcos có data phong phú cho churn/upsell. Sản xuất (Samsung, Foxconn) cần quality prediction. Không cần GPU — phù hợp infra Việt Nam. SHAP đáp ứng yêu cầu giải thích của NHNN."}
+    },
+    "conditions": [
+      "Ít nhất 1 credit scoring model production tại khách hàng ngân hàng/tài chính trả phí với AUC > 0.80 và SHAP explanations",
+      "Feature store (Feast) hoạt động với < 100ms online serving latency cho real-time prediction use cases",
+      "Monitoring pipeline (Evidently) phát hiện data drift và model performance degradation trong < 24 giờ",
+      "Data quality pipeline với Great Expectations hoặc tương đương — validate input data trước khi đưa vào model",
+      "Vietnamese data preprocessing library chuẩn hoá: ID formats (CCCD/CMND), địa chỉ (tỉnh/quận/phường), currency (VND), date formats (dd/mm/yyyy)",
+      "Compliance documentation cho NHNN: model card, SHAP-based explanations, validation report, backtesting results cho credit scoring models",
+      "AutoGluon benchmark trên ít nhất 5 Vietnamese business datasets để establish internal baselines và best practices",
+      "Feature engineering playbook cho top 3 use cases (credit scoring, churn, demand forecasting) với domain-specific features đã validated"
+    ]
+  },
+  "industry_applications": [
+    {
+      "industry": "Chấm điểm tín dụng (Credit Scoring)",
+      "use_case": "Xây dựng mô hình chấm điểm tín dụng dựa trên ML cho ngân hàng và công ty tài chính — đánh giá khả năng trả nợ của khách hàng",
+      "description": "Credit scoring là use case phổ biến nhất của tabular ML tại Việt Nam. Input: thông tin nhân khẩu học, lịch sử tín dụng (CIC), thu nhập, nghề nghiệp, lịch sử giao dịch, alternative data (mobile usage, e-commerce). Output: Probability of Default (PD), credit score, risk segment. Models: LightGBM/XGBoost cho accuracy, Logistic Regression cho benchmark và regulatory compliance. SHAP bắt buộc — NHNN yêu cầu giải thích quyết định từ chối. VPBank, TPBank, FE Credit, Home Credit Vietnam đã triển khai ML-based scoring. Calibration quan trọng — PD phải chính xác cho risk pricing. Basel III/IFRS 9 compliance cần model validation framework.",
+      "priority": "P0",
+      "market_size_vn": "USD 20-50M (credit scoring + risk analytics VN)",
+      "technical_complexity": "Medium",
+      "vietnam_readiness": "High"
+    },
+    {
+      "industry": "Định giá rủi ro bảo hiểm (Insurance Risk Pricing)",
+      "use_case": "Mô hình dự đoán rủi ro và định giá phí bảo hiểm dựa trên đặc điểm khách hàng và lịch sử claims",
+      "description": "Insurance pricing: dự đoán claim frequency (Poisson/Negative Binomial) và claim severity (Gamma/Tweedie) từ policyholder features. GLM là regulatory standard nhưng GBDT (LightGBM với Tweedie loss) cho accuracy cao hơn. Features: tuổi, giới tính, loại xe, vùng miền, lịch sử claims, occupation. Bảo Việt, Manulife Vietnam, Prudential Vietnam đang chuyển từ actuarial tables sang ML-based pricing. Tweedie distribution (compound Poisson-Gamma) cho pure premium prediction. Uplift modeling cho cross-sell/upsell bảo hiểm bổ sung. Fairness constraints quan trọng — tránh discrimination dựa trên protected attributes.",
+      "priority": "P0",
+      "market_size_vn": "USD 10-25M (insurtech + risk analytics VN)",
+      "technical_complexity": "Medium-High",
+      "vietnam_readiness": "Medium-High"
+    },
+    {
+      "industry": "Dự đoán rời bỏ (Churn Prediction)",
+      "use_case": "Dự đoán khách hàng có nguy cơ rời bỏ để triển khai chiến dịch giữ chân kịp thời",
+      "description": "Churn prediction cho telcos (Viettel, VNPT, MobiFone — 130M+ subscribers), ngân hàng, SaaS, subscription services. Features: RFM (Recency, Frequency, Monetary), usage patterns, engagement metrics, complaint history, payment behavior, tenure. Models: LightGBM cho prediction, survival analysis (Cox PH, Random Survival Forest) cho time-to-churn. Class imbalance: churn rate 2-10%, cần SMOTE hoặc class_weight tuning. Threshold tuning trên precision-recall curve — business trade-off giữa retention cost và customer value. Uplift modeling: ai sẽ respond to retention offer vs ai sẽ ở lại dù không có offer.",
+      "priority": "P1",
+      "market_size_vn": "USD 10-20M (customer analytics + retention VN)",
+      "technical_complexity": "Medium",
+      "vietnam_readiness": "High"
+    },
+    {
+      "industry": "Dự báo nhu cầu (Demand Forecasting)",
+      "use_case": "Dự báo nhu cầu sản phẩm cho tối ưu hoá tồn kho, sản xuất và chuỗi cung ứng",
+      "description": "Demand forecasting cho retail (Thế Giới Di Động, Bách Hoá Xanh — 5,000+ cửa hàng), FMCG, manufacturing. Features: historical sales, pricing, promotions, calendar events (Tết, Black Friday), weather, store attributes, product hierarchy. Models: LightGBM với lag/rolling features — approach từ M5 competition winners. Hierarchical forecasting: store-product level cần reconciliation (top-down, bottom-up, middle-out). Cold-start problem cho new products — similarity-based transfer. Quantile regression cho prediction intervals — business cần know uncertainty, không chỉ point forecast. Tết seasonality là unique challenge cho Việt Nam.",
+      "priority": "P1",
+      "market_size_vn": "USD 15-30M (supply chain analytics + demand planning VN)",
+      "technical_complexity": "Medium-High",
+      "vietnam_readiness": "Medium-High"
+    },
+    {
+      "industry": "Kiểm soát chất lượng sản xuất (Manufacturing Quality Control)",
+      "use_case": "Dự đoán lỗi sản phẩm và kiểm soát chất lượng dựa trên dữ liệu sensor và quy trình sản xuất",
+      "description": "Quality prediction cho manufacturing (Samsung Vietnam, Foxconn, VinFast, nhà máy dệt may). Input: sensor data (temperature, pressure, humidity, vibration), machine parameters, raw material properties, operator info, production line. Output: defect probability, defect type classification, yield prediction. Models: LightGBM cho tabular sensor features (aggregated statistics), anomaly detection cho rare defects. Feature engineering critical: rolling statistics (mean, std, min, max) trên time windows, interaction features giữa parameters. Extreme class imbalance (defect rate 0.1-2%) — precision-recall optimization. Real-time scoring cần < 50ms latency.",
+      "priority": "P1",
+      "market_size_vn": "USD 10-20M (smart manufacturing + quality AI VN)",
+      "technical_complexity": "Medium-High",
+      "vietnam_readiness": "Medium"
+    },
+    {
+      "industry": "Phân khúc khách hàng (Customer Segmentation)",
+      "use_case": "Phân nhóm khách hàng dựa trên hành vi mua sắm, nhân khẩu học và engagement để cá nhân hoá marketing",
+      "description": "Customer segmentation cho e-commerce (Shopee, Tiki, Lazada Vietnam), ngân hàng, retail. Kết hợp unsupervised (K-Means, DBSCAN cho clustering) và supervised (predict segment membership, predict next-best-action). Features: RFM scores, product category preferences, channel preferences, lifecycle stage, CLV (Customer Lifetime Value). K-Means + LightGBM pipeline: cluster trước, rồi predict cluster membership cho new customers. Embedding-based: entity embeddings cho customer representations, nearest-neighbor cho similarity. Actionable segments: churn-risk, high-value loyal, price-sensitive, new-to-brand — mỗi segment cần marketing strategy riêng.",
+      "priority": "P2",
+      "market_size_vn": "USD 5-15M (customer analytics + personalization VN)",
+      "technical_complexity": "Medium",
+      "vietnam_readiness": "High"
+    }
+  ],
+  "case_studies": [
+    {
+      "title": "Home Credit Vietnam — ML-based credit scoring cho người chưa có lịch sử tín dụng",
+      "industry": "Tài chính / Financial Services",
+      "problem": "60%+ người Việt Nam chưa có lịch sử tín dụng tại CIC (Credit Information Center). Phương pháp truyền thống (rule-based scoring, manual review) không đánh giá được nhóm này, dẫn tới từ chối sai hoặc rủi ro cao.",
+      "solution": "Home Credit Vietnam triển khai ML-based scoring sử dụng alternative data: thông tin điện thoại (loại máy, thời gian sử dụng), lịch sử thanh toán tiện ích, dữ liệu nhân khẩu học mở rộng. XGBoost/LightGBM models với 200+ features. Kaggle competition 'Home Credit Default Risk' thu hút 7,000+ teams, top solutions đạt AUC > 0.80.",
+      "results": "Mở rộng đáng kể tệp khách hàng có thể scoring. Giảm tỷ lệ nợ xấu 15-20% so với rule-based. Thời gian phê duyệt từ 2-3 ngày xuống < 10 phút cho pre-approved segments. Kaggle competition tạo ra ensemble methods và feature engineering techniques được áp dụng rộng rãi.",
+      "tech_stack": "XGBoost, LightGBM, scikit-learn, pandas, SHAP, custom feature store",
+      "lessons": "Alternative data mở rộng tệp underbanked. Feature engineering (200+ features) quan trọng hơn model choice. Ensemble methods (stacking LightGBM + XGBoost + CatBoost) cải thiện 0.5-1% AUC. SHAP explanations cần cho regulatory compliance."
+    },
+    {
+      "title": "M5 Forecasting Competition — LightGBM thống trị demand forecasting",
+      "industry": "Bán lẻ / Retail",
+      "problem": "Dự báo nhu cầu 30,490 sản phẩm tại Walmart stores với 42,840 time series. Hierarchical forecasting cần accuracy tại nhiều aggregation levels (item, store, state, national).",
+      "solution": "Top solutions sử dụng LightGBM với extensive feature engineering: lag features (7, 14, 28 days), rolling statistics (mean, std qua multiple windows), calendar features (holidays, events, SNAP), price features, và encoding features. Recursive forecasting: predict day t+1, dùng prediction làm feature cho t+2.",
+      "results": "LightGBM-based solutions chiếm top 50 leaderboard. Winning solution: WRMSSE 0.520. Feature engineering quan trọng hơn model architecture — top 10 đều dùng variants của LightGBM. Recursive multi-step forecasting với uncertainty quantification (quantile regression) là approach winning.",
+      "tech_stack": "LightGBM, pandas, numpy, scikit-learn, custom feature pipelines",
+      "lessons": "Feature engineering quyết định chiến thắng, không phải model. Lag features + rolling statistics + calendar features là foundation. Hierarchical reconciliation cải thiện overall accuracy. Quantile regression cho uncertainty — business cần prediction intervals, không chỉ point forecasts."
+    },
+    {
+      "title": "Viettel churn prediction — giữ chân 130 triệu subscribers",
+      "industry": "Viễn thông / Telecommunications",
+      "problem": "Viettel với 130M+ mobile subscribers cần dự đoán churn sớm để triển khai retention campaigns hiệu quả. Churn rate 2-5%/tháng nhưng absolute numbers rất lớn. Manual intervention không scale.",
+      "solution": "ML pipeline: data extraction từ CDR (Call Detail Records), billing, CRM → feature engineering (usage patterns, recharge behavior, network quality metrics, tenure, plan type) → LightGBM classification → threshold tuning cho optimal precision-recall trade-off → targeted retention offers. Model retrain monthly để capture changing patterns.",
+      "results": "Precision tại top 10% predictions > 60%. Retention campaigns targeted hiệu quả hơn 3-5x so với random. ROI on retention spend cải thiện 200%+. Model deployed as batch scoring pipeline chạy weekly.",
+      "tech_stack": "LightGBM, Spark (data processing), Airflow (orchestration), scikit-learn, SHAP",
+      "lessons": "CDR data là goldmine cho churn prediction — usage patterns, network quality, social graph features. Class imbalance cần careful handling (SMOTE + threshold tuning). Monthly retraining essential — churn patterns shift theo promotions và competitors. Uplift modeling (ai respond to offer) quan trọng hơn churn prediction đơn thuần."
+    }
+  ],
+  "key_papers": [
+    {
+      "title": "Random Forests",
+      "authors": "Leo Breiman",
+      "year": 2001,
+      "venue": "Machine Learning, 45(1), 5-32",
+      "contribution": "Giới thiệu Random Forest: bagging + random feature subsampling tại mỗi split. Tạo ensemble of decorrelated decision trees robust và khó overfitting. Vẫn là baseline đáng tin cậy nhất cho tabular data sau 25 năm. 100,000+ citations — paper ML được trích dẫn nhiều nhất.",
+      "url": "https://link.springer.com/article/10.1023/A:1010933404324"
+    },
+    {
+      "title": "XGBoost: A Scalable Tree Boosting System",
+      "authors": "Tianqi Chen, Carlos Guestrin",
+      "year": 2016,
+      "venue": "KDD 2016",
+      "contribution": "Hệ thống gradient boosting scalable với regularized objective, approximate split finding, sparsity-aware algorithm, và cache-aware access. Trở thành winning algorithm của hầu hết Kaggle tabular competitions. 'XGBoost là Swiss Army knife của ML' — thay đổi toàn bộ landscape tabular ML. 15,000+ citations.",
+      "url": "https://arxiv.org/abs/1603.02754"
+    },
+    {
+      "title": "LightGBM: A Highly Efficient Gradient Boosting Decision Tree",
+      "authors": "Guolin Ke, Qi Meng, Thomas Finley, Taifeng Wang, Wei Chen, Weidong Ma, Qiwei Ye, Tie-Yan Liu",
+      "year": 2017,
+      "venue": "NeurIPS 2017",
+      "contribution": "GOSS (Gradient-based One-Side Sampling) giữ instances có gradient lớn, EFB (Exclusive Feature Bundling) giảm features. 10-20x nhanh hơn XGBoost với accuracy tương đương. Leaf-wise growth thay vì level-wise. Trở thành default GBDT cho production và competitions. 6,000+ citations.",
+      "url": "https://papers.nips.cc/paper/2017/hash/6449f44a102fde848669bdd9eb6b76fa-Abstract.html"
+    },
+    {
+      "title": "CatBoost: unbiased boosting with categorical features",
+      "authors": "Liudmila Prokhorenkova, Gleb Gusev, Aleksandr Vorobev, Anna Veronika Dorogush, Andrey Gulin",
+      "year": 2018,
+      "venue": "NeurIPS 2018",
+      "contribution": "Ordered target statistics cho categorical features — giải quyết target leakage trong target encoding. Ordered boosting giảm prediction shift. Symmetric (oblivious) trees cho inference nhanh. Ít hyperparameter tuning nhất trong top 3 GBDT frameworks. 3,000+ citations.",
+      "url": "https://arxiv.org/abs/1706.09516"
+    },
+    {
+      "title": "TabNet: Attentive Interpretable Tabular Learning",
+      "authors": "Sercan Ö. Arik, Tomas Pfister",
+      "year": 2021,
+      "venue": "AAAI 2021",
+      "contribution": "Attention-based architecture cho tabular data: sequential attention chọn features tại mỗi decision step, tạo interpretable feature masks. Self-supervised pre-training trên unlabeled data. Mở đường cho deep learning trên tabular data, dù GBDT vẫn thống trị. 2,000+ citations.",
+      "url": "https://arxiv.org/abs/1908.07442"
+    },
+    {
+      "title": "Why do tree-based models still outperform deep learning on typical tabular data?",
+      "authors": "Léo Grinsztajn, Edouard Oyallon, Gaël Varoquaux",
+      "year": 2022,
+      "venue": "NeurIPS 2022",
+      "contribution": "Benchmark hệ thống 45 datasets: GBDT vượt deep learning trên phần lớn tabular tasks, đặc biệt medium-sized datasets. Tree-based models robust hơn với uninformative features, irregular target functions, và non-rotationally-invariant data. Paper quantify 'GBDT vẫn là king' cho tabular data. Quan trọng cho practitioners chọn đúng approach.",
+      "url": "https://arxiv.org/abs/2207.08815"
+    },
+    {
+      "title": "Revisiting Deep Learning Models for Tabular Data (FT-Transformer)",
+      "authors": "Yury Gorishniy, Ivan Rubachev, Valentin Khrulkov, Artem Babenko",
+      "year": 2021,
+      "venue": "NeurIPS 2021",
+      "contribution": "Feature Tokenizer + Transformer: mỗi feature thành token, Transformer encoder học feature interactions. Simple architecture competitive với GBDT trên nhiều tasks. Benchmark comprehensive cho tabular deep learning. Cho thấy Transformer là architecture deep learning phù hợp nhất cho tabular data.",
+      "url": "https://arxiv.org/abs/2106.11959"
+    },
+    {
+      "title": "TabPFN: A Transformer That Solves Small Tabular Classification Problems in a Second",
+      "authors": "Noah Hollmann, Samuel Müller, Katharina Eggensperger, Frank Hutter",
+      "year": 2023,
+      "venue": "ICLR 2023",
+      "contribution": "Prior-Data Fitted Network: meta-learned Transformer pre-trained trên synthetic data, zero-shot prediction trên new datasets trong < 1 giây. Competitive với tuned GBDT trên small datasets (< 3K rows). Paradigm mới: thay vì train model, dùng pre-trained predictor. Breakthrough cho rapid prototyping.",
+      "url": "https://arxiv.org/abs/2207.01848"
+    },
+    {
+      "title": "AutoGluon-Tabular: Robust and Accurate AutoML for Structured Data",
+      "authors": "Nick Erickson, Jonas Mueller, Alexander Shirkov, Hang Zhang, Pedro Larroy, Mu Li, Alexander Smola",
+      "year": 2020,
+      "venue": "ICML 2020 AutoML Workshop",
+      "contribution": "Multi-layer stacking ensemble với automatic model selection, hyperparameter tuning, và resource management. Consistently top performance trên AutoML benchmarks. 3 dòng code cho competitive results. Chứng minh stacking + diverse models vượt trội single-model optimization.",
+      "url": "https://arxiv.org/abs/2003.06505"
+    },
+    {
+      "title": "A Unified Approach to Interpreting Model Predictions (SHAP)",
+      "authors": "Scott M. Lundberg, Su-In Lee",
+      "year": 2017,
+      "venue": "NeurIPS 2017",
+      "contribution": "Thống nhất 6 phương pháp giải thích existing (LIME, DeepLIFT, etc.) dưới framework Shapley values. Tính chất lý thuyết mạnh (efficiency, symmetry, linearity, dummy). TreeSHAP (2020) cho exact Shapley values trên tree models trong polynomial time. Trở thành standard cho model interpretation. 15,000+ citations.",
+      "url": "https://arxiv.org/abs/1705.07874"
+    }
+  ],
+  "cross_domain_connections": [
+    {
+      "target": "B01",
+      "connection_type": "foundational_dependency",
+      "description": "ML Fundamentals (B01) cung cấp nền tảng lý thuyết: bias-variance tradeoff, regularization, cross-validation, gradient descent, ensemble methods. Mọi concept trong B13 build trên B01. Decision trees, linear models, evaluation metrics — đều thuộc B01 fundamentals. Không thể làm tabular ML tốt mà không nắm vững B01."
+    },
+    {
+      "target": "B07",
+      "connection_type": "temporal_extension",
+      "description": "Time Series (B07) mở rộng tabular ML cho dữ liệu có temporal dependency. Demand forecasting, churn prediction với survival analysis, financial time series — đều là tabular ML + temporal component. LightGBM với lag/rolling features là approach phổ biến nhất cho time series tabular (M5 competition). Feature engineering temporal (lag, rolling stats, calendar) là bridge giữa B13 và B07."
+    },
+    {
+      "target": "B05",
+      "connection_type": "data_pipeline",
+      "description": "Data Engineering (B05) cung cấp data pipelines cho tabular ML: ETL/ELT, data quality, data warehousing. Feature store integration (Feast) kết nối data engineering và ML. Data validation (Great Expectations) đảm bảo input quality. Batch processing (Spark) cho large-scale feature computation. 80% effort trong tabular ML project là data preparation — B05 dependency trực tiếp."
+    },
+    {
+      "target": "B06",
+      "connection_type": "deployment_operations",
+      "description": "MLOps (B06) cho deployment và monitoring: model versioning (MLflow), CI/CD cho ML, model serving (BentoML), monitoring (Evidently). Model retraining automation, A/B testing, canary deployments. B13 models trong production cần toàn bộ B06 stack — training model chỉ là 20% effort, operations là 80%."
+    },
+    {
+      "target": "B12",
+      "connection_type": "hybrid_analytics",
+      "description": "Search & RAG (B12) kết hợp với tabular ML cho hybrid analytics: structured predictions (B13) + unstructured knowledge retrieval (B12). Ví dụ: credit scoring model (B13) + RAG trên policy documents cho explanation generation (B12). Feature enrichment: extract features từ text documents qua NLP/RAG, đưa vào tabular models."
+    }
+  ],
+  "bestPractices": [
+    "Bắt đầu với LightGBM baseline trước khi thử bất cứ gì khác. LightGBM nhanh nhất, accuracy competitive, ít hyperparameter. Nếu LightGBM baseline AUC > 0.75, đầu tư vào feature engineering — sẽ cải thiện nhiều hơn là đổi model. Chỉ thử CatBoost khi nhiều categorical features, XGBoost khi cần regularization mạnh hơn.",
+    "Feature engineering quyết định 80% chất lượng model. Đầu tư 60% effort vào EDA, feature creation, feature validation. Domain expertise quan trọng hơn ML expertise cho feature engineering. Tạo feature engineering playbook cho mỗi domain (credit scoring, churn, demand forecasting). Automated feature engineering (Featuretools) bổ sung nhưng không thay thế domain knowledge.",
+    "Cross-validation phải match production setting. Temporal data dùng TimeSeriesSplit — KHÔNG BAO GIỜ dùng random K-Fold cho time-dependent data. Grouped data dùng GroupKFold — KHÔNG để cùng customer trong cả train và test. Stratified K-Fold cho imbalanced classification. Sai cross-validation strategy là nguồn gốc phổ biến nhất của overestimated performance.",
+    "SHAP explanations bắt buộc cho mọi production model, đặc biệt financial models tại Việt Nam. NHNN yêu cầu giải thích quyết định tín dụng. SHAP summary plot cho global feature importance, SHAP waterfall cho local explanations (giải thích từng quyết định). TreeSHAP cho exact values — không dùng approximate methods cho regulatory reporting.",
+    "Monitor model drift từ ngày đầu tiên production. Setup Evidently hoặc NannyML cho data drift detection (PSI, KS test) và performance monitoring. Alert thresholds: PSI > 0.2 cho feature drift, AUC drop > 0.02 cho performance degradation. Retrain schedule: monthly minimum, weekly cho high-velocity domains (e-commerce). Concept drift nguy hiểm hơn data drift — validate trên recent data.",
+    "Xử lý class imbalance đúng cách — KHÔNG chỉ dùng accuracy. Metric chính: AUC-ROC cho overall discrimination, AUC-PR cho extreme imbalance (fraud: 0.1%), F1-score cho balanced view. Threshold tuning trên precision-recall curve theo business cost matrix. SMOTE/class_weight cho model training, threshold tuning cho deployment decision.",
+    "Data quality pipeline trước ML pipeline. Validate input data với Great Expectations hoặc Pandera: schema validation, range checks, null percentages, distribution drift. Garbage in = garbage out — không có model nào cứu được bad data. Dành 20% effort cho data quality checks — tiết kiệm 80% effort debug model."
+  ],
+  "antiPatterns": [
+    "Bỏ qua EDA và nhảy thẳng vào training model. Nhiều teams bắt đầu bằng fit(X, y) mà không hiểu data: distributions, correlations, missing patterns, outliers, class imbalance. Kết quả: features kém, data leakage không phát hiện, model performance ảo. Dành ít nhất 1-2 ngày cho EDA trước khi viết training code.",
+    "Dùng accuracy cho imbalanced classification. Credit default rate 2%, model predict tất cả 'no default' đạt 98% accuracy nhưng vô dụng. Đây là sai lầm phổ biến nhất trong tabular ML tại doanh nghiệp Việt Nam. Dùng AUC-ROC, AUC-PR, F1-score. Luôn kiểm tra confusion matrix.",
+    "Random K-Fold CV cho time-series data. Dùng dữ liệu tháng 12 để train, validate trên tháng 6 — data leakage từ tương lai. Results inflate 5-15% so với production. Mọi data có temporal component PHẢI dùng TimeSeriesSplit hoặc walk-forward validation.",
+    "Over-engineer model mà bỏ qua feature engineering. Thử TabNet, FT-Transformer, ensemble phức tạp — trong khi LightGBM + tốt features đã đủ. Grinsztajn et al. (2022) confirm: GBDT vượt deep learning trên phần lớn tabular tasks. Đầu tư vào features trước, model sau.",
+    "Deploy model mà không có monitoring. 'Model chạy tốt trên test set' không có nghĩa model chạy tốt trong 3 tháng. Data drift, concept drift, feature pipeline failures — tất cả xảy ra trong production. Không có monitoring = model degradation âm thầm, phát hiện khi đã gây thiệt hại.",
+    "Impute missing values mù quáng mà không phân tích missingness pattern. Thay NaN bằng mean/median mà không kiểm tra: missing có informative không? (MNAR — ví dụ: thu nhập missing vì khách hàng không muốn khai). Missing indicator columns thường chứa predictive signal. XGBoost/LightGBM xử lý missing native — đôi khi KHÔNG impute là tốt nhất."
+  ],
+  "pipeline": {
+    "stages": [
+      {
+        "name": "Data Collection & Integration (Thu thập và tích hợp dữ liệu)",
+        "description": "Thu thập dữ liệu từ nhiều nguồn: CRM, ERP (MISA, Fast, SAP), core banking, data warehouse, APIs. Tích hợp và join tables, resolve entity matching (cùng customer từ nhiều systems). Vietnamese-specific: chuẩn hoá ID formats (CCCD 12 số, CMND 9 số), địa chỉ (tỉnh/quận/phường), tên (unicode normalization). Data profiling: schema discovery, cardinality checks, distribution overview.",
+        "tools": ["pandas / polars", "SQL", "Airflow", "Great Expectations", "Custom connectors (MISA, Fast)"],
+        "inputs": "Raw data từ CRM, ERP, databases, APIs, spreadsheets",
+        "outputs": "Integrated dataset với schema documentation, profiling report"
+      },
+      {
+        "name": "EDA & Feature Engineering (Khám phá dữ liệu và kỹ thuật đặc trưng)",
+        "description": "Exploratory Data Analysis: distributions, correlations, missing patterns, outliers, target analysis. Feature engineering: encoding categoricals (target encoding, ordinal), scaling numericals, interaction features, aggregation features, time-based features. Domain-specific features cho từng use case (credit scoring: debt-to-income ratio, payment history features; churn: RFM scores, usage trend features). Feature selection: SHAP importance, mutual information, recursive feature elimination. Validate features không có data leakage.",
+        "tools": ["pandas / polars", "matplotlib / seaborn / plotly", "scikit-learn", "Featuretools", "SHAP"],
+        "inputs": "Integrated dataset từ Stage 1",
+        "outputs": "Feature matrix (X) + target (y) + feature documentation + EDA report"
+      },
+      {
+        "name": "Model Training & Validation (Huấn luyện và đánh giá mô hình)",
+        "description": "Cross-validation strategy selection (Stratified K-Fold, TimeSeriesSplit, GroupKFold). Baseline model (LightGBM default params). Hyperparameter tuning (Optuna, 100-200 trials). Model comparison (LightGBM vs XGBoost vs CatBoost). Ensemble nếu cần (stacking 2-3 models). Calibration check (reliability diagram, ECE). Class imbalance handling (class_weight, SMOTE, threshold tuning). SHAP analysis cho feature importance và model interpretation.",
+        "tools": ["LightGBM / XGBoost / CatBoost", "scikit-learn", "Optuna", "SHAP", "MLflow"],
+        "inputs": "Feature matrix + target + CV strategy",
+        "outputs": "Trained model + CV metrics + SHAP explanations + calibration report + MLflow run"
+      },
+      {
+        "name": "Model Validation & Testing (Kiểm định mô hình)",
+        "description": "Out-of-time validation trên truly held-out data (dữ liệu gần nhất chưa dùng trong training/CV). Stress testing: performance trên subgroups (age, region, product type). Fairness checks: demographic parity, equalized odds. Stability analysis: model performance stability qua time periods. Backtesting cho financial models (Basel III requirements). Model documentation: model card, feature importance, decision boundaries, failure cases.",
+        "tools": ["scikit-learn metrics", "SHAP", "Fairlearn", "Custom validation scripts", "MLflow"],
+        "inputs": "Trained model + held-out test data",
+        "outputs": "Validation report + model card + fairness analysis + approval decision"
+      },
+      {
+        "name": "Deployment & Serving (Triển khai và phục vụ)",
+        "description": "Model packaging (BentoML, ONNX export cho optimized inference). API deployment (FastAPI endpoint hoặc BentoML service). Batch scoring pipeline (Airflow scheduled job) cho offline predictions. Online serving với feature store (Feast) cho real-time features. A/B testing framework cho champion/challenger. Canary deployment: 5% traffic → 25% → 100%. Latency target: < 100ms P99 cho online, < 1 hour cho batch.",
+        "tools": ["BentoML / FastAPI", "ONNX Runtime", "Feast", "Docker / Kubernetes", "Airflow"],
+        "inputs": "Validated model + feature store + deployment config",
+        "outputs": "Production API endpoint + batch scoring pipeline + A/B test setup"
+      },
+      {
+        "name": "Monitoring & Retraining (Giám sát và huấn luyện lại)",
+        "description": "Liên tục giám sát: data drift (PSI, KS test trên input features), model performance (AUC, precision, recall khi ground truth available), prediction drift (distribution of scores over time), feature pipeline health. Alert thresholds cho regression detection. Automated retraining trigger khi drift vượt ngưỡng. Retrain schedule: monthly minimum. A/B test new model vs current champion trước khi swap. Model versioning và rollback capability.",
+        "tools": ["Evidently AI", "Grafana + Prometheus", "MLflow Model Registry", "Airflow", "Great Expectations"],
+        "inputs": "Production predictions + ground truth (delayed) + system metrics",
+        "outputs": "Monitoring dashboards + drift alerts + retraining triggers + model version history"
+      }
+    ]
+  },
+  "learning_resources": [
+    {
+      "title": "Hands-On Machine Learning with Scikit-Learn, Keras, and TensorFlow (Aurélien Géron, 3rd Ed.)",
+      "type": "book",
+      "url": "https://www.oreilly.com/library/view/hands-on-machine-learning/9781098125974/",
+      "level": "Beginner to Intermediate",
+      "description": "Sách ML thực hành phổ biến nhất. Chương 6-7 (Decision Trees, Ensemble) và Chương 2 (End-to-End ML Project) là foundation cho tabular ML. Hands-on code, clear explanations. KHỞI ĐẦU TỐT NHẤT cho ML beginners."
+    },
+    {
+      "title": "XGBoost Documentation & Tutorials",
+      "type": "documentation",
+      "url": "https://xgboost.readthedocs.io/",
+      "level": "Beginner to Intermediate",
+      "description": "Official XGBoost docs: parameters, tutorials, GPU support. Introduction to Boosted Trees tutorial giải thích gradient boosting rõ ràng nhất. XGBoost Parameters guide cho hyperparameter tuning."
+    },
+    {
+      "title": "LightGBM Documentation",
+      "type": "documentation",
+      "url": "https://lightgbm.readthedocs.io/",
+      "level": "Beginner to Intermediate",
+      "description": "Official LightGBM docs: parameters, features (GOSS, EFB), tuning guide. Parameter tuning guide là must-read cho practitioners. Categorical feature handling documentation cho native categorical support."
+    },
+    {
+      "title": "scikit-learn Documentation",
+      "type": "documentation",
+      "url": "https://scikit-learn.org/stable/",
+      "level": "Beginner to Intermediate",
+      "description": "ML library chuẩn: preprocessing (pipelines, transformers), model selection (cross-validation, grid search), metrics. User Guide và API Reference. Mọi tabular ML practitioner phải nắm vững scikit-learn."
+    },
+    {
+      "title": "SHAP Documentation & Tutorials",
+      "type": "documentation",
+      "url": "https://shap.readthedocs.io/",
+      "level": "Intermediate",
+      "description": "Official SHAP docs: TreeSHAP, KernelSHAP, visualizations. Tutorial notebooks cho summary plots, dependence plots, force plots, waterfall plots. Bắt buộc cho model interpretation và regulatory compliance."
+    },
+    {
+      "title": "Kaggle Tabular Competitions & Notebooks",
+      "type": "platform",
+      "url": "https://www.kaggle.com/competitions?hostSegmentIdFilter=8",
+      "level": "Intermediate",
+      "description": "Học từ top Kaggle solutions cho tabular data: Home Credit, Santander, IEEE Fraud Detection, M5 Forecasting. Notebooks chia sẻ feature engineering techniques, hyperparameter tuning strategies, ensemble methods. Thực hành tốt nhất cho competitive tabular ML."
+    },
+    {
+      "title": "Feature Engineering and Selection (Max Kuhn, Kjell Johnson)",
+      "type": "book",
+      "url": "https://bookdown.org/max/FES/",
+      "level": "Intermediate",
+      "description": "Sách comprehensive về feature engineering: encoding, transformations, interactions, selection. Free online. R-based nhưng concepts áp dụng cho Python. Đọc nếu muốn nâng cao feature engineering skills — 80% of tabular ML success."
+    },
+    {
+      "title": "MLflow Documentation",
+      "type": "documentation",
+      "url": "https://mlflow.org/docs/latest/index.html",
+      "level": "Intermediate",
+      "description": "Experiment tracking, model registry, model serving. Tutorials cho logging experiments, comparing runs, model versioning. Essential cho production ML workflow. Tích hợp scikit-learn, LightGBM, XGBoost native."
+    },
+    {
+      "title": "Feast Feature Store Documentation",
+      "type": "documentation",
+      "url": "https://docs.feast.dev/",
+      "level": "Intermediate to Advanced",
+      "description": "Open-source feature store: offline/online serving, point-in-time correctness, feature sharing. Quickstart guide và tutorials. Essential khi có 3+ models sharing features hoặc cần real-time feature serving."
+    },
+    {
+      "title": "Evidently AI Documentation",
+      "type": "documentation",
+      "url": "https://docs.evidentlyai.com/",
+      "level": "Intermediate",
+      "description": "ML monitoring: data drift detection, model quality reports, target drift. Integration với MLflow, Airflow. Dashboards cho production monitoring. Open-source Apache 2.0. Essential cho production model monitoring."
+    },
+    {
+      "title": "AutoGluon-Tabular Documentation & Tutorials",
+      "type": "documentation",
+      "url": "https://auto.gluon.ai/stable/tutorials/tabular/index.html",
+      "level": "Intermediate",
+      "description": "AutoML framework: 3 dòng code cho competitive tabular ML. Tutorials từ quickstart đến advanced customization. Benchmark results. Dùng cho rapid prototyping và establishing baselines."
+    },
+    {
+      "title": "Why do tree-based models still outperform deep learning on tabular data? (Grinsztajn et al., 2022)",
+      "type": "paper",
+      "url": "https://arxiv.org/abs/2207.08815",
+      "level": "Intermediate to Advanced",
+      "description": "Paper benchmark quan trọng nhất cho tabular ML practitioners. Hiểu khi nào GBDT vượt deep learning, khi nào deep learning có cơ hội. Inductive biases analysis. Bắt buộc đọc trước khi chọn giữa GBDT và deep learning."
+    }
+  ],
+  "risks": [
+    {
+      "id": "R01",
+      "name": "Data leakage — performance ảo cao trong development nhưng thất bại trong production",
+      "description": "Data leakage xảy ra khi thông tin từ target hoặc từ tương lai rò rỉ vào training features. Credit scoring: feature 'đã trả nợ đúng hạn' computed từ kết quả tương lai. Churn: feature 'cancelled subscription' rò rỉ target. Temporal leakage: dùng dữ liệu tháng sau để predict tháng trước. AUC trên test set có thể inflate 10-20% so với production. Phổ biến nhất và nguy hiểm nhất trong tabular ML — phát hiện muộn gây mất lòng tin.",
+      "severity": "High",
+      "probability": "High",
+      "mitigation": "Strict temporal splitting cho time-dependent data. Feature engineering pipeline tách biệt cho train/serve. Feature store với point-in-time correctness (Feast). Business logic review mỗi feature. Check feature importance bất thường (feature quá mạnh = suspect leakage)."
+    },
+    {
+      "id": "R02",
+      "name": "Model drift — performance degradation âm thầm trong production",
+      "description": "Model performance giảm dần do: concept drift (quan hệ input-output thay đổi — ví dụ: COVID thay đổi spending patterns), data drift (phân bố input features thay đổi — ví dụ: demographic shift), feature pipeline failures (upstream data source thay đổi schema). Nếu không monitor, model degradation âm thầm cho đến khi business impact rõ ràng — có thể mất hàng triệu USD cho credit scoring model bị drift.",
+      "severity": "High",
+      "probability": "High",
+      "mitigation": "Evidently AI cho drift detection (PSI, KS test). Alert thresholds: PSI > 0.2, AUC drop > 0.02. Monthly retraining minimum. Ground truth monitoring khi available (delayed labels). A/B test new model vs champion trước khi swap."
+    },
+    {
+      "id": "R03",
+      "name": "Data quality — garbage in, garbage out tại doanh nghiệp Việt Nam",
+      "description": "Dữ liệu doanh nghiệp Việt Nam thường: missing values 20-40% cho nhiều features, inconsistent formats (date, ID, address), duplicate records không deduplicate, manual data entry errors, schema thay đổi không document. Model trained trên dirty data cho predictions không đáng tin cậy. Nhiều teams bỏ qua data quality và nhảy thẳng vào modeling.",
+      "severity": "Medium",
+      "probability": "High",
+      "mitigation": "Data quality pipeline trước ML pipeline. Great Expectations cho schema validation, range checks, null checks. Data profiling reports. Dành 20% effort cho data quality — tiết kiệm 80% debug time. Document data issues và business rules."
+    },
+    {
+      "id": "R04",
+      "name": "Regulatory compliance — NHNN requirements cho financial models",
+      "description": "NHNN (Ngân hàng Nhà nước) yêu cầu giải thích quyết định tín dụng. Basel III/IFRS 9 cần model validation, backtesting, stress testing. Model dùng cho credit decision phải interpretable hoặc có explanation layer. Black-box model có thể bị từ chối bởi regulators. Fairness requirements: không được discriminate dựa trên protected attributes.",
+      "severity": "High",
+      "probability": "Medium",
+      "mitigation": "SHAP explanations bắt buộc cho mọi financial model. Model card documentation. Backtesting reports. Logistic Regression benchmark cho regulatory comparison. Fairness checks (Fairlearn). Engage compliance team sớm — không chờ đến deployment."
+    },
+    {
+      "id": "R05",
+      "name": "Feature engineering bottleneck — thiếu domain expertise",
+      "description": "Feature engineering quyết định 80% quality nhưng yêu cầu deep domain knowledge: credit scoring cần hiểu financial behavior, insurance cần actuarial knowledge, manufacturing cần process engineering understanding. ML engineers thiếu domain expertise tạo features generic, bỏ sót features quan trọng nhất. Domain experts không biết ML, không biết features nào feasible.",
+      "severity": "Medium",
+      "probability": "High",
+      "mitigation": "Cross-functional teams: ML engineers + domain experts. Feature engineering workshops. Domain-specific feature playbooks. AutoML (Featuretools) cho automated feature generation, nhưng human curation bắt buộc. Iterative feature development với domain expert feedback loop."
+    },
+    {
+      "id": "R06",
+      "name": "Overfitting trên small datasets — đặc biệt với GBDT",
+      "description": "GBDT (đặc biệt LightGBM leaf-wise) dễ overfit trên small datasets (< 5K rows). Hyperparameter tuning trên same CV folds có thể overfit CV performance. Nhiều features so với samples tạo curse of dimensionality. Kaggle-style tuning (100s of trials) overfit small datasets.",
+      "severity": "Medium",
+      "probability": "Medium",
+      "mitigation": "Regularization: max_depth, min_data_in_leaf, L1/L2 penalty. Nested CV cho unbiased performance estimation. Feature selection giảm dimensionality. Early stopping trên validation set. CatBoost ordered boosting cho less overfitting. TabPFN cho very small datasets."
+    }
+  ],
+  "related_nodes": ["B01", "B07", "B05", "B06", "B12"],
+  "metadata": {
+    "status": "reviewed",
+    "version": "1.0",
+    "createdAt": "2026-03-31",
+    "updatedAt": "2026-03-31",
+    "researchedBy": ["R-alpha", "R-beta", "R-gamma", "R-MLE", "R-DE", "R-DA", "R-DBE", "R-BE", "R-FE", "R-DO", "R-SE", "R-QA", "R-SA", "R-D02", "R-D15", "R-sigma"],
+    "consolidatedBy": "R-sigma (Ms. Scribe)",
+    "normalizedAt": "2026-03-31",
+    "normalizedBy": "R-sigma",
+    "phase": "Phase 0",
+    "module": "B13",
+    "reviewedBy": null,
+    "approvedBy": null,
+    "notes": "Consolidated bởi R-sigma (Ms. Scribe). Overall feasibility 8.5/10 CONDITIONAL GO — baseline trưởng thành nhất với TRL 9. JSON field names English, values Vietnamese (có dấu) per language rule. Technical terms giữ English. 16 agents nghiên cứu. Chiến lược: LightGBM baseline + feature engineering trước khi phức tạp hoá. Credit scoring và churn prediction là P0 use cases tại Việt Nam. SHAP bắt buộc cho regulatory compliance (NHNN). Không cần GPU — phù hợp infrastructure Việt Nam. Feature engineering quyết định 80% quality — đầu tư vào features, không phải models. Data quality là thách thức lớn nhất tại doanh nghiệp Việt Nam — organizational problem, không phải technical problem."
+  }
+}

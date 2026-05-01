@@ -1,0 +1,72 @@
+agent: R-alpha
+version: v1.0-mvp
+last_updated: 2026-04-27
+status: mvp-baseline
+notes: |
+  Generic baseline cases for R-α SOTA research agent. Project-specific cases
+  live in `projects/{id}/.eval/` (per project-pinning principle). These 4 cases
+  test agent's general capability, not specific industry knowledge.
+
+test_cases:
+
+  - id: alpha-001-sparse-data-forecast
+    description: "Sparse retail forecast — multi-algorithm SOTA review"
+    input:
+      brief: "B2B 3PL company has 18 months sparse SKU sales data, target accuracy improvement vs Prophet baseline. Need SOTA recommendation."
+      knowledge: ["B01-forecasting"]
+      constraints:
+        compute_budget: "moderate"
+        deployment: "self-host"
+    expected:
+      must_address: ["sparse data handling", "Prophet limitations", "modern alternatives"]
+      must_cite_at_least: 5
+      forbid: ["Prophet as default recommendation", "single-algorithm answer"]
+      sections: ["SOTA Review", "Recommended Algorithms (top-2 ranked)", "Trade-offs", "Citations"]
+      score_threshold: 7.5
+    eval_method: [llm-judge, format-parser]
+
+  - id: alpha-002-bilingual-nlp
+    description: "Multi-lingual NLP intent classification (VN-EN mixed)"
+    input:
+      brief: "VN-language user inputs with code-switching. Need intent classifier with <100ms latency."
+      knowledge: ["B08-conversational-ai"]
+      constraints:
+        latency: "<100ms p95"
+    expected:
+      must_address: ["Vietnamese tokenization", "code-switching handling", "latency tradeoff"]
+      must_cite_at_least: 4
+      forbid: ["pure English-only models without VN consideration"]
+      sections: ["SOTA Review", "Recommended Approach", "Trade-offs"]
+      score_threshold: 7.5
+
+  - id: alpha-003-no-data
+    description: "Adversarial: no data available for baseline claim"
+    input:
+      brief: "Need SOTA review for AI-driven negotiation in B2B procurement, VN context."
+      knowledge: []  # intentionally empty — no industry node
+    expected:
+      must_address: ["acknowledge limited data", "request more context OR fresh research"]
+      must_cite_at_least: 3
+      forbid: ["fabricated statistics", "confident claim without source"]
+      key_phrase_required: ["insufficient data" OR "fresh research needed"]
+      score_threshold: 7.0
+    notes: "Adversarial — tests R-MAS-06 anti-hallucination"
+
+  - id: alpha-004-rapid-evolution-field
+    description: "Field where SOTA changes monthly (LLM coding assistants)"
+    input:
+      brief: "SOTA review for AI coding assistant, last research 6 months ago. Verify still valid OR update."
+      knowledge: ["B10-agentic-ai"]
+    expected:
+      must_address: ["acknowledge field velocity", "what changed in 6 months", "what holds"]
+      must_cite_at_least: 6
+      forbid: ["6-month-old claims as current SOTA without verification"]
+      score_threshold: 7.5
+    notes: "Tests vendor-watch awareness + R-LCY-05 drift"
+
+eval_dimensions:
+  correctness: 0.30
+  completeness: 0.25
+  citation_quality: 0.25
+  clarity: 0.10
+  actionability: 0.10

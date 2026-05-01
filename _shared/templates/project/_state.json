@@ -1,0 +1,131 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema#",
+  "title": "Project State",
+  "description": "Live project state. Updated by orchestrator and agents at every phase transition, gate decision, or significant event. This is the operational counterpart to _meta.json.",
+  "type": "object",
+  "_instructions": "Mutable. Source of truth for: current phase, gate status, blockers, cost burn, eval scores. Read by every agent at task start.",
+
+  "project_id": "<PROJECT-SLUG>",
+  "schema_version": "1.0",
+
+  "lifecycle": {
+    "status": "<intake | discovery | proposal | sow_signed | in_design | in_dev | in_qa | in_deploy | live | support | closed | cancelled | on_hold>",
+    "current_phase": "<00-intake | 01-discovery | ...>",
+    "current_sprint": null,
+    "phase_started_at": "<ISO-8601>",
+    "expected_phase_end": "<ISO-8601>",
+    "overall_health": "<green | yellow | red>",
+    "health_reason": ""
+  },
+
+  "phase_history": [
+    {
+      "phase": "00-intake",
+      "started_at": "<ISO-8601>",
+      "ended_at": "<ISO-8601>",
+      "outcome": "<pass | fail | skipped | conditional>",
+      "owner": "<agent or human>",
+      "deliverable": "<path/to/00-intake.md>",
+      "notes": ""
+    }
+  ],
+
+  "gates": {
+    "intake_to_discovery": { "status": "pending", "approver": "", "decided_at": null, "notes": "" },
+    "discovery_to_proposal": { "status": "pending", "approver": "", "decided_at": null, "notes": "" },
+    "sow_signed": { "status": "pending", "approver": "", "decided_at": null, "notes": "" },
+    "design_to_dev": { "status": "pending", "approver": "", "decided_at": null, "notes": "" },
+    "dev_to_qa": { "status": "pending", "approver": "", "decided_at": null, "notes": "" },
+    "qa_to_deploy": { "status": "pending", "approver": "", "decided_at": null, "notes": "" },
+    "production_launch": { "status": "pending", "approver": "", "decided_at": null, "notes": "" },
+    "client_acceptance": { "status": "pending", "approver": "", "decided_at": null, "notes": "" }
+  },
+
+  "blockers": [
+    {
+      "id": "BLK-001",
+      "severity": "<critical | high | medium | low>",
+      "description": "",
+      "owner": "",
+      "raised_at": "<ISO-8601>",
+      "resolved_at": null,
+      "resolution": ""
+    }
+  ],
+
+  "open_decisions": [
+    { "id": "DEC-001", "topic": "", "owner": "", "deadline": null, "status": "open" }
+  ],
+
+  "adrs": [
+    { "id": "ADR-001", "title": "", "status": "<proposed | accepted | superseded | deprecated>", "path": "decisions/ADR-001-...md" }
+  ],
+
+  "scrs": [
+    { "id": "SCR-001", "title": "", "status": "<draft | submitted | approved | rejected | implemented>", "path": "decisions/SCR-001-...md" }
+  ],
+
+  "cost_burn": {
+    "currency": "USD",
+    "llm_spend_to_date": 0,
+    "llm_spend_cap": null,
+    "infra_spend_to_date": 0,
+    "labor_hours_to_date": 0,
+    "labor_hours_budget": null,
+    "last_synced": "<ISO-8601>",
+    "burn_rate_warning": false
+  },
+
+  "eval_scores": {
+    "latest_run_id": null,
+    "latest_run_at": null,
+    "by_skill": {
+      "<skill-id>": { "score": null, "threshold": null, "pass": null, "golden_set": "" }
+    },
+    "regression_status": "<unknown | passing | failing>"
+  },
+
+  "deliverables_index": [
+    { "phase": "00-intake", "path": "00-intake.md", "status": "draft", "approved_by": null, "approved_at": null }
+  ],
+
+  "memory_promotion_queue": [
+    { "candidate": "", "from_path": "", "to_path": "", "status": "<proposed | reviewed | promoted | rejected>", "reviewed_by": null }
+  ],
+
+  "memory_runtime": {
+    "_doc": "Layer W (.memory/) tracking. Spec: _shared/standards/memory-runtime.md",
+    "enabled": true,
+    "version": "1.0",
+    "created_at": null,
+    "last_gc": null,
+    "active_runs": [],
+    "redactions_count": 0,
+    "size_bytes": 0
+  },
+
+  "security": {
+    "_doc": "Security counters; bumped by orchestrator middleware",
+    "redactions_count": 0,
+    "pii_near_leaks": 0,
+    "cross_project_read_blocks": 0
+  },
+
+  "human_checkpoints": [
+    { "name": "intake_review", "due_by": null, "status": "pending", "owner": "<COO>", "notes": "" },
+    { "name": "proposal_review", "due_by": null, "status": "pending", "owner": "<CEO>", "notes": "" },
+    { "name": "design_review", "due_by": null, "status": "pending", "owner": "<CTO>", "notes": "" },
+    { "name": "pre_deploy_review", "due_by": null, "status": "pending", "owner": "<CTO>", "notes": "" },
+    { "name": "client_acceptance", "due_by": null, "status": "pending", "owner": "<CEO>", "notes": "" }
+  ],
+
+  "incidents": [
+    { "id": "INC-001", "severity": "", "summary": "", "occurred_at": null, "resolved_at": null, "postmortem_path": "" }
+  ],
+
+  "communication_log_pointer": "communication-log.md",
+
+  "last_orchestrator_tick": "<ISO-8601>",
+  "last_updated": "<ISO-8601>",
+  "last_updated_by": "<agent-id or human>"
+}

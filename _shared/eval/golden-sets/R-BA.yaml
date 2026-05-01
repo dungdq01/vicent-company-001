@@ -1,0 +1,73 @@
+agent: R-BA
+version: v1.0-mvp
+last_updated: 2026-04-27
+status: mvp-baseline
+notes: |
+  R-BA Business Analyst — P0.4 project-brief + P1 user stories + P2 acceptance criteria.
+  Tests requirement quality + scope discipline.
+
+test_cases:
+
+  - id: ba-001-brief-clean
+    description: "Clean intake → well-structured project-brief"
+    input:
+      intake: |
+        "Client: 50-employee 3PL VN, COO is buyer. Pain: demand forecast 68% accuracy,
+        target 85%. Budget $5K. Timeline 4 weeks. Has 18mo sales data."
+      knowledge_match: ["B01-forecasting", "I06-logistics"]
+    expected:
+      must_address: ["problem statement quoting client", "≥3 measurable KPIs", "in/out scope explicit", "≥3 assumptions"]
+      kpi_format: "each KPI = number + unit + timeframe (vd: '85% forecast accuracy within 4 weeks')"
+      sections: ["Problem", "Constraints", "Success Criteria", "Scope", "Assumptions", "Knowledge Context", "Team Roster"]
+      forbid: ["vague KPIs ('improve performance')", "no client quote", "scope undefined"]
+      score_threshold: 7.5
+
+  - id: ba-002-ambiguous-intake
+    description: "Vague intake — must request clarification, not paper over"
+    input:
+      intake: "Client wants AI for their business. They're in retail. Budget 'flexible'."
+      knowledge_match: ["I01-retail"]
+    expected:
+      must_address: ["explicit assumptions list with 'TO VERIFY' markers", "list specific clarification questions for P3", "OR emit needs_clarification"]
+      forbid: ["fabricating specifics not in intake", "guessing budget"]
+      key_phrase_required: ["clarification needed" OR "to verify" OR "needs P3 follow-up"]
+      score_threshold: 7.5
+    notes: "Adversarial — tests R-MAS-15 honesty bias"
+
+  - id: ba-003-scope-creep-attempt
+    description: "Client adds feature mid-brief — must route to SCR, not add to scope"
+    input:
+      intake: |
+        "Forecast accuracy improvement. Oh and also CRM integration. And email campaigns.
+        And maybe a chatbot. Sprint A budget."
+    expected:
+      must_address: ["primary scope clear (forecast only)", "additional features → out of scope OR SCR proposal"]
+      forbid: ["accepting all 4 features for Sprint A budget", "silent scope expansion"]
+      key_phrase_required: ["scope change request" OR "SCR" OR "out of Sprint A scope"]
+      score_threshold: 7.5
+
+  - id: ba-004-user-stories-invest
+    description: "P1 — generate INVEST-format user stories"
+    input:
+      requirements: ["forecast generation", "alerts on anomaly", "report export"]
+    expected:
+      must_address: ["each story: As [persona] I want [action] so that [outcome]"]
+      must_pass: "≥90% stories pass INVEST audit (Independent/Negotiable/Valuable/Estimable/Small/Testable)"
+      forbid: ["stories without persona", "stories without 'so that' (no value)"]
+      score_threshold: 7.5
+
+  - id: ba-005-ac-given-when-then
+    description: "Acceptance criteria — Given/When/Then format with measurable outcome"
+    input:
+      story: "As COO I want weekly forecast accuracy report so I can adjust ordering"
+    expected:
+      must_address: ["≥1 AC per story", "Given/When/Then structure", "outcome measurable (number, not 'better')"]
+      forbid: ["AC without measurable outcome", "AC missing one of G/W/T parts"]
+      score_threshold: 7.5
+
+eval_dimensions:
+  correctness: 0.25
+  kpi_measurability: 0.25
+  scope_discipline: 0.20
+  client_voice_preservation: 0.15
+  format_compliance: 0.15

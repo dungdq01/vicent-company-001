@@ -1,0 +1,659 @@
+{
+  "id": "B07",
+  "name": "Anomaly Detection & Monitoring",
+  "type": "baseline",
+  "slug": "anomaly-detection-monitoring",
+  "tagline": "Phat hien bat thuong va giam sat lien tuc — tu gian lan giao dich den loi cam bien, tu xam nhap mang den drift mo hinh, bao ve he thong truoc nhung gi khong the du doan",
+  "category": "baseline",
+  "icon": "ShieldAlert",
+  "color": "#FF5252",
+  "depthLevel": 3,
+  "selectedAgents": ["R-alpha", "R-beta", "R-gamma", "R-MLE", "R-DE", "R-DLE", "R-DA", "R-BE", "R-DO", "R-SE", "R-QA", "R-SA", "R-D02", "R-D04", "R-sigma"],
+  "description": "Anomaly Detection & Monitoring la linh vuc phat hien cac mau bat thuong trong du lieu — tu diem bat thuong don le den bat thuong tap the trong chuoi thoi gian, tu gian lan tai chinh den hong hoc thiet bi san xuat. Ky thuat trai dai tu phuong phap thong ke co dien (Z-score, Grubbs) qua machine learning (Isolation Forest, LOF, One-Class SVM) den deep learning hien dai (Autoencoder, VAE, Anomaly Transformer). Voi stack open-source chin muoi (PyOD 40+ algorithms, Alibi Detect, Kafka, Flink), he thong co the trien khai tu batch phan tich hang ngay den streaming phat hien real-time duoi 100ms. Cho thi truong Viet Nam — noi ngan hang mat $200M+/nam do gian lan, 8,000+ nha may can giam sat chat luong, va thuong mai dien tu xu ly 2.5 ty buu kien/nam — lam chu B07 la bat buoc cho bat ky nen tang AI nghiem tuc nao.",
+  "description_paragraphs": [
+    "Anomaly Detection & Monitoring la linh vuc giao giua Statistical Learning, Machine Learning, va Signal Processing, tap trung vao viec phat hien cac data points, events, hoac patterns lech dang ke khoi hanh vi binh thuong. Linh vuc bao gom 8 sub-fields: Point Anomaly, Contextual Anomaly, Collective Anomaly, Time-Series, Streaming, Graph, Image/Video, va Log/Event anomaly detection. Stack cong nghe hoan toan open-source va chin muoi: PyOD (40+ algorithms, MIT), Alibi Detect (production-grade voi drift detection), Kafka + Flink cho streaming, PyTorch cho deep models, Prometheus + Grafana cho monitoring — TRL 8, da duoc chung minh tai Netflix, Uber, Stripe.",
+    "Tai Viet Nam, B07 co diem kha thi 7.3/10 (CONDITIONAL GO) voi Market Demand cao nhat (9/10): ngan hang mat $200M+/nam do gian lan va dang chiu ap luc tu NHNN trien khai AI fraud detection truoc 2027; 8,000+ nha may can predictive quality control (giam defect 15-30%); thuong mai dien tu 2.5 ty buu kien/nam can logistics anomaly detection. Tuy nhien, Data Availability (6/10) va Implementation Risk (6/10) la thach thuc: du lieu bat thuong co nhan cuc ky hiem tai VN, va ty le false positive 30-50% cua phuong phap unsupervised gay 'alert fatigue' nghiem trong.",
+    "Chien luoc trien khai: bat dau voi Banking Fraud Detection lam beachhead (willingness to pay cao nhat, $20K-100K/nam SaaS), dung kien truc batch-first (PostgreSQL + PyOD + MLflow + Grafana, $500-1,500/thang infrastructure). Them streaming (Kafka + Flink) chi khi client yeu cau latency <1 giay. Dieu kien GO: can pilot client ngan hang cung cap labeled data, tich hop SHAP explainability tu ngay dau (bat buoc cho regulatory compliance NHNN), va xay Vietnam Anomaly Benchmark Dataset lam competitive moat."
+  ],
+  "aliases": [
+    "Phat hien bat thuong",
+    "Giam sat bat thuong",
+    "Anomaly Detection",
+    "Outlier Detection",
+    "Phat hien ngoai le",
+    "Fraud Detection",
+    "Phat hien gian lan"
+  ],
+  "maturity_level": "mature",
+  "trl": 8,
+  "core_concepts": [
+    {
+      "name": "Diem bat thuong (Point Anomaly)",
+      "definition": "Mot data instance don le lech dang ke khoi phan con lai cua dataset. Scoring function s(x) > tau voi tau duoc chon de kiem soat ty le false positive alpha. Vi du: giao dich $50,000 khi binh thuong <$200. Phuong phap: Z-score, Grubbs' test, k-NN distance.",
+      "difficulty": "Beginner",
+      "prerequisites": ["Thong ke co ban", "Phan phoi xac suat"]
+    },
+    {
+      "name": "Bat thuong theo ngu canh (Contextual Anomaly)",
+      "definition": "Data instance chi bat thuong trong mot ngu canh cu the: x = (x_c, x_b) la bat thuong khi p(x_b|x_c) < epsilon, du p(x_b) marginally co the binh thuong. Vi du: nhiet do 35°C binh thuong mua he nhung bat thuong mua dong. Dac biet quan trong cho time-series.",
+      "difficulty": "Intermediate",
+      "prerequisites": ["Xac suat co dieu kien", "Time-series co ban", "Point anomaly"]
+    },
+    {
+      "name": "Bat thuong tap the (Collective Anomaly)",
+      "definition": "Nhom data instances bat thuong khi xet chung, du tung instance rieng le co the binh thuong. p(S) << tich p(x_i). Vi du: mot goi tin mang binh thuong, nhung hang ngan goi giong nhau trong 1 giay = DDoS attack. Can phuong phap xet subsequences, subgraphs.",
+      "difficulty": "Intermediate",
+      "prerequisites": ["Phan tich chuoi", "Graph theory co ban"]
+    },
+    {
+      "name": "Nguyen ly Isolation (Isolation Forest Principle)",
+      "definition": "Anomalies it va khac biet, nen can it splits de co lap qua random partitioning. Score: s(x,n) = 2^(-E[h(x)]/c(n)), voi h(x) la path length trong iTree. Thoi gian tuyen tinh O(t*psi*log(psi)). Subsample psi=256 chong masking/swamping. Paradigm shift: co lap bat thuong thay vi mo hinh binh thuong.",
+      "difficulty": "Intermediate",
+      "prerequisites": ["Decision trees", "Ensemble methods"]
+    },
+    {
+      "name": "Sai so Tai tao (Autoencoder Reconstruction Error)",
+      "definition": "Autoencoder hoc nen du lieu binh thuong qua bottleneck encoder-decoder. Anomaly score: a(x) = ||x - g_phi(f_theta(x))||^2. Bat thuong khong khop voi patterns da hoc → sai so tai tao cao. Variants: Denoising AE, Sparse AE, VAE (anomaly score = -ELBO). Hieu qua cho high-dimensional data (images, sensors).",
+      "difficulty": "Intermediate",
+      "prerequisites": ["Neural networks", "Dimensionality reduction"]
+    },
+    {
+      "name": "Phat hien bat thuong Chuoi thoi gian (Time-Series Anomaly Detection)",
+      "definition": "Xu ly thach thuc rieng cua temporal data: autocorrelation, trend, seasonality, non-stationarity. Phuong phap chu dao: model-residual e_t = y_t - y_hat_t, flag khi |e_t| > k*sigma_e. STL decomposition: Y_t = T_t + S_t + R_t. Deep learning: LSTM, Temporal CNN, Anomaly Transformer.",
+      "difficulty": "Intermediate",
+      "prerequisites": ["Phan tich chuoi thoi gian", "ARIMA/ETS", "RNNs"]
+    },
+    {
+      "name": "Phat hien bat thuong Streaming (Streaming Anomaly Detection)",
+      "definition": "Phat hien tren luong du lieu lien tuc voi rang buoc: bo nho han che, xu ly mot lan, latency thap. Thach thuc chinh: concept drift — phan phoi du lieu thay doi theo thoi gian. Algorithms: ADWIN (adaptive windowing), Half-Space Trees, xStream (random projections + count-min sketches). Can phan biet anomaly vs novelty vs drift.",
+      "difficulty": "Advanced",
+      "prerequisites": ["Online learning", "Streaming algorithms", "Concept drift"]
+    },
+    {
+      "name": "Phat hien bat thuong Da bien (Multivariate Anomaly Detection)",
+      "definition": "Phat hien bat thuong chi hien thi qua tuong tac nhieu bien — kiem tra tung bien rieng le se bo sot. PCA-based: a(x) = sum((v_j^T * x)^2) cho minor components. Mahalanobis: a(x) = (x-mu)^T * Sigma^-1 * (x-mu). Thach thuc: curse of dimensionality lam distance concentrate trong khong gian cao chieu.",
+      "difficulty": "Advanced",
+      "prerequisites": ["Dai so tuyen tinh", "PCA", "Uoc luong covariance"]
+    },
+    {
+      "name": "Nguong va Quan ly Canh bao (Threshold & Alert Management)",
+      "definition": "Chuyen anomaly score thanh quyet dinh hanh dong. Ba chien luoc: Static (fixed percentile, vd score > 0.95), Dynamic (thich ung theo phan phoi score gan day), Multi-level (Warning 0.85 → Critical 0.95 → Emergency 0.99). Alert fatigue la van de #1 — ty le false positive 30-50% cho unsupervised methods khien operators bo qua moi canh bao.",
+      "difficulty": "Intermediate",
+      "prerequisites": ["Thong ke co ban", "Signal detection theory"]
+    },
+    {
+      "name": "Vong phan hoi & Drift Detection (Feedback Loop & Model Drift)",
+      "definition": "Khong co feedback loop, mo hinh suy giam trong vai tuan. Can: labeling UI tich hop dashboard, phan biet 'khong bat thuong' vs 'bat thuong nhung khong can hanh dong', retrain trigger theo so luong labels. Drift detection (Alibi Detect) phat hien distribution shift, trigger retrain trong 24h. Budget 30% engineering effort cho model maintenance.",
+      "difficulty": "Advanced",
+      "prerequisites": ["MLOps co ban", "Statistical testing"]
+    }
+  ],
+  "algorithms": [
+    {
+      "name": "Isolation Forest",
+      "category": "Isolation-based, Ensemble",
+      "complexity": "Training: O(t*psi*log(psi)); Scoring: O(t*log(psi)) moi diem",
+      "pros": ["Thoi gian tuyen tinh — scale hang trieu records", "Khong can tinh distance hay density", "Subsample chong masking/swamping", "It hyperparameters (t, psi, contamination)"],
+      "cons": ["Axis-aligned splits kho voi feature interactions (can Extended IF)", "Nhay cam voi features khong lien quan", "Khong tich hop labeled anomalies native"],
+      "use_cases": ["General-purpose tabular anomaly detection", "High-dimensional data", "First-choice baseline cho moi bai toan"],
+      "key_papers": ["Liu, F.T., Ting, K.M., Zhou, Z.-H. (2008). Isolation Forest. ICDM."]
+    },
+    {
+      "name": "One-Class SVM (OC-SVM)",
+      "category": "Kernel-based, Boundary method",
+      "complexity": "Training: O(n^2) den O(n^3); Scoring: O(n_sv * d) moi diem",
+      "pros": ["Nen tang ly thuyet vung (Statistical Learning Theory)", "Linh hoat qua kernel (RBF, polynomial)", "Nu parameter truc tiep kiem soat ty le outlier"],
+      "cons": ["O(n^2-n^3) khong scale dataset lon", "Nhay cam voi kernel va hyperparameter", "Khong co probabilistic output"],
+      "use_cases": ["Dataset nho-vua, normal class ro rang", "Chieu trung binh voi kernel phu hop"],
+      "key_papers": ["Scholkopf, B. et al. (2001). Estimating the support of a high-dimensional distribution."]
+    },
+    {
+      "name": "Local Outlier Factor (LOF)",
+      "category": "Density-based, Neighborhood method",
+      "complexity": "O(n^2) naive; O(n*log(n)) voi spatial indexing",
+      "pros": ["Bat local anomalies ma global methods bo sot", "Xu ly clusters voi density khac nhau", "Score LOF truc quan (ty le density)"],
+      "cons": ["O(n^2) han che scalability", "Nhay cam voi chon k", "Kem cho high dimensions"],
+      "use_cases": ["Datasets co clusters density khac nhau", "Local anomaly detection"],
+      "key_papers": ["Breunig, M.M. et al. (2000). LOF: Identifying density-based local outliers. SIGMOD."]
+    },
+    {
+      "name": "DBSCAN / HDBSCAN Anomaly Detection",
+      "category": "Density-based clustering, By-product method",
+      "complexity": "O(n*log(n)) voi spatial indexing; O(n^2) worst-case",
+      "pros": ["Khong gia dinh so clusters", "Xu ly cluster hinh dang bat ky", "HDBSCAN GLOSH score lien tuc va robust", "Noise points la phat hien bat thuong tu nhien"],
+      "cons": ["DBSCAN can tune epsilon va MinPts can than", "Kem cho high dimensions", "Vanilla DBSCAN chi co binary (noise hay khong)"],
+      "use_cases": ["Du lieu khong gian", "Khi can clustering va anomaly detection cung luc"],
+      "key_papers": ["Ester, M. et al. (1996). DBSCAN. KDD.", "Campello, R.J.G.B. et al. (2013). HDBSCAN. PAKDD."]
+    },
+    {
+      "name": "Autoencoder / VAE Anomaly Detection",
+      "category": "Reconstruction-based, Deep Learning",
+      "complexity": "Training: O(epochs*n*d*k); Inference: O(d*k) moi sample",
+      "pros": ["Hieu qua cho high-dimensional data (images, sensors, time series)", "VAE cung cap probabilistic anomaly score", "Bat cau truc phi tuyen ma PCA bo sot"],
+      "cons": ["Can du lieu training chu yeu la normal (semi-supervised)", "Bottleneck dimension k nhay cam", "Can GPU cho training", "Black-box — kho giai thich"],
+      "use_cases": ["Manufacturing visual inspection", "Sensor monitoring", "High-dimensional time series"],
+      "key_papers": ["Kingma, D.P. & Welling, M. (2014). Auto-Encoding Variational Bayes. ICLR.", "An, J. & Cho, S. (2015). VAE-based anomaly detection using reconstruction probability."]
+    },
+    {
+      "name": "Anomaly Transformer",
+      "category": "Attention-based, Deep Learning",
+      "complexity": "O(n^2*d) attention per layer (n sequence length, d model dim)",
+      "pros": ["Bat ca local va global temporal dependencies", "Association discrepancy la anomaly criterion moi", "State-of-art tren nhieu time-series benchmarks"],
+      "cons": ["O(n^2) attention costly cho sequences dai", "Can nhieu du lieu training", "GPU-intensive", "Kho deploy real-time streaming"],
+      "use_cases": ["Multivariate time-series anomaly detection", "IT operations (AIOps)", "Batch analysis cho complex temporal patterns"],
+      "key_papers": ["Xu, J. et al. (2022). Anomaly Transformer: Time Series Anomaly Detection with Association Discrepancy. ICLR."]
+    },
+    {
+      "name": "ADWIN + Half-Space Trees (Streaming)",
+      "category": "Online/Streaming, Adaptive",
+      "complexity": "ADWIN: O(log(W)) per update; HS-Trees: O(max_depth) per point",
+      "pros": ["Xu ly concept drift tu dong (ADWIN adaptive window)", "Constant memory cho streaming", "Khong can retrain — incremental update"],
+      "cons": ["Do chinh xac thap hon batch methods", "ADWIN chi phat hien mean shift (khong phai variance)", "HS-Trees can reference window tot"],
+      "use_cases": ["Real-time sensor monitoring", "Network intrusion detection streaming", "IoT device anomaly detection"],
+      "key_papers": ["Bifet, A. & Gavalda, R. (2007). Learning from Time-Changing Data with Adaptive Windowing. SDM.", "Tan, S.C. et al. (2011). Fast Anomaly Detection for Streaming Data. IJCAI."]
+    },
+    {
+      "name": "Statistical Methods (Z-score, Grubbs, IQR)",
+      "category": "Statistical, Parametric/Non-parametric",
+      "complexity": "O(n) cho Z-score/IQR; O(n*log(n)) cho Grubbs iterative",
+      "pros": ["Don gian, de hieu, de giai thich (regulatory-friendly)", "Khong can training data", "Rat nhanh — production tu 1950s", "Baseline tot de so sanh voi ML methods"],
+      "cons": ["Gia dinh normal distribution (Z-score, Grubbs)", "Chi univariate — bo sot multivariate anomalies", "Khong adapt theo thoi gian"],
+      "use_cases": ["Quick screening dau tien", "Regulatory-compliant banking (NHNN)", "Low-complexity embedded systems"],
+      "key_papers": ["Grubbs, F.E. (1950). Sample criteria for testing outlying observations.", "Tukey, J.W. (1977). Exploratory Data Analysis."]
+    },
+    {
+      "name": "Deep SAD / DevNet (Semi-supervised)",
+      "category": "Semi-supervised, Deep Learning",
+      "complexity": "O(epochs*n*d*k) — tuong tu autoencoder",
+      "pros": ["Tan dung labeled anomalies (du it) de cai thien performance dang ke", "Deep SAD: one-class objective + labeled guidance", "DevNet: deviation network — score truc tiep"],
+      "cons": ["Can it nhat vai tram labeled anomalies", "Van can du lieu normal nhieu", "Phuc tap hon unsupervised"],
+      "use_cases": ["Fraud detection voi historical fraud labels", "Manufacturing voi defect labels tu QC", "Bat ky domain co partial labels"],
+      "key_papers": ["Ruff, L. et al. (2020). Deep Semi-Supervised Anomaly Detection. ICLR.", "Pang, G. et al. (2019). DevNet. KDD."]
+    }
+  ],
+  "tech_stack": {
+    "data_ingestion": {
+      "recommended": {"recommended": "Apache Kafka 3.7+", "rationale": "Distributed event streaming platform cho real-time data ingestion tu nhieu nguon (sensors, logs, transactions). Production-proven tai LinkedIn, Netflix. Ket hop Debezium cho CDC tu databases."},
+      "alternatives": {"recommended": "RabbitMQ / Amazon Kinesis / Azure Event Hubs", "rationale": "RabbitMQ don gian hon cho team nho. Kinesis/Event Hubs cho cloud-native. Chi dung managed services khi khong co Kafka expertise."}
+    },
+    "stream_processing": {
+      "recommended": {"recommended": "Apache Flink 1.19+", "rationale": "Stateful stream processing cho real-time feature engineering va windowed aggregations. CEP (Complex Event Processing) cho rule-based pattern matching. Latency <100ms cho fraud detection."},
+      "alternatives": {"recommended": "Spark Structured Streaming / Kafka Streams / Apache Beam", "rationale": "Kafka Streams nhe hon cho simple transforms. Spark Streaming khi da co Spark ecosystem. Beam cho portability."}
+    },
+    "feature_store": {
+      "recommended": {"recommended": "Feast 0.40+", "rationale": "Open-source feature store cho ML: shared feature definitions, point-in-time joins, online/offline serving. Mien phi. Tranh feature drift giua training va serving."},
+      "alternatives": {"recommended": "Tecton / Hopsworks / Vertex AI Feature Store", "rationale": "Tecton managed; Hopsworks cho on-premise. Chi xet khi Feast khong du cho scale."}
+    },
+    "anomaly_detection_library": {
+      "recommended": {"recommended": "PyOD 2.0+ (Python Outlier Detection)", "rationale": "40+ algorithms trong unified API. MIT license. Isolation Forest, LOF, OCSVM, Autoencoders, Deep SAD — tat ca tu mot thu vien. DEFAULT cho moi POC va baseline."},
+      "alternatives": {"recommended": "Alibi Detect 0.12+ / River 0.21+ / scikit-learn", "rationale": "Alibi Detect cho production (drift detection tich hop). River cho streaming incremental learning. scikit-learn cho Isolation Forest va basic methods."}
+    },
+    "deep_learning": {
+      "recommended": {"recommended": "PyTorch 2.3+", "rationale": "Autoencoder, VAE, Anomaly Transformer models. Dynamic computation graph de debug. TorchScript/ONNX cho deployment. Community lon nhat cho anomaly detection research."},
+      "alternatives": {"recommended": "TensorFlow 2.16+ / JAX", "rationale": "TensorFlow khi can TFLite (edge deployment). JAX cho research performance-critical."}
+    },
+    "feature_engineering": {
+      "recommended": {"recommended": "tsfresh 0.20+", "rationale": "Tu dong extract 700+ statistical features tu time series. Giam 80% effort feature engineering thu cong. Ket hop pandas + numpy cho batch processing."},
+      "alternatives": {"recommended": "Featuretools / tsfel / Catch22 / Polars", "rationale": "Catch22 cho 22 core features (nhanh hon tsfresh). Polars thay pandas cho datasets lon."}
+    },
+    "model_serving": {
+      "recommended": {"recommended": "BentoML 1.3+ / Triton Inference Server", "rationale": "BentoML cho don gian: package models as APIs voi batching. Triton cho GPU-accelerated high-throughput. Redis cache anomaly scores va features."},
+      "alternatives": {"recommended": "TorchServe / Seldon Core / KServe / Ray Serve", "rationale": "Seldon Core cho Kubernetes-native. Ray Serve khi da dung Ray ecosystem."}
+    },
+    "experiment_tracking": {
+      "recommended": {"recommended": "MLflow 2.15+", "rationale": "Experiment tracking, model registry, deployment. Self-hosted mien phi. Track anomaly detection configs, threshold parameters, performance metrics qua thoi gian."},
+      "alternatives": {"recommended": "Weights & Biases / Neptune / ClearML", "rationale": "W&B cho visualization tot hon nhung SaaS. ClearML mien phi self-hosted alternative."}
+    },
+    "monitoring_alerting": {
+      "recommended": {"recommended": "Prometheus + Grafana + Alertmanager", "rationale": "Prometheus thu thap metrics (model performance, anomaly rates, latency). Grafana dashboards va alerting rules. Alertmanager route canh bao den Slack/PagerDuty. Self-hosted, mien phi."},
+      "alternatives": {"recommended": "ELK Stack / Datadog / InfluxDB + Chronograf", "rationale": "ELK cho log anomaly analysis. Datadog all-in-one nhung $23+/host/thang. InfluxDB cho time-series metrics chuyen biet."}
+    },
+    "explainability": {
+      "recommended": {"recommended": "SHAP 0.45+ / LIME", "rationale": "BAT BUOC cho banking vertical (NHNN regulatory compliance). SHAP giai thich moi anomaly score: feature nao dong gop nhieu nhat. Isolation Forest + SHAP la combo uu tien cho regulated verticals."},
+      "alternatives": {"recommended": "Alibi Explain / InterpretML / Captum (PyTorch)", "rationale": "Alibi Explain tich hop Alibi Detect. Captum cho PyTorch deep models."}
+    },
+    "labeling": {
+      "recommended": {"recommended": "Label Studio 1.12+", "rationale": "Open-source labeling tool. Tich hop vao feedback loop: operators label true positive/false positive tu alert dashboard. Can thiet cho semi-supervised model improvement."},
+      "alternatives": {"recommended": "Prodigy / Labelbox / Custom labeling UI", "rationale": "Prodigy nhanh cho NLP/tabular. Custom UI khi can embed vao existing dashboard."}
+    },
+    "api_layer": {
+      "recommended": {"recommended": "FastAPI 0.115+", "rationale": "Async-native, OpenAPI auto-docs, Pydantic validation. Scoring API endpoint /score voi latency <50ms. Health check va metrics endpoints cho Prometheus."},
+      "alternatives": {"recommended": "Flask / Django REST / gRPC", "rationale": "gRPC cho internal microservice communication (lower latency). Flask khi team quen thuoc."}
+    }
+  },
+  "feasibility_score": {
+    "overall_score": 7.3,
+    "verdict": "CONDITIONAL GO",
+    "verdict_vi": "Tien hanh co dieu kien",
+    "summary": "Linh vuc chin muoi ky thuat (TRL 8), nhu cau thi truong cuc cao (9/10) voi ngan hang VN mat $200M+/nam do gian lan va regulatory tailwind tu NHNN. Dieu kien: can pilot client ngan hang cung cap labeled data, batch-first architecture (streaming la Phase 2), tich hop SHAP explainability tu ngay dau, va xay Vietnam Anomaly Benchmark Dataset lam competitive moat.",
+    "dimensions": {
+      "technical_feasibility": {"score": 8, "rationale": "Algorithms chin muoi (Isolation Forest, Autoencoders, Transformer) voi production-grade libraries (PyOD 40+ algorithms, Alibi Detect, River). Kien truc hybrid batch-train/stream-infer da duoc chung minh tai Netflix, Uber. Tru 2 diem cho do phuc tap streaming pipelines va model drift management."},
+      "market_demand": {"score": 9, "rationale": "Ngan hang VN mat $200M+/nam do gian lan, tang 25%/nam voi digital banking. 8,000+ nha may can quality control. E-commerce 2.5 ty buu kien/nam. Global market $7.1B by 2028. NHNN mandate AI fraud detection truoc 2027. Tru 1 diem vi mot so client chua nhan ra can AI-based detection."},
+      "data_availability": {"score": 6, "rationale": "Public benchmarks ton tai (KDD Cup, Credit Card Fraud, NAB, SWAT). Nhung Vietnam-specific labeled anomaly data cuc ky hiem. Ngan hang giu proprietary fraud data, khong chia se. Factory sensor data silo trong legacy SCADA/PLC. Can 3-6 thang partnership voi pilot customers de xay dataset."},
+      "implementation_risk": {"score": 6, "rationale": "Alert fatigue tu false positive rate 30-50% (unsupervised). Streaming infrastructure (Kafka + Flink) can DevOps chuyen mon hiem tai VN (<200 senior engineers). Cold-start problem cho khach moi. Feedback loop (Stage 6) la thanh phan quan trong nhat nhung thuong bi danh gia thap effort."},
+      "vietnam_market_fit": {"score": 8, "rationale": "47 ngan hang thuong mai + 80 fintech. VietQR 180M+ giao dich/thang tao fraud vectors moi. Manufacturing FDI (Samsung, Foxconn) co budget tuong duong global. On-premise deployment dap ung data residency (Thong tu 13/2023/TT-NHNN). Tru 2 diem cho SMB willingness to pay thap va thieu labeled data."}
+    },
+    "conditions": [
+      "It nhat 1 pilot client ngan hang cung cap labeled fraud data truoc khi commit xay full product",
+      "Bat dau batch-first architecture (PostgreSQL + PyOD + MLflow + Grafana, $500-1,500/thang). Streaming la Phase 2",
+      "Tich hop SHAP explainability tu ngay dau — bat buoc cho regulatory compliance NHNN",
+      "Xay Vietnam Anomaly Benchmark Dataset qua partnership voi pilot customers (3-6 thang)",
+      "Target <10% false positive rate truoc khi production deployment qua threshold calibration voi pilot",
+      "Tuyen 2 streaming engineers proactively cho Phase 2 (Kafka/Flink recruitment mat 3-6 thang tai VN)"
+    ]
+  },
+  "industry_applications": [
+    {
+      "industry": "Ngan hang & Fintech (Banking Fraud Detection)",
+      "use_case": "Phat hien gian lan giao dich tai chinh",
+      "description": "Fraud detection cho 47 ngan hang thuong mai VN + 80 fintech. VietQR 180M+ giao dich/thang tao attack surface moi. Isolation Forest + SHAP cho explainability. Semi-supervised voi historical fraud labels. Target latency <100ms cho real-time blocking.",
+      "priority": "P0",
+      "market_size_vn": "USD 200M+ (ton that gian lan/nam, tang 25%/nam)",
+      "technical_complexity": "High",
+      "vietnam_readiness": "High"
+    },
+    {
+      "industry": "San xuat (Manufacturing — Quality Control)",
+      "use_case": "Giam sat chat luong va phat hien defects tu dong",
+      "description": "Predictive quality control cho 8,000+ nha may VN. Autoencoder tren sensor data (nhiet do, rung dong, ap suat, RPM). Giam defect rate 15-30%. Phat hien trong 5 giay de ngan unplanned downtime ($50K-500K/incident).",
+      "priority": "P1",
+      "market_size_vn": "USD 80M (chi tieu IT san xuat)",
+      "technical_complexity": "Medium",
+      "vietnam_readiness": "Medium"
+    },
+    {
+      "industry": "Thuong mai dien tu & Logistics (E-commerce Anomaly)",
+      "use_case": "Phat hien bat thuong logistics va gia ca",
+      "description": "2.5 ty buu kien/nam: anomaly detection cho delivery time prediction failures, pricing anomalies, fake review detection, inventory shrinkage. Batch daily detection du cho hau het use cases. Key players: Shopee, Lazada, Tiki, GHTK, GHN.",
+      "priority": "P1",
+      "market_size_vn": "USD 50M",
+      "technical_complexity": "Medium",
+      "vietnam_readiness": "High"
+    },
+    {
+      "industry": "Vien thong (Telecom Network Anomaly)",
+      "use_case": "Phat hien bat thuong mang va gian lan SIM",
+      "description": "3 nha mang lon (Viettel, VNPT, Mobifone): network anomaly detection, SIM swap fraud, subscription fraud. Multivariate monitoring hang tram metrics mang dong thoi. Streaming pipeline voi Kafka + Flink.",
+      "priority": "P1",
+      "market_size_vn": "USD 30M",
+      "technical_complexity": "High",
+      "vietnam_readiness": "Medium"
+    },
+    {
+      "industry": "An ninh mang (Cybersecurity / SIEM)",
+      "use_case": "Phat hien xam nhap va bat thuong bao mat",
+      "description": "Log anomaly detection cho intrusion detection systems. Ket hop rule-based (SIEM) voi ML-based anomaly scoring. Graph anomaly detection cho lateral movement. SOAR playbook tu dong phan hoi. Dac biet cho co quan nha nuoc va ngan hang.",
+      "priority": "P2",
+      "market_size_vn": "USD 40M",
+      "technical_complexity": "Very High",
+      "vietnam_readiness": "Low"
+    },
+    {
+      "industry": "IT Operations (AIOps)",
+      "use_case": "Giam sat he thong IT va phat hien su co tu dong",
+      "description": "Prometheus metrics + log anomaly detection cho DevOps/SRE teams. Tu dong phat hien service degradation, resource exhaustion, deployment regression. Grafana dashboards voi anomaly annotations. Target: cong ty tech VN va FDI.",
+      "priority": "P2",
+      "market_size_vn": "USD 20M",
+      "technical_complexity": "Medium",
+      "vietnam_readiness": "High"
+    }
+  ],
+  "case_studies": [
+    {
+      "title": "Stripe Radar — Fraud detection cho hang trieu merchants",
+      "industry": "Fintech / Payments",
+      "problem": "Phat hien gian lan real-time tren hang ty giao dich/nam voi false positive rate thap de khong block giao dich hop phap.",
+      "solution": "ML-based fraud scoring voi labeled historical data (semi-supervised). Ensemble models voi rule engine. Real-time scoring <100ms.",
+      "results": "Block $40B+ gian lan. False positive rate thap hon industry average. 89% merchants su dung Radar by default.",
+      "tech_stack": "Custom ML pipeline, real-time scoring, labeled feedback loop",
+      "lessons": "Semi-supervised voi feedback loop hieu qua hon unsupervised. Labeled data la competitive moat."
+    },
+    {
+      "title": "Netflix — Anomaly detection cho streaming quality",
+      "industry": "Technology / Streaming",
+      "problem": "Phat hien suy giam chat luong streaming tren hang tram trieu users, hang ngan microservices, nhieu regions.",
+      "solution": "Statistical anomaly detection (Robust PCA) + ML models tren time-series metrics. Kafka pipeline cho real-time. Custom Grafana dashboards.",
+      "results": "Giam Mean Time to Detect (MTTD) tu hang gio xuong phut. Tu dong rollback deployments co van de.",
+      "tech_stack": "Kafka, Flink, custom ML models, Grafana, Atlas (time-series DB)",
+      "lessons": "Hybrid statistical + ML hieu qua hon pure ML. Domain-specific features quan trong hon algorithm chon."
+    },
+    {
+      "title": "Uber — Marketplace anomaly detection",
+      "industry": "Ride-hailing / Logistics",
+      "problem": "Phat hien bat thuong trong marketplace metrics (demand/supply imbalance, pricing anomalies, driver fraud) real-time.",
+      "solution": "Argos platform: statistical anomaly detection tren millions of time series. Hierarchical detection framework. Multi-level alerting.",
+      "results": "Giam false positive rate 60%. Cover 10,000+ metrics tu dong. Detection latency <5 phut.",
+      "tech_stack": "Kafka, Apache Spark, custom statistical models, Hive, Presto",
+      "lessons": "Scale > sophistication: statistical methods tren nhieu metrics hieu qua hon deep learning tren it metrics."
+    }
+  ],
+  "key_papers": [
+    {
+      "title": "Isolation Forest",
+      "authors": "Fei Tony Liu, Kai Ming Ting, Zhi-Hua Zhou",
+      "year": 2008,
+      "venue": "ICDM",
+      "contribution": "Nguyen ly isolation cho anomaly detection: anomalies it va khac biet, can it splits de co lap. Linear time, subsample-based. Thay doi paradigm tu profiling normal sang isolating anomalies.",
+      "url": "https://doi.org/10.1109/ICDM.2008.17"
+    },
+    {
+      "title": "LOF: Identifying Density-Based Local Outliers",
+      "authors": "Markus M. Breunig, Hans-Peter Kriegel, Raymond T. Ng, Jorg Sander",
+      "year": 2000,
+      "venue": "SIGMOD",
+      "contribution": "Local Outlier Factor: do mat do cuc bo tuong doi voi hang xom. Bat local anomalies ma global methods bo sot. 3000+ citations, foundational method.",
+      "url": "https://doi.org/10.1145/342009.335388"
+    },
+    {
+      "title": "Anomaly Transformer: Time Series Anomaly Detection with Association Discrepancy",
+      "authors": "Jiehui Xu, Haixu Wu, Jianmin Wang, Mingsheng Long",
+      "year": 2022,
+      "venue": "ICLR",
+      "contribution": "Association discrepancy la anomaly criterion moi: anomalies co weaker associations voi toan bo series. State-of-art tren 6 benchmarks. Minimax optimization cho Anomaly-Attention.",
+      "url": "https://arxiv.org/abs/2110.02642"
+    },
+    {
+      "title": "Auto-Encoding Variational Bayes",
+      "authors": "Diederik P. Kingma, Max Welling",
+      "year": 2014,
+      "venue": "ICLR",
+      "contribution": "VAE framework: generative model voi learned approximate inference. Reconstruction probability la anomaly score tu nhien. Nen tang cho moi reconstruction-based anomaly detection.",
+      "url": "https://arxiv.org/abs/1312.6114"
+    },
+    {
+      "title": "PyOD: A Python Toolbox for Scalable Outlier Detection",
+      "authors": "Yue Zhao, Zain Nasrullah, Zheng Li",
+      "year": 2019,
+      "venue": "JMLR",
+      "contribution": "Unified API cho 40+ anomaly detection algorithms. MIT license. De-facto standard Python library cho outlier detection research va production.",
+      "url": "https://arxiv.org/abs/1901.01588"
+    },
+    {
+      "title": "Deep Semi-Supervised Anomaly Detection",
+      "authors": "Lukas Ruff, Robert A. Vandermeulen, Nico Gornitz, Alexander Binder, Emmanuel Muller, Klaus-Robert Muller, Marius Kloft",
+      "year": 2020,
+      "venue": "ICLR",
+      "contribution": "Deep SAD: ket hop one-class deep learning voi labeled anomaly guidance. Cai thien dang ke so voi unsupervised khi co it labels. Practical cho fraud detection.",
+      "url": "https://arxiv.org/abs/1906.02694"
+    },
+    {
+      "title": "Alibi Detect: Algorithms for Outlier, Adversarial, and Drift Detection",
+      "authors": "Seldon Technologies",
+      "year": 2021,
+      "venue": "Open Source Software",
+      "contribution": "Production-grade library tich hop outlier detection + drift detection + adversarial detection. Backend cho Seldon Core. Drift detectors (KS, MMD, LSDD) la unique selling point.",
+      "url": "https://docs.seldon.io/projects/alibi-detect"
+    },
+    {
+      "title": "Estimating the Support of a High-Dimensional Distribution (One-Class SVM)",
+      "authors": "Bernhard Scholkopf, John C. Platt, John Shawe-Taylor, Alex J. Smola, Robert C. Williamson",
+      "year": 2001,
+      "venue": "Neural Computation",
+      "contribution": "One-Class SVM: hoc decision boundary phan cach normal data khoi origin trong kernel space. Nu parameter kiem soat fraction of outliers. Foundational cho kernel-based anomaly detection.",
+      "url": "https://doi.org/10.1162/089976601750264965"
+    },
+    {
+      "title": "USAD: UnSupervised Anomaly Detection on Multivariate Time Series",
+      "authors": "Julien Audibert, Pietro Michiardi, Frederic Guyard, Sebastien Marti",
+      "year": 2020,
+      "venue": "KDD",
+      "contribution": "Adversarial training giua 2 autoencoders cho multivariate time-series anomaly detection. Nhanh hon va on dinh hon GAN-based methods. Ung dung cho IoT/industrial monitoring.",
+      "url": "https://doi.org/10.1145/3394486.3403392"
+    },
+    {
+      "title": "A Comprehensive Survey on Graph Anomaly Detection with Deep Learning",
+      "authors": "Xiaoxiao Ma, Jia Wu, Shan Xue, Jian Yang, Chuan Zhou, Quan Z. Sheng, Hui Xiong, Leman Akoglu",
+      "year": 2022,
+      "venue": "IEEE TKDE",
+      "contribution": "Survey toan dien ve graph anomaly detection voi deep learning: node, edge, subgraph, graph-level anomalies. Framework phan loai va so sanh methods.",
+      "url": "https://doi.org/10.1109/TKDE.2021.3118815"
+    }
+  ],
+  "cross_domain_connections": [
+    {
+      "target": "B01",
+      "connection_type": "forecast_residual_anomaly",
+      "description": "Forecast-residual anomaly detection: B01 du bao gia tri ky vong → B07 phat hien khi thuc te lech dang ke khoi du bao. e_t = y_t - y_hat_t. Du bao demand (B01) + phat hien demand anomaly (B07) cho supply chain. Ket noi manh nhat cua B07."
+    },
+    {
+      "target": "B03",
+      "connection_type": "visual_anomaly_detection",
+      "description": "Computer Vision (B03) cho visual anomaly detection: phat hien defects san xuat, kiem tra chat luong san pham bang camera. Autoencoder/f-AnoGAN tren images. B03 cung cap feature extraction; B07 cung cap anomaly scoring framework."
+    },
+    {
+      "target": "B06",
+      "connection_type": "anomaly_triggers_optimization",
+      "description": "B07 phat hien bat thuong → B06 re-optimize: phat hien machine failure (B07) → reschedule production (B06). Phat hien demand spike (B07) → re-route delivery (B06). Anomaly detection la trigger cho dynamic re-optimization."
+    },
+    {
+      "target": "B04",
+      "connection_type": "log_text_anomaly",
+      "description": "NLP (B04) cho log anomaly detection: parse unstructured log text, extract patterns, phat hien log sequences bat thuong. PhoBERT cho Vietnamese system logs. B04 text understanding + B07 anomaly scoring."
+    },
+    {
+      "target": "B02",
+      "connection_type": "document_anomaly",
+      "description": "Document Intelligence (B02) phat hien document anomalies: hoa don gia, chung tu gia mao, inconsistencies trong bao cao tai chinh. B02 extract structured data; B07 phat hien outliers trong extracted values."
+    },
+    {
+      "target": "B05",
+      "connection_type": "user_behavior_anomaly",
+      "description": "Recommendation Systems (B05) cung cap user behavior profiles → B07 phat hien hanh vi bat thuong: account takeover, bot activity, rating manipulation. User embedding (B05) lam features cho anomaly detection (B07)."
+    }
+  ],
+  "bestPractices": [
+    "Bat dau voi Isolation Forest (PyOD) lam baseline cho MOI bai toan. Don gian, nhanh, it hyperparameters. Chi chuyen sang complex models khi IF demonstrably khong du.",
+    "Tich hop SHAP explainability tu ngay dau, dac biet cho banking vertical. NHNN yeu cau giai thich quyet dinh fraud detection cho auditors. Isolation Forest + SHAP la combo uu tien.",
+    "Batch truoc, streaming sau. Detection hang gio/ngay du cho 70% use cases voi 20% infrastructure cost. Streaming (Kafka + Flink) chi khi client yeu cau latency <1 giay.",
+    "Xay feedback loop (label true positive/false positive) vao sprint 1, khong phai 'them sau'. Khong co feedback loop, model suy giam trong vai tuan. Budget 30% engineering effort cho model maintenance.",
+    "Multi-level thresholds (Warning → Critical → Emergency) thay vi binary (anomaly/normal). Giam alert fatigue dang ke. Dynamic thresholds adapt theo seasonal patterns (ngay/dem, ngay thuong/cuoi tuan, Tet).",
+    "Benchmark lien tuc: do Precision, Recall, F1, ROC-AUC, va dac biet PR-AUC (class imbalance nghiem trong). KHONG dung accuracy — misleading voi ty le anomaly 0.1-1%.",
+    "Xay domain-specific feature engineering truoc khi tang model complexity. Rolling statistics (mean, std, min, max), rate-of-change, lag features thuong hieu qua hon deep learning voi features raw."
+  ],
+  "antiPatterns": [
+    "Deploy deep learning (Autoencoder, Transformer) ma khong thu Isolation Forest + statistical methods truoc. 80% bai toan, simple methods du tot voi 10% effort.",
+    "Train anomaly detection model tren data chua loc — chua anomalies trong training data lam corrupted baseline 'binh thuong'. Phai dam bao training data predominantly normal.",
+    "Gia dinh unsupervised methods la 'plug and play'. Thuc te can 4-6 tuan configuration, feature engineering, threshold tuning cho moi domain. Set client expectations ro rang.",
+    "Bo qua concept drift — model trained thang 1 se degrade thang 6 khi patterns thay doi (mua Tet, promotion moi, infrastructure changes). Can drift detection va automated retraining.",
+    "Dung accuracy lam metric chinh voi ty le anomaly 0.1-1%. Model predict 'tat ca la normal' dat 99%+ accuracy. Dung PR-AUC, F1, Precision@k.",
+    "Streaming-first architecture cho market entry VN. Kafka + Flink can specialized DevOps hiem tai VN va $3,000-8,000/thang cloud costs. Margin am cho SMBs paying $500-2,000/thang.",
+    "Ignore explainability cho banking vertical. Black-box models (deep autoencoders) bi tu choi boi NHNN compliance. Uu tien Isolation Forest + SHAP hon Autoencoder cho regulated domains."
+  ],
+  "pipeline": {
+    "stages": [
+      {
+        "name": "Data Collection & Ingestion",
+        "description": "Thu thap du lieu tu nhieu nguon: sensors, transaction logs, system metrics, API events. Kafka cho real-time streaming, Debezium cho CDC tu databases. Schema registry (Avro/Protobuf), partitioning strategy, retention policy.",
+        "tools": ["Apache Kafka", "Debezium", "Apache Flink (initial ETL)"],
+        "inputs": "Raw sensor data, transaction logs, system metrics, API events",
+        "outputs": "Cleaned, timestamped event stream + batch data lake"
+      },
+      {
+        "name": "Feature Engineering",
+        "description": "Tao feature vectors tu raw events. Online (real-time) va offline (historical). Rolling statistics (mean, std, min, max), rate-of-change, categorical encoding, lag features. Feast lam feature store dam bao consistency giua training va serving.",
+        "tools": ["Feast", "tsfresh", "Apache Flink (streaming features)", "pandas + numpy"],
+        "inputs": "Raw events tu Stage 1",
+        "outputs": "Feature vectors (online: real-time, offline: historical)"
+      },
+      {
+        "name": "Model Training (Offline)",
+        "description": "Train mo hinh tren historical data. Unsupervised: train tren 'normal' data only (Isolation Forest, Autoencoder). Semi-supervised: dung labeled set cho threshold calibration. Retrain frequency: weekly (stable) den daily (high-drift). MLflow track experiments.",
+        "tools": ["PyOD", "PyTorch", "scikit-learn", "MLflow"],
+        "inputs": "Historical feature vectors + optional labels",
+        "outputs": "Trained model artifacts trong MLflow registry"
+      },
+      {
+        "name": "Inference & Scoring",
+        "description": "Scoring du lieu moi: anomaly score (0.0-1.0) + binary label + confidence. Real-time qua Triton/BentoML, batch qua scheduled jobs. Redis cache scores va features. Latency targets: <50ms (fraud), <500ms (sensors), <5min (batch).",
+        "tools": ["Triton/BentoML", "Redis", "FastAPI"],
+        "inputs": "Feature vectors moi (real-time hoac batch)",
+        "outputs": "Anomaly score + binary label + confidence"
+      },
+      {
+        "name": "Threshold Management & Alerting",
+        "description": "Chuyen scores thanh alerts. Static (percentile), Dynamic (adaptive), Multi-level (Warning/Critical/Emergency). Route alerts qua Alertmanager den Slack/PagerDuty. Grafana dashboards voi anomaly annotations.",
+        "tools": ["Custom threshold engine", "Alertmanager", "PagerDuty", "Grafana"],
+        "inputs": "Anomaly scores tu Stage 4",
+        "outputs": "Alerts routed to appropriate channels"
+      },
+      {
+        "name": "Feedback Loop & Retraining",
+        "description": "QUAN TRONG NHAT cho long-term quality. Operators label true positive/false positive tu alert dashboard (Label Studio). Phan biet 'khong bat thuong' vs 'bat thuong nhung khong can hanh dong'. Retrain trigger khi du labels hoac drift detected. Drift detection qua Alibi Detect (KS, MMD tests).",
+        "tools": ["Label Studio", "Alibi Detect", "MLflow", "Custom feedback API"],
+        "inputs": "Human feedback (TP/FP labels), drift detection signals",
+        "outputs": "Updated training data, recalibrated thresholds, retrained models"
+      }
+    ]
+  },
+  "learning_resources": [
+    {
+      "title": "PyOD Documentation & Tutorials",
+      "type": "documentation",
+      "url": "https://pyod.readthedocs.io",
+      "level": "All levels",
+      "description": "Tai lieu chinh thuc PyOD: 40+ algorithms voi unified API. Quick start, benchmarks, examples. KHOI DAU TOT NHAT cho anomaly detection."
+    },
+    {
+      "title": "Alibi Detect Documentation",
+      "type": "documentation",
+      "url": "https://docs.seldon.io/projects/alibi-detect",
+      "level": "Intermediate",
+      "description": "Production-grade outlier detection + drift detection. Algorithms, deployment guides, integration voi Seldon Core. Pick cho production systems."
+    },
+    {
+      "title": "Anomaly Detection Learning Resources (CMU)",
+      "type": "course",
+      "url": "https://www.andrew.cmu.edu/user/lakoglu/anomaly-detection-resources/",
+      "level": "All levels",
+      "description": "Curated list boi Leman Akoglu (CMU) — bao gom papers, tutorials, datasets, tools. Reference toan dien nhat cho linh vuc."
+    },
+    {
+      "title": "Outlier Analysis (Charu C. Aggarwal)",
+      "type": "book",
+      "url": "https://link.springer.com/book/10.1007/978-3-319-47578-3",
+      "level": "Intermediate to Advanced",
+      "description": "Sach giao khoa toan dien nhat ve outlier detection: statistical, distance, density, isolation, clustering, time-series, graphs. Nen tang ly thuyet."
+    },
+    {
+      "title": "Apache Kafka Documentation",
+      "type": "documentation",
+      "url": "https://kafka.apache.org/documentation/",
+      "level": "Intermediate",
+      "description": "Tai lieu chinh thuc Kafka: architecture, configuration, operations. Can thiet cho streaming anomaly detection pipeline."
+    },
+    {
+      "title": "Apache Flink Documentation",
+      "type": "documentation",
+      "url": "https://flink.apache.org/docs/",
+      "level": "Intermediate to Advanced",
+      "description": "Stream processing framework: stateful computations, windowed aggregations, CEP. Core cua real-time anomaly detection pipeline."
+    },
+    {
+      "title": "Feast Feature Store Documentation",
+      "type": "documentation",
+      "url": "https://feast.dev",
+      "level": "Intermediate",
+      "description": "Open-source feature store: shared feature definitions, point-in-time joins, online/offline serving. Dam bao consistency giua training va serving."
+    },
+    {
+      "title": "Prometheus + Grafana Monitoring Stack",
+      "type": "documentation",
+      "url": "https://prometheus.io/docs/ | https://grafana.com/docs/",
+      "level": "Beginner to Intermediate",
+      "description": "Monitoring va dashboarding stack: collect metrics, visualize, alert. Core cua monitoring layer trong anomaly detection system."
+    },
+    {
+      "title": "Kaggle Credit Card Fraud Detection Dataset",
+      "type": "dataset",
+      "url": "https://www.kaggle.com/mlg-ulb/creditcardfraud",
+      "level": "Beginner",
+      "description": "284,807 transactions, 492 frauds (0.17%). PCA-transformed features. Dataset benchmark kinh dien nhat cho fraud detection. Quick start 30 phut."
+    },
+    {
+      "title": "Numenta Anomaly Benchmark (NAB)",
+      "type": "dataset",
+      "url": "https://github.com/numenta/NAB",
+      "level": "Intermediate",
+      "description": "Benchmark cho streaming anomaly detection: 58 time-series voi labeled anomalies. Scoring framework chuan. Essential cho benchmarking streaming detectors."
+    },
+    {
+      "title": "River — Online Machine Learning Library",
+      "type": "library",
+      "url": "https://riverml.xyz",
+      "level": "Intermediate",
+      "description": "Incremental/online learning cho streaming data. Half-Space Trees, ADWIN, streaming anomaly detectors. Alternative cho PyOD khi can streaming."
+    },
+    {
+      "title": "MLflow Documentation",
+      "type": "documentation",
+      "url": "https://mlflow.org/docs/latest/index.html",
+      "level": "Intermediate",
+      "description": "ML lifecycle management: experiment tracking, model registry, deployment. Track anomaly detection experiments, threshold configurations, model performance."
+    }
+  ],
+  "risks": [
+    {
+      "id": "R01",
+      "name": "Alert fatigue / Ty le false positive cao",
+      "description": "Phuong phap unsupervised san sinh 30-50% false positives, khien operators bo qua moi canh bao. Day la ly do #1 anomaly detection projects that bai trong production.",
+      "severity": "Critical",
+      "probability": "High",
+      "mitigation": "Multi-level thresholds (warning/critical/emergency). Uu tien semi-supervised voi human-in-the-loop feedback. Target <10% FP rate truoc production qua threshold calibration voi pilot."
+    },
+    {
+      "id": "R02",
+      "name": "Cold-start problem — Khach moi khong co du lieu lich su",
+      "description": "Khach hang moi khong du historical data de train meaningful models. Can 2-4 tuan tich luy data toi thieu.",
+      "severity": "High",
+      "probability": "Very High",
+      "mitigation": "Transfer learning baselines theo nganh. Rule-based detection lam cau noi trong thoi gian tich luy data. Pre-train tren public/synthetic datasets va fine-tune tren customer data."
+    },
+    {
+      "id": "R03",
+      "name": "Thieu du lieu bat thuong co nhan tai Viet Nam",
+      "description": "Vietnam-specific labeled anomaly data cuc ky hiem. Ngan hang giu proprietary fraud data. Factory sensor data silo trong legacy SCADA/PLC. Can 3-6 thang partnership de xay dataset.",
+      "severity": "Critical",
+      "probability": "High",
+      "mitigation": "Xay Vietnam Anomaly Benchmark Dataset qua partnership voi pilot customers. Dung synthetic data augmentation. Bat dau unsupervised, chuyen semi-supervised khi co labels."
+    },
+    {
+      "id": "R04",
+      "name": "Do phuc tap streaming infrastructure",
+      "description": "Kafka + Flink can DevOps chuyen mon hiem tai VN (uoc tinh <200 senior engineers toan quoc). Chi phi $3,000-8,000/thang cloud cho moderate workload.",
+      "severity": "High",
+      "probability": "Medium",
+      "mitigation": "Phase 1: batch-only (don gian, re, du cho 70% use cases). Phase 2: streaming chi cho latency-critical (fraud, security). Xet managed Kafka (Confluent Cloud) giam operational burden."
+    },
+    {
+      "id": "R05",
+      "name": "Concept drift / Model staleness",
+      "description": "Phan phoi du lieu thay doi theo thoi gian (fraud patterns moi, seasonal changes, infrastructure changes). Model suy giam accuracy trong vai tuan neu khong retrain.",
+      "severity": "High",
+      "probability": "Very High",
+      "mitigation": "Drift detection (Alibi Detect: KS, MMD, LSDD tests). Automated retraining pipelines voi MLflow. SLA: retrain trong 24h sau khi phat hien drift. Budget 30% engineering cho maintenance."
+    },
+    {
+      "id": "R06",
+      "name": "Data privacy va regulatory compliance",
+      "description": "Du lieu ngan hang VN chiu quy dinh NHNN. Cross-border data transfer bi han che. PDPD (Nghi dinh 13/2023) yeu cau nghiem ngat ve bao ve du lieu ca nhan.",
+      "severity": "Critical",
+      "probability": "Medium",
+      "mitigation": "On-premise va private cloud deployment tu ngay dau. Data anonymization trong feature engineering pipeline. Tu van phap ly chuyen ve fintech VN. Chung chi PCI-DSS cho payment fraud use case."
+    }
+  ],
+  "metadata": {
+    "status": "reviewed",
+    "version": "1.0",
+    "createdAt": "2026-03-31",
+    "updatedAt": "2026-03-31",
+    "researchedBy": ["R-alpha", "R-beta", "R-gamma", "R-MLE", "R-DE", "R-DLE", "R-DA", "R-BE", "R-DO", "R-SE", "R-QA", "R-SA", "R-D02", "R-D04", "R-sigma"],
+    "consolidatedBy": "R-sigma (Ms. Scribe)",
+    "normalizedAt": "2026-03-31",
+    "normalizedBy": "R-sigma",
+    "phase": "Phase 0",
+    "module": "B07",
+    "reviewedBy": null,
+    "approvedBy": null,
+    "notes": "Consolidated by R-sigma (Ms. Scribe). Overall feasibility 7.3/10 CONDITIONAL GO. JSON field names English, values Vietnamese (non-diacritical) per language rule. Technical terms remain English."
+  }
+}

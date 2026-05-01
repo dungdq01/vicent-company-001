@@ -1,0 +1,104 @@
+{
+  "id": "I15",
+  "name": "Insurance",
+  "slug": "insurance",
+  "category": "industry",
+  "icon": "Shield",
+  "color": "#FF8F00",
+  "depthLevel": 1,
+  "overview": {
+    "description": "Vietnam's insurance market is underinsured relative to GDP with penetration ~2.5%. Growth is accelerating with digital-first insurtech players. AI use cases include fraud detection, claims automation, risk scoring, and customer churn prediction.",
+    "marketSizeVietnam": "~$8B insurance market; 18 life and 30 non-life insurers; insurtech growing fast",
+    "marketSizeSEA": "~$80B insurance market; Singapore and Indonesia lead AI adoption in claims",
+    "aiMaturity": "L1",
+    "aiAppetite": "medium"
+  },
+  "domainKnowledge": {
+    "keyEntities": [
+      "Policyholders",
+      "Policies",
+      "Claims",
+      "Premiums",
+      "Agents",
+      "Risk profiles"
+    ],
+    "keyProcesses": [
+      "Policy underwriting",
+      "Premium calculation",
+      "Claims processing",
+      "Fraud investigation",
+      "Renewal"
+    ],
+    "dataTypes": [
+      "Policy documents",
+      "Claims history",
+      "Customer profiles",
+      "Medical records",
+      "Damage photos"
+    ],
+    "typicalDataVolume": "Medium — structured policy and claims data; medical records fragmented",
+    "dataQuality": "Medium — core systems structured; fraud and medical data harder to standardize"
+  },
+  "painPoints": [
+    {
+      "problem": "Insurance fraud (staged accidents, fake claims) is growing rapidly",
+      "severity": 9,
+      "aiSolvable": true,
+      "mapsToBaseline": [
+        "B07",
+        "B13"
+      ]
+    },
+    {
+      "problem": "Claims processing is manual and slow, causing customer dissatisfaction",
+      "severity": 8,
+      "aiSolvable": true,
+      "mapsToBaseline": [
+        "B02",
+        "B03"
+      ]
+    },
+    {
+      "problem": "Risk scoring models are outdated and fail to leverage alternative data",
+      "severity": 7,
+      "aiSolvable": true,
+      "mapsToBaseline": [
+        "B13"
+      ]
+    }
+  ],
+  "regulations": [],
+  "priorityBaselines": {
+    "high": [
+      "B07",
+      "B13"
+    ],
+    "medium": [
+      "B02",
+      "B03"
+    ],
+    "low": [
+      "B08",
+      "B12"
+    ]
+  },
+  "competitiveLandscape": [],
+  "relatedNodes": [
+    {
+      "nodeId": "I02",
+      "relationship": "adjacent",
+      "description": "Insurance and finance share risk modeling, fraud detection, and regulatory compliance."
+    },
+    {
+      "nodeId": "I11",
+      "relationship": "adjacent",
+      "description": "Insurance contracts require legal analysis and compliance monitoring."
+    }
+  ],
+  "metadata": {
+    "createdAt": "2026-04-03",
+    "updatedAt": "2026-04-03",
+    "version": "0.1",
+    "status": "skeleton"
+  }
+}

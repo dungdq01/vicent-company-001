@@ -1,0 +1,114 @@
+{
+  "id": "I12",
+  "name": "Media & Entertainment",
+  "slug": "media-entertainment",
+  "category": "industry",
+  "icon": "Tv2",
+  "color": "#FFA000",
+  "depthLevel": 1,
+  "overview": {
+    "description": "Vietnam's media and entertainment market is driven by streaming, gaming, and digital advertising. AI use cases include content recommendation, personalization, automated content generation, and audience analytics.",
+    "marketSizeVietnam": "~$3B digital media market; 70M+ social media users; gaming market ~$900M",
+    "marketSizeSEA": "~$25B media market; strong growth in streaming, gaming, short-form video",
+    "aiMaturity": "L1",
+    "aiAppetite": "medium"
+  },
+  "domainKnowledge": {
+    "keyEntities": [
+      "Users",
+      "Content",
+      "Creators",
+      "Ads",
+      "Playlists",
+      "Engagement events"
+    ],
+    "keyProcesses": [
+      "Content creation",
+      "Curation",
+      "Distribution",
+      "Monetization",
+      "Audience analytics"
+    ],
+    "dataTypes": [
+      "Watch history",
+      "Click streams",
+      "Content metadata",
+      "Ad impressions",
+      "Social signals"
+    ],
+    "typicalDataVolume": "Very high — streaming platforms generate massive behavioral data",
+    "dataQuality": "High on platforms; low for traditional media publishers transitioning digital"
+  },
+  "painPoints": [
+    {
+      "problem": "Content discovery on large platforms is overwhelming without personalization",
+      "severity": 8,
+      "aiSolvable": true,
+      "mapsToBaseline": [
+        "B05",
+        "B12"
+      ]
+    },
+    {
+      "problem": "Content moderation at scale (hate speech, misinformation) is impossible manually",
+      "severity": 9,
+      "aiSolvable": true,
+      "mapsToBaseline": [
+        "B03",
+        "B04"
+      ]
+    },
+    {
+      "problem": "Ad targeting effectiveness is low; brands demand better audience segmentation",
+      "severity": 7,
+      "aiSolvable": true,
+      "mapsToBaseline": [
+        "B13",
+        "B05"
+      ]
+    },
+    {
+      "problem": "Generating localized Vietnamese content at scale requires AI assistance",
+      "severity": 8,
+      "aiSolvable": true,
+      "mapsToBaseline": [
+        "B09",
+        "B04"
+      ]
+    }
+  ],
+  "regulations": [],
+  "priorityBaselines": {
+    "high": [
+      "B05",
+      "B09"
+    ],
+    "medium": [
+      "B03",
+      "B04"
+    ],
+    "low": [
+      "B12",
+      "B13"
+    ]
+  },
+  "competitiveLandscape": [],
+  "relatedNodes": [
+    {
+      "nodeId": "I17",
+      "relationship": "adjacent",
+      "description": "Gaming and media share recommendation, engagement, and content AI patterns."
+    },
+    {
+      "nodeId": "I18",
+      "relationship": "adjacent",
+      "description": "Media and marketing share audience analytics and ad targeting."
+    }
+  ],
+  "metadata": {
+    "createdAt": "2026-04-03",
+    "updatedAt": "2026-04-03",
+    "version": "0.1",
+    "status": "skeleton"
+  }
+}

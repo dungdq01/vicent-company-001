@@ -1,0 +1,714 @@
+{
+  "id": "B01",
+  "name": "Forecasting & Time Series",
+  "type": "baseline",
+  "slug": "forecasting-time-series",
+  "tagline": "Predict the future from historical patterns",
+  "category": "baseline",
+  "icon": "TrendingUp",
+  "color": "#4FC3F7",
+  "depthLevel": 3,
+  "selectedAgents": ["R-alpha", "R-beta", "R-gamma", "R-MLE", "R-DE", "R-DA", "R-BE", "R-DO", "R-FE", "R-QA", "R-D06", "R-SA", "R-sigma"],
+  "description": "Forecasting & Time Series is one of the most commercially impactful AI sub-fields, spanning classical statistical methods (ARIMA, ETS), machine learning ensembles (LightGBM, Random Forests), deep learning architectures (Transformers, N-BEATS, PatchTST), and foundation models (TimesFM, Chronos, Moirai) that enable zero-shot cold-start forecasting without per-dataset retraining. The domain is foundational to demand planning, inventory optimisation, logistics capacity, energy grid balancing, and financial risk management across every major industry vertical.",
+  "aliases": [
+    "Time Series Forecasting",
+    "Demand Forecasting",
+    "Predictive Analytics",
+    "Time Series Analysis",
+    "Temporal Prediction",
+    "Sales Forecasting",
+    "Load Forecasting"
+  ],
+  "maturity_level": "mature",
+  "trl": 8,
+  "core_concepts": [
+    {
+      "name": "Stationarity & Differencing",
+      "definition": "A time series is weakly stationary if its mean, variance, and autocovariance are constant over time. Non-stationary series are transformed via differencing (removing trends) or log/Box-Cox transforms (stabilising variance) before classical modelling. The Augmented Dickey-Fuller (ADF) test is the standard stationarity diagnostic.",
+      "formula_latex": "\\Delta y_t = y_t - y_{t-1} = (1-B) y_t; \\quad \\text{Box-Cox: } w_t = (y_t^\\lambda - 1)/\\lambda",
+      "significance": "Violating stationarity is the single most common error in classical time series modelling. Automated tools (AutoARIMA, StatsForecast) perform stationarity testing internally, but practitioners must understand the diagnostics to interpret model failures."
+    },
+    {
+      "name": "Decomposition (Trend, Seasonality, Residual)",
+      "definition": "A time series is decomposed into structural components — trend (T), seasonality (S), and residual (R). Additive decomposition assumes these sum; multiplicative assumes they multiply. STL (Seasonal and Trend decomposition using Loess) is robust to changing seasonality and outliers. MSTL extends STL to multiple seasonality periods.",
+      "formula_latex": "\\text{Additive: } y_t = T_t + S_t + R_t; \\quad \\text{Multiplicative: } y_t = T_t \\times S_t \\times R_t",
+      "significance": "Decomposition provides interpretability that pure ML lacks. Trend and seasonality removal is a preprocessing step for many models. Identifying irregular or shifting seasonality directly informs model selection."
+    },
+    {
+      "name": "ARIMA & Autoregressive Models",
+      "definition": "ARIMA(p,d,q) combines autoregression (AR — linear combination of p past values), integration (I — d-th order differencing), and moving average (MA — q past forecast errors). SARIMA adds seasonal counterparts. SARIMAX incorporates exogenous variables. Box-Jenkins methodology provides the systematic order identification and diagnostic checking workflow.",
+      "formula_latex": "\\Phi(B)(1-B)^d y_t = \\Theta(B)\\varepsilon_t; \\quad \\text{AIC} = -2\\mathcal{L}(\\theta) + 2k",
+      "significance": "ARIMA remains a strong, interpretable benchmark and baseline. AutoARIMA via StatsForecast fits thousands of series in seconds, making it competitive at scale."
+    },
+    {
+      "name": "Exponential Smoothing & ETS Models",
+      "definition": "Exponential smoothing assigns exponentially decreasing weights to past observations. The ETS (Error-Trend-Seasonality) framework unifies all variants under a probabilistic state space formulation with 30 possible model combinations. Model selection via AIC. Holt-Winters handles multiplicative seasonality. Auto-ETS automates selection.",
+      "formula_latex": "\\hat{y}_{t+h} = (l_t + h b_t) \\cdot s_{t-m+h\\bmod m}; \\quad l_t = \\alpha(y_t/s_{t-m}) + (1-\\alpha)(l_{t-1}+b_{t-1})",
+      "significance": "ETS is the gold standard for univariate business forecasting with few parameters and strong empirical performance. StatsForecast AutoETS processes 10,000 series in seconds."
+    },
+    {
+      "name": "LSTM & Recurrent Neural Networks",
+      "definition": "LSTMs address the vanishing gradient problem of vanilla RNNs via a cell state and three gates (input, forget, output) that regulate long-term information flow. GRUs are a simplified two-gate variant. TCNs use dilated causal convolutions for parallel training and explicit receptive field control.",
+      "formula_latex": "c_t = f_t \\odot c_{t-1} + i_t \\odot \\tilde{c}_t; \\quad h_t = o_t \\odot \\tanh(c_t)",
+      "significance": "LSTMs introduced the deep learning era for time series and powered production systems at Google, Amazon, and Uber from 2016–2021. Understanding them is prerequisite for Transformer architectures."
+    },
+    {
+      "name": "Transformer-Based Forecasting & Patch Tokenisation",
+      "definition": "Transformers model dependencies between any two timesteps via scaled dot-product attention. Direct application to raw timesteps proved problematic. PatchTST treats non-overlapping time patches as tokens (reducing sequence length by factor P). iTransformer inverts attention to operate across variates (features) rather than time, capturing multivariate correlations.",
+      "formula_latex": "\\text{Attention}(Q,K,V) = \\text{softmax}(QK^T/\\sqrt{d_k})V; \\quad \\text{PatchTST token}_i = \\text{Patch}[i\\cdot P:(i+1)P]",
+      "significance": "Transformers dominate long-horizon forecasting leaderboards. PatchTST and iTransformer are current best practice for production multivariate forecasting. The patch design principle transfers to foundation model architecture."
+    },
+    {
+      "name": "Probabilistic Forecasting & Prediction Intervals",
+      "definition": "Probabilistic forecasting produces a full predictive distribution (quantiles, sample paths) rather than a single point estimate. Key methods: conformal prediction (approximate coverage under mild stationarity conditions), quantile regression (minimise pinball loss), DeepAR (global LSTM with parametric likelihood), and diffusion models (diverse trajectory generation). CRPS and Winkler Score are proper scoring rules for evaluation.",
+      "formula_latex": "L_q(y,\\hat{y}) = q\\cdot\\max(y-\\hat{y},0) + (1-q)\\cdot\\max(\\hat{y}-y,0); \\quad \\text{CRPS}(F,y) = \\int_{-\\infty}^{\\infty}[F(z)-\\mathbf{1}(z\\geq y)]^2 dz",
+      "significance": "Supply chain safety stock, capacity buffers, and financial hedging decisions require uncertainty quantification. Conformal prediction provides approximate (not guaranteed) coverage for time series — the exchangeability assumption does not strictly hold and rolling re-calibration is required."
+    },
+    {
+      "name": "Global vs. Local Forecasting Models",
+      "definition": "Local models train independently per series. Global models train jointly on thousands of series, learning shared patterns via cross-series information transfer. Global models are more data-efficient per series and handle cold-start better. Foundation models (TimesFM, Chronos) are the extreme of global models — pre-trained on billions of data points for universal zero-shot inference. Negative transfer risk exists when series are too heterogeneous.",
+      "formula_latex": "\\text{Global: } \\theta = \\arg\\min_\\theta \\sum_i \\sum_t L(y_t^{(i)}, f(y_{t-1:t-p}^{(i)}, z^{(i)}; \\theta))",
+      "significance": "The shift from local to global to foundation models is the central architectural trend 2020–2026. Choosing correctly between tiers directly determines model quality, compute cost, and cold-start handling."
+    },
+    {
+      "name": "Hierarchical Forecasting & MinT Reconciliation",
+      "definition": "Enterprise forecasting requires coherent forecasts across hierarchy levels (SKU → category → region → national). MinT (Minimum Trace) projects base forecasts onto the coherent subspace by minimising forecast error variance using the shrinkage-estimated covariance matrix W. The summing matrix S encodes the aggregation structure.",
+      "formula_latex": "\\tilde{y}_t = S(S^T W^{-1} S)^{-1} S^T W^{-1} \\hat{y}_t; \\quad y_t = S b_t",
+      "significance": "Every enterprise forecasting system deals with hierarchies. Ignoring coherence produces conflicting forecasts across reporting levels. MinT is production-ready in StatsForecast, sktime, and fable. Dynamic hierarchies require versioned summing matrices."
+    },
+    {
+      "name": "Time Series Foundation Models (Zero-Shot Forecasting)",
+      "definition": "Foundation models for time series are large neural networks pre-trained on massive, diverse corpora (millions of series, multiple domains), enabling zero-shot or few-shot forecasting on unseen series without retraining. TimesFM (Google DeepMind, 200M params, 100B training points), Chronos (Amazon, T5-based tokenisation), Moirai (Salesforce, MoE outputs, LOTSA dataset), and MOMENT (CMU, BERT-style masked pre-training). Zero-shot performance surpasses statistical baselines on cold-start tasks; fine-tuned models outperform on in-distribution data once ≥60 observations are available.",
+      "formula_latex": "\\mathcal{L}_{\\text{pretrain}} = -\\sum \\log p_\\theta(\\text{patch}_t | \\text{patch}_{1:t-1}); \\quad \\text{Zero-shot: no gradient updates at inference}",
+      "significance": "Foundation models solve the cold-start problem — the primary barrier to early platform adoption. They complement, not replace, task-specific trained models. The 12–24 month window before hyperscaler commoditisation requires urgent reference client acquisition."
+    },
+    {
+      "name": "Walk-Forward Cross-Validation with Gap",
+      "definition": "Time series cross-validation uses expanding training windows with a gap between the training end and validation start. The gap must equal max(forecast_horizon, max_lag_used_in_features) to prevent future data from bleeding into training-time features. Incorrect gap configuration produces optimistic training metrics (MASE ~0.78) that degrade silently in production (~0.95).",
+      "formula_latex": "\\text{gap} \\geq \\max(\\text{forecast\\_horizon}, \\max\\text{lag\\_features}); \\quad \\text{Fold}_k: \\text{Train}[0:t_k], \\text{Val}[t_k + \\text{gap}: t_k + \\text{gap} + H]",
+      "significance": "The #1 source of production accuracy degradation in forecasting systems. Documented in 30–50% of ML forecasting post-mortems. Must be a first-class CI/CD blocking gate, not a best-practice footnote."
+    },
+    {
+      "name": "Evaluation Metrics for Forecasting",
+      "definition": "MAE (interpretable, same units), RMSE (penalises outliers), MAPE (avoid when actuals near zero), SMAPE (bounded alternative), MASE (scale-free, comparable across series — primary production metric). For probabilistic: Winkler Score (interval width + coverage penalty) and CRPS (proper scoring rule for full distributions). MASE < 1.0 vs seasonal naive is the standard deployment gate.",
+      "formula_latex": "\\text{MASE} = \\frac{\\text{MAE}}{\\bar{e}_{\\text{naive}}}; \\quad \\bar{e}_{\\text{naive}} = \\frac{1}{T-m}\\sum_{t=m+1}^{T}|y_t - y_{t-m}|",
+      "significance": "Metric choice affects which model appears to win. MASE is the recommended primary metric because it is scale-free, handles seasonality via the naive denominator, and allows meaningful comparison across heterogeneous series portfolios."
+    }
+  ],
+  "algorithms": [
+    {
+      "name": "ARIMA / SARIMA",
+      "category": "Statistical",
+      "complexity": "O(n·p²) fitting",
+      "pros": [
+        "Mathematically well-understood and interpretable parameters",
+        "Strong performance on univariate short-horizon forecasting",
+        "Produces valid prediction intervals under Gaussian assumptions",
+        "AutoARIMA automates order selection; StatsForecast scales to thousands of series"
+      ],
+      "cons": [
+        "Assumes linearity; cannot capture complex non-linear patterns",
+        "Requires stationarity preprocessing",
+        "Struggles with irregular or multiple seasonality periods"
+      ],
+      "use_cases": [
+        "Univariate short-horizon business KPIs",
+        "Financial returns and economic indicators",
+        "Baseline benchmark for any forecasting system"
+      ],
+      "key_papers": [
+        "Box & Jenkins (1970). Time Series Analysis: Forecasting and Control. Holden-Day.",
+        "Hyndman & Khandakar (2008). Automatic Time Series Forecasting. Journal of Statistical Software, 27(3)."
+      ]
+    },
+    {
+      "name": "ETS / Holt-Winters",
+      "category": "Statistical",
+      "complexity": "O(n·m) where m is seasonal period",
+      "pros": [
+        "Few parameters with strong empirical performance",
+        "30-model family with AIC-based automatic selection",
+        "Prediction intervals from probabilistic state space formulation",
+        "StatsForecast AutoETS fits 10,000 series in seconds"
+      ],
+      "cons": [
+        "Limited to additive/multiplicative combinations of trend and seasonality",
+        "Cannot incorporate external covariates natively",
+        "Underperforms on hierarchical, covariate-rich use cases vs LightGBM"
+      ],
+      "use_cases": [
+        "Univariate business KPI forecasting",
+        "ERP-embedded demand planning",
+        "High-frequency automated forecasting at scale",
+        "Fallback model when ML models fail"
+      ],
+      "key_papers": [
+        "Hyndman et al. (2008). Forecasting with Exponential Smoothing: The State Space Approach. Springer.",
+        "M4 Competition (Makridakis et al., 2020). The M4 Competition. IJF."
+      ]
+    },
+    {
+      "name": "LightGBM (Global Model with Lag Features)",
+      "category": "Machine Learning",
+      "complexity": "O(n·d·log n) where d is number of features",
+      "pros": [
+        "M5 Competition winner — best on real-world hierarchical retail data",
+        "Native categorical feature support (store_id, sku_id)",
+        "SHAP-based explainability for feature attribution",
+        "Fastest training on tabular feature-engineered time series data",
+        "Tweedie loss handles zero-inflated demand distributions"
+      ],
+      "cons": [
+        "Performance gated on feature engineering quality — lag and rolling feature design is critical",
+        "Does not capture inter-series correlations natively",
+        "Walk-forward CV gap misconfiguration silently degrades production accuracy"
+      ],
+      "use_cases": [
+        "Retail demand forecasting at SKU×Store level (10K–1M series)",
+        "Logistics shipment volume forecasting",
+        "Supply chain inventory replenishment",
+        "Any tabular time series with ≥50 series and ≥100 rows/series"
+      ],
+      "key_papers": [
+        "Ke, G. et al. (2017). LightGBM: A Highly Efficient Gradient Boosting Decision Tree. NeurIPS 2017.",
+        "M5 Competition (Makridakis et al., 2022). M5 accuracy competition. IJF."
+      ]
+    },
+    {
+      "name": "Temporal Fusion Transformer (TFT)",
+      "category": "Deep Learning",
+      "complexity": "O(n·T²) in sequence length",
+      "pros": [
+        "Handles static, known-future, and unknown-future covariates cleanly via variable selection",
+        "Quantile outputs for probabilistic forecasting built-in",
+        "Attention-based interpretability: which past timesteps drove the forecast",
+        "Top-3 on multiple real-world business forecasting benchmarks"
+      ],
+      "cons": [
+        "Complex architecture with many hyperparameters; brittle to training instability",
+        "Requires careful feature separation by input type",
+        "Slower to train than MLP-based methods"
+      ],
+      "use_cases": [
+        "Logistics origin-destination volume forecasting with known future events",
+        "Energy load forecasting with weather and calendar covariates",
+        "Multi-horizon retail forecasting requiring interpretable attention"
+      ],
+      "key_papers": [
+        "Lim, B. et al. (2021). Temporal Fusion Transformers for Interpretable Multi-horizon Time Series Forecasting. IJF, 37(4). arXiv:1912.09363"
+      ]
+    },
+    {
+      "name": "PatchTST",
+      "category": "Deep Learning (Transformer)",
+      "complexity": "O(n·(L/P)²) where L is sequence length and P is patch size",
+      "pros": [
+        "Patch tokenisation captures local temporal semantics — strong on long horizons",
+        "Channel independence avoids spurious cross-variate noise",
+        "Pre-trainable via masked patch modelling (self-supervised)",
+        "Outperforms all prior Transformers on 8 standard benchmarks"
+      ],
+      "cons": [
+        "Does not model cross-variate correlations by design",
+        "Requires sufficient training data for supervised training",
+        "Not zero-shot without pre-training corpus"
+      ],
+      "use_cases": [
+        "Long-horizon univariate and multivariate forecasting",
+        "Energy, traffic, weather forecasting at high frequency",
+        "Transfer learning across domains via masked pre-training"
+      ],
+      "key_papers": [
+        "Nie, Y. et al. (2023). A Time Series is Worth 64 Words: Long-term Forecasting with Transformers. ICLR 2023. arXiv:2211.14730"
+      ]
+    },
+    {
+      "name": "N-BEATS",
+      "category": "Deep Learning (MLP)",
+      "complexity": "O(n·L·H) in sequence length and horizon",
+      "pros": [
+        "Purely MLP-based — no recurrence or convolution; fast and parallelisable",
+        "Interpretable variant decomposes into trend and seasonality basis expansions",
+        "No exogenous variable requirement",
+        "Strong benchmark results on M4 competition data"
+      ],
+      "cons": [
+        "Does not naturally handle multivariate inputs",
+        "Requires significant data for global training",
+        "Interpretable variant imposes structural assumptions"
+      ],
+      "use_cases": [
+        "Long-horizon univariate forecasting",
+        "Interpretable component decomposition for business users",
+        "Competition-grade univariate benchmarks"
+      ],
+      "key_papers": [
+        "Oreshkin, B.N. et al. (2020). N-BEATS: Neural Basis Expansion Analysis for Interpretable Time Series Forecasting. ICLR 2020. arXiv:1905.10437"
+      ]
+    },
+    {
+      "name": "DeepAR",
+      "category": "Deep Learning (LSTM, Probabilistic)",
+      "complexity": "O(n·T·H) in training; sequential at inference",
+      "pros": [
+        "Full predictive distribution — quantiles and sample paths",
+        "Global model leverages patterns across thousands of related series",
+        "Handles count data (Negative Binomial), continuous data (Gaussian/Student-t)",
+        "Handles missing values and irregular time series natively"
+      ],
+      "cons": [
+        "Autoregressive inference is sequential — slow for long horizons",
+        "Training requires large corpora of related series",
+        "Less interpretable than statistical methods"
+      ],
+      "use_cases": [
+        "Probabilistic demand forecasting at product level",
+        "Intermittent demand (spare parts, slow-moving SKUs)",
+        "Energy consumption forecasting with distributional outputs"
+      ],
+      "key_papers": [
+        "Salinas, D. et al. (2020). DeepAR: Probabilistic Forecasting with Autoregressive Recurrent Networks. IJF, 36(3). arXiv:1704.04110"
+      ]
+    },
+    {
+      "name": "Chronos",
+      "category": "Foundation Model (Zero-Shot)",
+      "complexity": "O(1) inference (no training required per dataset)",
+      "pros": [
+        "Zero-shot probabilistic forecasting via T5 backbone with quantised token vocabulary",
+        "Strong CRPS on 42 benchmark datasets",
+        "Multiple model sizes (Tiny to Large) for cost-accuracy tradeoffs",
+        "Open-source on HuggingFace — multiple sizes available"
+      ],
+      "cons": [
+        "Tokenisation quantisation introduces discretisation error",
+        "Slower than statistical methods for single series (2s/series CPU for large model)",
+        "Underperforms fine-tuned models on in-distribution data"
+      ],
+      "use_cases": [
+        "Cold-start forecasting for new entities (< 60 observations)",
+        "Diverse-domain zero-shot benchmarking",
+        "Probabilistic cold-start with uncertainty quantification"
+      ],
+      "key_papers": [
+        "Ansari, A.F. et al. (2024). Chronos: Learning the Language of Time Series. TMLR 2024. arXiv:2403.07815"
+      ]
+    },
+    {
+      "name": "TimesFM",
+      "category": "Foundation Model (Zero-Shot)",
+      "complexity": "O(1) inference; 200M parameters",
+      "pros": [
+        "Zero-shot forecasting with 200M parameter decoder-only Transformer",
+        "Trained on 100B real-world data points (Google Trends, Wikipedia, synthetic)",
+        "Outperforms statistical baselines on zero-shot tasks across 34 datasets",
+        "Deployable on standard hardware; pip-installable"
+      ],
+      "cons": [
+        "Primarily point forecasting (probabilistic extension in progress as of 2025)",
+        "Outperformed by fine-tuned models on in-distribution data",
+        "First cold-start incurs 30–60s model load time without pre-warming"
+      ],
+      "use_cases": [
+        "Cold-start forecasting across any domain",
+        "Rapid prototyping and PoC forecasting pipelines",
+        "Benchmark baseline against which task-specific models are compared"
+      ],
+      "key_papers": [
+        "Das, A. et al. (2024). A Decoder-Only Foundation Model for Time-Series Forecasting. ICML 2024. arXiv:2310.10688"
+      ]
+    },
+    {
+      "name": "Prophet",
+      "category": "Statistical + Bayesian",
+      "complexity": "O(n log n) via Stan MCMC/MAP",
+      "pros": [
+        "Analyst-accessible — no time series expertise required",
+        "Automatic changepoint detection with Laplace prior",
+        "Built-in holiday effects and custom seasonality periods",
+        "Robust to missing data and outliers"
+      ],
+      "cons": [
+        "Slower at scale than StatsForecast AutoETS for batch processing",
+        "Cannot incorporate lag-based ML features natively",
+        "Underperforms LightGBM on hierarchical multi-series problems"
+      ],
+      "use_cases": [
+        "Business series with known holiday effects",
+        "Analyst-driven forecasting without ML infrastructure",
+        "Series with abrupt level shifts or structural breaks"
+      ],
+      "key_papers": [
+        "Taylor, S.J. & Letham, B. (2018). Forecasting at Scale. The American Statistician, 72(1). doi:10.1080/00031305.2017.1380080"
+      ]
+    }
+  ],
+  "sota_2024_2026": {
+    "summary": "2024 was the foundation model year for time series. TimesFM (Google DeepMind, ICML 2024), Chronos (Amazon, TMLR 2024), Moirai (Salesforce, ICML 2024), and MOMENT (CMU, ICML 2024) all released within months of each other. These models enable zero-shot forecasting without per-dataset training. Simultaneously, iTransformer (ICLR 2024) recovered Transformer competitiveness for multivariate series by inverting attention to operate across variates. Mamba-based state space models (linear O(n) complexity) emerged as an architectural alternative. The Gift-Eval benchmark (2024) provided the first holistic multi-domain evaluation showing no single architecture universally dominates.",
+    "key_models": [
+      { "name": "TimesFM", "org": "Google DeepMind", "params": "200M", "venue": "ICML 2024", "innovation": "Decoder-only patches, 100B training points" },
+      { "name": "Chronos", "org": "Amazon", "params": "20M–710M", "venue": "TMLR 2024", "innovation": "Numeric tokenisation via T5, probabilistic outputs" },
+      { "name": "Moirai", "org": "Salesforce", "params": "14M–311M", "venue": "ICML 2024", "innovation": "Masked pre-training, MoE output heads, LOTSA dataset" },
+      { "name": "MOMENT", "org": "CMU", "params": "385M", "venue": "ICML 2024", "innovation": "BERT-style masked patches, Time Series Pile (13 domains)" },
+      { "name": "iTransformer", "org": "Tsinghua/MSRA", "params": "variable", "venue": "ICLR 2024", "innovation": "Inverted attention across variates instead of time" }
+    ],
+    "ongoing_debates": [
+      "Foundation models vs fine-tuned models: foundation models lead on cold-start but lag on in-distribution (Gift-Eval, 2024)",
+      "Transformers vs linear models: DLinear debate (Zeng 2023) partially resolved by PatchTST/iTransformer but linear models remain competitive on many real datasets",
+      "Mamba vs Transformer: linear complexity advantage is real but benchmark superiority is not yet decisive"
+    ]
+  },
+  "key_papers": [
+    {
+      "title": "Time Series Analysis: Forecasting and Control",
+      "authors": "Box, G.E.P. & Jenkins, G.M.",
+      "year": 1970,
+      "venue": "Holden-Day (Textbook, 4th ed. Wiley 2015)",
+      "arxiv_id": null,
+      "contribution": "Introduced the ARIMA model class and the iterative Box-Jenkins 3-step methodology. Established ACF/PACF as diagnostic tools and MLE as the estimation framework. The single most influential work in time series forecasting."
+    },
+    {
+      "title": "Forecasting with Exponential Smoothing: The State Space Approach",
+      "authors": "Hyndman, R.J., Koehler, A.B., Ord, J.K., Snyder, R.D.",
+      "year": 2008,
+      "venue": "Springer Verlag (Textbook)",
+      "arxiv_id": null,
+      "contribution": "Unified all exponential smoothing methods under the ETS probabilistic state space framework, enabling AIC-based model selection and proper prediction intervals. Implemented as ets() in R forecast package."
+    },
+    {
+      "title": "DeepAR: Probabilistic Forecasting with Autoregressive Recurrent Networks",
+      "authors": "Salinas, D., Flunkert, V., Gasthaus, J., Januschowski, T.",
+      "year": 2020,
+      "venue": "International Journal of Forecasting, 36(3)",
+      "arxiv_id": "1704.04110",
+      "contribution": "First large-scale global probabilistic forecasting model using LSTM with parametric likelihood. Demonstrated cross-series transfer learning for forecasting. Production-deployed at Amazon."
+    },
+    {
+      "title": "N-BEATS: Neural Basis Expansion Analysis for Interpretable Time Series Forecasting",
+      "authors": "Oreshkin, B.N., Carpov, D., Chapados, N., Bengio, Y.",
+      "year": 2020,
+      "venue": "ICLR 2020",
+      "arxiv_id": "1905.10437",
+      "contribution": "Pure MLP architecture with residual stacking. Interpretable variant uses Fourier and polynomial basis functions for trend/seasonality decomposition. Outperformed all classical methods on M4 competition data."
+    },
+    {
+      "title": "Temporal Fusion Transformers for Interpretable Multi-horizon Time Series Forecasting",
+      "authors": "Lim, B., Arık, S.O., Loeff, N., Pfister, T.",
+      "year": 2021,
+      "venue": "International Journal of Forecasting, 37(4)",
+      "arxiv_id": "1912.09363",
+      "contribution": "Specialised Transformer for forecasting with variable selection networks, gated residual networks, and attention-based interpretability. Handles mixed input types including static, known-future, and observed covariates."
+    },
+    {
+      "title": "A Time Series is Worth 64 Words: Long-term Forecasting with Transformers",
+      "authors": "Nie, Y., Nguyen, N.H., Sinthong, P., Kalagnanam, J.",
+      "year": 2023,
+      "venue": "ICLR 2023",
+      "arxiv_id": "2211.14730",
+      "contribution": "Introduced PatchTST: patch-based tokenisation capturing local temporal context, channel independence reducing noise, and self-supervised pre-training via masked patch modelling. Outperformed all prior Transformers on 8 benchmarks."
+    },
+    {
+      "title": "Are Transformers Effective for Time Series Forecasting?",
+      "authors": "Zeng, A., Chen, M., Zhang, L., Liu, Q.",
+      "year": 2023,
+      "venue": "AAAI 2023",
+      "arxiv_id": "2205.13504",
+      "contribution": "Showed a simple one-layer linear model (DLinear) outperforms multiple Transformer variants on 7/8 standard benchmarks. Triggered major re-evaluation of Transformer-based TS research and raised benchmark design questions."
+    },
+    {
+      "title": "A Decoder-Only Foundation Model for Time-Series Forecasting",
+      "authors": "Das, A., Kong, W., Leach, A., Mathur, S., Sen, R., Yu, R.",
+      "year": 2024,
+      "venue": "ICML 2024",
+      "arxiv_id": "2310.10688",
+      "contribution": "TimesFM: 200M parameter decoder-only Transformer trained on 100B real-world data points. Zero-shot performance competitive with statistical baselines on 34 datasets. Deployed internally at Google."
+    },
+    {
+      "title": "Chronos: Learning the Language of Time Series",
+      "authors": "Ansari, A.F., Stella, L., Türkmen, C., et al. (Amazon)",
+      "year": 2024,
+      "venue": "Transactions on Machine Learning Research (TMLR)",
+      "arxiv_id": "2403.07815",
+      "contribution": "Tokenised numeric time series via mean-scaling and quantisation into 4096-bin vocabulary, fine-tuning T5 as an autoregressive forecaster. Strong zero-shot CRPS on 42 benchmark datasets. Open-sourced on HuggingFace."
+    },
+    {
+      "title": "Unified Training of Universal Time Series Forecasting Transformers",
+      "authors": "Woo, G., Liu, C., Kumar, A., Xiong, C., Savarese, S., Sahoo, D.",
+      "year": 2024,
+      "venue": "ICML 2024",
+      "arxiv_id": "2402.02592",
+      "contribution": "Moirai: universal forecasting model using masked encoder pre-training on LOTSA (27B data points). Mixture-of-experts output heads handle different distribution types. Any-variate attention for multivariate series."
+    },
+    {
+      "title": "iTransformer: Inverted Transformers Are Effective for Time Series Forecasting",
+      "authors": "Liu, Y., Hu, T., Zhang, H., et al.",
+      "year": 2024,
+      "venue": "ICLR 2024",
+      "arxiv_id": "2310.06625",
+      "contribution": "Inverted Transformer applying attention across variates rather than time. Each variate token represents its entire temporal series. Achieved best results on multiple multivariate benchmarks including ETT, Weather, Traffic, Solar."
+    },
+    {
+      "title": "Forecasting at Scale",
+      "authors": "Taylor, S.J. & Letham, B.",
+      "year": 2018,
+      "venue": "The American Statistician, 72(1)",
+      "arxiv_id": null,
+      "contribution": "Facebook Prophet: practical analyst-accessible forecasting using additive decomposition with piecewise linear/logistic trend, Fourier-based seasonality, and automatic changepoint detection via Laplace prior."
+    }
+  ],
+  "tech_stack": {
+    "layer_1_ingestion_storage": {
+      "time_series_db": { "recommended": "TimescaleDB 2.14+", "rationale": "Native time-partitioning, continuous aggregates, SQL compatibility, 1M+ inserts/sec with compression", "alternatives": ["InfluxDB 3.0", "QuestDB"] },
+      "data_lake": { "recommended": "Apache Parquet on S3/MinIO + Delta Lake 3.x", "rationale": "Column-oriented, 10–50x compression, ACID transactions for schema evolution", "alternatives": ["Apache Iceberg", "Apache ORC"] },
+      "feature_store": { "recommended": "SQL point-in-time views in TimescaleDB (MVP/Prod v1); Feast 0.40+ (Full Platform only when <10ms online retrieval confirmed needed)", "rationale": "Feast adds operational complexity; SQL views achieve correctness for batch-only use cases", "alternatives": ["Hopsworks Community", "Tecton"] },
+      "streaming": { "recommended": "Apache Kafka 3.7 + Faust 1.10 (only when streaming is confirmed customer requirement)", "rationale": "Most demand forecasting use cases are daily/weekly batch — defer Kafka until streaming is explicitly needed", "alternatives": ["Redpanda", "AWS Kinesis"] }
+    },
+    "layer_2_model_training": {
+      "core_framework": { "recommended": "PyTorch 2.3+ + PyTorch Lightning 2.2+", "rationale": "De facto standard; most forecasting repos (PatchTST, iTransformer, Chronos) are PyTorch-native", "alternatives": ["TensorFlow/Keras", "JAX"] },
+      "statistical_baselines": { "recommended": "StatsForecast (Nixtla) 1.7+ + statsmodels 0.14+", "rationale": "StatsForecast fits AutoARIMA/AutoETS on 10,000 series in seconds", "alternatives": ["R forecast package", "Prophet"] },
+      "gradient_boosting": { "recommended": "LightGBM 4.3+", "rationale": "M5 competition winner architecture; fastest training on tabular feature-engineered TS; native categorical support", "alternatives": ["XGBoost", "CatBoost"] },
+      "foundation_models": { "recommended": "Hugging Face Transformers 4.40+ + nixtla/TimesFM 1.x", "rationale": "HuggingFace provides unified access to Chronos, MOMENT, Moirai; TimesFM has standalone pip package", "alternatives": ["GluonTS (AWS)", "direct model repos"] },
+      "experiment_tracking": { "recommended": "MLflow 2.13+", "rationale": "Open-source, self-hostable, Model Registry with champion/challenger management, no per-seat pricing", "alternatives": ["Weights & Biases", "Neptune.ai"] },
+      "hpo": { "recommended": "Optuna 3.6+", "rationale": "Async parallel trials, pruning (MedianPruner), Bayesian (TPE) and CMA-ES samplers", "alternatives": ["Ray Tune", "Hyperopt"] }
+    },
+    "layer_3_serving": {
+      "batch_inference": { "recommended": "Pandas/Dask (up to 50K series); Apache Spark 3.5+ (above 50K)", "rationale": "Spark JVM overhead unjustified below 50K series; Dask Python-native and sufficient for mid-market", "alternatives": ["Ray Serve"] },
+      "real_time_serving": { "recommended": "FastAPI 0.111+ (MVP + Prod v1); BentoML 1.2+ (Full Platform only)", "rationale": "FastAPI sufficient for MVP and Prod v1; BentoML adds containerisation convenience at operator cost", "alternatives": ["TorchServe", "Triton Inference Server"] },
+      "model_registry": { "recommended": "MLflow Model Registry 2.13+", "rationale": "Native integration with training tracking; stage transitions with audit trail", "alternatives": ["BentoML Model Store", "DVC + Git"] }
+    },
+    "layer_4_orchestration_monitoring": {
+      "orchestration": { "recommended": "Apache Airflow 2.9+", "rationale": "Battle-tested, large operator ecosystem, excellent for scheduled retraining pipelines", "alternatives": ["Prefect 2", "Dagster"] },
+      "containerisation": { "recommended": "Docker 26+ + Kubernetes 1.29+ (when horizontal scaling or multi-tenant isolation required)", "rationale": "Docker Compose sufficient for MVP; K8s only when HPA and namespace isolation needed", "alternatives": ["AWS ECS/Fargate", "Nomad"] },
+      "monitoring": { "recommended": "Prometheus 2.52+ + Grafana 10+ + Evidently AI 0.4+", "rationale": "Prometheus for SLA metrics; Evidently adds ML-specific drift detection (PSI, target drift, coverage)", "alternatives": ["WhyLogs + WhyLabs", "Arize AI"] },
+      "data_quality": { "recommended": "Great Expectations 1.0+", "rationale": "Expectation suite enforces data contracts; HTML data docs; justified from day 1", "alternatives": ["Soda Core", "dbt tests"] }
+    }
+  },
+  "effort_estimate": {
+    "mvp": {
+      "scope": "1 data source, LightGBM global model, walk-forward CV, FastAPI endpoint, StatsForecast ETS baseline",
+      "duration_optimistic": "3 weeks",
+      "duration_realistic": "4–5 weeks",
+      "team": "1 ML engineer",
+      "notes": "Optimistic assumes clean data and experienced engineer. Realistic accounts for data quality issues (70%+ probability). Data procurement time (2–6 weeks for enterprise clients) is explicitly excluded."
+    },
+    "production_v1": {
+      "scope": "Multi-source ingestion, Great Expectations, LightGBM + TFT, conformal prediction, MinT reconciliation, MLflow, Airflow, Evidently monitoring, Chronos cold-start",
+      "duration_beta_estimate": "18 weeks",
+      "duration_sentinel_estimate": "24–28 weeks",
+      "team": "2 engineers (1 ML + 1 MLOps/DE)",
+      "notes": "18 weeks is achievable if Feast is deferred (SQL views used instead) and Kafka/Spark excluded. 24–28 weeks is realistic if Feast is included or team is new to the full stack. MinT is 2.5 weeks, not 1."
+    },
+    "full_platform": {
+      "scope": "All Prod v1 + multi-tenancy, foundation model fine-tuning, Next.js dashboard, auto-retraining, GPU serving",
+      "duration": "37 weeks (~9 months)",
+      "team": "4 engineers (2 ML + 1 MLOps + 1 FE)",
+      "notes": "Business UI scope tends to expand — strict feature freeze required after month 5. GPU cost model must be validated before foundation model serving infrastructure is committed."
+    }
+  },
+  "feasibility_score": {
+    "overall": 6.9,
+    "verdict": "CONDITIONAL GO",
+    "technical_feasibility": { "score": 8, "weight": 0.30, "weighted": 2.40, "notes": "All core tools production-mature with 5+ years evidence. Foundation model ecosystem tooling (monitoring, fine-tuning, cost optimisation) is immature — score deduction." },
+    "market_feasibility": { "score": 7, "weight": 0.30, "weighted": 2.10, "notes": "Strong demand across all verticals. Saturated at enterprise tier (Oracle, SAP, AWS Forecast). Foundation model zero-shot is a genuine 12–24 month differentiation window. Vietnam/SEA market 3–5 years behind US/EU — significant entry wedge." },
+    "data_feasibility": { "score": 6, "weight": 0.20, "weighted": 1.20, "notes": "Data quality highly variable. 2-year minimum history requirement disqualifies ~30% of early clients. Weekly batch ERP export (common in Vietnamese manufacturing SMEs) cannot meet daily ingestion SLA without client-side IT changes." },
+    "risk_score": { "score": 6, "weight": 0.20, "weighted": 1.20, "notes": "GPU cost at scale, walk-forward CV leakage, and Feast over-engineering are the top operational risks. All are mitigable but require organisational maturity that early-stage teams typically lack." },
+    "go_conditions": [
+      "Condition 1: Customer discovery (5 interviews) to validate series count, SLA, data sovereignty, and willingness to pay before Production v1 stack selection",
+      "Condition 2: GPU cost benchmark spike (2 weeks) — test Chronos-tiny/small/base + TimesFM-200M on CPU and GPU before architecture lock",
+      "Condition 3: Walk-forward CV leakage gate implemented as CI/CD blocking test before first ML development sprint"
+    ]
+  },
+  "cross_domain_connections": [
+    {
+      "target": "B07 (Anomaly Detection & Monitoring)",
+      "connection_type": "complementary",
+      "description": "Prediction-error-based anomaly detection uses forecast residuals as the anomaly signal (|y_t - ŷ_t| > k·σ). STL decomposition residuals are the anomaly component. Conversely, anomaly-robust training (removing outliers before fitting) is critical for forecast accuracy. Both modules share drift detection infrastructure.",
+      "bidirectional": true
+    },
+    {
+      "target": "Operations Research & Inventory Optimisation",
+      "connection_type": "enables",
+      "description": "Demand forecasts feed inventory optimisation (newsvendor model, stochastic programming). Forecast errors propagate as stochastic uncertainty into optimisation problems. Amazon uses DeepAR forecasts as inputs to supply chain optimisation. The newsvendor optimal order quantity is F⁻¹(Cu/(Cu+Co)) — the forecast distribution F is the direct input.",
+      "bidirectional": false
+    },
+    {
+      "target": "Financial Analytics & Risk Management",
+      "connection_type": "specialises_into",
+      "description": "Financial forecasting uses GARCH models for volatility clustering, LSTM for multi-step price series, and portfolio optimisation combines return + covariance forecasts (Black-Litterman). High-frequency trading uses order flow forecasting. The Basel III market risk framework relies on GARCH-family volatility models.",
+      "bidirectional": false
+    },
+    {
+      "target": "Supply Chain Management",
+      "connection_type": "foundational_for",
+      "description": "Demand forecasting is the foundational capability in S&OP. Hierarchical forecasting (SKU → category → region) is the standard architecture. Lead time forecasting enables dynamic safety stock. M5 Competition used Walmart hierarchical sales data — LightGBM won.",
+      "bidirectional": false
+    },
+    {
+      "target": "Energy Systems & Grid Operations",
+      "connection_type": "critical_for",
+      "description": "Short-term electricity load and renewable generation forecasting is critical for grid balancing. Probabilistic forecasting feeds stochastic unit commitment. GEFCom tracks SOTA — <2% MAPE achievable with Transformer+weather features. Multi-seasonality (daily + weekly + annual) requires MSTL.",
+      "bidirectional": false
+    },
+    {
+      "target": "Healthcare & Epidemiology",
+      "connection_type": "applies_to",
+      "description": "Patient arrival forecasting drives hospital staffing. Epidemic forecasting (SIR/SEIR + ML corrections) uses TS methods. Vital sign trend forecasting in ICUs uses LSTM/Mamba for early warning. CDC FluSight competition tracks influenza forecasting SOTA annually.",
+      "bidirectional": false
+    },
+    {
+      "target": "B08 (NLP & Language Models)",
+      "connection_type": "convergence",
+      "description": "LLM pre-training techniques (masked modelling, next-token prediction) have been directly adapted for TS (Chronos uses T5; MOMENT uses BERT-style masking). LLM-Time (NeurIPS 2023) shows GPT-4 achieves competitive zero-shot TS performance. Multimodal forecasting incorporating news/social media as leading indicators is an emerging cross-domain application.",
+      "bidirectional": true
+    }
+  ],
+  "industry_applications": [
+    {
+      "industry": "I06 — Logistics & Supply Chain",
+      "use_cases": [
+        "Shipment volume forecasting at DC level (daily/weekly/monthly)",
+        "Warehouse labour headcount and dock scheduling",
+        "Fleet sizing and carrier capacity booking per lane",
+        "Last-mile delivery density forecasting (parcels per zone per day)",
+        "Inventory replenishment and multi-echelon positioning",
+        "Safety stock calculation from probabilistic demand forecasts"
+      ],
+      "key_data_sources": ["TMS (shipment history, lane, weight, carrier)", "WMS (inbound/outbound units, dock events)", "External APIs (weather, fuel index)", "ERP (purchase orders, supplier lead times)"],
+      "target_accuracy": "MAPE < 15% at SKU/week level; MASE < 0.80",
+      "special_considerations": "Strong lunar calendar effects (CNY, Tet) for Asia-Pacific. Intermittent demand on long-tail lanes. Promotion calendars (11.11, Black Friday) are extreme outlier events — must be modelled as known events, not anomalies."
+    },
+    {
+      "industry": "I05 — Retail & E-commerce",
+      "use_cases": [
+        "SKU×Store demand forecasting for inventory planning",
+        "Hierarchical category/region/national forecasting with MinT reconciliation",
+        "New product launch cold-start forecasting via foundation models",
+        "Price elasticity and promotion lift modelling",
+        "Markdown and clearance quantity optimisation"
+      ],
+      "key_data_sources": ["POS transaction logs", "ERP (on-hand inventory, purchase orders)", "Promotional calendar", "Weather API", "Competitor pricing"],
+      "target_accuracy": "MAPE < 10–15% at SKU level; PI coverage 78–82% for 80% nominal",
+      "special_considerations": "Zero-inflated demand for slow-movers and new SKUs — use Tweedie loss. Promotion confounding: without promotion flag as feature, lag features carry misleading signal during heavy promotion periods."
+    },
+    {
+      "industry": "I07 — Energy",
+      "use_cases": [
+        "Short-term electricity load forecasting (1h–48h) for grid balancing",
+        "Solar and wind generation forecasting for renewable integration",
+        "Price forecasting for energy trading",
+        "HVAC and building energy consumption forecasting"
+      ],
+      "key_data_sources": ["Smart meter readings", "Weather (temperature, solar irradiance, wind speed)", "Calendar (time-of-use patterns)", "Economic activity proxies"],
+      "target_accuracy": "MAPE < 2–5% for load forecasting",
+      "special_considerations": "Multiple seasonality periods (hourly + daily + weekly + annual) require MSTL. Probabilistic forecasting (quantile stacks) feeds stochastic unit commitment. GEFCom competition benchmark tracks SOTA."
+    },
+    {
+      "industry": "I02 — Finance",
+      "use_cases": [
+        "Returns and price series forecasting",
+        "Volatility forecasting (GARCH family) for risk management",
+        "Portfolio return and covariance forecasting",
+        "Credit default risk early warning"
+      ],
+      "key_data_sources": ["Exchange tick data", "Order book depth", "Macroeconomic indicators", "Earnings announcements"],
+      "target_accuracy": "MAPE < 5–8%; Sharpe ratio improvement as business metric",
+      "special_considerations": "Near-efficient markets, heavy-tailed distributions, regime changes. The Basel III market risk framework requires GARCH-class volatility models. HIPAA/PDPA do not apply but MiFID II data handling requirements do in EU."
+    },
+    {
+      "industry": "I01 — Agriculture & Agritech",
+      "use_cases": [
+        "Crop yield forecasting for supply planning",
+        "Weather-adjusted demand forecasting for agricultural inputs",
+        "Price forecasting for commodity hedging"
+      ],
+      "key_data_sources": ["Satellite imagery (NDVI)", "Weather stations", "Soil sensors", "Futures market prices"],
+      "target_accuracy": "MAPE < 15–25% (high inherent variability)",
+      "special_considerations": "Strong weather dependency. Irregular growing seasons. Data sparsity for smallholder farms."
+    }
+  ],
+  "risks": [
+    {
+      "rank": 1,
+      "name": "GPU Cost Spiral",
+      "probability": "MEDIUM",
+      "impact": "HIGH",
+      "description": "Foundation model GPU inference costs compound non-linearly as client series counts grow. Without a cost model integrated into client pricing, the platform may be revenue-positive but margin-negative at scale.",
+      "mitigation": "GPU cost benchmark spike before Prod v1 architecture lock. Limit foundation models to cold-start path (< 60 obs). Pre-compute nightly; never serve synchronously. Evaluate Chronos-tiny as default (15% CRPS penalty acceptable for cold-start)."
+    },
+    {
+      "rank": 2,
+      "name": "Walk-Forward CV Leakage — Silent Quality Corruption",
+      "probability": "MEDIUM-HIGH",
+      "impact": "HIGH",
+      "description": "Incorrect gap configuration in walk-forward CV produces training MASE ~0.78 that degrades to ~0.95 in production. Detection requires 4–8 weeks of live monitoring. Client trust is destroyed when the gap is discovered.",
+      "mitigation": "CI/CD blocking gate: assert gap >= max(forecast_horizon, max_lag_features). Canary leakage test. Code review checklist for all feature engineering. Compare training-time vs live production MASE on first client deployment."
+    },
+    {
+      "rank": 3,
+      "name": "Feast Feature Store Over-Engineering",
+      "probability": "HIGH",
+      "impact": "MEDIUM",
+      "description": "Feast consistently causes 2–4x timeline overruns on first implementations. Including Feast in Production v1 critical path converts the 18-week timeline to 24–28 weeks.",
+      "mitigation": "Implement features as point-in-time correct SQL views in TimescaleDB for Prod v1. Introduce Feast only in Full Platform phase, only when sub-10ms online feature retrieval is a confirmed requirement."
+    },
+    {
+      "rank": 4,
+      "name": "Hyperscaler Commoditisation of Foundation Models",
+      "probability": "HIGH",
+      "impact": "HIGH",
+      "description": "AWS, Google Cloud, and Nixtla TimeGPT are direct threats. The 12–24 month window before zero-shot foundation models are a $10/month managed service is narrow.",
+      "mitigation": "Shift primary moat to MLOps pipeline depth (monitoring, explainability, hierarchical reconciliation, ERP integration) rather than model quality. Establish 3 reference clients with documented ROI within 9 months."
+    },
+    {
+      "rank": 5,
+      "name": "Data Availability Barrier for Early Clients",
+      "probability": "MEDIUM",
+      "impact": "MEDIUM",
+      "description": "~30% of potential early clients lack the 2-year minimum history for trained global models. Vietnamese manufacturing SMEs on weekly ERP batch cadence cannot meet the daily ingestion SLA without 4–12 weeks of client-side IT work.",
+      "mitigation": "Foundation model cold-start path mitigates history requirement (with 15–20% MASE degradation caveat). Offer weekly-frequency forecasting tier for clients on weekly batch cadence. Qualify data maturity in first client discovery conversation."
+    }
+  ],
+  "created_at": "2026-03-30",
+  "updated_at": "2026-03-30",
+  "data_sources": [
+    "Dr. Archon (R-α) Research Report — B01 — 2026-03-30",
+    "Dr. Praxis (R-β) Tech Report — B01 — 2026-03-30",
+    "Dr. Sentinel (R-γ) Feasibility Report — B01 — 2026-03-30",
+    "R-MLE, R-DE, R-DA, R-BE, R-DO, R-QA, R-D06, R-SA, R-FE Practitioner Notes — B01 — 2026-03-30"
+  ],
+  "tags": [
+    "forecasting",
+    "time-series",
+    "demand-planning",
+    "ARIMA",
+    "ETS",
+    "LightGBM",
+    "transformer",
+    "PatchTST",
+    "iTransformer",
+    "foundation-models",
+    "TimesFM",
+    "Chronos",
+    "Moirai",
+    "probabilistic-forecasting",
+    "conformal-prediction",
+    "hierarchical-forecasting",
+    "MinT-reconciliation",
+    "walk-forward-validation",
+    "MASE",
+    "retail",
+    "logistics",
+    "energy",
+    "supply-chain"
+  ],
+  "metadata": {
+    "createdAt": "2026-03-30",
+    "updatedAt": "2026-03-30",
+    "researchedBy": ["R-alpha", "R-beta", "R-gamma", "R-MLE", "R-DE", "R-DA", "R-BE", "R-DO", "R-QA", "R-D06", "R-SA", "R-FE"],
+    "synthesisedBy": "R-sigma (Ms. Scribe)",
+    "version": "3.0",
+    "status": "reviewed",
+    "normalizedAt": "2026-03-30",
+    "normalizedBy": "R-BE-normalizer"
+  }
+}

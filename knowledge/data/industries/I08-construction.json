@@ -1,0 +1,107 @@
+{
+  "id": "I08",
+  "name": "Construction & Built Environment",
+  "slug": "construction-built-environment",
+  "category": "industry",
+  "icon": "Building2",
+  "color": "#FFA000",
+  "depthLevel": 1,
+  "overview": {
+    "description": "Construction in Vietnam is booming with infrastructure projects and urbanization. AI adoption is nascent but growing in site safety monitoring, BIM optimization, defect detection, and project schedule prediction.",
+    "marketSizeVietnam": "~$60B construction market; 8% CAGR; government infrastructure push drives demand",
+    "marketSizeSEA": "~$500B regional construction market; smart city projects accelerating AI adoption",
+    "aiMaturity": "L1",
+    "aiAppetite": "low"
+  },
+  "domainKnowledge": {
+    "keyEntities": [
+      "Construction sites",
+      "Equipment",
+      "Workers",
+      "Materials",
+      "Building permits",
+      "BIM models"
+    ],
+    "keyProcesses": [
+      "Site planning",
+      "Foundation work",
+      "Structure erection",
+      "MEP installation",
+      "Inspection"
+    ],
+    "dataTypes": [
+      "Drone imagery",
+      "CCTV footage",
+      "BIM/CAD files",
+      "IoT sensor data",
+      "Project schedules"
+    ],
+    "typicalDataVolume": "Low to medium — project-based; data fragmented across contractors",
+    "dataQuality": "Low — paper-based processes still dominant; limited digital adoption"
+  },
+  "painPoints": [
+    {
+      "problem": "Safety incidents on sites are common; PPE compliance is hard to monitor at scale",
+      "severity": 9,
+      "aiSolvable": true,
+      "mapsToBaseline": [
+        "B03"
+      ]
+    },
+    {
+      "problem": "Project delays and cost overruns are endemic due to poor scheduling",
+      "severity": 8,
+      "aiSolvable": true,
+      "mapsToBaseline": [
+        "B06",
+        "B01"
+      ]
+    },
+    {
+      "problem": "Structural defect detection post-construction is manual and slow",
+      "severity": 7,
+      "aiSolvable": true,
+      "mapsToBaseline": [
+        "B03",
+        "B07"
+      ]
+    },
+    {
+      "problem": "Document management (contracts, permits, drawings) is chaotic",
+      "severity": 7,
+      "aiSolvable": true,
+      "mapsToBaseline": [
+        "B02"
+      ]
+    }
+  ],
+  "regulations": [],
+  "priorityBaselines": {
+    "high": [
+      "B03",
+      "B07"
+    ],
+    "medium": [
+      "B02",
+      "B06"
+    ],
+    "low": [
+      "B01",
+      "B15"
+    ]
+  },
+  "competitiveLandscape": [],
+  "relatedNodes": [
+    {
+      "nodeId": "I04",
+      "relationship": "adjacent",
+      "description": "Construction uses manufactured materials; similar IoT monitoring patterns."
+    }
+  ],
+  "metadata": {
+    "createdAt": "2026-04-03",
+    "updatedAt": "2026-04-03",
+    "version": "0.1",
+    "status": "skeleton"
+  }
+}

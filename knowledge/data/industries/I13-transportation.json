@@ -1,0 +1,370 @@
+{
+  "id": "I13",
+  "name": "Transportation & Mobility",
+  "slug": "transportation-mobility",
+  "category": "industry",
+  "icon": "Car",
+  "color": "#FFA000",
+  "depthLevel": 2,
+  "overview": {
+    "description": "Ngành vận tải và di động Việt Nam đang ở điểm bùng phát cấu trúc: văn hóa xe máy (chiếm 78% trong 50+ triệu phương tiện đăng ký) va chạm với đô thị hóa nhanh, mở rộng Metro và làn sóng điện hóa do VinFast dẫn đầu. Thị trường bao gồm sáu phân khúc chính: ride-hailing (~880–940 triệu USD, CAGR 19%), hàng không (78,3 triệu hành khách/năm), hàng hải (VIMC: 80 triệu tấn hàng rời, 6,5 triệu TEU), Metro đô thị (HCMC Tuyến 1 khai trương 12/2024), EV (90.000 xe bán năm 2024, gấp 2,5× năm 2023) và bus/taxi truyền thống đang suy giảm thị phần.\n\nMức độ trưởng thành AI phân hóa rõ rệt theo phân khúc: ride-hailing và hàng không doanh thu đã đạt L3 (Grab, Vietnam Airlines/Amadeus), trong khi đội xe SME (tải trọng, xe khách liên tỉnh) gần như chưa có AI — đây là khoảng trắng lớn nhất với hơn 20.000–30.000 doanh nghiệp vận tải tải trọng nhỏ và 500.000+ phương tiện thương mại. Tổng chi phí bảo trì ước tính VND 10–15 nghìn tỷ/năm với gần như zero ứng dụng AI hiện tại.\n\nThị trường SEA đạt 24 tỷ USD ride-hailing và giao đồ ăn (2023), dự báo 31 tỷ USD năm 2025. Xanh SM (VinGroup) đã vươn lên dẫn đầu thị phần ride-hailing Việt Nam (39,85% Q1 2025) chỉ sau 2 năm ra mắt — sự gián đoạn nhanh nhất trong lịch sử vận tải Việt Nam — nhờ mô hình 100% xe điện VinFast và lợi thế chi phí vận hành. Khoảng trắng AI cho MAESTRO tập trung vào đội xe SME, xe khách liên tỉnh, và công cụ hỗ trợ quanh các nền tảng lớn — không phải cạnh tranh trực tiếp với Grab hay Xanh SM.",
+    "marketSizeVietnam": "Ride-hailing ~880–940 triệu USD (2024, CAGR 19%); hàng không ~78,3 triệu hành khách/năm; EV ~90.000 xe bán năm 2024 (gấp 2,5× 2023); VinFast 150.000 cổng sạc tại 34 tỉnh; thiệt hại tắc nghẽn HCMC ước tính 5,4 tỷ USD/năm",
+    "marketSizeSEA": "Ride-hailing & giao đồ ăn SEA ~24 tỷ USD (2023), dự báo 31 tỷ USD (2025); toàn Châu Á – Thái Bình Dương vượt 58,3 tỷ USD (2025, CAGR 30%+); Grab FY2024 doanh thu 2,80 tỷ USD (+18,6% YoY); thị trường AI hàng hải toàn cầu đạt 4,13 tỷ USD (2024, CAGR 23%)",
+    "aiMaturity": "L2",
+    "aiAppetite": "high",
+    "keyQuestions": [
+      "Đội xe của chúng tôi có dữ liệu OBD-II hoặc telematics nào đang được thu thập nhưng chưa được phân tích không?",
+      "Chi phí bảo trì hàng tháng của đội xe là bao nhiêu, và bao nhiêu phần trăm là sửa chữa ngoài kế hoạch?",
+      "Chúng tôi có đang tuân thủ Nghị định 10/2020 về camera hành trình không, và dữ liệu camera đó có được sử dụng gì không?",
+      "Hành lang vận chuyển nào tốn nhiều nhiên liệu nhất, và chúng tôi có dữ liệu GPS đầy đủ cho các hành lang đó không?",
+      "Khách hàng logistics của chúng tôi có đội xe vận tải tự quản lý hoặc hợp đồng không, và họ có muốn giải pháp AI cho đội xe không?"
+    ],
+    "whenToUse": [
+      "Khi doanh nghiệp vận tải SME (20–200 xe) muốn giảm chi phí bảo trì và cải thiện an toàn tài xế",
+      "Khi doanh nghiệp logistics (khách hàng I06) cũng quản lý đội xe tải và muốn tối ưu chi phí vận hành",
+      "Khi nhà khai thác xe khách liên tỉnh muốn tối ưu lịch trình, tuyến đường và tiết kiệm nhiên liệu",
+      "Khi cơ quan vận tải đô thị hoặc thành phố muốn cải thiện hiệu quả phân luồng giao thông và dự báo nhu cầu Metro/xe buýt",
+      "Khi hãng hàng không hạng 2 muốn giảm chi phí gián đoạn phi hành đoàn và dự báo trễ chuyến"
+    ]
+  },
+  "domainKnowledge": {
+    "keyEntities": [
+      "Phương tiện thương mại (xe tải, xe khách, taxi, xe máy ride-hailing)",
+      "Tài xế và phi hành đoàn (drivers, cabin crew, pilots)",
+      "Hành khách và điểm pickup/dropoff",
+      "Tuyến đường và lịch trình (routes, timetables, GTFS feeds)",
+      "Nút giao thông và điểm dừng (intersections, bus stops, metro stations)",
+      "Đội xe (fleet) và depot bảo trì",
+      "Sân bay và slot hàng không (airport slots, gates, runways)",
+      "Cảng biển và bến cầu (berths, container yards, RTG cranes)",
+      "Trạm sạc EV và pin (charging stations, SoC — State of Charge)",
+      "Cảm biến OBD-II, camera hành trình (Nghị định 10/2020)",
+      "Nền tảng ride-hailing (Grab, Xanh SM, Be Group)",
+      "Hệ thống GDS và quản lý doanh thu hàng không (Amadeus, Sabre)"
+    ],
+    "keyProcesses": [
+      "Ghép cặp tài xế-hành khách thời gian thực (real-time matching) với latency <100ms",
+      "Tính giá cước động (surge pricing) dựa trên cung cầu theo ô lục giác H3",
+      "Lập lịch và tối ưu tuyến đường đội xe (fleet dispatch và VRPTW optimization)",
+      "Giám sát bảo trì và phát hiện hỏng hóc từ dữ liệu OBD-II",
+      "Chấm điểm hành vi tài xế (driver behavior scoring) từ gia tốc kế và camera",
+      "Dự báo nhu cầu hành khách theo không gian-thời gian (spatiotemporal demand forecasting)",
+      "Quản lý doanh thu hàng không (revenue management) và tối ưu hạng vé",
+      "Lập lịch phi hành đoàn và xử lý gián đoạn (crew scheduling và disruption management)",
+      "Bảo trì sửa chữa tàu bay (MRO) và lên lịch theo dự đoán",
+      "Điều phối vào cảng tàu biển, xếp dỡ container và tối ưu bãi (yard planning)",
+      "Quản lý tín hiệu giao thông thích ứng (adaptive signal control)",
+      "Quản lý mạng sạc EV và cân bằng tải lưới điện"
+    ],
+    "dataTypes": [
+      "GPS traces (1–5 giây/ping cho ride-hailing, 10–30 giây/ping cho xe tải)",
+      "Dữ liệu OBD-II: RPM động cơ, nhiệt độ nước làm mát, tải động cơ, mã lỗi DTC",
+      "GTFS static và GTFS-RT (vị trí tàu/xe buýt, độ trễ chuyến, cảnh báo)",
+      "Dữ liệu AFC (Automated Fare Collection) — thẻ smart tap-in/tap-out Metro",
+      "Dữ liệu AIS tàu biển (vị trí, tốc độ, hướng — công khai qua MarineTraffic)",
+      "Video camera hành trình (dashcam) theo Nghị định 10/2020",
+      "Dữ liệu ACARS máy bay (Aircraft Communications Addressing and Reporting System)",
+      "Hệ thống đặt vé hàng không GDS (Amadeus, Sabre — O&D demand)",
+      "Dữ liệu cảm biến pin EV (State of Charge, nhiệt độ pin, lịch sử sạc)",
+      "Dữ liệu thời tiết và lịch sự kiện (weather API, event calendar — feature engineering)",
+      "Hồ sơ bảo trì xe (maintenance logs — paper và digital work orders)",
+      "Dữ liệu nhiên liệu theo chuyến (per-trip fuel consumption từ telematics)"
+    ],
+    "typicalDataVolume": "Rất cao cho ride-hailing: 17,3 triệu GPS events/ngày cho mỗi 1.000 xe hoạt động (ping 5 giây). Trung bình cho đội xe SME: 2,9 triệu events/ngày cho 1.000 xe tải (ping 30 giây). Thấp-trung cho hàng không: dữ liệu GDS và AMOS có cấu trúc tốt nhưng khối lượng nhỏ hơn. Hàng hải: dữ liệu AIS công khai phong phú; dữ liệu TOS cảng biển trong silo vendor.",
+    "dataQuality": "Phân hóa mạnh theo phân khúc: Ride-hailing Grab/Xanh SM đạt 8/10 nhưng đóng kín (không truy cập bên thứ ba). Hàng không (AMOS, ACARS) đạt 7/10 — có cấu trúc tốt nhưng pipeline dự đoán chưa được xây dựng. Hàng hải (AIS) đạt 6/10 — dữ liệu công khai tốt, dữ liệu TOS cảng trong silo. Metro (AFC tap data) đạt 5/10 — chất lượng tốt nhưng lịch sử ngắn (Metro mới khai trương 2021–2024). Xe tải SME đạt 3/10 — GPS bắt buộc nhưng trong silo vendor, hồ sơ bảo trì paper-based. Xe máy ngoài nền tảng: 1/10 — gần như không có dữ liệu."
+  },
+  "painPoints": [
+    {
+      "problem": "Tắc nghẽn giao thông nghiêm trọng tại HCMC và Hà Nội gây thiệt hại kinh tế khổng lồ — HCMC ước tính 5,4 tỷ USD/năm, Hà Nội 1,2 tỷ USD/năm; 127 giờ kẹt xe/người/năm tại HCMC (TomTom 2025)",
+      "severity": 9,
+      "aiSolvable": true,
+      "mapsToBaseline": ["B09", "B07"]
+    },
+    {
+      "problem": "Đội xe SME (20–200 xe) hoạt động phản ứng với hỏng hóc thay vì phòng ngừa — chi phí bảo trì ngoài kế hoạch chiếm 40–60% tổng chi phí bảo trì; hồ sơ bảo trì paper-based không thể dùng cho ML",
+      "severity": 9,
+      "aiSolvable": true,
+      "mapsToBaseline": ["B08", "B04"]
+    },
+    {
+      "problem": "Hành vi lái xe nguy hiểm và tỷ lệ tai nạn cao — Việt Nam có tỷ lệ tử vong giao thông thuộc hàng cao nhất SEA; camera Nghị định 10/2020 đã lắp nhưng dữ liệu không được phân tích",
+      "severity": 8,
+      "aiSolvable": true,
+      "mapsToBaseline": ["B01", "B08"]
+    },
+    {
+      "problem": "Định tuyến xe máy và mô hình ML phức tạp — 78% phương tiện là xe máy; các mô hình routing chuẩn cho ô tô thất bại; ETA bị ước tính thấp hơn 15–30%; cảm biến giao thông không đếm được xe máy chính xác",
+      "severity": 8,
+      "aiSolvable": true,
+      "mapsToBaseline": ["B05", "B03"]
+    },
+    {
+      "problem": "Hạ tầng sạc EV chưa đủ cho tốc độ tăng trưởng dự kiến — VinFast 150.000 cổng sạc tại 34 tỉnh nhưng không có mô hình dự báo tải lượng; không có hỗ trợ tài chính cho mạng sạc bên thứ ba",
+      "severity": 8,
+      "aiSolvable": true,
+      "mapsToBaseline": ["B09", "B08"]
+    },
+    {
+      "problem": "Tỷ lệ sử dụng giao thông công cộng thấp — Metro HCMC mới khai trương 12/2024; thiếu kết nối chặng cuối; không có AI dự báo nhu cầu hay tối ưu lịch trình động",
+      "severity": 8,
+      "aiSolvable": true,
+      "mapsToBaseline": ["B07", "B01"]
+    },
+    {
+      "problem": "Trễ chuyến bay liên hoàn tại Tân Sơn Nhất — sân bay hoạt động vượt công suất; thiếu công cụ AI dự báo cascade delay và tối ưu lịch phi hành đoàn khi gián đoạn",
+      "severity": 7,
+      "aiSolvable": true,
+      "mapsToBaseline": ["B04", "B09"]
+    },
+    {
+      "problem": "Hiệu quả cảng biển thấp — VIMC cảng Cái Mép-Thị Vải bị nghẽn; quy trình lập kế hoạch xếp container và phân bổ cầu cảng thủ công; container rỗng tồn đọng làm tắc bãi",
+      "severity": 7,
+      "aiSolvable": true,
+      "mapsToBaseline": ["B09", "B07"]
+    },
+    {
+      "problem": "Chi phí nhiên liệu biến động ảnh hưởng biên lợi nhuận hàng không — nhiên liệu chiếm ~30% OPEX; Vietjet đã triển khai SkyBreathe nhưng Vietnam Airlines và các hãng nhỏ hơn chưa có công cụ tối ưu",
+      "severity": 6,
+      "aiSolvable": true,
+      "mapsToBaseline": ["B04", "B09"]
+    },
+    {
+      "problem": "Ma sát vận tải xuyên biên giới ASEAN — hành lang Mekong thiếu phối hợp AI; thủ tục hải quan và giấy phép phân mảnh giữa các quốc gia; không có dự báo nhu cầu xuyên biên giới",
+      "severity": 6,
+      "aiSolvable": true,
+      "mapsToBaseline": ["B09", "B07"]
+    }
+  ],
+  "regulations": [
+    {
+      "name": "Nghị định 10/2020/NĐ-CP",
+      "description": "Nghị định quản lý kinh doanh vận tải bằng xe ô tô — bắt buộc lắp camera hành trình trên tất cả phương tiện kinh doanh ride-hailing và vận tải hành khách. Phân loại nền tảng quản lý phương tiện/tài xế hoặc đặt giá cước trực tiếp là doanh nghiệp vận tải, yêu cầu cấp phép của Sở GTVT tỉnh.",
+      "impact": "high"
+    },
+    {
+      "name": "PDPL 2025 (Luật Bảo vệ Dữ liệu Cá nhân — Luật 91/2025/QH15)",
+      "description": "Có hiệu lực từ 1/1/2026. Dữ liệu GPS hành khách và lịch sử vị trí tài xế được phân loại là dữ liệu cá nhân. Yêu cầu đồng ý rõ ràng cho xử lý tự động. Mức phạt tối đa 5% doanh thu năm tài chính trước. Ảnh hưởng đến: pipeline dự báo nhu cầu ride-hailing, mô hình huấn luyện từ GPS cá nhân, chuyển dữ liệu xuyên biên giới (tác động đến Grab Singapore HQ).",
+      "impact": "high"
+    },
+    {
+      "name": "Tiêu chuẩn ICAO SMS (Safety Management System)",
+      "description": "Các hãng hàng không Việt Nam vận hành AI tuân theo tiêu chuẩn quản lý an toàn ICAO trong khi chờ CAAV xây dựng khung quản trị AI chuyên biệt. EASA phát hành đề xuất quy định AI hàng không đầu tiên (11/2025) ảnh hưởng đến các hãng có đường bay châu Âu (Vietnam Airlines, Vietjet).",
+      "impact": "medium"
+    },
+    {
+      "name": "Nghị quyết 13/NQ-TW về phát triển đô thị thông minh",
+      "description": "Chủ trương chính phủ về xây dựng giao thông đô thị thông minh — tạo môi trường pháp lý thuận lợi cho AI quản lý giao thông, đặc biệt tại HCMC và Hà Nội. HCMC đã ký hợp đồng với PTV Group cho mô hình giao thông chiến lược. Tuy nhiên, quy trình mua sắm chính phủ vẫn dài (6–24 tháng).",
+      "impact": "medium"
+    },
+    {
+      "name": "IMO MASS Framework (Maritime Autonomous Surface Ships)",
+      "description": "Lộ trình quốc tế cho tàu tự lái đến năm 2028. Việt Nam chưa có quy định AV/MASS riêng. Khoảng trống pháp lý tạo thuận lợi cho thử nghiệm AI hàng hải nhưng cũng tạo rủi ro quy định phản ứng sau sự cố.",
+      "impact": "low"
+    },
+    {
+      "name": "Thông tư về phát triển đường cao tốc (mục tiêu 5.000 km đến 2030)",
+      "description": "Chính phủ mục tiêu 5.000 km đường cao tốc đến 2030 từ ~1.900 km năm 2021. Mở rộng hạ tầng tạo cơ hội cho route optimization và fleet AI trên hành lang mới, nhưng cũng tạo GPS gap mới ở vùng nông thôn trong giai đoạn thi công.",
+      "impact": "low"
+    }
+  ],
+  "priorityBaselines": {
+    "high": ["B08", "B04", "B07", "B09", "B06"],
+    "medium": ["B01", "B03", "B05", "B11", "B10"],
+    "low": ["B02", "B12", "B15"]
+  },
+  "competitiveLandscape": [
+    {
+      "competitor": "Grab Vietnam (GrabML + GrabMaps)",
+      "strengths": "GrabMaps tự phát triển với định tuyến xe máy đặc thù SEA — 10 năm dữ liệu quỹ đạo xe máy từ 8 quốc gia. GrabML bao gồm dự báo nhu cầu, ghép cặp, surge pricing ở quy mô quốc gia. FY2024 doanh thu 2,80 tỷ USD (+18,6%). 35,57% thị phần Q1 2025.",
+      "weaknesses": "Không bán công cụ AI cho bên thứ ba. Tập trung vào ride-hailing — không có giải pháp cho đội xe SME, hàng không, cảng biển. Giá cước bị ảnh hưởng bởi cạnh tranh từ Xanh SM."
+    },
+    {
+      "competitor": "Xanh SM / VinFast (V-Green ecosystem)",
+      "strengths": "Hệ sinh thái khép kín: sản xuất EV (VinFast) + nền tảng ride-hailing (Xanh SM: 39,85% thị phần Q1 2025) + mạng sạc (V-Green: 150.000 cổng). Lợi thế chi phí vận hành từ điện EVN. Dữ liệu pin telemetry từ 175.000 EV giao hàng tại Việt Nam 2025.",
+      "weaknesses": "AI chưa sâu bằng Grab theo đánh giá bên ngoài — tăng trưởng chủ yếu từ lợi thế chi phí và thương hiệu VinGroup. Routing AI vẫn dựa vào Vietmap/HERE (chưa xây dựng maps nội bộ như Grab). Rủi ro phụ thuộc một nhà sản xuất EV duy nhất."
+    },
+    {
+      "competitor": "Samsara / Lytx (Global Fleet AI Platforms)",
+      "strengths": "Sản phẩm fleet telematics và driver behavior scoring đã được chứng minh toàn cầu. Tích hợp OBD-II, camera AI, và phân tích bảo trì. Hàng trăm khách hàng doanh nghiệp lớn ở Mỹ/châu Âu.",
+      "weaknesses": "Giá doanh nghiệp Mỹ (~USD 33–50/xe/tháng = VND 800K–1,2M/xe/tháng) quá cao cho SME Việt Nam. Không hỗ trợ tiếng Việt. Không có hiệu chỉnh cho điều kiện đường Việt Nam, Tet, hay xe máy. Không tích hợp với TMS/phần mềm quản lý đội xe phổ biến tại Việt Nam."
+    },
+    {
+      "competitor": "Optibus (Public Transit AI)",
+      "strengths": "AI lên lịch và tối ưu tuyến xe buýt đã triển khai tại nhiều thành phố toàn cầu. Đánh giá nhanh các kịch bản thay đổi lộ trình phức tạp bao gồm tác động EV.",
+      "weaknesses": "Không có hiện diện tại Việt Nam. Không hỗ trợ GTFS Việt Nam đặc thù. Giá doanh nghiệp phù hợp với cơ quan vận tải lớn, không phải SME xe khách liên tỉnh Việt Nam."
+    },
+    {
+      "competitor": "Amadeus / PROS (Aviation Revenue Management)",
+      "strengths": "Amadeus Revenue Management (ARM) là hệ thống chuẩn ngành cho Vietnam Airlines. Có mặt sâu rộng trong hệ sinh thái GDS và IT hàng không toàn cầu.",
+      "weaknesses": "Chi phí triển khai ARM tùy chỉnh trên 1 triệu USD — ngoài tầm các hãng hàng không Bamboo, Vietravel, Pacific Airlines. Chu kỳ bán hàng dài 12–24 tháng. Không phù hợp cho hãng bay hạng 2 Việt Nam."
+    }
+  ],
+  "aiUseCases": [
+    {
+      "useCase": "Bảo trì dự đoán đội xe (Fleet Predictive Maintenance)",
+      "baseline": "B08",
+      "feasibility": "high",
+      "roiEstimate": "Giảm 25–35% chi phí bảo trì; hoàn vốn 3–8 tháng. Đội 50 xe tải: tiết kiệm VND 100–200 triệu/tháng. Giảm 62% sự cố hỏng giữa đường.",
+      "implementationMonths": "4–5 tháng",
+      "vietnamContext": "Đội xe SME Việt Nam 20–200 xe là khoảng trắng lớn nhất — không có AI, chi phí bảo trì phản ứng cao, hồ sơ paper-based. Nghị định 10/2020 đã bắt buộc GPS → dữ liệu có sẵn nhưng chưa được phân tích. Dự toán 2–3 tuần lắp đặt OBD-II dongle (USD 30–80/xe). Cảnh báo qua Zalo/SMS phù hợp văn hóa vận hành."
+    },
+    {
+      "useCase": "Chấm điểm hành vi tài xế (Driver Behavior Scoring)",
+      "baseline": "B01",
+      "feasibility": "high",
+      "roiEstimate": "Giảm 5–15% phí bảo hiểm; giảm chi phí tai nạn; cải thiện thương hiệu an toàn doanh nghiệp vận tải. Tỷ lệ tử vong giao thông Việt Nam thuộc hàng cao nhất SEA.",
+      "implementationMonths": "4–6 tháng",
+      "vietnamContext": "Nghị định 10/2020 bắt buộc camera trên phương tiện ride-hailing — dữ liệu video đã có sẵn, không cần đầu tư phần cứng mới. Cần layer UX bổ sung: thông báo Zalo, báo cáo coaching, xu hướng điểm số hàng tuần. Khác với I06 anomaly detection vì hướng đến hành vi cá nhân."
+    },
+    {
+      "useCase": "Tối ưu tuyến xe khách liên tỉnh và xe tải (Route Optimization)",
+      "baseline": "B06",
+      "feasibility": "high",
+      "roiEstimate": "Tiết kiệm 8–18% nhiên liệu (chiết khấu từ 10–30% chuẩn quốc tế do điều kiện đường VN); hoàn vốn 2–4 tháng. Đội 500 xe khách: tiết kiệm ~VND 3 tỷ/tháng nhiên liệu.",
+      "implementationMonths": "3–5 tháng",
+      "vietnamContext": "Core thuật toán tái sử dụng từ I06 route optimization (B06) — tiết kiệm 60–70% effort phát triển. Điều chỉnh cho vận tải đường dài vs. giao hàng chặng cuối. Đỉnh Tết cần xử lý riêng (mô hình chuẩn thất bại trong 5–7 ngày trước Tết). Dữ liệu booking Vexere/Baolau có cấu trúc tốt nhưng doanh nghiệp không sở hữu — cần thương lượng data access."
+    },
+    {
+      "useCase": "Dự báo nhu cầu hành khách theo không gian-thời gian (Demand Forecasting)",
+      "baseline": "B07",
+      "feasibility": "medium",
+      "roiEstimate": "Tăng 8–15% utilization tài xế (regime ít dữ liệu — thấp hơn 15–25% chuẩn toàn cầu); giảm 20–30% thời gian chờ hành khách tại vùng dự báo tốt.",
+      "implementationMonths": "4–6 tháng",
+      "vietnamContext": "Phụ thuộc H3 hexagonal grid thay vì lat/lon đơn thuần. Feature engineering: mật độ POI theo ô hex, proximity Metro stations, lịch sự kiện, lịch thi đại học, giờ tan ca VinFast Hải Phòng. Retraining hàng ngày sau sự kiện lớn. Mùa Tết xử lý giống I06 — dùng lại logic cùng framework."
+    },
+    {
+      "useCase": "Dự báo trễ chuyến bay và lên lịch phi hành đoàn (Aviation Delay & Crew AI)",
+      "baseline": "B04",
+      "feasibility": "medium",
+      "roiEstimate": "Giảm 20–30% chi phí gián đoạn; độ chính xác dự báo trễ chuyến đạt 90% (Random Forest + oversampling). Mỗi giờ AOG (Aircraft on Ground) tốn USD 10.000–150.000.",
+      "implementationMonths": "6–9 tháng",
+      "vietnamContext": "Nhắm vào Bamboo Airways, Vietravel Airlines, Pacific Airlines — quá lớn cho spreadsheet, quá nhỏ cho Amadeus ARM (>1 triệu USD). Cần partnership với hãng hàng không. Tân Sơn Nhất quá tải — slot constraint là nút cổ chai thực sự, AI chỉ tối ưu trong giới hạn cơ sở hạ tầng. Long Thanh Airport (khai trương một phần 2026) sẽ thay đổi bức tranh."
+    },
+    {
+      "useCase": "Phân tích quản lý giao thông đô thị (Traffic Management Analytics)",
+      "baseline": "B09",
+      "feasibility": "medium",
+      "roiEstimate": "Giảm 10–20% thời gian di chuyển tại HCMC (chiết khấu từ 25–40% chuẩn quốc tế do phức tạp xe máy). Giá trị công cộng ~540 triệu USD/năm nếu giải quyết 10% chi phí tắc nghẽn 5,4 tỷ USD.",
+      "implementationMonths": "7–10 tháng",
+      "vietnamContext": "HCMC đã có 1.837 camera AI tại 195 nút giao thông — hạ tầng thu thập dữ liệu đã triển khai. PTV Group ký hợp đồng mô hình giao thông chiến lược. Đây là thị trường B2G — không phải kênh bán hàng tự nhiên của Smartlog. Tiếp cận qua đối tác tích hợp smart city."
+    },
+    {
+      "useCase": "Dự báo tải lượng sạc EV cho nhà khai thác bên thứ ba (EV Charging Demand Forecast)",
+      "baseline": "B07",
+      "feasibility": "medium",
+      "roiEstimate": "Giảm chi phí phạt lưới điện (demand charge); tăng utilization trạm sạc; cải thiện trải nghiệm người dùng EV. Thị trường nhỏ hiện tại nhưng tăng trưởng theo làn sóng EV.",
+      "implementationMonths": "5–7 tháng",
+      "vietnamContext": "VinFast V-Green kiểm soát mạng sạc lớn nhất — không thể cạnh tranh. Nhắm vào nhà khai thác trạm sạc bên thứ ba đang mở rộng tại khu đô thị và cao tốc. Dữ liệu charging sạch hơn dữ liệu xe — phát triển nhanh hơn. Cần partnership trước khi triển khai. Phù hợp Phase 2."
+    },
+    {
+      "useCase": "AI cảng biển — xếp container và dự báo ETA tàu (Maritime Port AI)",
+      "baseline": "B09",
+      "feasibility": "low",
+      "roiEstimate": "Giảm 10–15% thời gian dừng container; giảm chi phí vận hành RTG crane; tăng năng lực thông qua cảng Cái Mép-Thị Vải.",
+      "implementationMonths": "12–18 tháng",
+      "vietnamContext": "VIMC là SOE — chu kỳ quyết định dài. Cần tích hợp API với TOS Navis N4. Dữ liệu AIS công khai sẵn sàng; dữ liệu bãi container trong silo TOS. Thích hợp Phase 3 sau khi VIMC đạt mức trưởng thành chuyển đổi số."
+    }
+  ],
+  "dataReadiness": {
+    "overallScore": 5,
+    "strengths": [
+      "Dữ liệu GPS phương tiện thương mại phong phú — Nghị định 10/2020 bắt buộc GPS cho toàn bộ vận tải thương mại (70–80% compliance xe tải >7,5 tấn, 85–90% xe buýt thành phố)",
+      "Dữ liệu AFC (Automated Fare Collection) chất lượng cao từ Metro Hà Nội và HCMC — mỗi lần tap-in/tap-out có timestamp đầy đủ",
+      "Dữ liệu AIS tàu biển công khai và chất lượng tốt (MarineTraffic, ExactEarth) — cập nhật 2–30 giây, độ chính xác 10m",
+      "Camera hành trình Nghị định 10/2020 đã lắp đặt — dữ liệu video sẵn sàng cho driver behavior AI không cần đầu tư phần cứng mới",
+      "GTFS static feed từ Hà Nội và HCMC đã công bố — có thể dùng ngay cho mô hình ridership",
+      "Dữ liệu AMOS hàng không (Vietnam Airlines, Vietjet) có cấu trúc tốt — timestamped đến cấp part number",
+      "Dữ liệu đặt vé xe khách trực tuyến từ Vexere/Baolau có cấu trúc tốt — nhưng doanh nghiệp không sở hữu"
+    ],
+    "gaps": [
+      "Dữ liệu GPS trong silo vendor telematics — operator nhìn thấy bản đồ nhưng AI developer không thể truy cập raw feed mà không cần custom API integration",
+      "Hồ sơ bảo trì paper-based tại SME fleet <200 xe — không có structured data cho predictive maintenance ML",
+      "Xe máy ngoài nền tảng: gần như không có dữ liệu — 99% xe máy Việt Nam không có GPS, là khoảng trống cơ bản cho traffic modeling",
+      "GTFS-RT chất lượng không đồng đều — chỉ ~60% xe buýt HCMC có real-time position; Metro SCADA không expose public GTFS-RT",
+      "Dữ liệu booking xe khách thuộc aggregator (Vexere, Baolau) — nhà khai thác xe khách không sở hữu demand intelligence của chính mình",
+      "Dữ liệu consumption nhiên liệu per-trip thiếu — tracking theo tháng/xe, không theo chuyến, không thể hỗ trợ per-trip fuel efficiency modeling",
+      "GPS gap ở vùng nông thôn — Tây Nguyên, vùng núi phía Bắc, kênh rạch Mekong có tín hiệu cellular không ổn định"
+    ],
+    "quickWins": [
+      "Cài đặt OBD-II dongle (USD 30–80/xe) cho pilot fleet 20–50 xe — bắt đầu thu thập dữ liệu telematics trong 2–3 tuần",
+      "Kết nối GTFS static feed của HCMC/Hà Nội — dữ liệu công khai, sẵn sàng ngay, không cần phê duyệt",
+      "Yêu cầu truy cập raw GPS feed từ vendor telematics (Vietmap, Webfleet) qua API — đây là bước unlock dữ liệu quan trọng nhất",
+      "Audit nhật ký bảo trì và digitize hồ sơ 12 tháng gần nhất từ paper sang structured database — 2–3 tháng effort nhưng bắt buộc trước khi train maintenance ML",
+      "Đăng ký MarineTraffic API (tier trả phí) để bắt đầu thu thập AIS historical data cho port AI feasibility analysis"
+    ]
+  },
+  "implementationRoadmap": {
+    "phase1": {
+      "duration": "0–6 tháng",
+      "initiatives": [
+        "MVP Bảo trì dự đoán đội xe (Fleet Predictive Maintenance) — Isolation Forest + XGBoost trên OBD-II; nhắm khách hàng SME 20–100 xe; est. 20–28 person-weeks",
+        "Tối ưu tuyến xe khách/xe tải — tái sử dụng core B06 từ I06; điều chỉnh cho vận tải đường dài; est. 12–18 person-weeks",
+        "Chấm điểm hành vi tài xế (Driver Behavior Scoring) — khai thác camera Nghị định 10/2020 đã có; output Zalo/SMS coaching; est. 18–24 person-weeks",
+        "Audit chất lượng dữ liệu GPS và OBD-II — áp dụng nguyên xi quy trình từ I06; dự phòng 2–3 tháng remediation",
+        "Bắt đầu cross-sell từ khách hàng I06 logistics — 30–40% client base có đội xe vận tải"
+      ]
+    },
+    "phase2": {
+      "duration": "6–18 tháng",
+      "initiatives": [
+        "Dự báo nhu cầu hành khách xe khách liên tỉnh — H3 hex grid; xử lý Tet (tái sử dụng từ I06); est. 16–22 person-weeks",
+        "AI trễ chuyến bay và lên lịch phi hành đoàn — nhắm Bamboo, Vietravel, Pacific Airlines; cần airline data partnership",
+        "Analytics quản lý giao thông đô thị (B2G) — tiếp cận qua đối tác tích hợp smart city; không bán trực tiếp cho chính phủ",
+        "Dự báo tải lượng sạc EV cho nhà khai thác bên thứ ba — cần partnership trạm sạc",
+        "Dự báo nhu cầu xe khách xuyên biên giới hành lang Mekong — xây trên I06 cross-border AI research",
+        "Mở rộng data lake I06 sang schema vận tải: vehicle_telemetry_event, vehicle_dtc_event, gtfs_rt_vehicle_position",
+        "Tích hợp GTFS-RT pipeline cho Metro Hà Nội và HCMC — Protobuf parser → Kafka → TimescaleDB"
+      ]
+    },
+    "phase3": {
+      "duration": "18+ tháng",
+      "initiatives": [
+        "Digital Twin mạng lưới Metro và đội xe đô thị (B12) — sau khi Metro tích lũy 24+ tháng dữ liệu",
+        "AI cảng biển VIMC — container stacking RL, vessel ETA, berth optimization — sau khi VIMC đạt mức trưởng thành chuyển đổi số",
+        "Xe tự lái (AV) — chỉ theo dõi, không đầu tư; đợi khung pháp lý Việt Nam (dự kiến 2028–2030)",
+        "Mở rộng sang hành lang ASEAN: tích hợp cross-border vận tải Việt Nam – Campuchia – Lào – Thái Lan",
+        "Mô hình AI chuyên biệt xe máy — fine-tuning cho môi trường giao thông hỗn hợp đặc thù Việt Nam khi đủ training data"
+      ]
+    }
+  },
+  "crossSellOpportunity": {
+    "sourceIndustry": "I06",
+    "overlap": "30–40% khách hàng logistics I06 của Smartlog (nhà sản xuất công nghiệp, nhà phân phối FMCG, doanh nghiệp nông nghiệp xuất khẩu) tự vận hành hoặc hợp đồng với đội xe tải thương mại. Khách hàng logistics quản lý kho hàng và 3PL sử dụng chính xác cùng loại phương tiện, tài xế, và hành trình GPS mà fleet AI I13 được xây dựng để phân tích. Đường dẫn bán hàng tự nhiên: mở rộng hợp đồng hiện có, không cần phát triển thị trường mới.",
+    "clientTypes": [
+      "Nhà sản xuất công nghiệp có đội xe tải nội bộ (Phú Mỹ Fertilizer, Baconco và các doanh nghiệp tương tự)",
+      "Nhà phân phối FMCG với đội xe giao hàng 20–100 xe",
+      "Doanh nghiệp xây dựng và vật liệu xây dựng với xe tải vận chuyển",
+      "Doanh nghiệp nông nghiệp xuất khẩu (gạo, cà phê, thủy sản) với fleet vận chuyển nông sản",
+      "Nhà thầu logistics vận tải 3PL (thay vì thuê ngoài toàn bộ)"
+    ],
+    "reusableComponents": [
+      "Pipeline Document AI (B02) — mở rộng từ vận đơn/hải quan sang hồ sơ bảo trì đội xe và biên bản kiểm tra xe",
+      "Route Optimization core (B06) — tái sử dụng thuật toán; điều chỉnh tham số cho vận tải đường dài vs. giao hàng chặng cuối",
+      "Kiến trúc Kafka/Flink từ I06 — pipeline telemetry vận tải chạy trên cùng event bus",
+      "Quy trình audit chất lượng dữ liệu GPS — áp dụng nguyên xi; cùng các vấn đề gap và timestamp mismatch",
+      "Vietnamese-language AI Copilot (nếu phát triển cho I06 B08) — mở rộng cho fleet management queries",
+      "Xử lý mùa Tết trong time-series models — logic giống nhau cho logistics và passenger demand",
+      "Data lake architecture — mở rộng schema, không xây mới"
+    ],
+    "revenueEstimate": "Nếu 30 trong số 100 khách hàng I06 chuyển đổi sang fleet AI I13 với đội 50 xe và giá VND 300–500K/xe/tháng: ARR bổ sung VND 450 triệu – 750 triệu/tháng (~VND 5,4 tỷ – 9 tỷ/năm). Ước tính thận trọng — không tính đến doanh thu từ khách hàng I13 mới ngoài base I06."
+  },
+  "relatedNodes": [
+    {
+      "nodeId": "I06",
+      "relationship": "supply_chain",
+      "description": "I06 (Logistics & Chuỗi cung ứng) và I13 chia sẻ hạ tầng vật lý: đội xe tải, tài xế, tuyến đường GPS, và cổng hải quan. Route Optimization (B06) và Document AI (B02) phát triển cho I06 có thể tái sử dụng trực tiếp cho I13. 30–40% khách hàng Smartlog I06 là người mua tiềm năng cho I13 fleet AI. Xây dựng I13 sau I06 giúp tiết kiệm 40–60% effort phát triển hạ tầng dữ liệu."
+    },
+    {
+      "nodeId": "I07",
+      "relationship": "adjacent",
+      "description": "I07 (Năng lượng) liên kết với I13 thông qua EV adoption: VinFast V-Green cần AI tối ưu tải lưới điện cho 150.000 cổng sạc. Dự báo tải lượng sạc EV là use case giao thoa giữa I07 (quản lý lưới điện) và I13 (mobility). Tăng trưởng EV thương mại tạo ra nhu cầu mới cho cả hai module."
+    }
+  ],
+  "metadata": {
+    "createdAt": "2026-04-03",
+    "updatedAt": "2026-04-03T00:00:00Z",
+    "version": "2.0",
+    "status": "draft",
+    "researchAgents": ["R-α", "R-β", "R-γ", "R-D13", "R-DE", "R-PM", "R-σ"]
+  }
+}

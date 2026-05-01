@@ -1,0 +1,112 @@
+{
+  "id": "I10",
+  "name": "Telecom",
+  "slug": "telecom",
+  "category": "industry",
+  "icon": "Signal",
+  "color": "#FFB300",
+  "depthLevel": 1,
+  "overview": {
+    "description": "Vietnam has 3 major telcos (Viettel, Vinaphone, Mobifone) serving 130M+ subscribers. AI use cases include network anomaly detection, churn prediction, customer service automation, and fraud detection.",
+    "marketSizeVietnam": "~$10B telecom revenue; 5G rollout accelerating; mobile-first population",
+    "marketSizeSEA": "~$80B regional telecom market; strong 5G investment driving AI in network ops",
+    "aiMaturity": "L2",
+    "aiAppetite": "high"
+  },
+  "domainKnowledge": {
+    "keyEntities": [
+      "Subscribers",
+      "Base stations",
+      "Network nodes",
+      "Service tickets",
+      "Billing records",
+      "SIM cards"
+    ],
+    "keyProcesses": [
+      "Network provisioning",
+      "Customer onboarding",
+      "Billing",
+      "Fault management",
+      "Network optimization"
+    ],
+    "dataTypes": [
+      "Call detail records (CDR)",
+      "Network logs",
+      "Customer profiles",
+      "Usage patterns",
+      "Fault alerts"
+    ],
+    "typicalDataVolume": "Very high — billions of CDRs per day; continuous network telemetry streams",
+    "dataQuality": "High — core billing and network systems well-structured and real-time"
+  },
+  "painPoints": [
+    {
+      "problem": "Network anomalies and outages are detected too slowly",
+      "severity": 9,
+      "aiSolvable": true,
+      "mapsToBaseline": [
+        "B07"
+      ]
+    },
+    {
+      "problem": "Customer churn prediction models are outdated or rule-based",
+      "severity": 8,
+      "aiSolvable": true,
+      "mapsToBaseline": [
+        "B13",
+        "B01"
+      ]
+    },
+    {
+      "problem": "Call center volume is high; automation penetration is low",
+      "severity": 7,
+      "aiSolvable": true,
+      "mapsToBaseline": [
+        "B08"
+      ]
+    },
+    {
+      "problem": "SIM swap fraud and account takeover are growing threats",
+      "severity": 8,
+      "aiSolvable": true,
+      "mapsToBaseline": [
+        "B07",
+        "B13"
+      ]
+    }
+  ],
+  "regulations": [],
+  "priorityBaselines": {
+    "high": [
+      "B07",
+      "B01"
+    ],
+    "medium": [
+      "B13",
+      "B08"
+    ],
+    "low": [
+      "B04",
+      "B12"
+    ]
+  },
+  "competitiveLandscape": [],
+  "relatedNodes": [
+    {
+      "nodeId": "I20",
+      "relationship": "adjacent",
+      "description": "Telecom and cybersecurity overlap in network threat detection."
+    },
+    {
+      "nodeId": "I02",
+      "relationship": "adjacent",
+      "description": "Telecom and finance share fraud detection and customer analytics patterns."
+    }
+  ],
+  "metadata": {
+    "createdAt": "2026-04-03",
+    "updatedAt": "2026-04-03",
+    "version": "0.1",
+    "status": "skeleton"
+  }
+}

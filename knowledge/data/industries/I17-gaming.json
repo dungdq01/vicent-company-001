@@ -1,0 +1,108 @@
+{
+  "id": "I17",
+  "name": "Gaming & Interactive",
+  "slug": "gaming-interactive",
+  "category": "industry",
+  "icon": "Gamepad2",
+  "color": "#FF6F00",
+  "depthLevel": 1,
+  "overview": {
+    "description": "Vietnam has a vibrant gaming market with 45M+ gamers. AI use cases include player behavior analytics, cheat detection, personalized game difficulty, NPC intelligence, and generative content for game worlds.",
+    "marketSizeVietnam": "~$900M gaming market; mobile gaming dominant; VNG, Garena major publishers",
+    "marketSizeSEA": "~$6B gaming market; fastest growing in APAC for mobile gaming",
+    "aiMaturity": "L2",
+    "aiAppetite": "high"
+  },
+  "domainKnowledge": {
+    "keyEntities": [
+      "Players",
+      "Games",
+      "Sessions",
+      "Items",
+      "NPCs",
+      "Leaderboards"
+    ],
+    "keyProcesses": [
+      "Matchmaking",
+      "In-game economy",
+      "Content generation",
+      "Anti-cheat",
+      "Monetization"
+    ],
+    "dataTypes": [
+      "Player behavior logs",
+      "In-game telemetry",
+      "Purchase history",
+      "Session data",
+      "Chat logs"
+    ],
+    "typicalDataVolume": "Very high — real-time telemetry from millions of concurrent players",
+    "dataQuality": "High — gaming companies have mature data infrastructure"
+  },
+  "painPoints": [
+    {
+      "problem": "Cheat detection in competitive games is reactive; exploits spread fast",
+      "severity": 8,
+      "aiSolvable": true,
+      "mapsToBaseline": [
+        "B07",
+        "B13"
+      ]
+    },
+    {
+      "problem": "Player churn prediction is low-accuracy; personalization is minimal",
+      "severity": 7,
+      "aiSolvable": true,
+      "mapsToBaseline": [
+        "B13",
+        "B05"
+      ]
+    },
+    {
+      "problem": "Generating dynamic game content (quests, maps, dialogue) at scale",
+      "severity": 8,
+      "aiSolvable": true,
+      "mapsToBaseline": [
+        "B09",
+        "B10"
+      ]
+    },
+    {
+      "problem": "Toxicity and harmful content detection in chat",
+      "severity": 7,
+      "aiSolvable": true,
+      "mapsToBaseline": [
+        "B04"
+      ]
+    }
+  ],
+  "regulations": [],
+  "priorityBaselines": {
+    "high": [
+      "B13",
+      "B07"
+    ],
+    "medium": [
+      "B09",
+      "B10"
+    ],
+    "low": [
+      "B05",
+      "B04"
+    ]
+  },
+  "competitiveLandscape": [],
+  "relatedNodes": [
+    {
+      "nodeId": "I12",
+      "relationship": "adjacent",
+      "description": "Gaming and media share content recommendation and generative AI patterns."
+    }
+  ],
+  "metadata": {
+    "createdAt": "2026-04-03",
+    "updatedAt": "2026-04-03",
+    "version": "0.1",
+    "status": "skeleton"
+  }
+}

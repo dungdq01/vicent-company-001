@@ -1,0 +1,729 @@
+{
+  "id": "B05",
+  "name": "Recommendation Systems",
+  "type": "baseline",
+  "slug": "recommendation-systems",
+  "tagline": "Ca nhan hoa trai nghiem nguoi dung bang du doan so thich — tu san pham den noi dung, tu e-commerce den giai tri",
+  "category": "baseline",
+  "icon": "Star",
+  "color": "#FF6B6B",
+  "depthLevel": 3,
+  "selectedAgents": ["R-alpha", "R-beta", "R-gamma", "R-MLE", "R-DE", "R-DA", "R-BE", "R-DO", "R-QA", "R-SA", "R-DLE", "R-D01", "R-D12", "R-sigma"],
+  "description": "Recommendation Systems — He thong De xuat (RecSys) la linh vuc AI su dung du lieu tuong tac nguoi dung (clicks, purchases, ratings, dwell time) de du doan va de xuat cac items phu hop nhat cho tung ca nhan. Tu collaborative filtering don gian (1990s) qua matrix factorization (Netflix Prize 2006-2009), deep learning (Wide&Deep, DeepFM 2016-2017), attention-based models (DIN/DIEN 2018), Transformer sequential models (SASRec 2018), graph neural networks (LightGCN 2020), den LLM-enhanced recommendation (P5, InstructRec 2022-2026). Kien truc production chuan la multi-stage funnel: candidate retrieval (two-tower + ANN) → ranking (feature-rich DNN) → business rules → A/B-tested serving, voi latency budget <100ms end-to-end.",
+  "description_paragraphs": [
+    "Recommendation Systems — He thong De xuat (RecSys) la linh vuc AI su dung du lieu tuong tac nguoi dung (clicks, purchases, ratings, dwell time) de du doan va de xuat cac items phu hop nhat cho tung ca nhan. Amazon quy 35% doanh thu cho recommendation engine. Netflix, TikTok, va Spotify ve ban chat la cac recommendation platforms. Linh vuc da tien hoa tu collaborative filtering don gian qua matrix factorization, deep learning, den ky nguyen hien tai voi Transformer va LLM-enhanced methods. Kien truc production chuan la multi-stage funnel: candidate retrieval (two-tower + ANN search) → ranking (feature-rich DNN) → business rules → A/B-tested serving.",
+    "Tai thi truong Viet Nam, RecSys doi mat voi landscape bi phan hoa: Shopee (~55% market share), TikTok Shop (~20%), Lazada (~12%), Tiki (~8%) deu xay in-house RecSys. Thi truong kha dung cho third-party RecSys la ~200-500 doanh nghiep trung binh ($1M-$50M revenue) nhu Thegioididong, Pharmacity, CellphoneS, Con Cung. Thach thuc VN-specific: data sparsity cuc cao (99.95%+) tren cac platform nho, COD dominance (60-70%) gay delay va noise trong purchase signals, flash sales culture tao spikes bat thuong, va thieu Vietnamese RecSys datasets cong khai.",
+    "Diem kha thi tong the la 6.6/10 voi verdict CONDITIONAL GO. Rang buoc chinh la data availability (5/10) — hau het nen tang VN ngoai top 4 khong co du interaction data cho deep learning RecSys. Con duong kha thi: bat dau voi phuong phap don gian (ALS, LightFM), nham mid-tier retailers khong co in-house AI, giup clients xay event tracking va data collection truoc khi hoa ML, va dinh vi MAESTRO nhu acceleration layer giam time-to-market tu 3 thang xuong 3 tuan."
+  ],
+  "aliases": [
+    "He thong De xuat",
+    "RecSys",
+    "Personalization",
+    "Collaborative Filtering",
+    "Content Recommendation"
+  ],
+  "maturity_level": "mature",
+  "trl": 9,
+  "core_concepts": [
+    {
+      "name": "User-Item Interaction Matrix (Ma tran tuong tac)",
+      "definition": "Cau truc du lieu nen tang R co shape (m x n) voi m users va n items. Moi o r_ui la tuong tac (rating, click, purchase). Ma tran nay cuc ky thua — 99%+ missing values. Muc tieu cot loi cua RecSys la matrix completion: du doan cac o trong. Explicit feedback (1-5 stars) chat luong cao nhung thua; implicit feedback (clicks, views, purchases) doi dao nhung nhieu noise.",
+      "difficulty": "Beginner",
+      "prerequisites": ["Dai so tuyen tinh co ban"]
+    },
+    {
+      "name": "Collaborative Filtering — CF (Loc cong tac)",
+      "definition": "Gia dinh rang users dong y trong qua khu se dong y trong tuong lai. User-based CF tim k users tuong dong nhat. Item-based CF (Amazon 2001) tim items tuong dong — on dinh hon vi item similarity it thay doi. Item-item similarity co the tinh truoc va cache. Van la competitive baseline trong production, dac biet vi interpretability ('De xuat vi ban thich X').",
+      "difficulty": "Beginner",
+      "prerequisites": ["Cosine similarity", "Thong ke co ban"]
+    },
+    {
+      "name": "Matrix Factorization — MF (Phan tich ma tran)",
+      "definition": "Phan tich R ≈ P * Q^T voi P (m x k) la user latent factors va Q (n x k) la item latent factors. k (50-300) la so chieu ẩn. ALS la phuong phap uu tien cho implicit feedback — cho phep closed-form updates va song song hoa. Breakthrough cua Netflix Prize. SVD++ them bias terms: y_ui = mu + b_u + b_i + p_u^T * q_i.",
+      "difficulty": "Intermediate",
+      "prerequisites": ["Dai so tuyen tinh (SVD)", "Toi uu hoa (SGD, ALS)"]
+    },
+    {
+      "name": "Two-Tower Architecture (Kien truc hai thap)",
+      "definition": "Paradigm thong tri cho large-scale retrieval: mot tower encode user, mot tower encode item thanh dense vectors. Score = dot product. Loi the then chot: item embeddings tinh truoc, chi can chay user tower online, ANN retrieval tren ty items trong mili-giay. YouTube, Facebook DSSM, Spotify deu dung. Han che: chi co dot product interaction — can ranking stage rieng cho fine-grained features.",
+      "difficulty": "Intermediate",
+      "prerequisites": ["Embedding models", "ANN retrieval"]
+    },
+    {
+      "name": "Deep Interest Network — DIN (Mang so thich sau)",
+      "definition": "Alibaba 2018: insight quan trong — khong phai tat ca lich su user deu relevant cho moi candidate item. DIN dung attention mechanism: candidate item query vao behavior sequence, tao weighted sum — user representation thay doi tuy theo item dang duoc danh gia. DIEN mo rong voi GRU + AUGRU de mo hinh su tien hoa so thich theo thoi gian. Tang 5-10% CTR tai Alibaba.",
+      "difficulty": "Advanced",
+      "prerequisites": ["Attention mechanisms", "RNN/GRU", "CTR prediction"]
+    },
+    {
+      "name": "Sequential Recommendation (De xuat tuan tu)",
+      "definition": "Mo hinh lich su tuong tac nhu chuoi co thu tu, du doan item tiep theo. SASRec (2018): Transformer mot chieu (causal attention) — standard baseline. BERT4Rec (2019): bidirectional masking, ly thuyet manh nhung thuc te khong consistently tot hon. S3-Rec them contrastive pre-training. Paradigm nay dac biet quan trong cho media/content recommendation noi session behavior la signal manh nhat.",
+      "difficulty": "Advanced",
+      "prerequisites": ["Transformers", "Self-attention", "Sequential modeling"]
+    },
+    {
+      "name": "Graph Neural Networks cho RecSys",
+      "definition": "User-item interactions hinh thanh bipartite graph tu nhien. LightGCN (2020) don gian hoa GCN chi con neighborhood aggregation — tot hon NGCF phuc tap. PinSage (Pinterest 2018): GNN quy mo cong nghiep dau tien tren 3B nodes, random-walk sampling, importance pooling. GNN bat signal ket noi bac cao ma MF miss, nhung gap scalability challenge tren graphs ty edges.",
+      "difficulty": "Advanced",
+      "prerequisites": ["Graph neural networks", "Message passing"]
+    },
+    {
+      "name": "Feature Interaction: FM, DeepFM, DCN-v2",
+      "definition": "Thach thuc cot loi: mo hinh cach features tuong tac — user preference cho 'electronics' + 'duoi $50' + 'rating cao' tao intent cu the. FM (Rendle 2010): factorized pairwise interactions O(kn). DeepFM (2017): FM + deep MLP chia se embedding layer — vua memorize vua generalize. DCN-v2 (Google): cross network hoc feature interactions bac bat ky. Van la workhorse trong CTR prediction.",
+      "difficulty": "Intermediate",
+      "prerequisites": ["Neural networks", "Feature engineering"]
+    },
+    {
+      "name": "Multi-Task Learning: MMOE va PLE",
+      "definition": "Production RecSys toi uu nhieu objectives dong thoi: CTR, CVR, watch time, retention. MMOE (Google 2018): nhieu expert networks voi task-specific gating — giam negative transfer. PLE (Tencent 2020): them task-specific experts ben canh shared experts. ESMM (Alibaba): phan tich pCTCVR = pCTR * pCVR, giai quyet sample selection bias cho CVR prediction.",
+      "difficulty": "Advanced",
+      "prerequisites": ["Multi-task learning", "Mixture of experts"]
+    },
+    {
+      "name": "Cold-Start Problem (Van de khoi dong lanh)",
+      "definition": "Lam sao de xuat cho users moi (khong co lich su) hoac items moi (khong co interactions)? CF thuong tuy khong the giai quyet thien. Mitigation: content-based features (item attributes, PhoBERT embeddings cho VN), meta-learning (MeLU), bandit exploration (Thompson Sampling), popularity fallback, va onboarding flows. Trong VN voi data thua, cold-start la thach thuc CHINH — khong phai secondary.",
+      "difficulty": "Intermediate",
+      "prerequisites": ["CF fundamentals", "Bandit algorithms"]
+    },
+    {
+      "name": "Exploration-Exploitation Tradeoff",
+      "definition": "Exploit: hien items co predicted relevance cao. Explore: thu items khong chac de gather information. Pure exploitation → filter bubbles. Thompson Sampling: lay mau tu posterior distribution, tu nhien can bang explore/exploit. LinUCB (2010): contextual bandit voi UCB. Netflix dung Thompson Sampling cho artwork personalization. Dac biet quan trong cho VN voi du lieu thua — exploration co the quan trong hon sophisticated ranking.",
+      "difficulty": "Advanced",
+      "prerequisites": ["Bandit theory", "Bayesian inference"]
+    },
+    {
+      "name": "LLM-based Recommendation",
+      "definition": "Frontier 2023-2026: P5 thong nhat 5 rec tasks thanh text-to-text. InstructRec cho zero-shot recommendation qua natural language. Chat-Rec hybrid: LLM cho NLU + explanation, traditional system cho retrieval + ranking. Thuc te 2026: LLM nhu feature extractor kha thi (item embeddings); LLM nhu recommender gap latency (200-500ms) va cost challenges. Phan loai la 'watch item' cho VN, khong phai development priority.",
+      "difficulty": "Advanced",
+      "prerequisites": ["Large language models", "RecSys fundamentals"]
+    }
+  ],
+  "algorithms": [
+    {
+      "name": "ItemKNN (Item-Based Collaborative Filtering)",
+      "category": "Memory-Based CF",
+      "complexity": "O(n^2) precompute, O(k) serve",
+      "pros": ["Don gian, interpretable", "Item similarity on dinh, cache duoc", "Van competitive voi DL cho du lieu thua", "Deploy duoc trong 1-2 tuan"],
+      "cons": ["Khong scale cho catalogs >10M items", "Khong xu ly cold-start items", "Can interaction data du day"],
+      "use_cases": ["E-commerce 'Similar Items' — P0 cho VN", "Baseline so sanh cho moi RecSys project"],
+      "key_papers": ["Linden, G. et al. (2003). Amazon.com Item-to-Item Collaborative Filtering. IEEE Internet Computing."]
+    },
+    {
+      "name": "ALS (Alternating Least Squares) Matrix Factorization",
+      "category": "Model-Based CF",
+      "complexity": "O(|Omega| * k^2) per iteration",
+      "pros": ["Hieu qua cho implicit feedback", "Song song hoa tot (Spark MLlib)", "Khong can GPU — train tren CPU trong phut", "Sweet spot cho VN <5M users"],
+      "cons": ["Khong incorporate side features tu nhien", "Linear latent space han che expressiveness"],
+      "use_cases": ["Homepage personalization cho mid-tier VN platforms", "Batch recommendations (khong real-time)"],
+      "key_papers": ["Hu, Y. et al. (2008). Collaborative Filtering for Implicit Feedback Datasets."]
+    },
+    {
+      "name": "BPR (Bayesian Personalized Ranking)",
+      "category": "Pairwise Learning",
+      "complexity": "O(|D_S| * k) per epoch",
+      "pros": ["Loss function chuan cho implicit feedback ranking", "Generic — ap dung cho MF, BPR-MF, neural models", "Bayesian derivation elegant"],
+      "cons": ["Negative sampling strategy anh huong lon den hieu qua", "Cham hoi tu hon pointwise loss cho du lieu day du"],
+      "use_cases": ["Training loss cho moi implicit feedback RecSys model"],
+      "key_papers": ["Rendle, S. et al. (2009). BPR: Bayesian Personalized Ranking from Implicit Feedback. UAI."]
+    },
+    {
+      "name": "LightFM (Hybrid CF + Content)",
+      "category": "Hybrid Factorization",
+      "complexity": "O(|Omega| * (k_u + k_i) * k) per epoch",
+      "pros": ["Ket hop CF va content features tu nhien", "Xu ly cold-start tot bang side features", "CPU-based, nhe", "Excellent cho VN voi du lieu thua + item metadata"],
+      "cons": ["Chi co pairwise interactions", "Khong capture sequential patterns"],
+      "use_cases": ["RecSys cho VN platforms voi data thua + co product metadata", "Alternative cho ALS khi co item/user side features"],
+      "key_papers": ["Kula, M. (2015). Metadata Embeddings for User and Item Cold-start Recommendations."]
+    },
+    {
+      "name": "Factorization Machines (FM)",
+      "category": "Feature Interaction",
+      "complexity": "O(nk) prediction — linear in features",
+      "pros": ["Mo hinh toan bo pairwise feature interactions voi factorized params", "Hieu qua cho sparse high-dimensional data", "Tong quat hoa SVD, SVD++", "Van la strong baseline cho CTR prediction"],
+      "cons": ["Chi second-order interactions", "Can FFM hoac DeepFM cho higher-order"],
+      "use_cases": ["CTR prediction voi sparse features", "Baseline cho moi ranking model"],
+      "key_papers": ["Rendle, S. (2010). Factorization Machines. ICDM."]
+    },
+    {
+      "name": "Wide & Deep Learning",
+      "category": "Hybrid DNN",
+      "complexity": "O(n_wide + depth * width) per sample",
+      "pros": ["Memorization (wide) + generalization (deep)", "Template cho industrial RecSys", "Battle-tested tai Google Play"],
+      "cons": ["Wide component can manual feature engineering", "DeepFM tu dong hoa tot hon"],
+      "use_cases": ["App/content recommendation", "CTR prediction voi mixed feature types"],
+      "key_papers": ["Cheng, H.T. et al. (2016). Wide & Deep Learning for Recommender Systems. DLRS."]
+    },
+    {
+      "name": "DeepFM",
+      "category": "Feature Interaction DNN",
+      "complexity": "O(nk + depth * width) per sample",
+      "pros": ["FM tu dong hoa feature interactions — khong can manual engineering", "FM + Deep chia se embedding layer", "Workhorse cho CTR prediction tai Huawei, Alibaba"],
+      "cons": ["Chi second-order explicit interactions (deep component hoc higher-order implicit)"],
+      "use_cases": ["CTR prediction production", "Ranking model trong multi-stage funnel"],
+      "key_papers": ["Guo, H. et al. (2017). DeepFM: A Factorization-Machine based Neural Network. IJCAI."]
+    },
+    {
+      "name": "DIN / DIEN (Deep Interest Network / Evolution Network)",
+      "category": "Attention-Based Sequential",
+      "complexity": "O(|B_u| * d) per candidate item",
+      "pros": ["Target-aware attention — user representation thay doi theo candidate", "DIEN mo hinh interest evolution theo thoi gian", "Production-proven: billions recs/ngay tai Alibaba"],
+      "cons": ["Can behavior sequence du dai", "Phuc tap hon FM/DeepFM", "Khong phu hop cho users voi <10 interactions"],
+      "use_cases": ["E-commerce display ads", "Product page recommendations cho users co lich su dai"],
+      "key_papers": ["Zhou, G. et al. (2018). Deep Interest Network for Click-Through Rate Prediction. KDD."]
+    },
+    {
+      "name": "SASRec (Self-Attentive Sequential Recommendation)",
+      "category": "Transformer Sequential",
+      "complexity": "O(n^2 * d) attention, n = sequence length",
+      "pros": ["Causal self-attention bat short-term va long-term dependencies", "Vuot RNN-based va CNN-based baselines", "Song song hoa training", "Standard baseline cho sequential rec"],
+      "cons": ["O(n^2) attention cho sequences dai", "Cloze-task gap khi serve (predict last position)"],
+      "use_cases": ["Next-item prediction", "Session-based recommendation cho media/content"],
+      "key_papers": ["Kang, W.C. & McAuley, J. (2018). Self-Attentive Sequential Recommendation. ICDM."]
+    },
+    {
+      "name": "LightGCN",
+      "category": "Graph Neural Network",
+      "complexity": "O(|E| * L * d) per epoch, L layers",
+      "pros": ["Don gian: chi neighborhood aggregation, khong transforms/activations", "Tot hon NGCF phuc tap", "Bat high-order connectivity ma MF miss"],
+      "cons": ["Scalability challenge tren graphs ty edges", "Mini-batch training voi neighbor sampling gay variance"],
+      "use_cases": ["Collaborative filtering khi interaction graph co rich relational structure"],
+      "key_papers": ["He, X. et al. (2020). LightGCN: Simplifying and Powering Graph Convolution Network for Recommendation. SIGIR."]
+    },
+    {
+      "name": "Two-Tower Model (DSSM / Dual Encoder)",
+      "category": "Retrieval Architecture",
+      "complexity": "O(d) per query (user tower) + O(log n) ANN search",
+      "pros": ["Item embeddings tinh truoc — retrieval mili-giay tren ty items", "Decoupled user/item encoding", "Paradigm thong tri cho industrial large-scale retrieval"],
+      "cons": ["Chi dot product interaction — khong mo hinh fine-grained cross-features", "Can ranking stage rieng"],
+      "use_cases": ["Candidate retrieval cho moi large-scale RecSys", "YouTube, Spotify, Facebook recommendation"],
+      "key_papers": ["Huang, P.S. et al. (2013). Learning Deep Structured Semantic Models. CIKM."]
+    },
+    {
+      "name": "Thompson Sampling",
+      "category": "Contextual Bandit",
+      "complexity": "O(d^2) per action (posterior update)",
+      "pros": ["Explore-exploit tu nhien qua posterior sampling", "Khong can tuning exploration parameter", "Production-proven: Netflix artwork personalization"],
+      "cons": ["Posterior maintenance co the phuc tap cho models phuc tap", "Khong optimal cho moi reward distribution"],
+      "use_cases": ["Cold-start exploration", "Artwork/layout personalization", "Dac biet quan trong cho VN data thua"],
+      "key_papers": ["Chapelle, O. & Li, L. (2011). An Empirical Evaluation of Thompson Sampling."]
+    },
+    {
+      "name": "LinUCB",
+      "category": "Contextual Bandit",
+      "complexity": "O(d^3) matrix inverse per update (amortized)",
+      "pros": ["Contextual features cho explore-exploit", "Upper Confidence Bound co ly thuyet regret bound", "Interpretable exploration strategy"],
+      "cons": ["Linear assumption han che expressiveness", "Matrix inverse expensive cho high-dim features"],
+      "use_cases": ["Contextual exploration cho news recommendation", "Feature-rich bandit problems"],
+      "key_papers": ["Li, L. et al. (2010). A Contextual-Bandit Approach to Personalized News Article Recommendation. WWW."]
+    },
+    {
+      "name": "PinSage",
+      "category": "Industrial-Scale GNN",
+      "complexity": "O(batch_size * |neighbors|^L * d) per batch",
+      "pros": ["GNN quy mo cong nghiep dau tien (3B nodes, 18B edges)", "Random-walk sampling cho scalability", "Curriculum training voi hard negatives", "+40% engagement improvement tai Pinterest"],
+      "cons": ["Phuc tap de reproduce", "Can infrastructure GNN chuyen biet"],
+      "use_cases": ["Visual/content recommendation quy mo lon", "Related item discovery"],
+      "key_papers": ["Ying, R. et al. (2018). Graph Convolutional Neural Networks for Web-Scale Recommender Systems. KDD."]
+    },
+    {
+      "name": "MMOE / PLE (Multi-Task Learning)",
+      "category": "Multi-Task Architecture",
+      "complexity": "O(num_experts * expert_size + num_tasks * gate_size)",
+      "pros": ["MMOE: giam negative transfer giua conflicting tasks", "PLE: task-specific + shared experts, progressive separation", "Production-proven tai Google (MMOE) va Tencent (PLE)"],
+      "cons": ["Nhieu hyperparameters (so experts, expert size, task weights)", "Training instability khi tasks conflict manh"],
+      "use_cases": ["Production ranking model toi uu CTR + CVR + engagement dong thoi"],
+      "key_papers": ["Ma, J. et al. (2018). Modeling Task Relationships in Multi-task Learning with Multi-gate Mixture-of-Experts. KDD."]
+    },
+    {
+      "name": "P5 / InstructRec (LLM-based Recommendation)",
+      "category": "LLM-Based",
+      "complexity": "O(n * d_model) per token, 7B+ params",
+      "pros": ["Thong nhat nhieu rec tasks thanh text-to-text", "Zero-shot recommendation cho domains moi", "Natural language explanations"],
+      "cons": ["Latency 200-500ms — vuot qua budget 100ms", "Chi phi $0.01-0.05/request — khong kha thi cho high-volume", "Vietnamese language support con yeu"],
+      "use_cases": ["Research exploration", "Cold-start scenarios", "Explanation generation (khong phai core ranking)"],
+      "key_papers": ["Geng, S. et al. (2022). Recommendation as Language Processing (P5). RecSys."]
+    }
+  ],
+  "tech_stack": {
+    "event_tracking": {
+      "recommended": {"recommended": "Segment + Kafka 3.7", "rationale": "Segment: turnkey SDKs, schema enforcement; Kafka: decouple ingestion from processing. Cho VN simplified: custom JS SDK + server-side API + Redis Streams thay Kafka."},
+      "alternatives": {"recommended": "Snowplow / Rudderstack / Google Analytics", "rationale": "Snowplow cho privacy-first tracking; Rudderstack open-source alternative."}
+    },
+    "feature_store": {
+      "recommended": {"recommended": "Feast 0.40+ (khi team >5 engineers) / Redis truc tiep (team <5)", "rationale": "Feast: open-source, dual online/offline. NHUNG: qua som cho <5M users — Redis truc tiep + Python script du cho VN Phase 1. Defer Feast den Stage 2."},
+      "alternatives": {"recommended": "Tecton (managed) / Hopsworks / Vertex AI Feature Store", "rationale": "Tecton managed; Hopsworks strong feature pipelines."}
+    },
+    "ann_retrieval": {
+      "recommended": {"recommended": "FAISS 1.8 + Milvus 2.4", "rationale": "FAISS: gold standard toc do GPU, mien phi. Milvus: managed persistence, filtering, horizontal scaling. Cho VN Phase 1: chi FAISS la du."},
+      "alternatives": {"recommended": "ScaNN / Pinecone / Qdrant / Weaviate", "rationale": "ScaNN (Google) toi uu quantization; Qdrant tot cho metadata filtering; Pinecone managed cloud."}
+    },
+    "training": {
+      "recommended": {"recommended": "PyTorch 2.4 + TorchRec 0.8", "rationale": "PyTorch thong tri research va industry. TorchRec: distributed embedding tables, sharding, RecSys primitives. Cho VN Phase 1: implicit library (ALS) khong can GPU."},
+      "alternatives": {"recommended": "RecBole / TensorFlow / LightFM", "rationale": "RecBole cho rapid prototyping nhieu algorithms; LightFM cho hybrid CF."}
+    },
+    "model_serving": {
+      "recommended": {"recommended": "Triton Inference Server 24.01+ (Stage 3) / FastAPI + ONNX Runtime (Stage 1-2)", "rationale": "Triton: multi-framework, dynamic batching, GPU sharing — nhung overkill cho VN Phase 1. FastAPI + ONNX Runtime cho CPU-based serving don gian hon."},
+      "alternatives": {"recommended": "TorchServe / BentoML / Ray Serve", "rationale": "BentoML cho packaging don gian; Ray Serve cho scaling."}
+    },
+    "orchestration": {
+      "recommended": {"recommended": "Apache Airflow 2.9+", "rationale": "Battle-tested cho ML pipelines, vast operator ecosystem. Cho VN Phase 1: cron jobs du — Airflow tu Stage 2."},
+      "alternatives": {"recommended": "Prefect / Dagster / Kubeflow Pipelines", "rationale": "Dagster developer-friendly; Prefect modern API."}
+    },
+    "ab_testing": {
+      "recommended": {"recommended": "Growthbook 2.x", "rationale": "Open-source, Bayesian statistics built-in, feature flags + experimentation, self-hostable. Mien phi."},
+      "alternatives": {"recommended": "LaunchDarkly / Statsig / Unleash", "rationale": "LaunchDarkly enterprise; Statsig analytics-native."}
+    },
+    "monitoring": {
+      "recommended": {"recommended": "Prometheus + Grafana + Evidently", "rationale": "Prometheus/Grafana: infrastructure metrics mien phi. Evidently: ML drift detection va data quality. Cho VN Phase 1: basic logging + manual checks."},
+      "alternatives": {"recommended": "Datadog / Arize / WhyLabs", "rationale": "Datadog all-in-one nhung $23/host/mo; Arize ML-specific observability."}
+    }
+  },
+  "feasibility_score": {
+    "overall_score": 6.6,
+    "verdict": "CONDITIONAL GO",
+    "verdict_vi": "Tien hanh co dieu kien",
+    "summary": "RecSys la CONDITIONAL GO tai VN 2026. Cong nghe chin muoi (9/10) va nhu cau toan cau lon, nhung thi truong VN bi phan hoa (top 4 xay in-house), data availability la rang buoc lon nhat (5/10), va infrastructure stack phuc tap cho target market. Con duong kha thi: bat dau don gian (ALS/LightFM), nham mid-tier retailers, giup clients xay data collection truoc.",
+    "dimensions": {
+      "technical_feasibility": {"score": 9, "rationale": "RecSys la mot trong nhung domain ML duoc hieu ro nhat. Open-source tooling xuat sac (PyTorch, TorchRec, RecBole, FAISS, Feast). Kien truc two-tower + ranking funnel da duoc chung minh o quy mo lon. Tru 1 diem cho LLM-based rec chua chung minh o production."},
+      "market_demand": {"score": 7, "rationale": "Nhu cau toan cau lon ($5.2B 2024, du kien $21.5B 2032). VN demand thuc nhung tap trung: top 4 platforms xay in-house. Addressable market cho external RecSys la mid-tier e-commerce va content platforms — co y nghia nhung khong khong lo."},
+      "data_availability": {"score": 5, "rationale": "Diem yeu then chot. Algorithms nhu DIN/PinSage can hang tram trieu interactions. Hau het nen tang VN ngoai top 4 co sparsity >99.95%. Public Vietnamese RecSys datasets gan nhu khong ton tai. Van de ga-va-trung: can model de thu thap data, nhung can data de train model."},
+      "implementation_risk": {"score": 6, "rationale": "Cong nghe chin muoi nhung van hanh phuc tap. Tech report mo ta stack 10+ components (Kafka, Flink, Feast, FAISS, Milvus, Triton, Airflow, Growthbook, Prometheus, Grafana, Evidently) — qua nang cho team VN 3-5 ML engineers. Feature store maintenance co the tieu ton 1 full-time engineer."},
+      "vietnam_market_fit": {"score": 6, "rationale": "E-commerce GMV VN tang nhanh (~$14B 2024, du kien $20B+ 2027). Nhung: do nhay cam gia (chi phoi quyet dinh mua hon personalization), phu thuoc livestream commerce (RecSys truyen thong it relevant), va Shopee dominance. Content platforms (Zing MP3, VnExpress) fit tot hon nhung budget nho hon."}
+    },
+    "conditions": [
+      "Bat dau voi phuong phap don gian (ALS/BPR, LightFM) thay vi deep learning stack — chung minh simple methods khong du truoc khi invest vao DL",
+      "Nham mid-market VN platforms 1M-10M users — qua lon cho AWS Personalize pricing nhung qua nho de xay in-house",
+      "Xac nhan nhu cau voi it nhat 3 pilot clients tra phi truoc khi dau tu vao multi-stage funnel architecture",
+      "Gioi han chi phi ha tang ban dau duoi $2,000/thang",
+      "Bao gom event tracking SDK va data collection phase nhu phan cua san pham — khong gia dinh clients da co du data"
+    ]
+  },
+  "industry_applications": [
+    {
+      "industry": "Thuong mai dien tu (E-commerce — Retail)",
+      "use_case": "Similar Items — San pham tuong tu tren trang chi tiet",
+      "description": "Item-item CF hoac content-based similarity tren trang san pham. Don gian nhat de implement (ItemKNN hoac Item2Vec), de nhat de chung minh ROI (truc tiep tang add-to-cart). Moi nen tang VN e-commerce can dieu nay.",
+      "priority": "P0",
+      "market_size_vn": "USD 500K+/nam",
+      "technical_complexity": "Low",
+      "vietnam_readiness": "High"
+    },
+    {
+      "industry": "Thuong mai dien tu (E-commerce — Retail)",
+      "use_case": "Frequently Bought Together — Thuong mua cung",
+      "description": "Association rules hoac co-purchase matrices. De giai thich cho stakeholders. Tac dong doanh thu truc tiep qua cross-sell. Tang AOV 5-15%.",
+      "priority": "P0",
+      "market_size_vn": "USD 400K+/nam",
+      "technical_complexity": "Low",
+      "vietnam_readiness": "High"
+    },
+    {
+      "industry": "Thuong mai dien tu (E-commerce — Retail)",
+      "use_case": "Homepage Personalization — Ca nhan hoa trang chu",
+      "description": "Two-tower retrieval + simple ranking. Flagship use case cho personalization value. Can it nhat 100K MAU voi du lieu hanh vi. Tiem nang doanh thu lon nhat.",
+      "priority": "P1",
+      "market_size_vn": "USD 600K+/nam",
+      "technical_complexity": "Medium",
+      "vietnam_readiness": "Medium"
+    },
+    {
+      "industry": "Thuong mai dien tu (E-commerce — Retail)",
+      "use_case": "Email/Push Notification Recommendations — De xuat qua email/push",
+      "description": "Batch recommendation (khong real-time) giam do phuc tap ha tang. ROI cao cho retention. Tuong thich voi data volume nho. Gui vao gio dinh (11:30-13:00, 20:00-22:00) cho VN.",
+      "priority": "P1",
+      "market_size_vn": "USD 200K+/nam",
+      "technical_complexity": "Low-Medium",
+      "vietnam_readiness": "Medium"
+    },
+    {
+      "industry": "Thuong mai dien tu (E-commerce — Retail)",
+      "use_case": "Search Personalization — Ca nhan hoa tim kiem",
+      "description": "Re-ranking ket qua tim kiem theo so thich user. Ket hop voi Elasticsearch/Algolia hien co. Blended score: 0.7 * search_score + 0.3 * personalization_score. Vietnamese text search da kho — personalized re-ranking la differentiator.",
+      "priority": "P1",
+      "market_size_vn": "USD 300K+/nam",
+      "technical_complexity": "Medium",
+      "vietnam_readiness": "Medium"
+    },
+    {
+      "industry": "Truyen thong & Giai tri (Media & Entertainment)",
+      "use_case": "News/Content Recommendation — De xuat tin tuc/noi dung",
+      "description": "Bai viet recommendations cho VnExpress-type platforms. Du lieu click day du nhung nhay cam editorial. Can Vietnamese NLP (PhoBERT) cho content understanding. Filter bubble concerns can xu ly can than. Time-decay half-life 4-8 gio cho tin tuc.",
+      "priority": "P2",
+      "market_size_vn": "USD 200K+/nam",
+      "technical_complexity": "Medium-High",
+      "vietnam_readiness": "High"
+    },
+    {
+      "industry": "Truyen thong & Giai tri (Media & Entertainment)",
+      "use_case": "Music Recommendation — De xuat nhac",
+      "description": "Playlist generation, song recommendations cho Zing MP3. Vietnamese music taste (V-pop, bolero, indie) chua duoc phuc vu tot boi global models. Sequential recommendation (SASRec) phu hop. Thi truong niche.",
+      "priority": "P2",
+      "market_size_vn": "USD 100K+/nam",
+      "technical_complexity": "High",
+      "vietnam_readiness": "Medium"
+    },
+    {
+      "industry": "Bat dong san (Real Estate)",
+      "use_case": "Property Matching — Goi y bat dong san",
+      "description": "Nen tang nhu Batdongsan.com.vn, Chotot. Thach thuc: interactions cuc thua (users tim kiem nhieu thang), quyet dinh gia tri cao, vi tri thong tri. Content-based filtering co the vuot CF o day.",
+      "priority": "P3",
+      "market_size_vn": "USD 100K+/nam",
+      "technical_complexity": "Medium",
+      "vietnam_readiness": "Low"
+    },
+    {
+      "industry": "Nhan su (HR / Job Market)",
+      "use_case": "Job Recommendation — Goi y viec lam",
+      "description": "Matching ung vien voi job listings (VietnamWorks, TopCV). Van de two-sided marketplace. Data thua va bi-directional nature tang do phuc tap.",
+      "priority": "P3",
+      "market_size_vn": "USD 150K+/nam",
+      "technical_complexity": "Medium-High",
+      "vietnam_readiness": "Low-Medium"
+    },
+    {
+      "industry": "Tai chinh (Finance)",
+      "use_case": "Financial Product Recommendation — Goi y san pham tai chinh",
+      "description": "The tin dung, khoan vay, bao hiem. Revenue cao per recommendation nhung regulatory phuc tap (Ngan hang Nha nuoc), du lieu nhay cam, interactions cuc thua.",
+      "priority": "P3",
+      "market_size_vn": "USD 250K+/nam",
+      "technical_complexity": "High",
+      "vietnam_readiness": "Low"
+    }
+  ],
+  "case_studies": [
+    {
+      "title": "Amazon Item-to-Item Collaborative Filtering — Nen tang cua e-commerce recommendation",
+      "industry": "E-commerce",
+      "problem": "Recommend san pham cho hang tram trieu users voi latency thap va catalog thay doi lien tuc.",
+      "solution": "Item-based CF voi pre-computed item-item similarity matrix. Items on dinh hon users nen similarity co the cache. O(1) serve time voi lookup table.",
+      "results": "35% tong doanh thu Amazon den tu recommendations. Item-based CF van la core component sau 20+ nam.",
+      "tech_stack": "Item-item CF + pre-computed similarity matrices + real-time serving",
+      "lessons": "Simple methods voi engineering tot co the serve o quy mo khong lo. Item similarity on dinh hon user similarity — insight then chot cho architecture."
+    },
+    {
+      "title": "Netflix Prize — Matrix Factorization revolution",
+      "industry": "Media & Entertainment",
+      "problem": "Cai thien prediction accuracy cua Netflix rating system them 10%.",
+      "solution": "Ensemble cua matrix factorization models (SVD++, biased MF voi temporal dynamics) va neighborhood methods.",
+      "results": "Doi thang (BellKor) dat 10.06% improvement. Nhung Netflix khong deploy solution thang vi engineering complexity. Thay vao do, MF insights duoc integrate vao production system don gian hon.",
+      "tech_stack": "SVD++, Biased MF, temporal dynamics, ensemble methods",
+      "lessons": "Academic best model khong luon la production best model. Engineering simplicity va maintainability quan trong hon marginal accuracy gains. Bai hoc tuong tu cho VN: ALS/LightFM truoc DIN/SASRec."
+    },
+    {
+      "title": "Shopee SEA — Multi-market recommendation system",
+      "industry": "E-commerce (Vietnam/SEA)",
+      "problem": "Serve 200M+ users across 13 markets voi product distributions khac nhau, multilingual content, va catalog velocity (trieu listings moi/ngay).",
+      "solution": "Multi-stage funnel: two-tower retrieval + pre-ranking + deep cross-network ranking (multi-task) + diversity re-ranking. Cross-market transfer learning.",
+      "results": "Daily Discover va Similar Products driving significant GMV. Recommendation team la mot trong nhung manh nhat SEA.",
+      "tech_stack": "Two-tower + ANN + DCN multi-task + cross-market transfer + real-time features",
+      "lessons": "Scale cua Shopee (200M users) justify full deep learning stack. Team VN trung binh KHONG NEN sao chep kien truc nay — quy mo va nguon luc khong tuong duong."
+    }
+  ],
+  "key_papers": [
+    {
+      "title": "Matrix Factorization Techniques for Recommender Systems",
+      "authors": "Yehuda Koren, Robert Bell, Chris Volinsky",
+      "year": 2009,
+      "venue": "IEEE Computer",
+      "contribution": "Survey dinh nghia cua MF methods: biased SVD, temporal dynamics. Insights tu Netflix Prize. Nen tang ly thuyet cho moi RecSys model.",
+      "url": "https://doi.org/10.1109/MC.2009.263"
+    },
+    {
+      "title": "BPR: Bayesian Personalized Ranking from Implicit Feedback",
+      "authors": "Steffen Rendle, Christoph Freudenthaler, Zeno Gantner, Lars Schmidt-Thieme",
+      "year": 2009,
+      "venue": "UAI",
+      "contribution": "Tieu chi toi uu pairwise cho implicit feedback. Generic framework ap dung cho moi model. Loss function chuan cho implicit RecSys.",
+      "url": "https://arxiv.org/abs/1205.2618"
+    },
+    {
+      "title": "Wide & Deep Learning for Recommender Systems",
+      "authors": "Heng-Tze Cheng et al. (Google)",
+      "year": 2016,
+      "venue": "DLRS Workshop",
+      "contribution": "Paradigm memorization (wide linear) + generalization (deep MLP). Template cho industrial RecSys. Deployed tai Google Play.",
+      "url": "https://arxiv.org/abs/1606.07792"
+    },
+    {
+      "title": "DeepFM: A Factorization-Machine based Neural Network for CTR Prediction",
+      "authors": "Huifeng Guo, Ruiming Tang, Yunming Ye, Zhenguo Li, Xiuqiang He",
+      "year": 2017,
+      "venue": "IJCAI",
+      "contribution": "FM tu dong hoa wide component — loai bo feature engineering. FM + Deep chia se embeddings. Workhorse CTR prediction.",
+      "url": "https://arxiv.org/abs/1703.04247"
+    },
+    {
+      "title": "Deep Interest Network for Click-Through Rate Prediction",
+      "authors": "Guorui Zhou et al. (Alibaba)",
+      "year": 2018,
+      "venue": "KDD",
+      "contribution": "Target-aware attention tren user behavior sequence. User representation thay doi tuy theo candidate item. Deployed tai Alibaba serving billions recs/ngay.",
+      "url": "https://arxiv.org/abs/1706.06978"
+    },
+    {
+      "title": "Self-Attentive Sequential Recommendation (SASRec)",
+      "authors": "Wang-Cheng Kang, Julian McAuley",
+      "year": 2018,
+      "venue": "ICDM",
+      "contribution": "Transformer cho sequential recommendation voi causal attention. Vuot RNN va CNN baselines. Standard baseline cho sequential rec.",
+      "url": "https://arxiv.org/abs/1808.09781"
+    },
+    {
+      "title": "LightGCN: Simplifying and Powering Graph Convolution Network for Recommendation",
+      "authors": "Xiangnan He, Kuan Deng, Xiang Wang, Yan Li, Yongdong Zhang, Meng Wang",
+      "year": 2020,
+      "venue": "SIGIR",
+      "contribution": "Don gian hoa GCN chi con neighborhood aggregation — khong transforms, khong activations. Tot hon NGCF phuc tap. Graph structure la signal quan trong.",
+      "url": "https://arxiv.org/abs/2002.02126"
+    },
+    {
+      "title": "Graph Convolutional Neural Networks for Web-Scale Recommender Systems (PinSage)",
+      "authors": "Rex Ying et al. (Pinterest)",
+      "year": 2018,
+      "venue": "KDD",
+      "contribution": "GNN quy mo cong nghiep dau tien: 3B nodes, 18B edges. Random-walk sampling, importance pooling, curriculum training. +40% engagement.",
+      "url": "https://arxiv.org/abs/1806.01973"
+    },
+    {
+      "title": "Recommendation as Language Processing (P5)",
+      "authors": "Shijie Geng, Shuchang Liu, Zuohui Fu, Yingqiang Ge, Yongfeng Zhang",
+      "year": 2022,
+      "venue": "RecSys",
+      "contribution": "Thong nhat 5 rec tasks (rating, sequential, explanation, review, direct) thanh text-to-text framework tren T5. Mo ra LLM-based RecSys paradigm.",
+      "url": "https://arxiv.org/abs/2203.13366"
+    },
+    {
+      "title": "Factorization Machines",
+      "authors": "Steffen Rendle",
+      "year": 2010,
+      "venue": "ICDM",
+      "contribution": "Feature interaction tong quat voi factorized parameters. O(nk) thay vi O(n^2k). Tong quat hoa SVD, SVD++. Van la strong baseline.",
+      "url": "https://doi.org/10.1109/ICDM.2010.127"
+    },
+    {
+      "title": "Are We Really Making Much Progress? A Worrying Analysis of Recent Neural Recommendation Approaches",
+      "authors": "Maurizio Ferrari Dacrema, Paolo Cremonesi, Dietmar Jannach",
+      "year": 2019,
+      "venue": "RecSys",
+      "contribution": "Phan tich cho thay nhieu DL RecSys papers khong outperform well-tuned baselines (ItemKNN, ALS). Evidence quan trong cho approach 'bat dau don gian' cua R-gamma.",
+      "url": "https://arxiv.org/abs/1907.06902"
+    },
+    {
+      "title": "Deep Learning Recommendation Model for Personalization and Recommendation Systems (DLRM)",
+      "authors": "Maxim Naumov et al. (Meta)",
+      "year": 2019,
+      "venue": "arXiv",
+      "contribution": "Kien truc tham chieu cong nghiep: embedding tables + MLP. Basis cho production systems tai Meta. Open-source benchmark.",
+      "url": "https://arxiv.org/abs/1906.00091"
+    }
+  ],
+  "cross_domain_connections": [
+    {
+      "target": "B04",
+      "connection_type": "uses_nlp_features",
+      "description": "RecSys can NLP cho Vietnamese product understanding: PhoBERT embeddings cho cold-start items, review sentiment analysis cho ranking signals, search query understanding cho personalized re-ranking. Khong the toi uu RecSys cho VN ma khong co Vietnamese NLP pipeline (B04). Ket noi manh nhat cua B05."
+    },
+    {
+      "target": "B03",
+      "connection_type": "visual_recommendations",
+      "description": "Visual recommendations — 'san pham trong tuong tu' dung image embeddings (ResNet/ViT). Dac biet relevant cho fashion, home decor, food. CLIP multimodal embeddings ket hop text va visual. B03 cung cap visual understanding; B05 su dung de recommend. PinSage la intersection ro rang nhat."
+    },
+    {
+      "target": "B01",
+      "connection_type": "demand_prediction",
+      "description": "Demand prediction informed boi recommendation strategy — RecSys drive demand, forecasting predict demand. Feedback loop: forecast anh huong inventory → inventory anh huong what co the recommend. B01 cung cap demand signals; B05 su dung de adjust recommendation strategy (khong recommend items sap het hang)."
+    },
+    {
+      "target": "B02",
+      "connection_type": "catalog_processing",
+      "description": "Document Intelligence (B02) xu ly product catalog data: extract thong tin san pham tu images, PDFs, descriptions. Output cua B02 (structured product data) la input cho B05 content-based filtering va cold-start mitigation. Ket noi yeu hon B04/B03 nhung real cho e-commerce RecSys."
+    },
+    {
+      "target": "B07",
+      "connection_type": "anomaly_detection",
+      "description": "Anomaly Detection (B07) phat hien bot traffic, fake reviews, click farms — du lieu nhiem anh huong truc tiep den RecSys quality. B07 la pre-processing layer bao ve B05 khoi data corruption. Cung phat hien recommendation drift va metric anomalies."
+    },
+    {
+      "target": "B08",
+      "connection_type": "conversational_recommendation",
+      "description": "Conversational AI (B08) cho phep conversational recommendation — user dien dat so thich bang ngon ngu tu nhien ('Toi muon giong X nhung re hon'). B08 cung cap NLU va dialogue management; B05 cung cap retrieval va ranking backend. Chat-Rec architecture la intersection."
+    }
+  ],
+  "bestPractices": [
+    "Bat dau voi phuong phap don gian (ALS, ItemKNN, LightFM) va chung minh chung khong du TRUOC KHI invest vao deep learning. Dacrema et al. (RecSys 2019) chung minh nhieu DL methods khong vuot well-tuned baselines. Cho VN voi <5M users, ALS match hoac vuot DL approaches.",
+    "Implement event tracking chuan hoa (view, click, add-to-cart, purchase, search) tu ngay dau — day la tien de cho moi ML application, khong chi RecSys. Khong co du lieu tot thi khong co model tot.",
+    "Luon dung time-based splits cho evaluation — KHONG BAO GIO random split interaction data. Random splits inflate metrics 10-30% so voi temporal evaluation thuc te. Train tren data truoc cutoff T, validate tren T+delta.",
+    "A/B testing la tieu chuan vang — offline metrics (NDCG@K) KHONG du tin cay. Model tang 5% NDCG offline co the khong tang hoac giam metrics online. Invest vao A/B infrastructure (Growthbook) truoc khi invest vao model sophistication.",
+    "Monitor coverage va diversity metrics — khong chi accuracy. Gini coefficient >0.8 = model chi recommend popular items, khong co gia tri hon 'best sellers' page. Target: coverage >30%, Gini <0.7.",
+    "Cho VN: staged infrastructure approach la bat buoc. Stage 1 (2-3 nguoi): implicit/LightFM + Redis + FastAPI. Stage 2 (5+): them FAISS + Airflow. Stage 3 (8+): them Feast + streaming. Khong xay full stack tu dau.",
+    "Cold-start la thach thuc CHINH cho VN, khong phai secondary. Dung content-based features (PhoBERT embeddings cho VN product titles), Thompson Sampling exploration, va popularity fallback. Khong oversell cho clients <50K MAU."
+  ],
+  "antiPatterns": [
+    "Deploy deep learning RecSys (DIN, SASRec, PinSage) cho client <5M users va <50M interactions ma chua thu ALS/LightFM baseline. Chi phi GPU + engineering complexity khong justify tai quy mo VN trung binh.",
+    "Copy kien truc Shopee-scale (11 infrastructure components: Kafka + Flink + Feast + FAISS + Milvus + Triton + Airflow + Growthbook + Prometheus + Grafana + Evidently) cho team 3-5 nguoi. Quan ly stack nay la full-time job.",
+    "Toi uu chi cho CTR (click-through rate) ma bo qua conversion va diversity. CTR-only optimization dan den clickbait recommendations. Can multi-objective (CTR + CVR + return probability).",
+    "Dung random splits de danh gia model. Data leakage tu tuong lai inflate metrics 10-30%. Ket qua: model 'tot' offline nhung fail online. Luon time-based splits.",
+    "Oversell RecSys cho clients chua co du interaction data (<50K MAU, <1M interactions tich luy). Model se converge ve popularity bias, khong co gia tri hon 'best sellers' list. Can data collection phase 3-6 thang truoc.",
+    "Invest vao LLM-based recommendation (P5, InstructRec) nhu development priority cho VN. Latency 200-500ms, chi phi $100K-500K/thang cho high-volume, Vietnamese language support con yeu. Chi kha thi nhu 'watch item' hoac cho explanation generation.",
+    "Bo qua exploration (Thompson Sampling) va chi exploitation. Pure exploitation → filter bubbles, suboptimal convergence, va miss long-tail items. Cho VN voi du lieu thua, exploration co the quan trong HON sophisticated ranking."
+  ],
+  "resources": [
+    {
+      "title": "RecBole — A Unified, Comprehensive and Efficient Recommendation Library",
+      "type": "library",
+      "url": "https://recbole.io/",
+      "level": "Intermediate",
+      "description": "Thu vien RecSys toan dien nhat: 70+ algorithms (CF, sequential, context-aware, knowledge-based), unified data format, evaluation framework. Tot nhat cho rapid prototyping va benchmarking."
+    },
+    {
+      "title": "implicit — Fast Python Collaborative Filtering for Implicit Datasets",
+      "type": "library",
+      "url": "https://github.com/benfred/implicit",
+      "level": "Beginner to Intermediate",
+      "description": "ALS, BPR, va nearest neighbor methods cho implicit feedback. CPU-based, nhanh, don gian. KHOI DAU TOT NHAT cho moi RecSys project VN. Khong can GPU."
+    },
+    {
+      "title": "LightFM — Hybrid Recommendation Algorithm",
+      "type": "library",
+      "url": "https://github.com/lyst/lightfm",
+      "level": "Beginner to Intermediate",
+      "description": "Hybrid CF + content-based. Xu ly cold-start bang side features. CPU-based. Tot cho VN e-commerce voi data thua nhung co product metadata."
+    },
+    {
+      "title": "FAISS — A Library for Efficient Similarity Search",
+      "type": "library",
+      "url": "https://github.com/facebookresearch/faiss",
+      "level": "Intermediate",
+      "description": "Gold standard ANN search tu Meta. GPU va CPU support. IVF+PQ quantization giam memory 10-20x. Can thiet cho moi RecSys co >100K items."
+    },
+    {
+      "title": "Feast — Open Source Feature Store",
+      "type": "library",
+      "url": "https://feast.dev/",
+      "level": "Intermediate to Advanced",
+      "description": "Feature store open-source: dual online (Redis) va offline (S3/Parquet) serving. Giai quyet training-serving skew. Can thiet tu Stage 2 (team >5 engineers)."
+    },
+    {
+      "title": "CS246: Mining Massive Datasets (Stanford)",
+      "type": "course",
+      "url": "https://web.stanford.edu/class/cs246/",
+      "level": "Intermediate",
+      "description": "Bao gom RecSys chapters: collaborative filtering, matrix factorization, LSH, recommendation at scale. Lecture slides va assignments mien phi."
+    },
+    {
+      "title": "Recommender Systems Handbook (Ricci et al.)",
+      "type": "book",
+      "url": "https://link.springer.com/book/10.1007/978-1-0716-2197-4",
+      "level": "All levels",
+      "description": "Sach tham khao toan dien nhat cho RecSys: tu CF basics den deep learning, evaluation, ethics. Edition 3 (2022) bao gom DL va GNN methods."
+    },
+    {
+      "title": "Growthbook — Open Source Feature Flagging and A/B Testing",
+      "type": "documentation",
+      "url": "https://docs.growthbook.io/",
+      "level": "Intermediate",
+      "description": "Self-hosted A/B testing voi Bayesian statistics. Can thiet cho moi RecSys production deployment. Mien phi."
+    },
+    {
+      "title": "Milvus — Open Source Vector Database",
+      "type": "documentation",
+      "url": "https://milvus.io/docs/",
+      "level": "Intermediate",
+      "description": "Distributed vector DB cho ANN search. Supports real-time inserts, metadata filtering, horizontal scaling. Alternative cho FAISS khi can managed persistence."
+    },
+    {
+      "title": "Evidently AI — ML Monitoring and Observability",
+      "type": "library",
+      "url": "https://docs.evidentlyai.com/",
+      "level": "Intermediate",
+      "description": "ML-specific drift detection, data quality monitoring, model performance tracking. Open-source. Can thiet cho RecSys production monitoring."
+    },
+    {
+      "title": "YouTube Deep Neural Networks for Recommendations (Google 2016)",
+      "type": "paper",
+      "url": "https://research.google/pubs/pub45530/",
+      "level": "Advanced",
+      "description": "Paper dinh nghia two-stage architecture (candidate generation + ranking) cho RecSys quy mo lon. Established paradigm van thong tri production 2026."
+    },
+    {
+      "title": "PhoBERT — Vietnamese Pre-trained Language Model",
+      "type": "library",
+      "url": "https://github.com/VinAIResearch/PhoBERT",
+      "level": "Intermediate",
+      "description": "Can thiet cho Vietnamese product understanding trong RecSys: product title embeddings cho cold-start, review sentiment features. Lien ket B05 ↔ B04."
+    }
+  ],
+  "risks": [
+    {
+      "id": "R01",
+      "name": "Data Chicken-and-Egg Problem — Van de ga-va-trung du lieu",
+      "description": "Client moi co du lieu tuong tac khong du de train model co y nghia, nhung can model hoat dong de thu thap du lieu co cau truc. Hau het nen tang VN ngoai top 4 o trong tinh trang nay.",
+      "severity": "Critical",
+      "probability": "High",
+      "mitigation": "Bat dau voi rule-based va popularity-based recommendations; instrument event tracking tu ngay 1; yeu cau toi thieu 3 thang data collection truoc khi hua ML-based personalization. Khong oversell cho clients <50K MAU."
+    },
+    {
+      "id": "R02",
+      "name": "Popularity Bias Amplification — Khuech dai thien vi pho bien",
+      "description": "Models train tren sparse data se converge ve recommend popular items cho tat ca moi nguoi, khong co gia tri tang them hon 'best sellers' page. Day la failure mode pho bien nhat cua RecSys trong thuc te.",
+      "severity": "High",
+      "probability": "High",
+      "mitigation": "Monitor coverage va diversity metrics (khong chi accuracy); implement exploration strategies (Thompson Sampling); diversity re-ranking; calibrate recommendations theo user interest distributions."
+    },
+    {
+      "id": "R03",
+      "name": "Infrastructure Complexity vs Team Capacity — Do phuc tap ha tang vs nang luc team",
+      "description": "Tech report mo ta stack 11 components (Kafka, Flink, Feast, FAISS, Milvus, Triton, Airflow, Growthbook, Prometheus, Grafana, Evidently). Team VN 3-5 engineers khong the van hanh dang tin cay.",
+      "severity": "High",
+      "probability": "High",
+      "mitigation": "Staged approach bat buoc: Stage 1 (implicit + Redis + FastAPI), Stage 2 (them FAISS + Airflow), Stage 3 (them Feast + streaming). Moi stage phai justify truoc khi len tiep."
+    },
+    {
+      "id": "R04",
+      "name": "Shrinking Addressable Market — Thi truong kha dung thu hep",
+      "description": "Shopee/Tiki xay in-house → thu hep TAM. Cac platform nho bi mua lai hoac dong cua (Sendo suy giam). Mid-market ngay cang mong.",
+      "severity": "Medium",
+      "probability": "Medium",
+      "mitigation": "Focus vertical e-commerce va content platforms; dinh vi nhu acceleration layer (giam time-to-market tu 6 thang xuong 3 tuan); managed-service pricing re hon thue 2 ML engineers."
+    },
+    {
+      "id": "R05",
+      "name": "PDPD Compliance — Tuan thu Nghi dinh 13/2023 ve Bao ve Du lieu Ca nhan",
+      "description": "User browsing history, click patterns, purchase history deu la du lieu ca nhan theo PDPD. Thu thap can consent. Cross-border data transfer (AWS Singapore) can impact assessment va co the can dang ky voi Bo Cong an.",
+      "severity": "High",
+      "probability": "Medium",
+      "mitigation": "Implement consent management nhu first-class feature; default first-party data collection; design cho data deletion tu ngay 1; luu du lieu tuong tac trong VN khi co the; privacy impact assessment templates cho clients."
+    },
+    {
+      "id": "R06",
+      "name": "Talent Competition — Canh tranh nhan tai",
+      "description": "ML engineers co kha nang build production RecSys duoc Shopee, TikTok, VinAI, FPT san don. VN san xuat ~500-1000 ML graduates/nam, top 10% bi big tech hap thu ngay o muc luong startups khong canh tranh duoc.",
+      "severity": "High",
+      "probability": "High",
+      "mitigation": "Xay engineering brand (open-source, conference talks); dau tu dao tao junior engineers dung MAESTRO knowledge base; tuyen remote tu Da Nang, Can Tho noi canh tranh it hon."
+    },
+    {
+      "id": "R07",
+      "name": "Offline-Online Metric Gap — Khoang cach metric offline-online",
+      "description": "Models cai thien NDCG@10 offline co the khong cai thien CTR/revenue online. Gap nay da duoc ghi nhan rong rai va da khien teams lang phi hang thang toi uu sai metric.",
+      "severity": "Medium",
+      "probability": "High",
+      "mitigation": "Thiet lap online evaluation la ground truth tu ngay 1; chi dung offline metrics cho iteration nhanh va loc models te; A/B testing infrastructure TRUOC model sophistication."
+    }
+  ],
+  "metadata": {
+    "status": "reviewed",
+    "version": "1.0",
+    "createdAt": "2026-03-31",
+    "updatedAt": "2026-03-31",
+    "researchedBy": ["R-alpha", "R-beta", "R-gamma", "R-MLE", "R-DLE", "R-DA", "R-DE", "R-BE", "R-DO", "R-QA", "R-SA", "R-D01", "R-D12", "R-sigma"],
+    "consolidatedBy": "R-sigma (Ms. Scribe)",
+    "normalizedAt": "2026-03-31",
+    "normalizedBy": "R-BE",
+    "phase": "Phase 1",
+    "module": "B05",
+    "reviewedBy": "R-BE",
+    "approvedBy": null,
+    "notes": "Normalized by R-BE — Step A5 complete. All Vietnamese descriptions follow language rule: JSON field names in English, values in Vietnamese."
+  }
+}

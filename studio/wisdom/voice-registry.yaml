@@ -1,0 +1,63 @@
+# Voice Registry — Studio voice contract per R-ORC-08
+# Spec: _shared/standards/boundaries.md §2
+# Last updated: 2026-04-27
+
+voices:
+
+  voice_a_technical:
+    description: "CEO technical, English/Vietnamese bilingual"
+    audience: ["dev", "CTO buyer", "ICP-E technical"]
+    tone: ["concise", "evidence-led", "direct", "no jargon-as-fluff"]
+    style_guide: "business-strategy/16-brand-content-kit.md §Voice A"
+    avoid:
+      - "jargon without definition"
+      - "buzzwords (synergy, leveraging, holistic)"
+      - "ROI promises without evidence"
+    used_in:
+      - "Architecture docs (P3-P4)"
+      - "CEO Substack"
+      - "X threads technical"
+      - "YouTube long-form technical"
+
+  voice_b_business:
+    description: "P3 formal business Vietnamese"
+    audience: ["client COO", "ICP-A/B/C", "VN business buyer"]
+    tone: ["professional", "warm", "specific", "outcome-focused"]
+    style_guide: "business-strategy/16-brand-content-kit.md §Voice B"
+    avoid:
+      - "over-formal academic"
+      - "passive voice"
+      - "technical without translation"
+    used_in:
+      - "Discovery report (client-facing)"
+      - "SOW + proposal"
+      - "Customer success comms"
+      - "LinkedIn long posts"
+
+  voice_c_energetic:
+    description: "Freelance MMO TikTok creator"
+    audience: ["MMO seller", "TikTok creator VN", "young entrepreneur"]
+    tone: ["energetic", "VN slang OK", "FOMO-aware but not exploit"]
+    style_guide: "business-strategy/16-brand-content-kit.md §Voice C"
+    avoid:
+      - "fake hype"
+      - "unrealistic promises"
+      - "broken English / Tiếng Anh giả"
+    used_in:
+      - "TikTok showcase videos"
+      - "MMO product launches (Path B)"
+      - "Threads casual"
+
+  voice_d_bot_per_project:
+    description: "Bot reply in client product — SET PER PROJECT"
+    audience: "End user of client's product"
+    tone: "Per project — define at P3, record in projects/{id}/harness/manifest.yaml.voice"
+    style_guide: "Per project ADR"
+    avoid:
+      - "Generic AI flavor (banned word list per 40-docs-rules.md)"
+    used_in:
+      - "Client bot products (Telegram bots, chat reply, etc.)"
+
+# Cross-deliverable enforcement:
+# R-σ + integration reviewer verify voice consistency before output ships.
+# Voice mismatch in same deliverable = R-σ rewrite section + log to permanent-fixes.md if pattern recurs.

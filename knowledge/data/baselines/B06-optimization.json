@@ -1,0 +1,732 @@
+{
+  "id": "B06",
+  "name": "Optimization & Operations Research",
+  "type": "baseline",
+  "slug": "optimization-operations-research",
+  "tagline": "Toi uu hoa quyet dinh duoi rang buoc — tu lap tuyen giao hang den lich san xuat, tu quan ly ton kho den dinh gia dong",
+  "category": "baseline",
+  "icon": "Zap",
+  "color": "#FF9800",
+  "depthLevel": 3,
+  "selectedAgents": ["R-alpha", "R-beta", "R-gamma", "R-MLE", "R-DE", "R-DA", "R-BE", "R-DO", "R-QA", "R-SA", "R-D04", "R-D06", "R-sigma"],
+  "description": "Optimization & Operations Research (OR) la xu suong toan hoc cua viec ra quyet dinh hop ly duoi rang buoc, bao gom tu quy hoach tuyen tinh den neural combinatorial solvers hien dai. Linh vuc da chuyen doi manh me 2023-2026 voi su hoi tu cua LLM, reinforcement learning, va classical solvers tao ra he thong hybrid tu dong formulate va giai bai toan toi uu tu mo ta ngon ngu tu nhien. Cho nen kinh te cong nghiep Viet Nam — noi logistics, lich san xuat, va hieu qua chuoi cung ung la yeu cau thuong mai then chot — lam chu baseline nay la bat buoc cho bat ky nen tang AI nghiem tuc nao.",
+  "description_paragraphs": [
+    "Optimization & Operations Research la nen tang toan hoc cua viec ra quyet dinh toi uu duoi rang buoc. Linh vuc trai dai tu Linear Programming (1947, Dantzig) qua Integer Programming, Constraint Programming, Metaheuristics, den hien dai voi ML-driven optimization va neural combinatorial solvers. Stack cong nghe hoan toan mien phi: OR-Tools (Apache 2.0) cho routing/scheduling/CP, HiGHS (MIT) cho LP/MIP, PuLP cho modeling, OSRM cho distance matrices — khong can mot dong license.",
+    "Tai Viet Nam, B06 co diem kha thi cao nhat portfolio (8.4/10) nho ba yeu to: (1) tooling mien phi, (2) chi can problem data (khong can training data nhu ML), (3) thi truong logistics VN chi 16-17% GDP (gap doi nuoc phat trien) dang can optimization. E-commerce 2.5 ty buu kien/nam, 4,000+ cong ty logistics, 8,000+ nha may trung va lon — tat ca deu co van de optimization.",
+    "Use case uu tien: last-mile delivery route optimization (P0) cho xe may — 70-80% giao hang VN bang xe may voi capacity 5-8 goi, di hem/ngo, COD 60-70%. Tiep theo: production scheduling (job-shop), cutting stock (det may), inventory optimization. Dieu kien GO: can pilot client ky truoc, can ky su OR chuyen mon, chap nhan 6 thang dau la consulting truoc productization."
+  ],
+  "aliases": [
+    "Toi uu hoa",
+    "Operations Research",
+    "OR",
+    "Mathematical Programming",
+    "Quy hoach toan hoc",
+    "Van thu nghien cuu"
+  ],
+  "maturity_level": "mature",
+  "trl": 9,
+  "core_concepts": [
+    {
+      "name": "Ham muc tieu & Rang buoc (Objective Function & Constraints)",
+      "definition": "Moi bai toan toi uu: min f(x) s.t. g_i(x) <= 0, h_j(x) = 0. Cau truc cua f, g, h quyet dinh do phuc tap tinh toan: tuyen tinh → da thuc; them dieu kien nguyen → NP-hard.",
+      "difficulty": "Beginner",
+      "prerequisites": ["Dai so tuyen tinh co ban", "Giai tich"]
+    },
+    {
+      "name": "Vung kha thi & Dieu kien KKT",
+      "definition": "Tap S = {x : g_i(x) <= 0, h_j(x) = 0}. Voi convex: moi cuc tri dia phuong = toan cuc. KKT la dieu kien can cho optimality trong chuong trinh phi tuyen co rang buoc, mo rong Lagrange multipliers.",
+      "difficulty": "Intermediate",
+      "prerequisites": ["Giai tich nhieu bien", "Dai so tuyen tinh"]
+    },
+    {
+      "name": "Quy hoach Tuyen tinh & Simplex (LP & Simplex Method)",
+      "definition": "Toi uu ham tuyen tinh voi rang buoc tuyen tinh. Simplex di qua dinh cua da dien kha thi — worst-case exponential nhung O(m) thuc te. Doi ngau (duality) cung cap chung chi toi uu. LP la nen tang cua moi solver hien dai.",
+      "difficulty": "Beginner",
+      "prerequisites": ["Dai so tuyen tinh"]
+    },
+    {
+      "name": "Quy hoach Nguyen & Branch-and-Bound (IP & B&B)",
+      "definition": "Bien quyet dinh phai nguyen (yes/no facility, so xe). LP relaxation cung cap bound. Branch-and-bound chia khong gian nghiem, cat nhanh noi bound te. Gurobi/CPLEX them cutting planes, presolve, heuristics — giai bai toan trieu bien ma 20 nam truoc khong the.",
+      "difficulty": "Intermediate",
+      "prerequisites": ["LP", "Ly thuyet do phuc tap"]
+    },
+    {
+      "name": "Toi uu Loi & Interior Point (Convex Optimization)",
+      "definition": "Ham muc tieu va tap kha thi deu convex. First-order: O(1/k) convergence, Nesterov O(1/k^2). Interior Point (Karmarkar 1984): O(n^1/2 log(1/eps)). SDP va SOCP la cac lop con quan trong cho combinatorial relaxation.",
+      "difficulty": "Intermediate",
+      "prerequisites": ["Giai tich", "Dai so tuyen tinh"]
+    },
+    {
+      "name": "Toi uu To hop: TSP, VRP, Knapsack, Bin Packing",
+      "definition": "TSP: tour ngan nhat qua n thanh pho — NP-hard nhung Concorde giai den ~100K. VRP: nhieu xe voi capacity — workhorse logistics. Knapsack co FPTAS. Bin packing la doi ngau — critical cho container loading. Day la nhom van de thuc te nhat cho VN.",
+      "difficulty": "Advanced",
+      "prerequisites": ["IP", "Graph theory"]
+    },
+    {
+      "name": "Metaheuristics: GA, SA, PSO, ACO, Tabu Search",
+      "definition": "Khi exact methods khong scale: GA (tien hoa quan the), SA (chap nhan giam nhiet), PSO (bay dan), ACO (pheromone), Tabu (nho ngan han). No Free Lunch: khong co metaheuristic thong tri moi bai toan — can tune theo problem-specific.",
+      "difficulty": "Intermediate",
+      "prerequisites": ["Xac suat", "Toi uu co ban"]
+    },
+    {
+      "name": "Constraint Programming (CP)",
+      "definition": "Tach mo hinh (khai bao constraints) khoi solver (tim kiem + truyen ba). CP xuat sac cho scheduling voi constraint phuc tap. CP-SAT (OR-Tools) thong tri job-shop benchmarks. Hybrid CP + MIP (SCIP) ket hop LP bounds voi CP propagation.",
+      "difficulty": "Advanced",
+      "prerequisites": ["Logic", "Search algorithms"]
+    },
+    {
+      "name": "Dynamic Programming & Phuong trinh Bellman",
+      "definition": "V(s) = max_a{R(s,a) + gamma*sum P(s'|s,a)V(s')}. Giai bai toan co optimal substructure va overlapping subproblems. Nen tang cho shortest path, sequence alignment, va RL hien dai. Curse of dimensionality → ADP/deep RL.",
+      "difficulty": "Intermediate",
+      "prerequisites": ["Giai thuat", "Xac suat"]
+    },
+    {
+      "name": "Toi uu Da muc tieu & Pareto (Multi-Objective Optimization)",
+      "definition": "Nhieu muc tieu xung dot (chi phi vs chat luong vs carbon). Nghiem la Pareto frontier — tap nghiem khong bi thong tri. NSGA-II (non-dominated sorting + crowding), NSGA-III (reference points cho >3 muc tieu), MOEA/D (phan gia thanh scalar).",
+      "difficulty": "Advanced",
+      "prerequisites": ["Metaheuristics", "Toi uu co ban"]
+    },
+    {
+      "name": "Toi uu Ngau nhien & Robust (Stochastic & Robust)",
+      "definition": "Bat dinh thuc te: demand du bao sai, thoi gian di chuyen bien dong. Stochastic programming: toi uu ky vong qua scenarios. Robust: dam bao kha thi cho worst-case. DRO: bridge giua hai — toi uu tren ambiguity set.",
+      "difficulty": "Advanced",
+      "prerequisites": ["Xac suat thong ke", "LP/MIP"]
+    },
+    {
+      "name": "Predict-then-Optimize (Du doan roi Toi uu)",
+      "definition": "Paradigm chu dao: du bao tham so bat dinh (demand, travel time) roi dua vao optimization model. SPO+ loss (Elmachtoub & Grigas) toi uu truc tiep downstream decision quality thay vi prediction accuracy. Lien ket B06 ↔ B01 Forecasting.",
+      "difficulty": "Advanced",
+      "prerequisites": ["ML forecasting (B01)", "LP/MIP"]
+    }
+  ],
+  "algorithms": [
+    {
+      "name": "Simplex Method",
+      "category": "Exact (LP)",
+      "complexity": "O(m) thuc te, exponential worst-case",
+      "pros": ["San sang production tu 1947", "Sensitivity analysis mien phi qua dual", "Xu ly hang trieu bien"],
+      "cons": ["Chi cho LP (khong nguyen)", "Worst-case exponential (Klee-Minty)"],
+      "use_cases": ["LP tong quat", "Sensitivity analysis", "LP relaxation cho MIP"],
+      "key_papers": ["Dantzig, G. (1947). Linear Programming."]
+    },
+    {
+      "name": "Interior Point (Barrier) Method",
+      "category": "Exact (LP/QP/SDP)",
+      "complexity": "O(n^1/2 log(1/eps)) iterations",
+      "pros": ["Da thuc thoi gian", "Song song hoa tot", "Xu ly LP lon sparse"],
+      "cons": ["Khong cho warm-start tot nhu Simplex", "Can nhieu bo nho"],
+      "use_cases": ["LP lon va sparse", "SDP/SOCP", "Song song voi Simplex trong solver hien dai"],
+      "key_papers": ["Karmarkar, N. (1984). A New Polynomial-time Algorithm for Linear Programming."]
+    },
+    {
+      "name": "Branch & Bound",
+      "category": "Exact (IP/MIP)",
+      "complexity": "Exponential worst-case, thuc te phu thuoc structure",
+      "pros": ["Tong quat cho moi IP/MIP", "LP relaxation bounds", "Solver hien dai toi uu cuc manh"],
+      "cons": ["NP-hard bai toan lon", "Memory cho cay tim kiem"],
+      "use_cases": ["Bai toan nguyen tong quat", "Scheduling", "Facility location"],
+      "key_papers": ["Land, A. & Doig, A. (1960). An Automatic Method for Solving Discrete Programming Problems."]
+    },
+    {
+      "name": "Branch & Cut",
+      "category": "Exact (MIP)",
+      "complexity": "Tot hon B&B nho cutting planes",
+      "pros": ["Ket hop branching + cutting planes", "Giai TSP den 85,900 cities (Concorde)", "Core cua moi MIP solver hien dai"],
+      "cons": ["Can chuyen gia de formulate cuts tot", "Phuc tap implementation"],
+      "use_cases": ["MIP lon", "TSP/VRP exact", "Combinatorial optimization"],
+      "key_papers": ["Padberg, M. & Rinaldi, G. (1991). A Branch-and-Cut Algorithm for TSP."]
+    },
+    {
+      "name": "Column Generation / Branch & Price",
+      "category": "Exact (Large Structured MIP)",
+      "complexity": "Phu thuoc pricing subproblem",
+      "pros": ["Phan gia bai toan lon thanh master + pricing", "Hieu qua cho VRP, crew scheduling, cutting stock"],
+      "cons": ["Can formulate Dantzig-Wolfe decomposition", "Pricing subproblem co the kho"],
+      "use_cases": ["VRP lon", "Crew scheduling", "Cutting stock 1D"],
+      "key_papers": ["Desrosiers, J. & Lubbecke, M. (2005). A Primer in Column Generation."]
+    },
+    {
+      "name": "Genetic Algorithm (GA)",
+      "category": "Metaheuristic",
+      "complexity": "O(pop_size * generations * eval_cost)",
+      "pros": ["Tong quat — bat ky ham muc tieu nao", "Quan the khong lo giup thoat cuc tri dia phuong", "De song song hoa"],
+      "cons": ["Khong dam bao toi uu", "Can tune nhieu tham so (crossover, mutation, selection)", "Cham cho bai toan lon"],
+      "use_cases": ["Multi-objective (NSGA-II)", "Black-box optimization", "Scheduling phuc tap"],
+      "key_papers": ["Holland, J. (1975). Adaptation in Natural and Artificial Systems."]
+    },
+    {
+      "name": "Simulated Annealing (SA)",
+      "category": "Metaheuristic",
+      "complexity": "O(iterations * eval_cost)",
+      "pros": ["Don gian implement", "Ly thuyet convergence den global optimum", "Tot cho combinatorial"],
+      "cons": ["Cham voi temperature schedule khong tot", "Single-solution — khong kham pha song song"],
+      "use_cases": ["Scheduling", "TSP local search", "Non-convex continuous"],
+      "key_papers": ["Kirkpatrick, S. et al. (1983). Optimization by Simulated Annealing."]
+    },
+    {
+      "name": "Particle Swarm Optimization (PSO)",
+      "category": "Metaheuristic",
+      "complexity": "O(swarm_size * iterations * eval_cost)",
+      "pros": ["Hieu qua cho continuous optimization", "It tham so hon GA", "Hoi tu nhanh"],
+      "cons": ["Kem cho discrete/combinatorial", "De bi premature convergence"],
+      "use_cases": ["Engineering design optimization", "Neural network training", "Continuous black-box"],
+      "key_papers": ["Kennedy, J. & Eberhart, R. (1995). Particle Swarm Optimization."]
+    },
+    {
+      "name": "Ant Colony Optimization (ACO)",
+      "category": "Metaheuristic",
+      "complexity": "O(ants * iterations * n^2) cho TSP",
+      "pros": ["Tu nhien cho routing va graph problems", "Pheromone accumulation kham pha nghiem tot", "Adaptable"],
+      "cons": ["Cham hoi tu", "Nhieu tham so (alpha, beta, evaporation)", "Kem cho non-graph problems"],
+      "use_cases": ["TSP/VRP", "Network routing", "Scheduling"],
+      "key_papers": ["Dorigo, M. (1996). Ant Colony System."]
+    },
+    {
+      "name": "Tabu Search",
+      "category": "Metaheuristic",
+      "complexity": "O(iterations * neighborhood_size * eval_cost)",
+      "pros": ["Nho ngan han tranh cycling", "Intensification + diversification balance", "Hieu qua cho scheduling"],
+      "cons": ["Tabu list size la tham so nhay cam", "Single-solution"],
+      "use_cases": ["Job-shop scheduling", "VRP local search refinement", "Graph coloring"],
+      "key_papers": ["Glover, F. (1986). Future Paths for Integer Programming."]
+    },
+    {
+      "name": "NSGA-II / NSGA-III",
+      "category": "Multi-Objective Evolutionary",
+      "complexity": "O(M * N^2) per generation (M objectives, N pop_size)",
+      "pros": ["NSGA-II: standard cho 2-3 muc tieu", "NSGA-III: reference points cho >3 muc tieu", "Pareto front approximation"],
+      "cons": ["Cham cho evaluations dat", "Can pop_size lon cho diverse front"],
+      "use_cases": ["Supply chain trade-offs (cost vs service vs carbon)", "Engineering design", "Portfolio optimization"],
+      "key_papers": ["Deb, K. et al. (2002). A Fast and Elitist Multiobjective Genetic Algorithm: NSGA-II."]
+    },
+    {
+      "name": "Bayesian Optimization",
+      "category": "Sequential Model-Based",
+      "complexity": "O(n^3) cho GP posterior (n evaluations)",
+      "pros": ["Hieu qua cho expensive black-box (<50 dims)", "Acquisition function balance explore/exploit", "Optuna TPE scalable hon GP"],
+      "cons": ["Khong scale cho high-dim", "GP overhead cho nhieu evaluations"],
+      "use_cases": ["Hyperparameter tuning (Optuna + Ray Tune)", "Simulation optimization", "Expensive engineering design"],
+      "key_papers": ["Snoek, J. et al. (2012). Practical Bayesian Optimization of ML Algorithms."]
+    },
+    {
+      "name": "Attention Model / POMO (Neural CO)",
+      "category": "Neural Combinatorial Optimization",
+      "complexity": "O(n^2 * d) attention per layer",
+      "pros": ["Fast inference (mili-giay) sau khi train", "Gan optimal cho TSP-100 (<0.1% gap)", "Amortized learning cho repeated similar instances"],
+      "cons": ["Thua classical solvers cho large-scale (>1000 nodes)", "Kho voi hard constraints", "Can GPU training"],
+      "use_cases": ["Fast approximate TSP/VRP cho real-time", "Initial solution generation cho local search"],
+      "key_papers": ["Kool, W. et al. (2019). Attention, Learn to Solve Routing Problems!", "Kwon, Y.D. et al. (2020). POMO."]
+    },
+    {
+      "name": "Google OR-Tools Suite",
+      "category": "Solver Suite (Production)",
+      "complexity": "Phu thuoc bai toan va solver backend",
+      "pros": ["Mien phi Apache 2.0", "Tich hop CP-SAT, GLOP, routing library", "Production-proven tai Google tu 2014", "Python/C++/Java/C# API"],
+      "cons": ["MIP khong nhanh bang Gurobi cho instances lon", "Community support (khong co commercial support)"],
+      "use_cases": ["DEFAULT cho moi routing, scheduling, CP tai MAESTRO", "Swap sang Gurobi chi khi OR-Tools fail"],
+      "key_papers": ["Google. (2014). OR-Tools: Operations Research Tools."]
+    },
+    {
+      "name": "ADMM (Alternating Direction Method of Multipliers)",
+      "category": "Distributed Optimization",
+      "complexity": "O(1/k) convergence rate",
+      "pros": ["Phan gia bai toan lon thanh subproblems", "Consensus-based distributed", "Xu ly hang trieu bien"],
+      "cons": ["Cham hoi tu cho non-smooth", "Can tune penalty parameter"],
+      "use_cases": ["Large-scale distributed convex", "Consensus optimization", "Supply chain network"],
+      "key_papers": ["Boyd, S. et al. (2011). Distributed Optimization and Statistical Learning via ADMM."]
+    }
+  ],
+  "tech_stack": {
+    "solver_lp_mip": {
+      "recommended": {"recommended": "Google OR-Tools (GLOP + SCIP) 9.10+", "rationale": "Mien phi, Apache-licensed, production-proven. Bundles LP (GLOP) va MIP (SCIP backend). Zero licensing friction cho VN startups. DEFAULT cho moi bai toan."},
+      "alternatives": {"recommended": "Gurobi 12 / CPLEX 23.1 / HiGHS 2.0 / COPT 7.0", "rationale": "Gurobi nhanh nhat MIP nhung $12K+/nam. HiGHS mien phi MIT, tot cho LP lon. Chi upgrade khi OR-Tools fail cu the."}
+    },
+    "constraint_programming": {
+      "recommended": {"recommended": "OR-Tools CP-SAT 9.10+", "rationale": "CP solver mien phi tot nhat. Thong tri scheduling benchmarks. Interval variables va no-overlap constraints la first-class. Native Python API."},
+      "alternatives": {"recommended": "IBM CP Optimizer / MiniZinc + Chuffed / OptaPlanner", "rationale": "IBM CP Optimizer commercial; OptaPlanner Java-based tot cho nurse rostering."}
+    },
+    "routing": {
+      "recommended": {"recommended": "OR-Tools Routing Library 9.10+", "rationale": "Purpose-built cho CVRP/VRPTW/PDPTW. Time windows, capacities, penalties, pickup-delivery. Production-grade."},
+      "alternatives": {"recommended": "VROOM 1.14 / Google Route Optimization API / custom LKH-3", "rationale": "VROOM nhanh cho basic VRP. Google API la benchmark shadow competitor."}
+    },
+    "distance_matrix": {
+      "recommended": {"recommended": "OSRM (Open Source Routing Machine)", "rationale": "Self-hosted, Vietnam OSM data, /table endpoint cho batch distance matrix. Mien phi. Can deploy voi VN map data."},
+      "alternatives": {"recommended": "Valhalla / Google Distance Matrix API / HERE API", "rationale": "Google/HERE chat luong cao hon nhung tra phi. Valhalla mien phi alternative."}
+    },
+    "geocoding_vn": {
+      "recommended": {"recommended": "Goong Maps API / Map4D", "rationale": "Chuyen biet cho dia chi Viet Nam: hem/ngo/kiet, so nha 12/3/5, ten phuong/quan khong chuan. Accuracy cao hon Google cho VN."},
+      "alternatives": {"recommended": "Google Geocoding API / Nominatim (OSM)", "rationale": "Google tot cho thanh pho lon nhung dat; Nominatim mien phi nhung VN accuracy thap."}
+    },
+    "modeling": {
+      "recommended": {"recommended": "PuLP 2.9+", "rationale": "Lightweight LP/MIP modeling. Solver-agnostic: swap GLOP ↔ HiGHS ↔ Gurobi khong doi code. Beginner-friendly syntax."},
+      "alternatives": {"recommended": "Pyomo 6.7 / cvxpy 1.5 / Python-MIP", "rationale": "Pyomo cho nonlinear; cvxpy cho convex + differentiable layers (cvxpylayers)."}
+    },
+    "metaheuristic": {
+      "recommended": {"recommended": "DEAP 1.4+", "rationale": "GA, PSO, ES, GP — linh hoat custom operators. Mature Python library."},
+      "alternatives": {"recommended": "pymoo 0.6 / pagmo / jMetalPy", "rationale": "pymoo tot hon cho multi-objective (NSGA-II/III built-in)."}
+    },
+    "multi_objective": {
+      "recommended": {"recommended": "pymoo 0.6+", "rationale": "NSGA-II/III, MOEA/D built-in. Pareto front visualization. Decision-making utilities (knee point, TOPSIS)."},
+      "alternatives": {"recommended": "DEAP / Platypus / jMetalPy", "rationale": "DEAP khi da dung cho single-objective; Platypus lightweight."}
+    },
+    "api_layer": {
+      "recommended": {"recommended": "FastAPI 0.115+", "rationale": "Async-native, OpenAPI auto-docs, Pydantic validation cho constraint models, high throughput."},
+      "alternatives": {"recommended": "Flask / Django REST / gRPC", "rationale": "gRPC cho internal microservice communication."}
+    },
+    "task_queue": {
+      "recommended": {"recommended": "Celery 5.4+ va Redis 7.2+", "rationale": "Async solver jobs, retry logic cho timeouts, priority queues. Cho batch optimization. Real-time dung Redis pub/sub truc tiep."},
+      "alternatives": {"recommended": "RQ / Dramatiq / Huey", "rationale": "RQ don gian hon Celery cho team nho."}
+    },
+    "monitoring": {
+      "recommended": {"recommended": "Prometheus + Grafana", "rationale": "Solve time p50/p95/p99, optimality gap, infeasibility rate, queue depth. Self-hosted, mien phi."},
+      "alternatives": {"recommended": "Datadog / New Relic", "rationale": "Datadog all-in-one nhung $23/host/thang."}
+    },
+    "experiment_tracking": {
+      "recommended": {"recommended": "MLflow 2.15+", "rationale": "Track solver configs, objective values, solve times. Quen thuoc voi ML teams. Self-hosted mien phi. Dung cho Phase 1; co the thay boi custom tracking Phase 2+."},
+      "alternatives": {"recommended": "Custom PostgreSQL logging / Weights & Biases", "rationale": "Custom logging khi can track constraint violations, solver gap progression chuyen biet."}
+    }
+  },
+  "feasibility_score": {
+    "overall_score": 8.4,
+    "verdict": "CONDITIONAL GO",
+    "verdict_vi": "Tien hanh co dieu kien",
+    "summary": "Diem cao nhat portfolio MAESTRO. Tooling mien phi (OR-Tools, HiGHS), du lieu co cau truc (khong can training data), va nhu cau thi truong VN cuc lon (logistics 16-17% GDP). Dieu kien: can pilot client, can ky su OR chuyen mon, chap nhan 6 thang consulting truoc productization.",
+    "dimensions": {
+      "technical_feasibility": {"score": 9, "rationale": "OR-Tools mien phi, Apache license, production-proven tai Google tu 2014. CP-SAT thong tri scheduling benchmarks. Toan bo stack open-source. Tru 1 diem cho real-time optimization can careful engineering."},
+      "market_demand": {"score": 9, "rationale": "Supply chain optimization $9.4B 2028. Route optimization $7.5B. Scheduling $920M. Moi cong ty logistics, moi nha may deu co van de optimization. Tru 1 diem vi nhieu client chua biet minh can optimization."},
+      "data_availability": {"score": 8, "rationale": "LOI THE LON NHAT cua B06: khong can training data. Chi can problem data (distances, capacities, time windows) da ton tai trong moi ERP/TMS/WMS. Tru 2 diem cho dia chi VN khong chuan (geocoding 60-75%)."},
+      "implementation_risk": {"score": 7, "rationale": "Solvers chin muoi nhung moi thu xung quanh kho: data cleaning, constraint elicitation tu domain experts, integration voi legacy systems (PHP/Excel), change management voi teams khong tin algorithm."},
+      "vietnam_market_fit": {"score": 9, "rationale": "Logistics 16-17% GDP (gap doi nuoc phat trien). Manufacturing tang 7-8%/nam. Last-mile 2.5 ty buu kien/nam. Tru 1 diem cho willingness to pay chua chung minh — nhieu cong ty VN thich thue them dispatcher hon mua software."}
+    },
+    "conditions": [
+      "It nhat 1 pilot client logistics/manufacturing ky truoc khi commit xay full product",
+      "Tuyen toi thieu 1 ky su OR chuyen mon (khong phai ML engineer 'co the hoc')",
+      "Chap nhan 6 thang dau la consulting-heavy custom work truoc khi productize",
+      "Bat dau batch-only (lap tuyen nightly), real-time la Phase 2",
+      "Dau tu manh vao Vietnamese address normalization + distance matrix pipeline"
+    ]
+  },
+  "industry_applications": [
+    {
+      "industry": "Logistics & Giao hang (Last-Mile Delivery)",
+      "use_case": "Toi uu tuyen giao hang last-mile cho xe may",
+      "description": "CVRPTW cho fleet xe may: capacity 5-8 goi, time windows, COD constraints (60-70% orders la COD), diem gui tien giua tuyen. 70-80% giao hang VN bang xe may — VRP khac hoan toan phuong Tay.",
+      "priority": "P0",
+      "market_size_vn": "USD 200M+ (chi tieu cong nghe carriers)",
+      "technical_complexity": "Medium",
+      "vietnam_readiness": "High"
+    },
+    {
+      "industry": "Logistics & Kho van (Warehouse)",
+      "use_case": "Toi uu duong di picking trong kho",
+      "description": "Slotting assignment + pick path optimization theo co-purchase frequency. Giam thoi gian picking 20-35%. Dac biet cho dark stores phuc vu same-day delivery.",
+      "priority": "P1",
+      "market_size_vn": "USD 50M",
+      "technical_complexity": "Low-Medium",
+      "vietnam_readiness": "High"
+    },
+    {
+      "industry": "San xuat (Manufacturing — Scheduling)",
+      "use_case": "Lich san xuat job-shop/flow-shop",
+      "description": "Sequencing jobs tren machines giam makespan, tardiness, setup costs. Nha may may 50 style x 20 chuyen — CP-SAT + GA giam changeover 20-30%, tang throughput 10-15%.",
+      "priority": "P1",
+      "market_size_vn": "USD 80M (chi tieu IT san xuat)",
+      "technical_complexity": "High",
+      "vietnam_readiness": "Medium"
+    },
+    {
+      "industry": "San xuat (Manufacturing — Cutting Stock)",
+      "use_case": "Toi uu cat vai det may",
+      "description": "Nesting algorithms cho 2D irregular cutting. Vai chiem 60-70% chi phi san xuat. Giam waste 3-5% → tiet kiem 6-10 ty VND/nam cho nha may trung binh. ROI NHANH NHAT (payback 1-2 thang).",
+      "priority": "P1",
+      "market_size_vn": "USD 25M",
+      "technical_complexity": "Medium",
+      "vietnam_readiness": "High"
+    },
+    {
+      "industry": "Chuoi cung ung (Inventory Optimization)",
+      "use_case": "Toi uu ton kho nguyen vat lieu",
+      "description": "Reorder points, safety stock, lot sizing. Giam 15-25% von luu dong trong khi duy tri service level. Multi-echelon optimization cho supplier lead time bien dong lon cua VN.",
+      "priority": "P1",
+      "market_size_vn": "USD 100M",
+      "technical_complexity": "Medium",
+      "vietnam_readiness": "Medium"
+    },
+    {
+      "industry": "Logistics (Fleet Management)",
+      "use_case": "Phan bo xe va driver",
+      "description": "Gan xe vao tuyen qua cac ngay/tuan, xet bao tri, driver availability, demand patterns.",
+      "priority": "P1",
+      "market_size_vn": "USD 60M",
+      "technical_complexity": "Medium",
+      "vietnam_readiness": "High"
+    },
+    {
+      "industry": "Nhan su & Y te (Workforce Scheduling)",
+      "use_case": "Lich ca lam viec nhan vien",
+      "description": "Toi uu ca lam viec cho benh vien, sieu thi. Rang buoc: Luat lao dong VN (8h/ngay, 48h/tuan, OT <=40h/thang), ca dem +30%. Bo luat 45/2019/QH14.",
+      "priority": "P2",
+      "market_size_vn": "USD 40M",
+      "technical_complexity": "Medium",
+      "vietnam_readiness": "Medium"
+    },
+    {
+      "industry": "Logistics (Container Loading)",
+      "use_case": "Toi uu xep container / bin packing",
+      "description": "3D bin packing cho truck/container. Maximize space utilization, respect weight limits va unloading sequence. Cang Hai Phong, HCMC.",
+      "priority": "P2",
+      "market_size_vn": "USD 30M",
+      "technical_complexity": "Medium",
+      "vietnam_readiness": "High"
+    },
+    {
+      "industry": "San xuat (Energy Optimization)",
+      "use_case": "Toi uu chi phi dien nha may",
+      "description": "Scheduling may nang sang gio thap diem (gia 1.5-2x off-peak). Tiet kiem 5-10% hoa don dien.",
+      "priority": "P2",
+      "market_size_vn": "USD 15M",
+      "technical_complexity": "Low-Medium",
+      "vietnam_readiness": "Medium"
+    },
+    {
+      "industry": "Chuoi cung ung (Network Design)",
+      "use_case": "Thiet ke mang luoi chuoi cung ung",
+      "description": "Vi tri kho, tuyen van chuyen, hub-and-spoke vs point-to-point. Large-scale MIP, giai hang nam. Consulting-adjacent.",
+      "priority": "P2",
+      "market_size_vn": "USD 40M",
+      "technical_complexity": "Very High",
+      "vietnam_readiness": "Low"
+    }
+  ],
+  "case_studies": [
+    {
+      "title": "Google OR-Tools — Production routing tai Google tu 2014",
+      "industry": "Technology / Logistics",
+      "problem": "Toi uu routing va scheduling o quy mo Google (delivery, workforce, resource allocation).",
+      "solution": "OR-Tools suite: CP-SAT cho scheduling, GLOP cho LP, Routing library cho VRP. Apache-licensed, open-source.",
+      "results": "Production tai Google 10+ nam. Community hang ngan developers. De-facto standard cho free optimization.",
+      "tech_stack": "OR-Tools CP-SAT + GLOP + Routing Library",
+      "lessons": "Free tooling co the production-grade. Khong can Gurobi license de bat dau."
+    },
+    {
+      "title": "Concorde TSP Solver — Giai TSP 85,900 cities chinh xac",
+      "industry": "Academic / Logistics",
+      "problem": "Giai TSP (NP-hard) chinh xac cho instances cuc lon.",
+      "solution": "Branch-and-cut voi sophisticated separation routines, cutting planes, va LP relaxation.",
+      "results": "Giai optimal TSP-85900 (pci3038 instance). Chung minh exact methods co the scale khi co good cuts.",
+      "tech_stack": "Custom C branch-and-cut solver",
+      "lessons": "Decades of handcrafted solver engineering van vuot neural approaches cho provable optimality."
+    },
+    {
+      "title": "GHTK (Giao Hang Tiet Kiem) — Routing 2M+ buu kien/ngay",
+      "industry": "Vietnamese Logistics",
+      "problem": "Toi uu routing cho 2M+ buu kien/ngay tren toan quoc VN voi dia chi khong chuan va xe may.",
+      "solution": "In-house routing engine (chi tiet khong cong khai, likely rule-based + heuristics).",
+      "results": "Xu ly thanh cong 2M+ parcels/ngay. Technology-first approach trong 3PL VN.",
+      "tech_stack": "Proprietary (khong cong khai)",
+      "lessons": "Thanh cong cua GHTK chung minh demand cho optimization trong logistics VN. Nhung ho van co the duoc cai thien voi OR-Tools solvers."
+    }
+  ],
+  "key_papers": [
+    {
+      "title": "Attention, Learn to Solve Routing Problems!",
+      "authors": "Wouter Kool, Herke van Hoof, Max Welling",
+      "year": 2019,
+      "venue": "ICLR",
+      "contribution": "Transformer encoder-decoder cho TSP/CVRP voi REINFORCE training. Dat baseline cho Neural Combinatorial Optimization. 0.1% gap den optimal TSP-50.",
+      "url": "https://arxiv.org/abs/1803.08475"
+    },
+    {
+      "title": "POMO: Policy Optimization with Multiple Optima",
+      "authors": "Yeong-Dae Kwon, Jinho Choo, Byoungjip Kim, Iljoo Yoon, Youngjune Gwon, Seungjai Min",
+      "year": 2020,
+      "venue": "NeurIPS",
+      "contribution": "Multiple starting points exploit solution symmetry. <0.1% gap TSP-100. Cai thien training stability cho REINFORCE.",
+      "url": "https://arxiv.org/abs/2010.16011"
+    },
+    {
+      "title": "OptiMUS: Scalable Optimization Modeling with (MI)LP Solvers and Large Language Models",
+      "authors": "Ali AhmadiTeshnizi, Wenzhi Gao, Madeleine Udell",
+      "year": 2023,
+      "venue": "arXiv",
+      "contribution": "LLM (GPT-4) formulate optimization problems tu natural language. 80%+ accuracy tren NLP4LP benchmark. Mo ra LLM-for-OR paradigm.",
+      "url": "https://arxiv.org/abs/2310.06116"
+    },
+    {
+      "title": "Smart Predict-then-Optimize (SPO+)",
+      "authors": "Adam N. Elmachtoub, Paul Grigas",
+      "year": 2022,
+      "venue": "Management Science",
+      "contribution": "SPO+ loss toi uu truc tiep downstream decision quality thay vi prediction accuracy. Bridge giua forecasting (B01) va optimization (B06).",
+      "url": "https://doi.org/10.1287/mnsc.2020.3922"
+    },
+    {
+      "title": "Hybrid Machines: A Framework for Learning to Branch and Cut",
+      "authors": "Maxime Gasse, Didier Chetelat, Nicola Ferroni, Laurent Charlin, Andrea Lodi",
+      "year": 2019,
+      "venue": "NeurIPS",
+      "contribution": "GNN bat chuoc strong branching decisions trong branch-and-bound. 2-5x speedup tren structured MIP instances.",
+      "url": "https://arxiv.org/abs/1906.01629"
+    },
+    {
+      "title": "A Fast and Elitist Multiobjective Genetic Algorithm: NSGA-II",
+      "authors": "Kalyanmoy Deb, Amrit Pratap, Sameer Agarwal, T. Meyarivan",
+      "year": 2002,
+      "venue": "IEEE Transactions on Evolutionary Computation",
+      "contribution": "Non-dominated sorting + crowding distance. Standard cho multi-objective optimization. >50,000 citations.",
+      "url": "https://doi.org/10.1109/4235.996017"
+    },
+    {
+      "title": "Google OR-Tools",
+      "authors": "Google Optimization Team",
+      "year": 2014,
+      "venue": "Open Source Software",
+      "contribution": "Suite tich hop CP-SAT, GLOP, routing library. Apache 2.0. Production tai Google. De-facto standard free optimization toolkit.",
+      "url": "https://developers.google.com/optimization"
+    },
+    {
+      "title": "Practical Bayesian Optimization of Machine Learning Algorithms",
+      "authors": "Jasper Snoek, Hugo Larochelle, Ryan P. Adams",
+      "year": 2012,
+      "venue": "NeurIPS",
+      "contribution": "Gaussian Process BO cho hyperparameter tuning. Khoi dau cua automated ML tuning. Nen tang cho Optuna, Ray Tune.",
+      "url": "https://arxiv.org/abs/1206.2944"
+    },
+    {
+      "title": "Distributed Optimization and Statistical Learning via ADMM",
+      "authors": "Stephen Boyd, Neal Parikh, Eric Chu, Borja Peleato, Jonathan Eckstein",
+      "year": 2011,
+      "venue": "Foundations and Trends in Machine Learning",
+      "contribution": "ADMM cho distributed convex optimization. Consensus framework. Ung dung trong supply chain distributed.",
+      "url": "https://doi.org/10.1561/2200000016"
+    },
+    {
+      "title": "An Evolutionary Algorithm for Large Traveling Salesman Problems (LKH)",
+      "authors": "Keld Helsgaun",
+      "year": 2000,
+      "venue": "European Journal of Operational Research",
+      "contribution": "Lin-Kernighan heuristic mo rong. LKH-3 van la state-of-art heuristic cho TSP lon (>10,000 nodes).",
+      "url": "https://doi.org/10.1016/S0377-2217(99)00284-2"
+    },
+    {
+      "title": "Introduction to Stochastic Programming",
+      "authors": "John R. Birge, Francois Louveaux",
+      "year": 1997,
+      "venue": "Springer (Textbook)",
+      "contribution": "Sach nen tang ve stochastic programming: two-stage, multi-stage, scenario-based. Essential cho optimization duoi bat dinh.",
+      "url": "https://link.springer.com/book/10.1007/978-1-4614-0237-4"
+    },
+    {
+      "title": "Robust Optimization",
+      "authors": "Aharon Ben-Tal, Laurent El Ghaoui, Arkadi Nemirovski",
+      "year": 2009,
+      "venue": "Princeton University Press (Textbook)",
+      "contribution": "Framework cho optimization duoi worst-case uncertainty. Uncertainty sets, robust counterparts. Critical cho risk-averse applications.",
+      "url": "https://press.princeton.edu/books/hardcover/9780691143682/robust-optimization"
+    }
+  ],
+  "cross_domain_connections": [
+    {
+      "target": "B01",
+      "connection_type": "optimizes_forecasts",
+      "description": "Predict-then-Optimize pipeline: B01 du bao demand/travel time → B06 toi uu inventory/routing dua tren du bao. SPO+ loss bridge giua hai. B01 cung cap tham so bat dinh; B06 su dung de ra quyet dinh toi uu. Ket noi manh nhat cua B06."
+    },
+    {
+      "target": "B05",
+      "connection_type": "pricing_optimization",
+      "description": "Dynamic pricing + recommendations: B05 de xuat san pham, B06 toi uu gia. Multi-objective: maximize revenue (B06) va user satisfaction (B05). Inventory-aware recommendations can B06 inventory optimization."
+    },
+    {
+      "target": "B04",
+      "connection_type": "constraint_extraction",
+      "description": "NLP (B04) cho natural-language constraint specification: domain experts mo ta rang buoc bang tieng Viet → B04 extract → B06 formulate. OptiMUS paradigm. PhoBERT cho Vietnamese constraint text understanding."
+    },
+    {
+      "target": "B03",
+      "connection_type": "vision_for_inspection",
+      "description": "Computer Vision (B03) cho quality inspection data → B06 toi uu production scheduling dua tren defect rates. B03 nhan dien hang loi → B06 dieu chinh lich san xuat, lot sizing."
+    },
+    {
+      "target": "B02",
+      "connection_type": "document_constraints",
+      "description": "Document Intelligence (B02) extract constraints tu hop dong, quy dinh, shipping documents → B06 su dung constraints nay trong optimization models. Structured data extraction la input cho constraint assembly."
+    }
+  ],
+  "bestPractices": [
+    "Bat dau voi OR-Tools cho moi van de routing, scheduling, va constraint programming. Mien phi, production-proven. Chi xet Gurobi khi OR-Tools demonstrably fail tren instance size cu the cua client.",
+    "Dau tu 70% effort vao data preprocessing: geocoding dia chi VN, distance matrix construction, constraint elicitation. Solver la phan de — data pipeline la noi projects song hay chet.",
+    "Batch truoc, real-time sau. Lap tuyen nightly don gian, re ($500/thang), de validate. Dynamic dispatch la Phase 2 voi 5-10x infrastructure cost. Khong over-engineer MVP.",
+    "Xay constraint configuration layer (JSON/YAML DSL) cho common constraints: vehicle type, time windows, driver-zone, weight limits. Day la khac biet giua consulting shop va product company.",
+    "Dinh gia theo ROI chung minh duoc: 'giam fleet tu 200 xe xuong 170 xe' → $50K/nam. Khong ban 'optimization software'. Pilot 4 tuan voi KPIs do duoc.",
+    "Benchmark lien tuc voi Google Route Optimization API. Neu MAESTRO khong vuot Google ve solution quality hoac constraint handling → clients chon Google. Chay head-to-head tren VN logistics data.",
+    "Xay robustness vao models: slack time, stochastic optimization cho ung dung critical. Optimization cung cap plan, khong phai prophecy. Mot tuyen toi uu hoan hao se vo khi ket xe xay ra."
+  ],
+  "antiPatterns": [
+    "Deploy neural combinatorial solvers (Attention Model, POMO) cho VN production ma khong thu OR-Tools truoc. NCO chua thay the classical solvers cho instances can provable optimality hoac >1000 nodes.",
+    "Hua 'mo ta van de bang tieng Viet va chung toi se toi uu' (LLM formulation). OptiMUS 80-90% accuracy = 10-20% sai. Formulation sai duoc giai optimal con te hon formulation dung duoc giai heuristic.",
+    "Build custom metaheuristic solver khi OR-Tools hoac Gurobi co the giai bai toan. Chi phi $200K-$500K engineering de reinvent the wheel. Chi build custom khi KHONG co solver nao fit.",
+    "Gia dinh data sach. Code examples trong tech report gia dinh distance matrix da san. Thuc te: xay distance matrix cho dia chi VN chiem 60-70% effort trien khai.",
+    "Deploy real-time dynamic dispatch truoc khi batch optimization da duoc chung minh va client da tra phi. Real-time can 5-10x infrastructure va engineering investment.",
+    "Toi uu chi mot muc tieu (vi du chi khoang cach) ma bo qua fairness (1 driver lam 12h, nguoi khac 4h), service level, va soft constraints (quen tac cua domain experts). Luon validate voi domain experts.",
+    "Theo duoi ride-hailing dispatch (Grab) hoac energy grid (EVN). Bi incumbents thong tri voi proprietary data. Focus vao thi truong phan manh mid-market."
+  ],
+  "resources": [
+    {
+      "title": "Google OR-Tools Documentation",
+      "type": "documentation",
+      "url": "https://developers.google.com/optimization",
+      "level": "All levels",
+      "description": "Tai lieu chinh thuc OR-Tools: routing, scheduling, LP/MIP, constraint programming. Code examples Python/C++/Java. KHOI DAU TOT NHAT cho moi OR project."
+    },
+    {
+      "title": "PuLP — A Linear Programming Toolkit for Python",
+      "type": "library",
+      "url": "https://coin-or.github.io/pulp/",
+      "level": "Beginner",
+      "description": "Modeling LP/MIP don gian. Solver-agnostic: swap GLOP/HiGHS/Gurobi ma khong doi code. Syntax beginner-friendly."
+    },
+    {
+      "title": "HiGHS — High Performance Optimization Solver",
+      "type": "library",
+      "url": "https://highs.dev/",
+      "level": "Intermediate",
+      "description": "Free MIT-licensed LP/MIP solver. Nhanh nhat trong cac free MIP solvers. Complement OR-Tools cho LP lon sparse."
+    },
+    {
+      "title": "OSRM — Open Source Routing Machine",
+      "type": "library",
+      "url": "http://project-osrm.org/",
+      "level": "Intermediate",
+      "description": "Self-hosted routing engine. /table endpoint cho batch distance matrix. Deploy voi Vietnam OSM data. Mien phi."
+    },
+    {
+      "title": "pymoo — Multi-objective Optimization in Python",
+      "type": "library",
+      "url": "https://pymoo.org/",
+      "level": "Intermediate",
+      "description": "NSGA-II/III, MOEA/D built-in. Pareto front visualization. Decision-making utilities. Active development."
+    },
+    {
+      "title": "DEAP — Distributed Evolutionary Algorithms in Python",
+      "type": "library",
+      "url": "https://deap.readthedocs.io/",
+      "level": "Intermediate",
+      "description": "GA, PSO, ES, GP linh hoat. Custom operators. Mature community."
+    },
+    {
+      "title": "Optuna — Hyperparameter Optimization Framework",
+      "type": "library",
+      "url": "https://optuna.org/",
+      "level": "Intermediate",
+      "description": "TPE-based Bayesian optimization. Define-by-run API. Pruning (MedianPruner). Distributed (MySQL/PostgreSQL backend). Ket hop Ray Tune cho parallel."
+    },
+    {
+      "title": "Introduction to Linear Optimization (Bertsimas & Tsitsiklis)",
+      "type": "book",
+      "url": "https://www.athenasc.com/linoptbook.html",
+      "level": "Intermediate",
+      "description": "Sach giao khoa kinh dien LP: simplex, duality, sensitivity analysis, interior point. Nen tang ly thuyet cho moi OR engineer."
+    },
+    {
+      "title": "Convex Optimization (Boyd & Vandenberghe)",
+      "type": "book",
+      "url": "https://web.stanford.edu/~boyd/cvxbook/",
+      "level": "Intermediate to Advanced",
+      "description": "Sach chuan ve convex optimization. Mien phi PDF. Chapters on SDP, SOCP, applications. Stanford course materials kem theo."
+    },
+    {
+      "title": "CVRPLIB — Capacitated Vehicle Routing Problem Library",
+      "type": "documentation",
+      "url": "http://vrp.atd-lab.inf.puc-rio.br/",
+      "level": "All levels",
+      "description": "Benchmark instances cho CVRP voi best-known solutions. Can thiet cho testing va benchmarking routing solvers."
+    },
+    {
+      "title": "Goong Maps API (Vietnam Geocoding)",
+      "type": "documentation",
+      "url": "https://docs.goong.io/",
+      "level": "Beginner to Intermediate",
+      "description": "Geocoding chuyen biet cho dia chi Viet Nam. Xu ly hem/ngo/kiet, so nha khong chuan. Accuracy cao hon Google cho VN addresses."
+    },
+    {
+      "title": "Vehicle Routing: Problems, Methods, and Applications (Toth & Vigo)",
+      "type": "book",
+      "url": "https://epubs.siam.org/doi/book/10.1137/1.9781611973594",
+      "level": "Advanced",
+      "description": "Sach tham khao toan dien nhat cho VRP: formulations, exact methods, heuristics, variants. Essential cho OR engineers lam routing."
+    }
+  ],
+  "risks": [
+    {
+      "id": "R01",
+      "name": "Dia chi Viet Nam khong chuan — Thach thuc #1",
+      "description": "Dia chi VN dung 'hem' (Nam), 'ngo' (Bac), 'kiet' (Trung). So nha '12/3/5'. Khong co format chuan. Geocoding accuracy 60-75% so voi 95%+ nuoc phat trien. Distance matrix se sai neu dia chi khong duoc giai quyet.",
+      "severity": "Critical",
+      "probability": "Very High",
+      "mitigation": "Deploy geocoding chuyen biet VN (Goong/Map4D); xay address normalization pipeline; chap nhan 90% accuracy voi manual override cho failures."
+    },
+    {
+      "id": "R02",
+      "name": "Thieu nhan tai OR — Bottleneck khong phai cong nghe",
+      "description": "Ky su Operations Research hiem toan cau va gan nhu khong ton tai tai VN. ML engineers KHONG the debug infeasible models, hieu dual variables, hay formulate cutting planes ma khong co dao tao OR.",
+      "severity": "High",
+      "probability": "High",
+      "mitigation": "Tuyen 1-2 ky su OR (HUST Toan ung dung, Vietnamese diaspora). Hoac dao tao ML engineers co nen toan manh. Dung OR-Tools high-level API giam nhu cau chuyen gia solver."
+    },
+    {
+      "id": "R03",
+      "name": "Change management — Nguoi dieu phoi khong tin algorithm",
+      "description": "Quan ly van hanh da dispatch thu cong 20 nam se khong tin algorithm. Tai xe se di lech tuyen toi uu.",
+      "severity": "High",
+      "probability": "Very High",
+      "mitigation": "Xay tin tuong dan: 'advisory mode' (goi y, khong bat buoc), so sanh song song algorithmic vs manual, bao cao tiet kiem hang tuan. Khong bao gio ep dung."
+    },
+    {
+      "id": "R04",
+      "name": "Google Route Optimization API — Doi thu bong",
+      "description": "Google API re ($0.01/route), scalable, duoc tin tuong. Cho routing don gian, no 'du tot' cho hau het clients.",
+      "severity": "High",
+      "probability": "High",
+      "mitigation": "KHONG canh tranh tren simple routing. Khac biet hoa tren: (a) constraints phuc tap (multi-depot, fleet khong dong nhat, PDPTW), (b) scheduling + inventory (Google khong co), (c) multi-objective, (d) data sovereignty (on-premise)."
+    },
+    {
+      "id": "R05",
+      "name": "Constraint explosion theo client — De doa productization",
+      "description": "Moi cong ty logistics co rules rieng: 'driver A khong den quan 12', 'khach B can xe lanh truoc 9h', 'khong giao trong Tet'. Productization bat kha thi neu moi client can custom model.",
+      "severity": "High",
+      "probability": "Very High",
+      "mitigation": "Xay constraint configuration layer (DSL/rule engine) cho common constraints qua config thay vi code. 3-5 clients dau se custom; dung kinh nghiem do de xac dinh 80% constraints chung va productize."
+    },
+    {
+      "id": "R06",
+      "name": "Willingness to pay — Cong ty VN nhay gia software",
+      "description": "Tool toi uu tiet kiem $50K/nam co the chi ban duoc $5K/nam vi VN danh gia software thap. Nhieu cong ty thich thue them dispatcher hon mua software.",
+      "severity": "High",
+      "probability": "High",
+      "mitigation": "Dinh gia theo ROI chung minh: 'tiet kiem $50K, tinh $10K'. Pilot co KPIs do duoc. Xet revenue-sharing cho accounts lon."
+    },
+    {
+      "id": "R07",
+      "name": "Solver licensing escalation — OR-Tools co the khong du cho instances lon",
+      "description": "OR-Tools khong xu ly instances 10,000+ stops. Gurobi tro nen can thiet o $12K+/nam/machine.",
+      "severity": "Medium",
+      "probability": "Medium",
+      "mitigation": "Bat dau OR-Tools; benchmark tren data client thuc; upgrade HiGHS (mien phi) cho LP truoc khi nhay sang Gurobi. Chi recommend Gurobi khi OR-Tools fail cu the."
+    }
+  ],
+  "metadata": {
+    "status": "reviewed",
+    "version": "1.0",
+    "createdAt": "2026-03-31",
+    "updatedAt": "2026-03-31",
+    "researchedBy": ["R-alpha", "R-beta", "R-gamma", "R-MLE", "R-DE", "R-DA", "R-BE", "R-DO", "R-QA", "R-SA", "R-D06", "R-D04", "R-sigma"],
+    "consolidatedBy": "R-sigma (Ms. Scribe)",
+    "normalizedAt": "2026-03-31",
+    "normalizedBy": "R-BE",
+    "phase": "Phase 1",
+    "module": "B06",
+    "reviewedBy": "R-BE",
+    "approvedBy": null,
+    "notes": "Normalized by R-BE — Step A5 complete. Highest feasibility score in portfolio (8.4/10). JSON field names English, values Vietnamese per language rule."
+  }
+}

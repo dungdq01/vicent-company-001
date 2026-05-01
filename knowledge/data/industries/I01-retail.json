@@ -1,0 +1,101 @@
+{
+  "id": "I01",
+  "name": "Retail & E-commerce",
+  "slug": "retail-ecommerce",
+  "category": "industry",
+  "icon": "ShoppingCart",
+  "color": "#F97316",
+  "depthLevel": 1,
+  "overview": {
+    "description": "Retail and e-commerce in Vietnam is one of the fastest-growing sectors in Southeast Asia, fueled by high smartphone penetration, rising middle class, and platforms like Shopee, Lazada, and Tiki. AI adoption spans demand forecasting, personalization, chatbot customer service, fraud detection, and dynamic pricing.",
+    "marketSizeVietnam": "~$16B e-commerce market (2025), growing 25%+ YoY",
+    "marketSizeSEA": "~$130B regional e-commerce, projected $200B+ by 2028",
+    "aiMaturity": "L2",
+    "aiAppetite": "high"
+  },
+  "domainKnowledge": {
+    "keyEntities": [
+      "Products/SKUs",
+      "Customers",
+      "Orders",
+      "Inventory",
+      "Stores/Warehouses",
+      "Promotions"
+    ],
+    "keyProcesses": [
+      "Merchandising",
+      "Order fulfillment",
+      "Customer acquisition",
+      "Inventory management",
+      "Returns processing"
+    ],
+    "dataTypes": [
+      "Transaction logs",
+      "Clickstream data",
+      "Customer profiles",
+      "Product catalogs",
+      "Inventory snapshots"
+    ],
+    "typicalDataVolume": "High — millions of transactions per day for large platforms",
+    "dataQuality": "Medium to high — structured e-commerce data, but offline retail data is messier"
+  },
+  "painPoints": [
+    {
+      "problem": "Inaccurate demand forecasting leads to overstock and stockouts",
+      "severity": 9,
+      "aiSolvable": true,
+      "mapsToBaseline": [
+        "B01"
+      ]
+    },
+    {
+      "problem": "Customer service overwhelmed by repetitive queries",
+      "severity": 7,
+      "aiSolvable": true,
+      "mapsToBaseline": [
+        "B08"
+      ]
+    },
+    {
+      "problem": "Fraudulent transactions and return abuse increasing with scale",
+      "severity": 8,
+      "aiSolvable": true,
+      "mapsToBaseline": [
+        "B07"
+      ]
+    }
+  ],
+  "regulations": [],
+  "priorityBaselines": {
+    "high": [
+      "B01",
+      "B08",
+      "B07"
+    ],
+    "medium": [
+      "B02"
+    ],
+    "low": [
+      "B03"
+    ]
+  },
+  "competitiveLandscape": [],
+  "relatedNodes": [
+    {
+      "nodeId": "I06",
+      "relationship": "supply_chain",
+      "description": "Retail depends on logistics for fulfillment and last-mile delivery."
+    },
+    {
+      "nodeId": "B01",
+      "relationship": "applies_to",
+      "description": "Demand forecasting is the highest-impact AI use case for retail."
+    }
+  ],
+  "metadata": {
+    "createdAt": "2026-03-30",
+    "updatedAt": "2026-03-30",
+    "version": "0.1",
+    "status": "skeleton"
+  }
+}

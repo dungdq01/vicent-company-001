@@ -1,0 +1,107 @@
+{
+  "id": "I03",
+  "name": "Healthcare & Hospital",
+  "slug": "healthcare-hospital",
+  "category": "industry",
+  "icon": "HeartPulse",
+  "color": "#FFB300",
+  "depthLevel": 1,
+  "overview": {
+    "description": "Healthcare in Vietnam is undergoing rapid modernization with 1,400+ public hospitals and a growing private sector. AI applications include medical imaging analysis, clinical document processing, patient flow optimization, and drug interaction prediction.",
+    "marketSizeVietnam": "~$20B healthcare spending; government targets 10% of GDP by 2030",
+    "marketSizeSEA": "~$430B regional healthcare market with strong growth from aging population",
+    "aiMaturity": "L1",
+    "aiAppetite": "medium"
+  },
+  "domainKnowledge": {
+    "keyEntities": [
+      "Patients",
+      "Diagnoses",
+      "Medications",
+      "Medical images",
+      "Lab results",
+      "Clinical notes"
+    ],
+    "keyProcesses": [
+      "Patient admission",
+      "Diagnostic imaging",
+      "Treatment planning",
+      "Discharge & billing",
+      "Drug dispensing"
+    ],
+    "dataTypes": [
+      "Medical images (X-ray, CT, MRI)",
+      "EHR records",
+      "Lab results",
+      "Clinical notes",
+      "Prescription data"
+    ],
+    "typicalDataVolume": "Medium — fragmented across hospital systems; national EMR not yet unified",
+    "dataQuality": "Low to medium — paper records still common in provincial hospitals"
+  },
+  "painPoints": [
+    {
+      "problem": "Radiologist shortage causes diagnostic delays; AI-assisted imaging can help",
+      "severity": 9,
+      "aiSolvable": true,
+      "mapsToBaseline": [
+        "B03"
+      ]
+    },
+    {
+      "problem": "Clinical documentation is manual, time-consuming, and error-prone",
+      "severity": 8,
+      "aiSolvable": true,
+      "mapsToBaseline": [
+        "B02",
+        "B04"
+      ]
+    },
+    {
+      "problem": "Patient wait times and resource allocation in hospitals are inefficient",
+      "severity": 8,
+      "aiSolvable": true,
+      "mapsToBaseline": [
+        "B01",
+        "B06"
+      ]
+    },
+    {
+      "problem": "Drug interaction and dosage errors cause preventable adverse events",
+      "severity": 9,
+      "aiSolvable": true,
+      "mapsToBaseline": [
+        "B13"
+      ]
+    }
+  ],
+  "regulations": [],
+  "priorityBaselines": {
+    "high": [
+      "B03",
+      "B02"
+    ],
+    "medium": [
+      "B13",
+      "B04"
+    ],
+    "low": [
+      "B01",
+      "B08"
+    ]
+  },
+  "competitiveLandscape": [],
+  "relatedNodes": [
+    {
+      "nodeId": "I16",
+      "relationship": "adjacent",
+      "description": "Pharma and healthcare share clinical trial data and drug efficacy modeling."
+    }
+  ],
+  "metadata": {
+    "createdAt": "2026-04-03",
+    "updatedAt": "2026-04-03",
+    "version": "0.1",
+    "status": "skeleton"
+  }
+}

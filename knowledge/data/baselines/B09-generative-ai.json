@@ -1,0 +1,720 @@
+{
+  "id": "B09",
+  "name": "Generative AI",
+  "type": "baseline",
+  "slug": "generative-ai",
+  "tagline": "Xay dung he thong sinh noi dung tu dong — tu text, hinh anh, video, code den audio — su dung LLMs, Diffusion Models va Flow Matching, phuc vu 100M+ nguoi dung Viet Nam trong content marketing, e-commerce va phat trien phan mem",
+  "category": "baseline",
+  "icon": "Sparkles",
+  "color": "#E040FB",
+  "depthLevel": 3,
+  "selectedAgents": ["R-alpha", "R-beta", "R-gamma", "R-MLE", "R-DE", "R-NLP", "R-DLE", "R-BE", "R-FE", "R-DO", "R-SE", "R-QA", "R-SA", "R-D12", "R-D18", "R-sigma"],
+  "description": "Generative AI la linh vuc xay dung he thong sinh noi dung moi tu du lieu hoc — bao gom text (LLMs: GPT-4o, Claude 4, Llama 4), hinh anh (Diffusion: Stable Diffusion 3.5, Flux, DALL-E 3), video (Sora, Runway Gen-3, Kling 2), code (Copilot, Cursor, Claude Code), audio (ElevenLabs, Suno) va 3D (Meshy, Tripo3D). Ky thuat trai dai tu Autoregressive Transformers, Diffusion Models, Flow Matching, VAEs, GANs den RLHF/DPO alignment. Thi truong toan cau $110-130B nam 2026, tang 35-40% CAGR. Voi stack chin muoi (LangChain, vLLM, ComfyUI, Qdrant), he thong co the trien khai tu writing assistant 30 phut den multimodal generation platform. Cho thi truong Viet Nam — 100M+ internet users, #2 TikTok market, $20B+ e-commerce — lam chu B09 la co hoi kinh doanh truc tiep voi market pull cuc manh trong content creation, marketing va software development.",
+  "description_paragraphs": [
+    "Generative AI la linh vuc giao giua Deep Learning, Information Retrieval, va Creative Computing, tap trung vao viec sinh noi dung moi co chat luong cao tu nhieu modality. Linh vuc bao gom 7 sub-fields: Large Language Models (text generation), Image Generation (text-to-image), Video Generation (text/image-to-video), Audio & Music Generation (TTS, music composition), Code Generation (program synthesis), 3D Generation (text-to-3D), va Multimodal Generation (joint multi-modality). Stack cong nghe hoan toan san sang: API providers (Claude 4, GPT-4o, Gemini 2.5), open-weight models (Llama 4, Mistral, Qwen 2.5), diffusion frameworks (ComfyUI, Diffusers), orchestration (LangChain, LlamaIndex) — TRL 7, emerging to mature, da duoc chung minh tai scale toan cau.",
+    "Tai Viet Nam, B09 co diem kha thi 7.0/10 (CONDITIONAL GO) voi Market Demand cao nhat (9/10): content creation cho 100M+ internet users, e-commerce product descriptions cho 500K+ sellers tren Shopee/Lazada, customer service automation, va software development productivity. Thi truong GenAI VN uoc tinh $100-200M nam 2026. Tuy nhien, Data Availability (6/10) va Implementation Risk (5/10) la thach thuc: du lieu tieng Viet chat luong cao hiem, GPU compute tai VN dat va hiem (khong co domestic GPU cloud), va hallucination/copyright risks chua duoc giai quyet day du.",
+    "Chien luoc trien khai: API-first (khong self-host Phase 1), tap trung text generation truoc (80%+ use cases monetizable), xay Vietnamese language moat (fine-tune dataset + evaluation benchmark), target vertical SaaS (e-commerce content, education, marketing) thay vi horizontal 'Vietnamese ChatGPT'. Dieu kien GO: chi phi per-generation duoi $0.002 cho text, prompt router (simple → small model, complex → frontier), va Vietnamese evaluation pipeline voi human evaluators."
+  ],
+  "aliases": [
+    "AI sinh noi dung",
+    "AI tao sinh",
+    "Generative AI",
+    "GenAI",
+    "Mo hinh sinh",
+    "Generative Models",
+    "AI Content Generation",
+    "Tao noi dung bang AI"
+  ],
+  "maturity_level": "emerging_to_mature",
+  "trl": 7,
+  "core_concepts": [
+    {
+      "name": "Foundation Models & Scaling Laws",
+      "definition": "Mo hinh nen tang (Bommasani et al., 2021) la mo hinh lon pre-trained tren du lieu rong, co the adapt cho nhieu downstream tasks. Scale tu 7B den 1T+ parameters (GPT-4 ~1.8T MoE, DeepSeek-V3 671B MoE). Scaling laws (Kaplan et al., 2020): L(N,D) ~ (Nc/N)^alpha_N + (Dc/D)^alpha_D + L_inf. Chinchilla-optimal: N va D scale ty le voi compute budget. Emergent abilities xuat hien tai scale thresholds (chain-of-thought ~100B params). Homogenization risk: ca nganh phu thuoc it base models.",
+      "difficulty": "Intermediate",
+      "prerequisites": ["Deep learning co ban", "Transformer architecture"]
+    },
+    {
+      "name": "Transformer Architecture & Self-Attention",
+      "definition": "Nen tang cua moi generative model hien dai. Scaled Dot-Product Attention: Attention(Q,K,V) = softmax(QK^T/sqrt(d_k))V. Multi-Head Attention: h subspaces song song. Decoder-only (GPT, Claude, Llama) thong tri text generation. Diffusion Transformer (DiT) thong tri image/video generation. Cai tien: Grouped Query Attention (giam KV-cache), Flash Attention (O(n^2*d/M) I/O), Ring Attention (1M+ context), RoPE positional encoding.",
+      "difficulty": "Advanced",
+      "prerequisites": ["Dai so tuyen tinh", "Deep learning co ban"]
+    },
+    {
+      "name": "Diffusion Models & Denoising",
+      "definition": "Mo hinh sinh dua tren qua trinh nhieu va khu nhieu. Forward: them Gaussian noise qua T steps: q(x_t|x_{t-1}) = N(sqrt(1-beta_t)*x_{t-1}, beta_t*I). Reverse: neural network epsilon_theta du doan noise de reconstruct. Training loss (DDPM simplified): E[||epsilon - epsilon_theta(sqrt(alpha_bar_t)*x_0 + sqrt(1-alpha_bar_t)*epsilon, t)||^2]. DDIM cho deterministic sampling (20-50 steps thay vi 1000). Classifier-free guidance (CFG) dieu khien text-image alignment. Latent Diffusion (Rombach et al., 2022) giam compute 48x bang diffuse trong latent space cua VAE.",
+      "difficulty": "Advanced",
+      "prerequisites": ["Xac suat thong ke", "Deep learning", "VAE co ban"]
+    },
+    {
+      "name": "Flow Matching & Rectified Flows",
+      "definition": "Framework simulation-free cho training continuous normalizing flows (Lipman et al., 2023). Hoc velocity field v_theta(x,t) van chuyen noise distribution p_0 den data distribution p_1 doc theo duong thang: dx/dt = v_theta(x,t), t in [0,1]. Conditional flow matching loss: L_CFM = E[||v_theta(phi_t(x0,x1), t) - (x1-x0)||^2]. Rectified flows (Liu et al., 2023) lam thang transport paths, cho phep few-step generation (4-8 steps). Nen tang cua Stable Diffusion 3 va Flux. Don gian hon DDPM, khong can noise schedule, tu nhien ho tro few-step inference.",
+      "difficulty": "Advanced",
+      "prerequisites": ["Calculus", "Diffusion models co ban", "ODE/SDE"]
+    },
+    {
+      "name": "Tokenization & Vocabulary",
+      "definition": "Chuyen doi raw input thanh discrete tokens cho model xu ly. BPE (Byte Pair Encoding): GPT-family, ~100k vocab. SentencePiece: Llama, T5, hoat dong tren raw text. Visual tokenization: VQ-VAE, VQGAN encode image patches thanh discrete tokens. Multimodal tokenization: GPT-4o dung unified token spaces (text + image + audio). Token count anh huong truc tiep cost, context utilization, va generation speed. Tieng Viet tokenize kem hieu qua hon English (nhieu tokens/tu) — anh huong chi phi.",
+      "difficulty": "Beginner",
+      "prerequisites": ["NLP fundamentals"]
+    },
+    {
+      "name": "Pre-training vs Fine-tuning vs Prompting",
+      "definition": "3 tang adaptation voi data efficiency tang dan. Pre-training: trillions tokens, $10M-100M+, broad capabilities. Fine-tuning: thousands-millions examples, $100-100K, task-specific. LoRA/QLoRA: low-rank adapter training (r=8-64), cho phep fine-tune 65B model tren 1 GPU 48GB. Prompting: zero to dozens examples, per-query cost, immediate. Instruction tuning (FLAN, InstructGPT) bien pre-trained model thanh instruction-following. Cho VN market: prompting + LoRA fine-tune tren Vietnamese data la practical nhat.",
+      "difficulty": "Intermediate",
+      "prerequisites": ["Foundation models co ban", "Transfer learning"]
+    },
+    {
+      "name": "RLHF, DPO & Constitutional AI Alignment",
+      "definition": "Alignment dam bao model helpful, harmless, honest (HHH). RLHF (Ouyang et al., 2022): SFT → Reward Model (Bradley-Terry) → PPO optimization voi KL penalty. DPO (Rafailov et al., 2023): loai bo reward model, optimize policy truc tiep tu preference pairs — don gian hon, stable hon. Constitutional AI (Bai et al., 2022): AI tu phe binh theo constitution, giam can human feedback. Pipeline 2026: pre-train → SFT → preference optimization → red-teaming → runtime safety layers. Open challenges: reward hacking, sycophancy, alignment tax.",
+      "difficulty": "Advanced",
+      "prerequisites": ["Reinforcement learning co ban", "LLM fundamentals"]
+    },
+    {
+      "name": "Hallucination & Factuality",
+      "definition": "Hallucination: output fluent nhung factually incorrect hoac unsupported. 2 loai: Intrinsic (mau thuan voi source), Extrinsic (fabricated facts). Mitigation: RAG grounding, citation/attribution, confidence calibration, Chain-of-Verification (CoVe), fine-tuning tren factuality datasets, post-hoc fact-checking pipelines. Van la barrier lon nhat cho deploy GenAI trong high-stakes domains (medical, legal, financial). Xac suat 85% xay ra trong production neu khong co RAG grounding.",
+      "difficulty": "Intermediate",
+      "prerequisites": ["LLM fundamentals", "RAG co ban"]
+    },
+    {
+      "name": "Latent Space & Latent Diffusion",
+      "definition": "Latent Diffusion Models (Rombach et al., 2022): diffusion trong compressed latent space thay vi pixel space. VAE Encoder: image x (H*W*3) → latent z (h*w*c), thuong 8x spatial downsampling. Diffusion process tren z. VAE Decoder: reconstruct image tu denoised latent. Giam compute ~48x, bao toan perceptual quality. Latent space cung la interface cho conditioning: text embeddings (cross-attention), spatial controls, style vectors. Trong LLMs: activation engineering exploit internal representations.",
+      "difficulty": "Intermediate",
+      "prerequisites": ["VAE co ban", "Diffusion models"]
+    },
+    {
+      "name": "Multimodal Fusion (Text + Image + Audio)",
+      "definition": "Mo hinh xu ly va sinh noi dung dong thoi nhieu modalities. 3 fusion architectures: Early fusion (interleave tokens — GPT-4o), Cross-attention fusion (separate encoders + cross-attention — Flamingo), Late fusion (independent processing + output fusion). Thach thuc: modality alignment (CLIP, ImageBind), temporal alignment (audio-video sync), resolution asymmetry. State-of-art 2026: GPT-4o va Gemini 2.5 native process va generate text + image + audio.",
+      "difficulty": "Advanced",
+      "prerequisites": ["Transformer architecture", "Computer Vision co ban", "Audio processing co ban"]
+    },
+    {
+      "name": "ControlNet & Guided Generation",
+      "definition": "ControlNet (Zhang et al., 2023): them spatial conditioning cho diffusion models bang trainable copy cua encoder blocks voi zero-initialized convolutions. Input conditions: edge maps (Canny), depth maps, pose skeletons, segmentation masks, scribbles. Broader paradigms: IP-Adapter (image prompt conditioning), T2I-Adapter (lightweight), Inpainting/Outpainting, Instruction-based editing (InstructPix2Pix). Cho phep precise spatial control ma van giu base model generation quality.",
+      "difficulty": "Intermediate",
+      "prerequisites": ["Diffusion models", "Computer Vision"]
+    },
+    {
+      "name": "Responsible AI & Safety",
+      "definition": "Trien khai GenAI co trach nhiem: bias & fairness (amplify training data biases), misinformation & deepfakes (sinh dien thong tin gia), copyright & IP (training tren copyrighted data — NYT v. OpenAI), environmental impact (GPT-4 ~7,500 MWh), dual use (bioweapons, cyberattacks). Regulatory 2026: EU AI Act co hieu luc, Vietnam Decree 13/2023. Content provenance (C2PA) cho AI-generated media. Watermarking, audit logging, content filtering la bat buoc cho production deployment.",
+      "difficulty": "Intermediate",
+      "prerequisites": ["AI ethics co ban", "Legal awareness"]
+    }
+  ],
+  "algorithms": [
+    {
+      "name": "GPT Family (Autoregressive LLMs)",
+      "category": "Large Language Model, Autoregressive",
+      "complexity": "Pre-training: O(N*D*6) FLOPs; Inference: O(n*d^2) voi KV-cache, O(n) sequential steps",
+      "pros": ["Hieu ngon ngu tu nhien tot nhat hien tai", "Zero-shot/few-shot — khong can training data", "128K-200K context window", "Multimodal (GPT-4o: text+image+audio)", "Ecosystem lon nhat (plugins, API, integrations)"],
+      "cons": ["Chi phi inference cao ($2.50-10/M tokens)", "Closed-source — khong self-host duoc", "Hallucination la rui ro lon", "Vietnamese quality khong consistent"],
+      "use_cases": ["General-purpose text generation", "Multimodal content creation", "Code generation", "Enterprise AI applications"],
+      "key_papers": ["Brown, T. et al. (2020). Language Models are Few-Shot Learners. NeurIPS.", "OpenAI (2023). GPT-4 Technical Report. arXiv."]
+    },
+    {
+      "name": "Claude / Anthropic (Constitutional AI)",
+      "category": "Large Language Model, Alignment-focused",
+      "complexity": "Tuong tu GPT family; CAI them self-critique loop trong training",
+      "pros": ["Best-in-class safety va instruction following", "1M context window (Claude 4)", "Strong reasoning va coding", "Constitutional AI giam hallucination", "Vietnamese ho tro tot trong cac commercial LLMs"],
+      "cons": ["Khong co image/video generation", "API-only — khong self-host", "Gia cao ($3/$15 per 1M input/output tokens)", "Vietnamese chua top-tier cho nuanced content"],
+      "use_cases": ["Complex analysis va reasoning", "Long-document processing", "Coding assistants (Claude Code)", "Safety-critical applications"],
+      "key_papers": ["Bai, Y. et al. (2022). Constitutional AI: Harmlessness from AI Feedback. arXiv."]
+    },
+    {
+      "name": "Llama / Mistral (Open-Weight LLMs)",
+      "category": "Open-Weight LLM, Self-hostable",
+      "complexity": "Training: O(N*D*6); Inference: O(n*d^2) voi KV-cache; MoE: chi active params",
+      "pros": ["Free weights — self-hosting va fine-tuning", "Llama 4 Scout: 10M context, 17B active params", "Community ecosystem lon", "Full control over data va deployment", "Fine-tune cho Vietnamese voi LoRA/QLoRA"],
+      "cons": ["Can GPU infrastructure ($200K+ entry)", "Khong co official support/SLA", "Vietnamese fine-tuning la DIY", "Safety guardrails yeu hon closed models"],
+      "use_cases": ["On-premise deployment cho data sovereignty", "Vietnamese fine-tuning", "Cost-optimized high-volume inference", "Academic research"],
+      "key_papers": ["Grattafiori, A. et al. (2024). The Llama 3 Herd of Models. arXiv."]
+    },
+    {
+      "name": "Stable Diffusion / Flux (Latent Diffusion & Flow Matching)",
+      "category": "Image Generation, Diffusion/Flow",
+      "complexity": "Training: O(T*N*d^2) per image; Inference: 20-50 denoising steps, O(steps*N*d^2)",
+      "pros": ["Open-source/open-weight — self-hostable", "ControlNet cho spatial control", "Fine-tune voi LoRA cho brand style", "SD3: flow matching + MMDiT architecture", "ComfyUI cho complex workflows"],
+      "cons": ["Can GPU cho local inference (8GB+ VRAM)", "Vietnamese text rendering yeu", "Chat luong chua bang Midjourney", "Model versions fragmented"],
+      "use_cases": ["Custom image generation pipelines", "Product imagery cho e-commerce", "Fine-tuned brand-specific generation", "Inpainting/outpainting workflows"],
+      "key_papers": ["Rombach, R. et al. (2022). High-Resolution Image Synthesis with Latent Diffusion Models. CVPR.", "Lipman, Y. et al. (2023). Flow Matching for Generative Modeling. ICLR."]
+    },
+    {
+      "name": "DALL-E 3 & Midjourney (Commercial Image Generation)",
+      "category": "Image Generation, Commercial",
+      "complexity": "Inference: API call, internal diffusion ~50 steps",
+      "pros": ["DALL-E 3: GPT-4 prompt rewriting, excellent prompt adherence", "Midjourney: best aesthetic quality", "Zero infrastructure — API/subscription", "Nhanh va de su dung"],
+      "cons": ["Khong self-host duoc", "Gia cao cho bulk generation", "Khong fine-tune duoc", "Khong render Vietnamese text tot"],
+      "use_cases": ["Marketing visuals", "Concept art va design exploration", "Quick prototyping", "Social media content"],
+      "key_papers": ["Ramesh, A. et al. (2021). Zero-Shot Text-to-Image Generation. ICML."]
+    },
+    {
+      "name": "Sora / Runway / Kling (Video Generation)",
+      "category": "Video Generation, Diffusion Transformer",
+      "complexity": "Cuc cao: spacetime patches + DiT, O(T*H*W*frames*d^2); Inference: 60-300 giay/video",
+      "pros": ["Sora: 60-second videos voi temporal coherence", "Emergent 3D consistency va physics understanding", "Runway Gen-3: professional quality cho filmmaking", "Kling 2: strong motion generation, competitive pricing"],
+      "cons": ["Chi phi compute cuc cao", "Artifacts trong complex scenes", "Thoi luong gioi han ~60 giay", "CHUA thuc te cho VN market 2026 — premature"],
+      "use_cases": ["Marketing videos", "Explainer content", "Film/advertising production", "Video effects"],
+      "key_papers": ["OpenAI (2024). Video Generation Models as World Simulators. Technical Report."]
+    },
+    {
+      "name": "RAG (Retrieval-Augmented Generation)",
+      "category": "Hybrid Retrieval + Generation",
+      "complexity": "Retrieval: O(log(N)) ANN search; Generation: O(m*d^2) LLM inference",
+      "pros": ["Giam hallucination dang ke bang grounding", "Cap nhat knowledge khong can retrain", "Trich dan source — tang tin cay", "Variants: Naive, Advanced, Modular, Agentic RAG"],
+      "cons": ["Chat luong phu thuoc retrieval quality", "Chunking strategy anh huong lon", "Vietnamese document preprocessing phuc tap (mixed vi/en, scanned PDFs)", "Can vector DB infrastructure"],
+      "use_cases": ["Enterprise knowledge Q&A", "Content generation voi source grounding", "Legal/financial document generation", "Education content creation"],
+      "key_papers": ["Lewis, P. et al. (2020). Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks. NeurIPS."]
+    },
+    {
+      "name": "LoRA / QLoRA Fine-tuning",
+      "category": "Parameter-Efficient Fine-tuning",
+      "complexity": "O(n*d*r) voi r << d; QLoRA: 4-bit quantization + LoRA",
+      "pros": ["Fine-tune 65B model tren 1 GPU 48GB (QLoRA)", "Chi phi $500-2,000 per fine-tune run", "Compose nhieu LoRA adapters", "Ecosystem lon: HuggingFace PEFT, SD LoRAs"],
+      "cons": ["Chat luong kem hon full fine-tuning cho complex tasks", "Can curated training data", "Hyperparameter tuning (rank, alpha, target modules)", "Vietnamese fine-tuning data hiem"],
+      "use_cases": ["Vietnamese language adaptation cho Llama", "Brand voice customization", "Domain-specific expertise (legal, medical)", "Style LoRAs cho image generation"],
+      "key_papers": ["Hu, E. et al. (2021). LoRA: Low-Rank Adaptation of Large Language Models. ICLR.", "Dettmers, T. et al. (2023). QLoRA: Efficient Finetuning of Quantized Language Models. NeurIPS."]
+    },
+    {
+      "name": "GAN (Generative Adversarial Networks)",
+      "category": "Adversarial Training, Legacy",
+      "complexity": "Training: minimax optimization, O(N*d^2) per step; Inference: single forward pass O(d^2)",
+      "pros": ["Single-pass inference — nhanh hon diffusion", "StyleGAN cho high-fidelity face generation", "Adversarial loss dung trong diffusion fine-tuning", "Real-time applications"],
+      "cons": ["Mode collapse va training instability", "Da bi diffusion models vuot qua ve chat luong (2024+)", "Kho train cho diverse datasets", "Kem flexible hon diffusion cho conditioning"],
+      "use_cases": ["Real-time image synthesis", "Adversarial training components", "Super-resolution", "Data augmentation"],
+      "key_papers": ["Goodfellow, I. et al. (2014). Generative Adversarial Networks. NeurIPS.", "Karras, T. et al. (2020). Analyzing and Improving the Image Quality of StyleGAN. CVPR."]
+    },
+    {
+      "name": "Codex / Copilot / Cursor / Claude Code (Code Generation)",
+      "category": "Code Generation, AI-assisted Development",
+      "complexity": "Tuong tu LLM inference; codebase-aware context can indexing O(N*d)",
+      "pros": ["SWE-bench: frontier models resolve >50% real-world issues", "Multi-file refactoring, test generation, debugging", "IDE-integrated (Copilot, Cursor) hoac CLI (Claude Code)", "Tang developer productivity 30-50%"],
+      "cons": ["Generated code can review ky — co the co bugs/security issues", "Context window limits cho large codebases", "Chi phi subscription ($10-40/thang/dev)", "Over-reliance risk"],
+      "use_cases": ["Day-to-day coding assistance", "Complex multi-file refactors", "Code review va debugging", "Test generation"],
+      "key_papers": ["Chen, M. et al. (2021). Evaluating Large Language Models Trained on Code. arXiv."]
+    },
+    {
+      "name": "Whisper + TTS (Speech Generation)",
+      "category": "Audio, Speech-to-Text + Text-to-Speech",
+      "complexity": "Whisper: O(n*d^2) encoder-decoder; TTS: neural codec + vocoder pipeline",
+      "pros": ["Whisper v3: robust ASR across languages", "ElevenLabs: production-quality voice synthesis", "VALL-E: 3-second voice cloning", "F5-TTS/CosyVoice: open-source high-quality TTS"],
+      "cons": ["Vietnamese TTS quality con han che", "Voice cloning raises deepfake concerns", "Real-time latency requirements kho dat", "Open-source options kem hon commercial"],
+      "use_cases": ["Vietnamese voice generation cho accessibility", "Audiobook/podcast creation", "Voice assistants", "Content narration"],
+      "key_papers": ["Radford, A. et al. (2022). Robust Speech Recognition via Large-Scale Weak Supervision. arXiv."]
+    },
+    {
+      "name": "Music & Audio Generation (Suno, MusicLM)",
+      "category": "Audio, Music Synthesis",
+      "complexity": "Audio tokenization (EnCodec) + autoregressive/diffusion generation",
+      "pros": ["Suno v4: text-to-song (lyrics + vocals + instrumentation)", "MusicLM: text-to-music tu descriptions", "Consumer-friendly products", "Creative applications da dang"],
+      "cons": ["Copyright issues voi training data", "Chat luong chua bang professional production", "Limited control over output", "Vietnamese music styles chua duoc support tot"],
+      "use_cases": ["Background music cho video content", "Podcast intros/outros", "Creative music exploration", "Marketing jingles"],
+      "key_papers": ["Agostinelli, A. et al. (2023). MusicLM: Generating Music From Text. arXiv."]
+    }
+  ],
+  "tech_stack": {
+    "llm_providers_api": {
+      "recommended": {"recommended": "Anthropic Claude 4", "rationale": "State-of-the-art reasoning, 1M context window, strong safety alignment. Chat luong tieng Viet tot nhat trong cac commercial LLMs. Primary choice cho complex analysis, long-doc processing, coding. $3/$15 per 1M input/output tokens."},
+      "alternatives": {"recommended": "OpenAI GPT-4o / Google Gemini 2.5 Pro / Groq", "rationale": "GPT-4o cho multimodal native (text+image+audio). Gemini 2.5 cho 2M context va competitive pricing ($1.25/$5). Groq cho ultra-low latency (<100ms TTFT). Chon theo use case va budget."}
+    },
+    "open_weight_models": {
+      "recommended": {"recommended": "Llama 4 (Meta)", "rationale": "Flagship open model family: Scout (17B active, 109B total MoE, 10M context), Maverick (17B active, 400B total MoE). Free weights cho self-hosting va fine-tuning. Competitive voi closed models. Vietnamese fine-tuning kha thi voi LoRA/QLoRA."},
+      "alternatives": {"recommended": "Mistral Large 2 / Qwen 2.5 (72B) / Vistral (VinAI) / DeepSeek-V3", "rationale": "Qwen 2.5 excellent CJK + Vietnamese support. DeepSeek-V3 frontier MoE chi $5.6M training cost. Vistral/PhoGPT cho Vietnamese-first apps. Mistral cho EU compliance."}
+    },
+    "image_generation": {
+      "recommended": {"recommended": "Stable Diffusion 3.5 + ComfyUI", "rationale": "Open-weight, self-hostable, ControlNet support, flow matching architecture. ComfyUI cho node-based complex pipelines. Fine-tune voi LoRA cho brand assets. Chi phi thap khi self-host."},
+      "alternatives": {"recommended": "Flux / DALL-E 3 API / Midjourney v7", "rationale": "Flux cho best open prompt adherence. DALL-E 3 cho GPT-integrated workflows. Midjourney cho best aesthetic quality. Chon API khi khong muon manage GPU infra."}
+    },
+    "video_generation": {
+      "recommended": {"recommended": "Sora (OpenAI) / Runway Gen-3 Alpha", "rationale": "Sora: highest fidelity, 60-second videos. Runway: professional production quality, image-to-video support. API-only — khong can GPU infrastructure. Luu y: Phase 2+ cho VN market, chua can Phase 1."},
+      "alternatives": {"recommended": "Kling 2 (Kuaishou) / Veo 2 (Google)", "rationale": "Kling 2 competitive quality va gia tot hon. Veo 2 tich hop Google ecosystem. Asian market content creation."}
+    },
+    "code_generation": {
+      "recommended": {"recommended": "Claude Code (Anthropic)", "rationale": "CLI-based agentic coding: edit files, run commands, multi-file context. Strongest reasoning cho complex refactors. Tich hop tot cho development workflow."},
+      "alternatives": {"recommended": "GitHub Copilot X / Cursor", "rationale": "Copilot cho IDE inline completion (day-to-day). Cursor cho AI-native IDE voi multi-file editing. Chon theo workflow preference."}
+    },
+    "embedding_models": {
+      "recommended": {"recommended": "BGE-M3 (BAAI)", "rationale": "Multi-lingual (ho tro tieng Viet), dense+sparse+ColBERT trong 1 model. Self-hosted mien phi. Tot nhat cho Vietnamese RAG pipeline vi khong phu thuoc cloud API."},
+      "alternatives": {"recommended": "OpenAI text-embedding-3-large / Cohere Embed v3", "rationale": "OpenAI cho highest accuracy (MTEB top). Cohere cho multilingual + compression. Chap nhan cloud dependency."}
+    },
+    "vector_databases": {
+      "recommended": {"recommended": "Qdrant", "rationale": "Rust-based, nhanh, hybrid search (dense + sparse), multi-tenancy native. Production-ready cho RAG pipeline. Rich filtering cho metadata queries."},
+      "alternatives": {"recommended": "Pinecone / pgvector / ChromaDB", "rationale": "Pinecone cho fully managed serverless. pgvector khi da co PostgreSQL. ChromaDB cho prototyping nhanh."}
+    },
+    "orchestration_frameworks": {
+      "recommended": {"recommended": "LangChain + LlamaIndex", "rationale": "LangChain: framework pho bien nhat cho LLM workflows — chains, agents, tools. LlamaIndex: best-in-class RAG, data connectors, index management. Ket hop 2 cho complete GenAI platform."},
+      "alternatives": {"recommended": "Claude Agent SDK / Instructor / Haystack", "rationale": "Claude Agent SDK cho Claude-powered agents. Instructor cho Pydantic-validated structured output. Haystack cho enterprise modular pipelines."}
+    },
+    "serving_infrastructure": {
+      "recommended": {"recommended": "vLLM", "rationale": "PagedAttention, continuous batching, OpenAI-compatible API. Production self-hosted inference cho Llama/Mistral. Throughput cao nhat. Chi dung khi self-host (Phase 2+, API spend >$10K/thang)."},
+      "alternatives": {"recommended": "TGI (HuggingFace) / Replicate / Modal", "rationale": "TGI cho HuggingFace ecosystem. Replicate cho one-click model deployment pay-per-use. Modal cho serverless GPU burst workloads."}
+    },
+    "monitoring_observability": {
+      "recommended": {"recommended": "Langfuse", "rationale": "Open-source LLM observability: tracing, cost tracking, prompt management, evals. Self-hosted mien phi. Vendor-agnostic. Dashboard chi phi per-generation — metric quan trong nhat cho cost optimization."},
+      "alternatives": {"recommended": "LangSmith / Arize Phoenix", "rationale": "LangSmith cho LangChain-based apps (tight integration). Phoenix cho self-hosted, framework-agnostic monitoring."}
+    },
+    "vietnamese_nlp": {
+      "recommended": {"recommended": "underthesea + PhoBERT + Vistral", "rationale": "underthesea: word segmentation, POS, NER cho tieng Viet. PhoBERT: encoder cho Vietnamese NLU tasks. Vistral (VinAI): Vietnamese-specific LLM. Ket hop cho Vietnamese text preprocessing va generation pipeline."},
+      "alternatives": {"recommended": "VnCoreNLP / PhoGPT / VietTTS", "rationale": "VnCoreNLP (Java-based) cho high-accuracy pipeline. PhoGPT (4B) cho small Vietnamese generation. VietTTS cho Vietnamese voice generation."}
+    }
+  },
+  "feasibility_score": {
+    "overall_score": 7.0,
+    "verdict": "CONDITIONAL GO",
+    "verdict_vi": "Tien hanh co dieu kien",
+    "summary": "Linh vuc emerging to mature (TRL 7), nhu cau thi truong cuc cao (9/10) voi GenAI market VN $100-200M nam 2026. Thi truong toan cau $110-130B, tang 35-40% CAGR. Dieu kien: API-first strategy (khong self-host Phase 1), tap trung text generation (80%+ monetizable), xay Vietnamese language moat (fine-tune dataset + eval benchmark), target vertical SaaS (e-commerce, education, marketing), chi phi per-generation duoi $0.002 text, prompt router tu ngay 1.",
+    "dimensions": {
+      "technical_feasibility": {"score": 8, "rationale": "Ecosystem chin muoi: API providers (Claude 4, GPT-4o, Gemini 2.5) production-grade. Open-weight models (Llama 4, Qwen 2.5) cho self-hosting. Diffusion models (SD3.5, Flux) cho image gen. Vietnamese language support da cai thien dang ke (70-80% use cases). Tru 2 diem: nuanced Vietnamese (literary, legal, regional dialects) con van de, va self-hosting can GPU dat ($200K+ entry)."},
+      "market_demand": {"score": 9, "rationale": "Explosive demand: content creation cho 100M+ internet users, e-commerce product descriptions (500K+ sellers Shopee/Lazada), software dev productivity, customer service automation. Vietnam la #2 TikTok market, booming digital content economy. 65%+ Fortune 500 da co GenAI in production. Tru 1 diem vi Vietnamese SMEs price sensitivity cuc cao ($3-8/user/month sweet spot)."},
+      "data_availability": {"score": 6, "rationale": "English training data abundant. Vietnamese corpora han che so voi EN/ZH/ES. High-quality Vietnamese instruction-tuning datasets hiem. Domain-specific Vietnamese data (legal, medical, financial) rat kho obtain. Day la vua challenge vua moat opportunity — ai xay duoc Vietnamese dataset truoc se co competitive advantage."},
+      "implementation_risk": {"score": 5, "rationale": "High risk tu nhieu vectors: GPU costs cho self-hosting ($200K-500K+ cluster), API dependency tren US providers (geopolitical risk), regulatory uncertainty (Vietnam chua co AI content framework), hallucination liability chua giai quyet, IP/copyright vacuum (khong co legal precedent cho AI-generated content tai VN). Multi-model architecture them orchestration complexity."},
+      "vietnam_market_fit": {"score": 7, "rationale": "Strong fit cho application layer: content marketing, e-commerce, education. Khong co Vietnamese player co competitive GenAI foundation model — realistic play la API + Vietnamese fine-tuning + domain specialization. Price sensitivity cuc cao: $3-8/user/month. Vietnamese language gap la differentiation opportunity. Window 2026 favor vertical domain-specific apps, khong con wrapper."}
+    },
+    "conditions": [
+      "API-first strategy — dung Claude/OpenAI/Gemini APIs cho MVP va initial scale. Chi self-host Llama 4 khi monthly API spend vuot $10K/thang hoac cho government/banking data sovereignty",
+      "Tap trung text generation Phase 1 (months 1-6), image generation Phase 2 (months 6-12), video/audio Phase 3 (12+). KHONG build multimodal tu ngay 1 — halves engineering scope va infrastructure cost",
+      "Xay Vietnamese language moat: curated instruction-tuning dataset (10K-50K high-quality examples), Vietnamese evaluation benchmarks voi human evaluators, fine-tuned Llama 4 cho Vietnamese (LoRA/QLoRA, $500-2,000/run)",
+      "Target vertical SaaS: chon 2-3 verticals (e-commerce product descriptions, education, marketing content). KHONG lam horizontal 'Vietnamese ChatGPT' — se thua free tiers tu OpenAI/Google",
+      "Chi phi per-generation duoi $0.002 cho text — dat duoc bang prompt caching, model routing (simple → small model, complex → frontier), token usage monitoring. Set hard monthly compute budgets",
+      "Xay Vietnamese AI evaluation pipeline: benchmark suite (factuality, fluency, cultural appropriateness), automated regression testing, human evaluation team (5-10 annotators). Budget $3-5K/thang",
+      "Proactive legal/compliance: content watermarking (C2PA), audit logging, AI content labeling. Engage voi Vietnam MIC va MOST ve AI content guidelines truoc khi regulation bat buoc"
+    ]
+  },
+  "industry_applications": [
+    {
+      "industry": "Marketing & Content Creation",
+      "use_case": "Sinh noi dung marketing tu dong — bai viet, social media posts, ad copy, email campaigns",
+      "description": "Sinh noi dung marketing tieng Viet chat luong cao cho brands va agencies. Social media content cho Facebook, TikTok, Zalo (VN la #2 TikTok market). Ad copy, blog posts, email campaigns. SEO content generation. Tone customization (formal, casual, persuasive). Volume play: hang ngan bai/thang cho agencies. Key players: digital marketing agencies VN (500+), brands voi in-house marketing teams, influencers.",
+      "priority": "P0",
+      "market_size_vn": "USD 30-50M (chi tieu content marketing + AI tools VN)",
+      "technical_complexity": "Low-Medium",
+      "vietnam_readiness": "High"
+    },
+    {
+      "industry": "San xuat truyen thong (Media & Entertainment Production)",
+      "use_case": "Sinh hinh anh, video, audio cho truyen thong va giai tri",
+      "description": "Image generation cho marketing materials, social media visuals. Video generation cho explainer videos, TikTok content, quang cao ngan. Audio/voice generation cho podcasts, audiobooks, narration. Design automation: product mockups, brand assets, social media templates. Target: media agencies, content creators, MCNs (Multi-Channel Networks). Luu y: image/video generation la Phase 2 — text-first strategy.",
+      "priority": "P0",
+      "market_size_vn": "USD 15-25M (media production + AI creative tools VN)",
+      "technical_complexity": "Medium-High",
+      "vietnam_readiness": "Medium"
+    },
+    {
+      "industry": "Phat trien phan mem (Software Development)",
+      "use_case": "AI-assisted coding — code generation, review, testing, documentation",
+      "description": "Tang developer productivity 30-50% bang code generation tools. Code completion (Copilot), multi-file editing (Cursor), agentic coding (Claude Code). Test generation tu dong. Code review va security scanning. Documentation generation. VN co 500K+ developers, outsourcing industry $5B+. Chi phi: $10-40/dev/thang — ROI ro rang voi salary $1,000-3,000/dev/thang tai VN.",
+      "priority": "P1",
+      "market_size_vn": "USD 20-40M (developer tools + productivity VN)",
+      "technical_complexity": "Medium",
+      "vietnam_readiness": "High"
+    },
+    {
+      "industry": "Giao duc (Education & E-learning)",
+      "use_case": "Sinh noi dung giao duc — bai giang, bai tap, giai thich khai niem, tutoring",
+      "description": "Tao bai giang va tai lieu hoc tap tu dong. Personalized tutoring conversations. Bai tap va de thi generation theo chuong trinh VN. Hoc tieng Anh (thi truong lon tai VN): conversation practice, grammar correction, vocabulary. EdTech companies: Topica, ELSA, Vuihoc, MindX. Cho phep sai so cao hon banking — LLM generation phu hop. Content localization cho Vietnamese curriculum.",
+      "priority": "P1",
+      "market_size_vn": "USD 10-20M (EdTech AI tools VN)",
+      "technical_complexity": "Medium",
+      "vietnam_readiness": "Medium-High"
+    },
+    {
+      "industry": "Thuong mai dien tu (E-commerce Content)",
+      "use_case": "Sinh mo ta san pham, review, va content cho e-commerce",
+      "description": "Tu dong sinh product descriptions cho 500K+ sellers tren Shopee, Lazada, Tiki. Product title optimization cho SEO. Review summarization va response generation. Marketing copy cho flash sales, promotions. A/B testing product descriptions. VN e-commerce market $20B+. Pain point lon: sellers can viet 100-1000s product listings — hien lam thu cong hoac copy-paste chat luong kem.",
+      "priority": "P1",
+      "market_size_vn": "USD 10-15M (e-commerce content + AI tools VN)",
+      "technical_complexity": "Low-Medium",
+      "vietnam_readiness": "High"
+    },
+    {
+      "industry": "Phap ly & Tai chinh (Legal/Financial Document Generation)",
+      "use_case": "Sinh va review tai lieu phap ly, bao cao tai chinh",
+      "description": "Draft hop dong, dieu khoan su dung, chinh sach bao mat. Bao cao tai chinh tu dong tu du lieu. Summarization van ban phap luat. Due diligence document review. CANH BAO: hallucination trong legal/financial cuc ky nguy hiem — bat buoc RAG grounding + citation + human review. Target: law firms, ke toan, ngan hang. Regulatory framework VN chua ro — proceed voi cau truc than trong.",
+      "priority": "P2",
+      "market_size_vn": "USD 5-10M (legal tech + financial document automation VN)",
+      "technical_complexity": "High",
+      "vietnam_readiness": "Low-Medium"
+    }
+  ],
+  "case_studies": [
+    {
+      "title": "Klarna — AI content generation thay the copywriters",
+      "industry": "Fintech / E-commerce",
+      "problem": "Can sinh hang ngan marketing materials, product descriptions, va customer communications across 45 markets va 35 languages.",
+      "solution": "Deploy GenAI pipeline (OpenAI) cho content generation: marketing emails, product descriptions, social media posts. AI-generated content A/B tested vs human-written.",
+      "results": "AI content perform tuong duong hoac tot hon human content tren A/B tests. Giam thoi gian tao content tu days xuong minutes. $40M estimated annual savings (bao gom customer service + content).",
+      "tech_stack": "OpenAI GPT-4, custom orchestration, multi-language, A/B testing framework",
+      "lessons": "GenAI co the thay the copywriting tai scale voi quality tuong duong. Key: A/B testing de validate quality, brand voice fine-tuning, human review cho high-stakes content."
+    },
+    {
+      "title": "Jasper AI — AI content platform $1.5B valuation",
+      "industry": "Marketing / Content",
+      "problem": "Marketing teams can tao noi dung nhanh hon ma van giu brand voice consistency across campaigns.",
+      "solution": "Platform cho marketing teams: blog posts, social media, ad copy, emails. Brand voice customization. Template library. Team collaboration. Multi-language support.",
+      "results": "100K+ business customers. $1.5B valuation (2022). Revenue $80M+ ARR. Chung minh willingness to pay cho AI content tools.",
+      "tech_stack": "OpenAI APIs, custom prompt engineering, React frontend, brand voice fine-tuning",
+      "lessons": "Vertical focus (marketing) thang horizontal GenAI. Brand voice customization la key differentiator. Enterprise customers tra $49-125/user/month — nhung VN market can gia thap hon nhieu ($5-15/user/month)."
+    },
+    {
+      "title": "GitHub Copilot — AI coding assistant 1.8M+ subscribers",
+      "industry": "Software Development",
+      "problem": "Developers mat nhieu thoi gian viet boilerplate code, looking up syntax, va debugging simple issues.",
+      "solution": "IDE-integrated code completion va generation. Inline suggestions, chat, PR summaries. Multi-language support. Context-aware completions tu current file va project.",
+      "results": "1.8M+ paying subscribers (2025). Developers report 30-55% faster task completion. GitHub revenue $2B+ ARR. Microsoft $100B+ AI revenue target.",
+      "tech_stack": "OpenAI Codex/GPT-4, VS Code extension, Language Server Protocol, context engine",
+      "lessons": "AI coding tools co product-market fit cuc manh. $10-19/dev/month la sweet spot globally. VN developers (500K+) la target tot — ROI ro rang voi salary VN."
+    }
+  ],
+  "key_papers": [
+    {
+      "title": "Attention Is All You Need",
+      "authors": "Ashish Vaswani, Noam Shazeer, Niki Parmar, Jakob Uszkoreit, Llion Jones, Aidan N. Gomez, Lukasz Kaiser, Illia Polosukhin",
+      "year": 2017,
+      "venue": "NeurIPS",
+      "contribution": "Kien truc Transformer — nen tang cua moi generative model hien dai. Loai bo recurrence, dung pure attention. Scaled dot-product attention, multi-head attention, positional encoding. 130,000+ citations by 2026.",
+      "url": "https://arxiv.org/abs/1706.03762"
+    },
+    {
+      "title": "Language Models are Few-Shot Learners (GPT-3)",
+      "authors": "Tom Brown, Benjamin Mann, Nick Ryder, et al.",
+      "year": 2020,
+      "venue": "NeurIPS",
+      "contribution": "175B parameter model chung minh in-context learning: LLM lon thuc hien tasks moi chi tu vai vi du trong prompt. Thiet lap paradigm foundation model. Performance scale log-linearly voi model size.",
+      "url": "https://arxiv.org/abs/2005.14165"
+    },
+    {
+      "title": "Zero-Shot Text-to-Image Generation (DALL-E)",
+      "authors": "Aditya Ramesh, Mikhail Pavlov, Gabriel Goh, Scott Gray, Chelsea Voss, Alec Radford, Mark Chen, Ilya Sutskever",
+      "year": 2021,
+      "venue": "ICML",
+      "contribution": "12B parameter autoregressive Transformer sinh images tu text captions dung discrete VAE tokens. Khoi dong linh vuc text-to-image generation. Tien de cho DALL-E 2 (diffusion + CLIP) va DALL-E 3 (GPT-4 prompt rewriting).",
+      "url": "https://arxiv.org/abs/2102.12092"
+    },
+    {
+      "title": "High-Resolution Image Synthesis with Latent Diffusion Models (Stable Diffusion)",
+      "authors": "Robin Rombach, Andreas Blattmann, Dominik Lorenz, Patrick Esser, Bjorn Ommer",
+      "year": 2022,
+      "venue": "CVPR",
+      "contribution": "Diffusion trong VAE latent space giam compute ~48x ma giu image quality. Cross-attention conditioning cho text guidance. Nen tang cua Stable Diffusion — open-source image generation duoc adopt rong rai nhat. Democratize high-quality image gen tren consumer GPUs.",
+      "url": "https://arxiv.org/abs/2112.10752"
+    },
+    {
+      "title": "GPT-4 Technical Report",
+      "authors": "OpenAI",
+      "year": 2023,
+      "venue": "arXiv",
+      "contribution": "Large multimodal model (text + image input) dat human-level performance tren professional benchmarks (90th percentile bar exam, 99th GRE verbal). Predictable scaling cua eval performance. Benchmark cho tat ca models sau do.",
+      "url": "https://arxiv.org/abs/2303.08774"
+    },
+    {
+      "title": "Constitutional AI: Harmlessness from AI Feedback",
+      "authors": "Yuntao Bai, Saurav Kadavath, Sandipan Kundu, et al.",
+      "year": 2022,
+      "venue": "arXiv",
+      "contribution": "Thay human feedback trong RLHF bang AI self-critique theo tap nguyen tac (constitution). Scalable alignment method. Nen tang cua Anthropic Claude. Anh huong lon den principle-driven AI safety.",
+      "url": "https://arxiv.org/abs/2212.08073"
+    },
+    {
+      "title": "Video Generation Models as World Simulators (Sora)",
+      "authors": "OpenAI",
+      "year": 2024,
+      "venue": "Technical Report",
+      "contribution": "Scaling video diffusion Transformers (DiT) tren spacetime patches tao emergent physical understanding — 3D consistency, object permanence, temporal coherence trong videos 60 giay. Benchmark moi cho video generation. Frame video gen la path toward world models.",
+      "url": "https://openai.com/research/video-generation-models-as-world-simulators"
+    },
+    {
+      "title": "The Llama 3 Herd of Models",
+      "authors": "Aaron Grattafiori, et al. (Meta)",
+      "year": 2024,
+      "venue": "arXiv",
+      "contribution": "8B, 70B, 405B parameter models trained tren 15T+ tokens. 405B variant match GPT-4 tren nhieu benchmarks. Chi tiet training methodology, data curation, post-training alignment. Open-weight model family manh nhat.",
+      "url": "https://arxiv.org/abs/2407.21783"
+    },
+    {
+      "title": "Scaling Laws for Neural Language Models",
+      "authors": "Jared Kaplan, Sam McCandlish, Tom Henighan, et al.",
+      "year": 2020,
+      "venue": "arXiv",
+      "contribution": "LLM loss theo smooth power-law curves theo model size, dataset size, compute budget. Larger models sample-efficient hon. Nen tang ly thuyet cho 'scaling up' strategy. Dan den Chinchilla correction (2022): models undertrained relative to size.",
+      "url": "https://arxiv.org/abs/2001.08361"
+    },
+    {
+      "title": "Flow Matching for Generative Modeling",
+      "authors": "Yaron Lipman, Ricky T.Q. Chen, Heli Ben-Hamu, Maximilian Nickel",
+      "year": 2023,
+      "venue": "ICLR",
+      "contribution": "Simulation-free training framework cho continuous normalizing flows via conditional flow matching. Don gian hon diffusion training. Adopted boi Stable Diffusion 3 va Flux. Enable faster inference qua naturally straighter sampling paths.",
+      "url": "https://arxiv.org/abs/2210.02747"
+    },
+    {
+      "title": "DeepSeek-V3 Technical Report",
+      "authors": "DeepSeek-AI",
+      "year": 2024,
+      "venue": "arXiv",
+      "contribution": "671B MoE model (37B active) trained chi $5.6M, dat performance competitive voi Claude 3.5 Sonnet va GPT-4o. DeepSeek-R1 (2025): RL alone (khong SFT) elicit strong reasoning. Chung minh frontier capabilities tai dramatically lower cost. First open-weight reasoning model competitive voi o1.",
+      "url": "https://arxiv.org/abs/2412.19437"
+    }
+  ],
+  "cross_domain_connections": [
+    {
+      "target": "B04",
+      "connection_type": "nlp_foundation",
+      "description": "NLP (B04) cung cap linguistic understanding nen tang cho text generation. Tokenization, syntax, semantics tu NLP embedded vao LLM pre-training. Nguoc lai, GenAI da transform NLP: tasks classification (sentiment, NER) nay framed la generation problems qua instruction-tuned LLMs. Shared: Transformer, attention, embeddings, evaluation metrics (BLEU, ROUGE, BERTScore)."
+    },
+    {
+      "target": "B03",
+      "connection_type": "visual_generation_backbone",
+      "description": "Computer Vision (B03) cung cap visual encoders (ViT, CLIP) va architectural patterns (U-Net, skip connections) cho image/video generation. VAE encoder/decoder trong Latent Diffusion la vision component. ControlNet va IP-Adapter rely tren vision understanding (edge detection, depth estimation, pose). CLIP bridge vision va language cho text-to-image conditioning."
+    },
+    {
+      "target": "B08",
+      "connection_type": "conversational_interface",
+      "description": "Conversational AI (B08) la primary interface nguoi dung interact voi generative models. ChatGPT, Claude, Gemini la generative models wrapped trong conversational framework. RLHF va instruction tuning transform base generative models thanh conversational agents. B08 dung B09 text generation; B09 duoc delivered qua B08 dialogue interface."
+    },
+    {
+      "target": "B10",
+      "connection_type": "agentic_extension",
+      "description": "Agentic AI (B10) mo rong GenAI tu 'sinh noi dung' sang 'plan + generate + execute'. Tool-augmented generation, multi-step reasoning, autonomous task execution. Code generation tools (Claude Code, Cursor) la GenAI + Agentic patterns. B10 la 2027-2028 story cho VN, nhung agentic coding da mainstream 2025-2026."
+    },
+    {
+      "target": "B12",
+      "connection_type": "rag_grounding",
+      "description": "Search & Information Retrieval (B12) cung cap RAG — paradigm chinh de giam hallucination trong GenAI. Dense retrieval, hybrid search, reranking, vector databases tu B12 la core cua production GenAI pipeline. Agentic RAG, Graph RAG, Corrective RAG deu phuc vu GenAI quality."
+    },
+    {
+      "target": "B02",
+      "connection_type": "document_intelligence",
+      "description": "Document Intelligence (B02) cung cap input cho GenAI pipelines: extract text tu PDF, scanned docs, bang bieu → chunk, embed, retrieve cho RAG. Nguoc lai, GenAI sinh documents tu structured data. Dac biet quan trong cho VN enterprise: du lieu thuong la unstructured PDFs mixed Vietnamese/English, can OCR pipeline truoc khi GenAI xu ly."
+    }
+  ],
+  "bestPractices": [
+    "API-first, self-host later. Dung Claude/OpenAI/Gemini APIs cho MVP va initial scale. Self-host Llama 4 CHI KHI monthly API spend vuot $10K/thang hoac cho government/banking data sovereignty. Giam initial capex tu $200K+ xuong gan zero.",
+    "Xay Vietnamese language moat — single highest-ROI investment. (a) Curated Vietnamese instruction-tuning dataset 10K-50K examples, (b) Vietnamese evaluation benchmarks voi human evaluators, (c) Fine-tuned Llama 4 cho Vietnamese bang LoRA/QLoRA ($500-2,000/run). Day la competitive advantage khong ai khac dang lam.",
+    "Text-first, add modalities incrementally. Phase 1 (months 1-6): text generation platform voi RAG. Phase 2 (months 6-12): image generation integration via API. Phase 3 (12+): video/audio chi khi market demands. KHONG build multimodal tu ngay 1 — halves engineering scope va infrastructure cost.",
+    "Prompt router tu ngay 1: simple queries → small model (Llama 8B, GPT-4o-mini — $0.08/1M tokens), complex → frontier model (Claude Opus, GPT-4o — $15/1M tokens). Target cost-per-generation duoi $0.002 cho text. Token usage monitoring obsessive.",
+    "RAG voi citation bat buoc cho moi content generation co factual claims. LLM chi sinh dua tren retrieved documents cho high-stakes domains. Moi claim phai co [Source N]. Confidence threshold — flag uncertain content cho human review.",
+    "Feedback loop tu ngay 1: user ratings (thumbs up/down), generation quality analytics, prompt tuning data. A/B testing prompt variants va model routing. Budget 20% engineering cho continuous improvement pipeline.",
+    "Vietnamese AI evaluation pipeline: (a) benchmark suite (factuality, fluency, cultural appropriateness, diacritics accuracy), (b) automated regression testing khi model updates, (c) human evaluation team 5-10 Vietnamese annotators. Budget $3-5K/thang. Khong co pipeline nay = khong biet output dang sai gi."
+  ],
+  "antiPatterns": [
+    "Xay 'Vietnamese ChatGPT' horizontal platform canh tranh truc tiep voi free tiers cua OpenAI/Google. Window cho ChatGPT wrapper da dong 2024. 2026 favor vertical domain-specific apps voi proprietary data advantages. Horizontal GenAI se thua.",
+    "Self-host LLMs trong Phase 1. GPU infrastructure tai VN dat ($200K-500K+ cluster) va hiem (khong co domestic GPU cloud, nearest AWS/GCP la Singapore — 20-40ms latency, 20-30% cost premium vs US). Validate product-market fit bang API truoc, self-host chi khi unit economics justify.",
+    "Build multimodal (text + image + video) tu ngay 1. Text generation covers 80%+ monetizable use cases tai VN 2026. Image generation da commoditized (Canva AI, free SD). Video generation premature cho VN enterprise. Over-engineering giet timelines va budget.",
+    "Khong test Vietnamese output quality truoc khi ship. Current models frequently: drop diacritics, confuse Northern/Southern Vietnamese, generate unnatural sentence structures dich tu English, hallucinate Vietnamese proper nouns. PHAI co Vietnamese quality benchmark va human eval.",
+    "Cho phep LLM freeform generation trong legal/financial/medical ma khong co RAG grounding + citation + human review. Hallucination trong regulated domains = rui ro phap ly nghiem trong. Vietnam chua co legal framework cho AI-generated content — liability uncertainty cuc cao.",
+    "Ignore IP/copyright risks. AI-generated content infringes training data copyrights — Vietnam chua co legal framework ro rang. Dung models voi clear commercial licenses (Llama 4 Community License, API ToS). Implement content provenance tracking. Monitor NYT v. OpenAI precedent.",
+    "Khong set hard compute budgets. GPU costs va API costs escalate nhanh. Vietnamese SMEs se KHONG tra $20/user/month — sweet spot la $3-8/user/month. Khong co cost controls = margin am. Set monthly budgets, per-generation caps, va model routing tu ngay 0."
+  ],
+  "pipeline": {
+    "stages": [
+      {
+        "name": "Input Processing",
+        "description": "Nhan va xu ly input tu user. Language detection (vi/en/auto). Prompt parsing (intent, params, content type). Safety pre-check: PII detection/redaction, jailbreak/prompt injection detection, topic filtering. Content type routing: text → LLM pipeline, image → Diffusion pipeline, code → Code pipeline, audio → TTS pipeline, video → Video pipeline.",
+        "tools": ["underthesea", "langdetect", "Custom PII detector", "Prompt injection classifier"],
+        "inputs": "Raw user prompt tu Web App / Mobile App / CLI / API",
+        "outputs": "Processed prompt voi: language, content type, safety flags, extracted parameters"
+      },
+      {
+        "name": "Model Selection & Routing",
+        "description": "Chon model phu hop dua tren complexity va content type. Complexity classifier: Simple (greeting, lookup) → small model (Llama 8B, ~$0.08/1M tokens), Medium (Q&A, translate) → mid model (Claude Sonnet, ~$3/1M tokens), Complex (analysis, creative) → frontier (Claude Opus, ~$15/1M tokens). Image: prompt complexity → steps (20-50) + model (SD/Flux/DALL-E). Code: language detection → specialized model. Cost optimization core.",
+        "tools": ["Custom complexity classifier", "Prompt router", "Cost estimator"],
+        "inputs": "Processed prompt tu Stage 1",
+        "outputs": "Selected model + generation parameters + estimated cost"
+      },
+      {
+        "name": "Context Retrieval (RAG)",
+        "description": "Truy xuat thong tin lien quan tu knowledge base cho grounded generation. Query formulation → embed (BGE-M3) → hybrid search (dense + BM25) tren Qdrant → rerank (cross-encoder) → context assembly. Top-5 passages voi metadata va relevance scores. Vietnamese document preprocessing: mixed vi/en handling, scanned PDF OCR (link B02). Bo qua cho pure creative generation.",
+        "tools": ["BGE-M3", "Qdrant", "BM25", "bge-reranker-v2-m3", "LangChain/LlamaIndex"],
+        "inputs": "Processed query tu Stage 1 (khi can factual grounding)",
+        "outputs": "Top-k relevant passages voi scores va metadata"
+      },
+      {
+        "name": "Generation",
+        "description": "Sinh noi dung theo content type. Text (Autoregressive): prompt → tokenize → KV-cache → sample (top-p, temp) → decode, streaming via SSE. Image (Diffusion): prompt → CLIP encode → noise init → denoise (20-50 steps) → VAE decode → pixel image. Code: context + instruction → fill-in-middle/completion → parse AST. Audio: text → phoneme → mel spectrogram → vocoder → WAV. Video: prompt → temporal planning → frame diffusion → encode (async + webhook).",
+        "tools": ["Claude API / OpenAI API / vLLM", "ComfyUI / Diffusers", "ElevenLabs / VietTTS", "Sora API / Runway API"],
+        "inputs": "System prompt + context + user prompt + generation parameters",
+        "outputs": "Generated content (streaming text, image file, code, audio, video)"
+      },
+      {
+        "name": "Post-Processing & Safety",
+        "description": "Kiem tra an toan va xu ly sau sinh. Text: safety filter → fact-check (optional NLI) → citation injection → formatting. Image: NSFW classifier → watermark (C2PA) → metadata embed → upscale (optional). Code: linter/formatter → security scan (Semgrep) → test generation suggestion. Audio: noise filter → normalize → watermark. Video: frame safety check → watermark → compress. Output guardrails: toxicity, brand compliance, Vietnamese quality check.",
+        "tools": ["Guardrails AI / NeMo Guardrails", "LlamaGuard", "C2PA watermarking", "Semgrep", "Custom Vietnamese quality checker"],
+        "inputs": "Raw generated content tu Stage 4",
+        "outputs": "Safety-cleared, post-processed content"
+      },
+      {
+        "name": "Delivery & Feedback",
+        "description": "Delivery: Text → SSE stream. Image → progressive JPEG → CDN URL. Code → streamed blocks + syntax highlight. Audio → chunked stream hoac full download. Video → webhook notification → signed URL. Feedback collection: user ratings (thumbs up/down), quality scores. Cost/token tracking → billing system. Latency metrics → Prometheus/Grafana. A/B testing prompt variants. Model routing accuracy → router retraining.",
+        "tools": ["FastAPI / Next.js", "CDN (Cloudflare R2 / S3)", "Langfuse", "Prometheus/Grafana"],
+        "inputs": "Post-processed content + delivery metadata",
+        "outputs": "Content delivered to user + feedback data + cost/quality metrics"
+      }
+    ]
+  },
+  "learning_resources": [
+    {
+      "title": "Anthropic Claude Documentation",
+      "type": "documentation",
+      "url": "https://docs.anthropic.com/",
+      "level": "All levels",
+      "description": "Claude API docs: messages, streaming, tool use, vision, extended thinking. Best practices cho system prompts, structured output. Primary LLM provider cho GenAI platform. KHOI DAU TOT NHAT."
+    },
+    {
+      "title": "LangChain Documentation & Tutorials",
+      "type": "documentation",
+      "url": "https://python.langchain.com/docs/",
+      "level": "All levels",
+      "description": "Framework pho bien nhat cho LLM applications: chains, agents, RAG, memory, tools. Quick start, use case guides, integrations. Nen tang cho orchestration layer cua GenAI platform."
+    },
+    {
+      "title": "LlamaIndex Documentation",
+      "type": "documentation",
+      "url": "https://docs.llamaindex.ai/",
+      "level": "Intermediate",
+      "description": "Data framework chuyen ve RAG: data ingestion, indexing, querying. Tot nhat cho document Q&A va knowledge-grounded generation. Nhieu loai index: vector, keyword, knowledge graph."
+    },
+    {
+      "title": "AI Engineering (Chip Huyen)",
+      "type": "book",
+      "url": "https://www.oreilly.com/library/view/ai-engineering/9781098166298/",
+      "level": "Intermediate",
+      "description": "Xay dung ung dung LLM production-grade: RAG, prompt engineering, fine-tuning, evaluation, deployment. Thuc te nhat cho practitioner xay GenAI products. Covers full stack tu model selection den monitoring."
+    },
+    {
+      "title": "ComfyUI Documentation & Tutorials",
+      "type": "documentation",
+      "url": "https://github.com/comfyanonymous/ComfyUI",
+      "level": "Intermediate",
+      "description": "Node-based UI cho image generation pipelines: SD3, Flux, ControlNet, inpainting, batch processing. Visual workflow builder. Nen tang cho image generation platform. Community workflows phong phu."
+    },
+    {
+      "title": "Hugging Face Diffusers Documentation",
+      "type": "documentation",
+      "url": "https://huggingface.co/docs/diffusers/",
+      "level": "Intermediate",
+      "description": "Python library cho diffusion models: Stable Diffusion, Flux, ControlNet, LoRA training. Programmatic access cho image generation pipelines. Integration voi HuggingFace ecosystem."
+    },
+    {
+      "title": "vLLM Documentation",
+      "type": "documentation",
+      "url": "https://docs.vllm.ai/",
+      "level": "Advanced",
+      "description": "Self-hosted LLM serving: PagedAttention, continuous batching, OpenAI-compatible API. Chi doc khi Phase 2+ va can self-host. Production inference cho Llama/Mistral/DeepSeek."
+    },
+    {
+      "title": "Langfuse Documentation",
+      "type": "documentation",
+      "url": "https://langfuse.com/docs",
+      "level": "Intermediate",
+      "description": "Open-source LLM observability: tracing, cost tracking, prompt management, evaluations. Self-hosted mien phi. Quan trong cho cost optimization va quality monitoring cua GenAI platform."
+    },
+    {
+      "title": "Qdrant Documentation",
+      "type": "documentation",
+      "url": "https://qdrant.tech/documentation/",
+      "level": "Intermediate",
+      "description": "Vector database cho RAG: indexing, filtering, hybrid search, multi-tenancy. Rust-based, nhanh. Production deployment guides. Core infrastructure cho knowledge-grounded generation."
+    },
+    {
+      "title": "PhoBERT & Vietnamese NLP (VinAI Research)",
+      "type": "library",
+      "url": "https://github.com/VinAIResearch/PhoBERT",
+      "level": "Intermediate",
+      "description": "Pre-trained language models cho tieng Viet: PhoBERT (encoder), PhoGPT (decoder), Vistral (instruction-tuned). Fine-tune cho Vietnamese text classification, NER, generation quality evaluation."
+    },
+    {
+      "title": "Vercel AI SDK Documentation",
+      "type": "documentation",
+      "url": "https://sdk.vercel.ai/docs",
+      "level": "Intermediate",
+      "description": "React/Next.js SDK cho AI UI: streaming responses, multi-provider support, useChat hook. Production web interface cho GenAI applications. Tich hop tot voi MAESTRO platform (Next.js-based)."
+    },
+    {
+      "title": "Prompt Engineering Guide",
+      "type": "guide",
+      "url": "https://www.promptingguide.ai/",
+      "level": "Beginner to Intermediate",
+      "description": "Comprehensive guide ve prompt engineering: zero-shot, few-shot, chain-of-thought, tree-of-thought, system prompts. Techniques de toi uu hoa output quality va giam chi phi. Foundation skill cho moi GenAI practitioner."
+    }
+  ],
+  "risks": [
+    {
+      "id": "R01",
+      "name": "IP/Copyright liability — AI-generated content vi pham ban quyen",
+      "description": "AI-generated content co the infringe training data copyrights. Vietnam CHUA co legal framework cho AI-generated content ownership. Khong co legal precedent. NYT v. OpenAI dang tien hanh. Xac suat cao (70%).",
+      "severity": "High",
+      "probability": "High",
+      "mitigation": "Dung models voi clear commercial licenses (Llama 4 Community License, API ToS). Implement content provenance tracking. Tranh training tren scraped Vietnamese copyrighted material. Monitor global litigation. Engage voi Vietnam MOST ve AI content guidelines."
+    },
+    {
+      "id": "R02",
+      "name": "Hallucination/factual errors — sinh noi dung sai su that",
+      "description": "Generated content chua thong tin sai, gay reputational hoac legal damage, dac biet trong medical, legal, financial domains. Xac suat rat cao (85%) khi khong co RAG grounding.",
+      "severity": "Critical",
+      "probability": "Very High",
+      "mitigation": "Bat buoc RAG voi citation cho factual claims. Human-in-the-loop cho high-stakes domains. Hallucination detection guardrails. Label AI-generated content ro rang. Tranh regulated domains trong Phase 1."
+    },
+    {
+      "id": "R03",
+      "name": "GPU compute cost escalation",
+      "description": "Self-hosting costs vuot projections. Cloud GPU pricing cao. Vietnam khong co domestic GPU supply chain. Nearest AWS/GCP la Singapore/Tokyo (20-40ms latency). Vietnamese companies face 20-30% cost premium vs US. Xac suat 50%.",
+      "severity": "High",
+      "probability": "Medium",
+      "mitigation": "API-first strategy minimize upfront GPU capex. Negotiate volume discounts. Quantized models (GGUF/AWQ) cho cost reduction. Hard monthly compute budgets. Model routing (simple → small, complex → large) tu ngay 1."
+    },
+    {
+      "id": "R04",
+      "name": "Regulatory risk — EU AI Act spillover, Vietnam Decree 13/2023",
+      "description": "Vietnam cybersecurity va content regulations co the restrict AI-generated content. EU AI Act classify certain GenAI la high-risk. Vietnam MIC chua ra binding guidance. Xac suat 45%.",
+      "severity": "High",
+      "probability": "Medium",
+      "mitigation": "Monitor Vietnam MIC AI policy. Design content filtering cho Vietnamese legal compliance (anti-state content, misinformation). AI content watermarking proactive (C2PA). Audit logs per Decree 13/2023."
+    },
+    {
+      "id": "R05",
+      "name": "Deepfake/misuse liability — image/video generation bi lam dung",
+      "description": "Image/video generation capabilities dung de tao harmful deepfakes, synthetic disinformation, fraud. Vietnam-specific risk: political deepfakes. Xac suat 40%, nhung impact rat cao.",
+      "severity": "Very High",
+      "probability": "Medium",
+      "mitigation": "Strict content safety filters. Watermark tat ca generated media. Restrict face generation/cloning. KYC cho enterprise customers. KHONG offer unrestricted video generation cho consumers."
+    },
+    {
+      "id": "R06",
+      "name": "Market commoditization — GenAI thanh commodity, margins collapse",
+      "description": "OpenAI, Google cat gia aggressively. Wrapper startups chet. GenAI pricing race to bottom. Xac suat 65%.",
+      "severity": "High",
+      "probability": "High",
+      "mitigation": "Build defensible moats: proprietary Vietnamese datasets, domain-specific fine-tuning, workflow integration. Focus vertical SaaS (education, e-commerce content) khong phai horizontal GenAI. Lock enterprise contracts voi switching costs."
+    },
+    {
+      "id": "R07",
+      "name": "API provider dependency — over-reliance tren OpenAI/Anthropic",
+      "description": "Provider thay doi pricing, ToS, hoac discontinue models. Geopolitical risk (US-VN relations). Xac suat 50%.",
+      "severity": "Medium",
+      "probability": "Medium",
+      "mitigation": "Multi-provider architecture (Claude + OpenAI + self-hosted). Abstract model layer behind internal API. Maintain Llama 4 self-hosted fallback cho critical workloads. Tranh provider-specific features tao lock-in."
+    },
+    {
+      "id": "R08",
+      "name": "Vietnamese language quality gap",
+      "description": "Generated Vietnamese text co unnatural phrasing, tonal errors, cultural inappropriateness. Drop diacritics, confuse Northern/Southern, translate tu English structure. Users reject low-quality Vietnamese. Xac suat 55%.",
+      "severity": "High",
+      "probability": "Medium",
+      "mitigation": "Invest Vietnamese evaluation benchmarks + human evaluation pipeline. Fine-tune open models tren curated Vietnamese data. Vietnamese prompt engineering expertise. Partner voi Vietnamese linguistics experts cho quality assurance."
+    }
+  ],
+  "metadata": {
+    "status": "reviewed",
+    "version": "1.0",
+    "createdAt": "2026-03-31",
+    "updatedAt": "2026-03-31",
+    "researchedBy": ["R-alpha", "R-beta", "R-gamma", "R-MLE", "R-DE", "R-NLP", "R-DLE", "R-BE", "R-FE", "R-DO", "R-SE", "R-QA", "R-SA", "R-D12", "R-D18", "R-sigma"],
+    "consolidatedBy": "R-sigma (Ms. Scribe)",
+    "normalizedAt": "2026-03-31",
+    "normalizedBy": "R-sigma",
+    "phase": "Phase 0",
+    "module": "B09",
+    "reviewedBy": null,
+    "approvedBy": null,
+    "notes": "Consolidated by R-sigma (Ms. Scribe). Overall feasibility 7.0/10 CONDITIONAL GO. JSON field names English, values Vietnamese (non-diacritical) per language rule. Technical terms remain English. 16 agents researched. API-first strategy + Vietnamese language moat + vertical SaaS la chien luoc cot loi. Text-first, add modalities incrementally."
+  }
+}

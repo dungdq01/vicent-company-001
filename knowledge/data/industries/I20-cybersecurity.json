@@ -1,0 +1,113 @@
+{
+  "id": "I20",
+  "name": "Cybersecurity & IT Operations",
+  "slug": "cybersecurity-it-operations",
+  "category": "industry",
+  "icon": "Lock",
+  "color": "#FF6F00",
+  "depthLevel": 1,
+  "overview": {
+    "description": "Cybersecurity in Vietnam is a growing priority as digital transformation accelerates across sectors. AI use cases include threat detection, log anomaly analysis, vulnerability prioritization, and automated incident response.",
+    "marketSizeVietnam": "~$500M cybersecurity market; government mandating security standards for critical infrastructure",
+    "marketSizeSEA": "~$5B cybersecurity market; ransomware and state-sponsored attacks driving investment",
+    "aiMaturity": "L2",
+    "aiAppetite": "high"
+  },
+  "domainKnowledge": {
+    "keyEntities": [
+      "Threats",
+      "Vulnerabilities",
+      "Logs",
+      "Incidents",
+      "Assets",
+      "Users"
+    ],
+    "keyProcesses": [
+      "Threat monitoring",
+      "Incident response",
+      "Vulnerability scanning",
+      "Access control",
+      "Forensics"
+    ],
+    "dataTypes": [
+      "Security logs (SIEM)",
+      "Network traffic",
+      "Endpoint telemetry",
+      "Vulnerability reports",
+      "Threat intel feeds"
+    ],
+    "typicalDataVolume": "Very high — security logs in enterprise environments are massive (TB/day)",
+    "dataQuality": "Medium — structured SIEM data good; correlation across tools still challenging"
+  },
+  "painPoints": [
+    {
+      "problem": "Alert fatigue — security teams drowning in false positives from SIEM tools",
+      "severity": 9,
+      "aiSolvable": true,
+      "mapsToBaseline": [
+        "B07",
+        "B10"
+      ]
+    },
+    {
+      "problem": "Advanced persistent threats (APTs) evade signature-based detection",
+      "severity": 10,
+      "aiSolvable": true,
+      "mapsToBaseline": [
+        "B07",
+        "B13"
+      ]
+    },
+    {
+      "problem": "Log analysis for incident investigation is manual and slow",
+      "severity": 8,
+      "aiSolvable": true,
+      "mapsToBaseline": [
+        "B04",
+        "B12"
+      ]
+    },
+    {
+      "problem": "Vulnerability prioritization across thousands of CVEs is overwhelming",
+      "severity": 7,
+      "aiSolvable": true,
+      "mapsToBaseline": [
+        "B13",
+        "B10"
+      ]
+    }
+  ],
+  "regulations": [],
+  "priorityBaselines": {
+    "high": [
+      "B07",
+      "B13"
+    ],
+    "medium": [
+      "B10",
+      "B04"
+    ],
+    "low": [
+      "B12"
+    ]
+  },
+  "competitiveLandscape": [],
+  "relatedNodes": [
+    {
+      "nodeId": "I10",
+      "relationship": "adjacent",
+      "description": "Telecom and cybersecurity overlap in network threat detection."
+    },
+    {
+      "nodeId": "I02",
+      "relationship": "adjacent",
+      "description": "Finance is cybersecurity highest-priority sector in Vietnam."
+    }
+  ],
+  "metadata": {
+    "createdAt": "2026-04-03",
+    "updatedAt": "2026-04-03",
+    "version": "0.1",
+    "status": "skeleton"
+  }
+}

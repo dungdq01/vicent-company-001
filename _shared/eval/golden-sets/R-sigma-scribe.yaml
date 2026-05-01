@@ -1,0 +1,82 @@
+agent: R-sigma
+version: v1.0-mvp
+last_updated: 2026-04-27
+status: mvp-baseline
+notes: |
+  R-σ Scribe — consolidation + Vietnamese translation + voice contract enforcement.
+  Tests output coherence across multiple agent inputs.
+
+test_cases:
+
+  - id: sigma-001-multi-agent-consolidate
+    description: "Consolidate R-α + R-β + R-γ into 1 discovery report"
+    input:
+      sources:
+        - "alpha-out (research SOTA, 4K tokens)"
+        - "beta-out (tech stack, 3K tokens)"
+        - "gamma-out (feasibility 78/100, GO)"
+      voice: "voice_b_business"
+      target_audience: "client COO, ICP-B"
+    expected:
+      must_address: ["sections from all 3 sources", "no duplicate content", "client-readable"]
+      voice_check: "voice_b_business throughout — formal Vietnamese business"
+      forbid: ["voice mixing", "raw English jargon without VN translation", "banned word list (delve, leverage, synergy)"]
+      sections: ["Executive Summary", "Pain Mapping", "Recommended Approach", "Investment", "Risks", "Next Steps"]
+      score_threshold: 8.0
+    notes: "R-σ has higher threshold (R-QAL-02 — gatekeeper role)"
+
+  - id: sigma-002-voice-bilingual
+    description: "Voice A (CEO technical) — bilingual EN/VN"
+    input:
+      sources: ["technical content from R-MLE + R-AE"]
+      voice: "voice_a_technical"
+      target_audience: "ICP-E technical buyer"
+    expected:
+      voice_check: "concise, evidence-led, EN/VN both acceptable"
+      must_address: ["technical accuracy preserved", "no over-formalization"]
+      forbid: ["business-jargon mode (voice_b)", "hand-wavy claims"]
+      score_threshold: 8.0
+
+  - id: sigma-003-citation-fidelity
+    description: "Source claims preserved with citations"
+    input:
+      sources:
+        - "alpha-out (with 8 citations)"
+        - "beta-out (with 5 citations)"
+    expected:
+      must_address: ["all 13 source citations preserved", "no claim without source"]
+      forbid: ["dropping citations during consolidation", "introducing new uncited claims"]
+      key_metric: "citation count_after >= count_before"
+      score_threshold: 8.0
+    notes: "Tests R-MAS-06 anti-hallucination through consolidation"
+
+  - id: sigma-004-conflict-flag
+    description: "Sources disagree — must flag, not silently pick one"
+    input:
+      sources:
+        - "alpha-out (recommends approach A)"
+        - "beta-out (recommends approach B)"
+    expected:
+      must_address: ["surface conflict explicitly", "present both with rationale", "OR escalate per R-ORC-02"]
+      forbid: ["silent merge", "picking one without acknowledging other"]
+      score_threshold: 8.0
+    notes: "Adversarial — tests R-ORC-02 tiebreak handling"
+
+  - id: sigma-005-handoff-doc
+    description: "Output ends with structured handoff per R-ORC-03"
+    input:
+      sources: ["any 2-3 agent outputs"]
+      next_phase: "P2 Proposal"
+    expected:
+      must_address: ["handoff section at end with required_inputs_to_quote ≥3 items"]
+      sections: ["...content...", "## Handoff to next phase"]
+      forbid: ["no handoff section", "vague required_actions"]
+      score_threshold: 8.0
+
+eval_dimensions:
+  correctness: 0.20
+  completeness: 0.20
+  voice_fidelity: 0.20
+  citation_preservation: 0.15
+  handoff_structure: 0.15
+  clarity: 0.10

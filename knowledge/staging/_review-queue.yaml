@@ -1,0 +1,21 @@
+# Knowledge Review Queue (append-only)
+# Spec: _shared/standards/knowledge-curation.md §2
+# Owner: R-σ (curator daily triage) + CEO (weekly batch)
+
+# Schema per entry:
+#   id: kr-{YYYYMMDD}-{nnn}
+#   source: "R-β fresh research" | "P9 project retro" | "R-LLMOps weekly" | other
+#   artifact_path: "staging/industries/I-XX/L1-skeleton.md"
+#   triggering_project: P-{YYYYMM}-{NNN}
+#   size_words: int
+#   citations_count: int
+#   cost_usd: float
+#   submitted_at: ISO8601
+#   urgency: "🔴 blocking" | "🟡 standard" | "🟢 proactive"
+#   status: pending | in_review | approved | needs_revision | rejected
+#   reviewer: "" | name
+#   review_notes: ""
+#   decision_date: ""
+
+entries: []
+# (empty — populated as agents write to staging/)

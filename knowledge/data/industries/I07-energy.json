@@ -1,0 +1,112 @@
+{
+  "id": "I07",
+  "name": "Energy & Utilities",
+  "slug": "energy-utilities",
+  "category": "industry",
+  "icon": "Zap",
+  "color": "#FFB300",
+  "depthLevel": 1,
+  "overview": {
+    "description": "Energy and utilities in Vietnam face rapid transition challenges: solar/wind expansion, grid modernization, and rising demand. AI applications include demand forecasting, predictive maintenance, and smart grid optimization.",
+    "marketSizeVietnam": "~$15B electricity market; EVN manages national grid; 50% renewable target by 2030",
+    "marketSizeSEA": "~$200B energy market undergoing decarbonization transition",
+    "aiMaturity": "L1",
+    "aiAppetite": "medium"
+  },
+  "domainKnowledge": {
+    "keyEntities": [
+      "Power plants",
+      "Grid nodes",
+      "Meters",
+      "Substations",
+      "Solar/wind farms",
+      "Consumers"
+    ],
+    "keyProcesses": [
+      "Power generation",
+      "Transmission",
+      "Distribution",
+      "Demand forecasting",
+      "Maintenance"
+    ],
+    "dataTypes": [
+      "SCADA sensor data",
+      "Smart meter readings",
+      "Weather data",
+      "Fault logs",
+      "Consumption patterns"
+    ],
+    "typicalDataVolume": "Very high — millions of smart meters; real-time grid data streams",
+    "dataQuality": "Medium — legacy systems mixed with modern SCADA; rural meters still analog"
+  },
+  "painPoints": [
+    {
+      "problem": "Grid instability from intermittent renewables requires better demand/supply forecasting",
+      "severity": 9,
+      "aiSolvable": true,
+      "mapsToBaseline": [
+        "B01"
+      ]
+    },
+    {
+      "problem": "Infrastructure failures (transformers, cables) cause costly outages",
+      "severity": 8,
+      "aiSolvable": true,
+      "mapsToBaseline": [
+        "B07",
+        "B01"
+      ]
+    },
+    {
+      "problem": "Energy theft and meter tampering cause revenue loss",
+      "severity": 7,
+      "aiSolvable": true,
+      "mapsToBaseline": [
+        "B07",
+        "B13"
+      ]
+    },
+    {
+      "problem": "Renewable energy yield prediction is imprecise, causing grid imbalance",
+      "severity": 8,
+      "aiSolvable": true,
+      "mapsToBaseline": [
+        "B01",
+        "B15"
+      ]
+    }
+  ],
+  "regulations": [],
+  "priorityBaselines": {
+    "high": [
+      "B01",
+      "B07"
+    ],
+    "medium": [
+      "B06",
+      "B15"
+    ],
+    "low": [
+      "B13"
+    ]
+  },
+  "competitiveLandscape": [],
+  "relatedNodes": [
+    {
+      "nodeId": "I04",
+      "relationship": "adjacent",
+      "description": "Manufacturing is the largest industrial energy consumer."
+    },
+    {
+      "nodeId": "I13",
+      "relationship": "adjacent",
+      "description": "EV adoption links energy and transportation sectors."
+    }
+  ],
+  "metadata": {
+    "createdAt": "2026-04-03",
+    "updatedAt": "2026-04-03",
+    "version": "0.1",
+    "status": "skeleton"
+  }
+}

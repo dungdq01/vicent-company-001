@@ -1,0 +1,69 @@
+# _refs.yaml — GitHub repo references for this project
+# Spec: _shared/standards/project-attachments.md §3
+# Update _meta.json.attachments.repos[] when adding/removing entries here.
+
+version: v1.0
+project_id: <PROJECT-SLUG>
+last_updated: <YYYY-MM-DD>
+
+refs:
+  # ═════════════════════════════════════════════════════════════
+  # TEMPLATE — copy block below per repo. Delete this comment after.
+  # ═════════════════════════════════════════════════════════════
+  - id: <repo-slug>                           # short id, kebab-case
+    url: https://github.com/<owner>/<repo>
+    commit_pin: <full-sha-40-chars>           # MANDATORY — exact SHA, NEVER branch
+    branch_at_pin: main                       # for human readability only
+    purpose: "<1-line why we reference this repo>"
+
+    # ── Load strategy ────────────────────────────────
+    load_strategy: cherry_pick                # cherry_pick | manifest_only | full_clone
+    cherry_pick:                              # required if load_strategy=cherry_pick
+      - <path/to/file1.ext>
+      - <path/to/file2.md>
+
+    # ── Fetch + cache ────────────────────────────────
+    fetch_method: git_clone                   # git_clone | manifest_only | download_zip
+    cache_path: _attachments/repos/<repo-slug>/
+    cache_ttl_hours: 720                      # 30 days; refetch + re-verify if exceeded
+
+    # ── Compliance gates (set after R-SEC check) ─────
+    license: <e.g., MIT | Apache-2.0 | BSD-3>
+    license_compatible: false                 # set TRUE only after R-SEC verifies vs studio policy
+    allowlist_passed: <YYYY-MM-DD>            # date repo URL allowlisted (CEO sign if novel)
+    pii_scan_passed: <YYYY-MM-DD>             # date scan completed per pii-redaction.md
+
+    # ── Engine load filter ───────────────────────────
+    load_for_agents: [<R-MLE>, <R-SA>]
+    load_for_phases: [<P1>, <P4c>]
+    summary_max_tokens: 2000                  # engine truncates if cherry_pick combined exceeds
+
+    # ── Audit ────────────────────────────────────────
+    attached_at: <YYYY-MM-DD>
+    attached_by: <P3 | agent>
+    notes: <optional>
+
+# ═════════════════════════════════════════════════════════════
+# Example (filled) — delete before committing real refs
+# ═════════════════════════════════════════════════════════════
+#  - id: auth-reference
+#    url: https://github.com/microsoft/recommenders
+#    commit_pin: a3f2c1b8d4e5f6789abc123def456ghi789jkl0m
+#    branch_at_pin: main
+#    purpose: "Two-tower DNN reference implementation"
+#    load_strategy: cherry_pick
+#    cherry_pick:
+#      - examples/02_model_collaborative_filtering/sar_movielens.ipynb
+#      - docs/source/concepts.md
+#    fetch_method: git_clone
+#    cache_path: _attachments/repos/auth-reference/
+#    cache_ttl_hours: 720
+#    license: MIT
+#    license_compatible: true
+#    allowlist_passed: 2026-05-01
+#    pii_scan_passed: 2026-05-01
+#    load_for_agents: [R-MLE]
+#    load_for_phases: [P1, P4c]
+#    summary_max_tokens: 2000
+#    attached_at: 2026-05-01
+#    attached_by: P3

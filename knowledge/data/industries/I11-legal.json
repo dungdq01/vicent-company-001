@@ -1,0 +1,104 @@
+{
+  "id": "I11",
+  "name": "Legal & Government",
+  "slug": "legal-government",
+  "category": "industry",
+  "icon": "Scale",
+  "color": "#FF8F00",
+  "depthLevel": 1,
+  "overview": {
+    "description": "Legal and government in Vietnam is beginning to adopt AI for document analysis, contract review, e-government services, and regulatory compliance. Adoption is cautious due to high sensitivity, but demand for efficiency tools is growing.",
+    "marketSizeVietnam": "~100,000 lawyers; e-government initiatives accelerating digitization of public services",
+    "marketSizeSEA": "~$5B LegalTech market; Singapore and Vietnam leading regulatory tech adoption",
+    "aiMaturity": "L1",
+    "aiAppetite": "low"
+  },
+  "domainKnowledge": {
+    "keyEntities": [
+      "Contracts",
+      "Court cases",
+      "Regulations",
+      "Citizens",
+      "Government agencies",
+      "Legal precedents"
+    ],
+    "keyProcesses": [
+      "Contract drafting",
+      "Due diligence",
+      "Regulatory filing",
+      "Court documentation",
+      "Compliance monitoring"
+    ],
+    "dataTypes": [
+      "Legal documents",
+      "Contracts",
+      "Regulations",
+      "Court rulings",
+      "Government records"
+    ],
+    "typicalDataVolume": "Low to medium — mostly unstructured text; large archives but fragmented access",
+    "dataQuality": "Variable — digitized documents vary widely in quality and completeness"
+  },
+  "painPoints": [
+    {
+      "problem": "Contract review is time-consuming, expensive, and error-prone",
+      "severity": 8,
+      "aiSolvable": true,
+      "mapsToBaseline": [
+        "B02",
+        "B04"
+      ]
+    },
+    {
+      "problem": "Legal search across regulations and precedents is inefficient",
+      "severity": 8,
+      "aiSolvable": true,
+      "mapsToBaseline": [
+        "B12",
+        "B04"
+      ]
+    },
+    {
+      "problem": "Compliance monitoring across multiple regulations is manual",
+      "severity": 7,
+      "aiSolvable": true,
+      "mapsToBaseline": [
+        "B02",
+        "B12"
+      ]
+    }
+  ],
+  "regulations": [],
+  "priorityBaselines": {
+    "high": [
+      "B02",
+      "B04"
+    ],
+    "medium": [
+      "B12"
+    ],
+    "low": [
+      "B09",
+      "B08"
+    ]
+  },
+  "competitiveLandscape": [],
+  "relatedNodes": [
+    {
+      "nodeId": "I02",
+      "relationship": "adjacent",
+      "description": "Finance and legal share compliance and regulatory document needs."
+    },
+    {
+      "nodeId": "I15",
+      "relationship": "adjacent",
+      "description": "Insurance relies on legal frameworks for contract and claims processing."
+    }
+  ],
+  "metadata": {
+    "createdAt": "2026-04-03",
+    "updatedAt": "2026-04-03",
+    "version": "0.1",
+    "status": "skeleton"
+  }
+}

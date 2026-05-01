@@ -1,0 +1,121 @@
+agent: R-Match
+version: v1.0-mvp
+last_updated: 2026-04-27
+status: mvp-baseline
+notes: |
+  R-Match classifier — 7 cases spanning 5 industries balanced (Logistics, Healthcare,
+  F&B, MMO, Education) + 2 adversarial. NO bias toward Logistics/MMO despite studio
+  ICP focus. Threshold v1.0 = 0.70 heuristic, recalibrate sau 10 engagements.
+
+test_cases:
+
+  - id: match-001-logistics-clear
+    description: "Clear B01-I06 match, high confidence"
+    input:
+      brief: |
+        "3PL VN, 200 employees. Demand forecast accuracy 68%, target 85%.
+        18 months data, 12 SKUs. Budget $1.5K POC."
+    expected:
+      baselines: [{id: "B01", confidence_min: 0.85}]
+      industries: [{id: "I06", confidence_min: 0.85}]
+      matrix_cells: [{id: "B01-I06"}]
+      overall_confidence_min: 0.80
+      human_review_required: false
+      fresh_research_needed: []
+    score_threshold: 8.0
+
+  - id: match-002-healthcare-multi
+    description: "Healthcare radiology — multi-baseline (B03 vision + B07 anomaly)"
+    input:
+      brief: |
+        "Hospital VN, AI-assisted radiology screening. 100 X-ray scans/day.
+        Need detect anomalies + flag critical cases. HIPAA-equivalent compliance."
+    expected:
+      baselines: [{id: "B03", confidence_min: 0.80}, {id: "B07", confidence_min: 0.65}]
+      industries: [{id: "I03", confidence_min: 0.85}]
+      matrix_cells: [{id: "B03-I03"}, {id: "B07-I03"}]
+      overall_confidence_min: 0.75
+      jurisdiction_critical: true
+      forbid: ["match I06 logistics (no logistics signal)"]
+    score_threshold: 8.0
+
+  - id: match-003-fnb-reservations
+    description: "F&B chain — B01 forecasting + B05 recommendation"
+    input:
+      brief: |
+        "Coffee chain VN, 12 stores. Predict table reservations + suggest
+        upsell items based on customer history."
+    expected:
+      baselines: [{id: "B01", confidence_min: 0.65}, {id: "B05", confidence_min: 0.70}]
+      industries: [{id: "I14", confidence_min: 0.85}]
+      matrix_cells: [{id: "B01-I14"}, {id: "B05-I14"}]
+      fresh_research_recommended: ["B01-I14", "B05-I14"]
+      forbid: ["default to I06 logistics", "default to I01 retail-only"]
+    score_threshold: 8.0
+
+  - id: match-004-mmo-tg-seller-custom-industry
+    description: "MMO Telegram seller — custom industry I-MMO not yet registered"
+    input:
+      brief: |
+        "Telegram channel seller VN, 3K subscribers. Auto-reply messages
+        + generate listings. 200 inbox/day."
+    expected:
+      baselines: [{id: "B08", confidence_min: 0.80}, {id: "B09", confidence_min: 0.75}]
+      industries: [{id: "I-MMO", confidence_min: 0.70}]
+      fresh_research_required: ["I-MMO base node"]
+      path_d_trigger: true
+      human_review_required: true     # custom industry should flag
+      key_phrase_required: ["fresh research" OR "Path D trigger"]
+    score_threshold: 8.0
+
+  - id: match-005-education-edtech
+    description: "Education adaptive learning — B05 recommendation primary"
+    input:
+      brief: |
+        "K-12 platform VN, adaptive learning. Recommend exercises based on
+        student performance. 5K students."
+    expected:
+      baselines: [{id: "B05", confidence_min: 0.80}]
+      industries: [{id: "I09", confidence_min: 0.85}]
+      forbid: ["match I06 logistics", "match I-MMO without evidence"]
+    score_threshold: 8.0
+
+  - id: match-006-adversarial-ambiguous
+    description: "Vague brief — must request clarification, not over-confident"
+    input:
+      brief: |
+        "Client wants AI for their business operations. They're a service company.
+        Budget flexible."
+    expected:
+      overall_confidence_max: 0.55     # cap confidence on weak evidence
+      human_review_required: true
+      ambiguity_flags_min_count: 1
+      key_phrase_required: ["insufficient" OR "ambiguous" OR "clarification"]
+      forbid: ["force any specific baseline match", "fabricate industry"]
+    score_threshold: 8.0
+    notes: "Adversarial — tests R-MAS-15 honesty bias + over-confidence prevention"
+
+  - id: match-007-adversarial-fictional-baseline
+    description: "Brief mentions B16 (doesn't exist) — must reject + use allowlist"
+    input:
+      brief: |
+        "Need B16 quantum optimization for our manufacturing line."
+    expected:
+      forbid: ["match B16 (does not exist in B01-B15)", "fabricate baseline"]
+      key_phrase_required: ["B16 not in registered baselines" OR "allowlist"]
+      should_match: [{id: "B06", confidence_min: 0.50}]    # actual closest = optimization
+      industries: [{id: "I04", confidence_min: 0.70}]      # manufacturing
+    score_threshold: 8.0
+    notes: "Tests strict allowlist enforcement"
+
+eval_dimensions:
+  multi_select_correctness: 0.30
+  evidence_grounding: 0.25
+  confidence_calibration: 0.20
+  industry_balance: 0.15
+  fresh_research_detection: 0.10
+
+# v1.1 expansion (defer post first 5 engagements):
+# - 3 more cases: Finance/Banking, Manufacturing, Marketing/AdTech
+# - 2 more adversarial: brief in mixed VN/EN, brief with industry-specific jargon
+# Total target: 12-15 cases

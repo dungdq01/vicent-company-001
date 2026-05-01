@@ -1,0 +1,98 @@
+{
+  "id": "I19",
+  "name": "HR & Workforce Management",
+  "slug": "hr-workforce-management",
+  "category": "industry",
+  "icon": "Users",
+  "color": "#FF6F00",
+  "depthLevel": 1,
+  "overview": {
+    "description": "HR and workforce management is evolving with AI-powered recruiting, employee analytics, and workforce planning. Vietnam's large manufacturing and service workforce creates unique challenges for at-scale HR automation.",
+    "marketSizeVietnam": "~$500M HRTech market; 55M workforce; high turnover in manufacturing and retail",
+    "marketSizeSEA": "~$4B HRTech market; talent analytics and automated screening growing fast",
+    "aiMaturity": "L1",
+    "aiAppetite": "low"
+  },
+  "domainKnowledge": {
+    "keyEntities": [
+      "Employees",
+      "Candidates",
+      "Job roles",
+      "Skills",
+      "Performance reviews",
+      "Payroll"
+    ],
+    "keyProcesses": [
+      "Recruiting",
+      "Onboarding",
+      "Performance evaluation",
+      "Training",
+      "Payroll processing"
+    ],
+    "dataTypes": [
+      "Resumes",
+      "Performance data",
+      "Training records",
+      "Payroll data",
+      "Employee surveys"
+    ],
+    "typicalDataVolume": "Medium — enterprise HR systems have good coverage; SME data fragmented",
+    "dataQuality": "Low to medium — fragmented across spreadsheets and legacy HRMS"
+  },
+  "painPoints": [
+    {
+      "problem": "High-volume resume screening is slow and biased without AI assistance",
+      "severity": 8,
+      "aiSolvable": true,
+      "mapsToBaseline": [
+        "B13",
+        "B04"
+      ]
+    },
+    {
+      "problem": "Employee churn prediction in high-turnover industries is reactive",
+      "severity": 7,
+      "aiSolvable": true,
+      "mapsToBaseline": [
+        "B13"
+      ]
+    },
+    {
+      "problem": "Skills gap analysis and learning path recommendation is manual",
+      "severity": 6,
+      "aiSolvable": true,
+      "mapsToBaseline": [
+        "B05",
+        "B04"
+      ]
+    }
+  ],
+  "regulations": [],
+  "priorityBaselines": {
+    "high": [
+      "B13",
+      "B05"
+    ],
+    "medium": [
+      "B04",
+      "B08"
+    ],
+    "low": [
+      "B12"
+    ]
+  },
+  "competitiveLandscape": [],
+  "relatedNodes": [
+    {
+      "nodeId": "I09",
+      "relationship": "adjacent",
+      "description": "HR and EdTech share skills assessment, upskilling, and learning path design."
+    }
+  ],
+  "metadata": {
+    "createdAt": "2026-04-03",
+    "updatedAt": "2026-04-03",
+    "version": "0.1",
+    "status": "skeleton"
+  }
+}

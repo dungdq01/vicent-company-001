@@ -1,0 +1,646 @@
+{
+  "id": "B02",
+  "name": "Document Intelligence",
+  "type": "baseline",
+  "slug": "document-intelligence",
+  "tagline": "Trich xuat tri thuc tu tai lieu bang AI",
+  "category": "baseline",
+  "icon": "FileSearch",
+  "color": "#FF8A65",
+  "depthLevel": 3,
+  "selectedAgents": ["R-alpha", "R-beta", "R-gamma", "R-MLE", "R-DE", "R-DA", "R-BE", "R-DO", "R-FE", "R-QA", "R-D02", "R-SA", "R-sigma"],
+  "description": "Document Intelligence (Tri tue Tai lieu) la linh vuc ung dung AI de tu dong hieu, phan tich va trich xuat thong tin tu tai lieu — bao gom anh chup, ban scan, file PDF, va cac dinh dang van ban so khac. Linh vuc nay ket hop Computer Vision (xu ly anh), NLP (xu ly ngon ngu), va Multimodal AI (da phuong thuc) de xay dung pipeline tu dong: tien xu ly anh, nhan dang ky tu (OCR), phan tich bo cuc, trich xuat thong tin, va hieu tai lieu. Tai Viet Nam, Document Intelligence dac biet quan trong do he thong hanh chinh cong, ngan hang, bao hiem, logistics deu phu thuoc nang ne vao tai lieu giay, voi thach thuc rieng tu dau thanh dieu tieng Viet va cac loai giay to dac thu (CMND/CCCD, hoa don GTGT, so ho khau).",
+  "aliases": [
+    "OCR",
+    "Document AI",
+    "Intelligent Document Processing",
+    "IDP",
+    "Tri tue Tai lieu",
+    "Xu ly Tai lieu Thong minh",
+    "Document Understanding"
+  ],
+  "maturity_level": "production",
+  "trl": 7,
+  "core_concepts": [
+    {
+      "name": "OCR Pipeline (Quy trinh Nhan dang Ky tu Quang hoc)",
+      "definition": "Chuoi cac buoc xu ly tu anh tai lieu den van ban so: tien xu ly anh -> phat hien vung van ban (text detection) -> nhan dang ky tu (text recognition) -> hau xu ly (spell correction, structure recovery). Day la nen tang cua moi he thong Document Intelligence.",
+      "formula_latex": "P(Y | X) = \\sum_{\\pi \\in B^{-1}(Y)} \\prod_t p(\\pi_t | X) \\quad \\text{(CTC Loss)}",
+      "significance": "Moi du lieu van ban xu ly tiep (trich xuat, phan loai, Q&A) deu phu thuoc chat luong OCR. PaddleOCR dat ~85-92% chinh xac tieng Viet, vietocr dat ~90-95% cho text recognition."
+    },
+    {
+      "name": "Layout Analysis (Phan tich Bo cuc)",
+      "definition": "Qua trinh xac dinh cau truc vat ly cua trang tai lieu — vi tri va loai cac thanh phan nhu tieu de, doan van, bang bieu, hinh anh, header, footer. Su dung object detection (DETR, Faster R-CNN) hoac DiT (Document Image Transformer).",
+      "formula_latex": "L_{Hungarian} = \\sum_i [L_{cls}(c_i, \\hat{c}_{\\sigma(i)}) + \\mathbf{1}_{c_i \\neq \\emptyset} L_{box}(b_i, \\hat{b}_{\\sigma(i)})]",
+      "significance": "Khong co layout analysis, OCR chi tra ve mot dong van ban dai ma khong biet cau truc logic cua tai lieu. La buoc tien quyet de trich xuat thong tin co cau truc."
+    },
+    {
+      "name": "2D Position Encoding (Ma hoa Vi tri 2 Chieu)",
+      "definition": "Ky thuat ket hop vi tri khong gian 2D cua token tren trang tai lieu vao bieu dien (embedding). LayoutLM tien phong: embedding = token_embedding + 1D_position + 2D_spatial_embedding, voi 2D_spatial_embedding = emb(x_min) + emb(y_min) + emb(x_max) + emb(y_max) + emb(width) + emb(height).",
+      "formula_latex": "\\text{embedding} = \\text{token\\_emb} + \\text{pos\\_1D} + \\text{emb}(x_{min}) + \\text{emb}(y_{min}) + \\text{emb}(x_{max}) + \\text{emb}(y_{max})",
+      "significance": "Dac diem rieng cua Document Intelligence so voi NLP thuan tuy: tai lieu co bo cuc 2 chieu. Thong tin 'token nay nam o dau tren trang' cuc ky quan trong de hieu cau truc tai lieu."
+    },
+    {
+      "name": "Document Understanding — Multimodal (Hieu Tai lieu Da phuong thuc)",
+      "definition": "Kha nang hieu noi dung tai lieu bang cach ket hop dong thoi: van ban (text), bo cuc khong gian (layout/spatial), va hinh anh thi giac (visual). Mo hinh dai dien: LayoutLM (2020), LayoutLMv2 (2021), LayoutLMv3 (2022), UDOP (2023).",
+      "formula_latex": "\\text{Attention}(Q, K, V) = \\text{softmax}(QK^T / \\sqrt{d_k}) V",
+      "significance": "Con nguoi doc tai lieu bang cach ket hop van ban, vi tri, va hinh thuc trinh bay. Mo hinh multimodal bat chuoc cach doc nay, dat SOTA tren FUNSD, CORD, DocVQA."
+    },
+    {
+      "name": "Table Structure Recognition (Nhan dang Cau truc Bang)",
+      "definition": "Qua trinh phat hien bang trong tai lieu va xac dinh cau truc chi tiet: hang, cot, o, o tron (merged cells), tieu de. Su dung DETR-based Table Transformer hoac GNN.",
+      "formula_latex": "\\text{IoU}(A, B) = |A \\cap B| / |A \\cup B|",
+      "significance": "Bang bieu chua luong lon thong tin co cau truc trong bao cao tai chinh, hop dong, tai lieu ky thuat. Do chinh xac hien tai ~85% tren bang phuc tap."
+    },
+    {
+      "name": "Information Extraction (Trich xuat Thong tin — IE)",
+      "definition": "Tu dong trich xuat thong tin co cau truc tu tai lieu phi cau truc: Key-Value Extraction (so hoa don, ngay, tong tien), Entity Extraction, Relation Extraction. Ket hop NER voi ngu canh khong gian 2D.",
+      "formula_latex": "P(y_i | x) = \\text{softmax}(W \\cdot h_i + b) \\quad \\text{(Token classification)}",
+      "significance": "Day la gia tri kinh doanh cot loi cua Document Intelligence — chuyen tai lieu phi cau truc thanh du lieu co cau truc de luu tru, phan tich, va tich hop vao ERP/CRM."
+    },
+    {
+      "name": "Handwriting Recognition (Nhan dang Chu viet tay — HWR)",
+      "definition": "Nhan dang va chuyen doi chu viet tay thanh van ban so. Offline HWR (tu anh tinh) la dang pho bien. Thach thuc dac biet voi tieng Viet: dau thanh dieu rat nho, de bi nham; ky tu dac biet (a-breve, o-horn, u-horn, d-stroke).",
+      "formula_latex": null,
+      "significance": "Nhieu tai lieu quan trong van duoc viet tay: don thuoc bac si, phieu ghi nhan, chu ky. Hien chua co giai phap HWR tieng Viet dat do chinh xac chap nhan duoc — day la co hoi nghien cuu lon."
+    },
+    {
+      "name": "Zero-shot Document Understanding (Hieu Tai lieu Khong can Huan luyen)",
+      "definition": "Kha nang hieu va xu ly loai tai lieu moi ma khong can fine-tune tren du lieu cua loai tai lieu do. Vision LLMs (GPT-4V, Claude Vision) co kha nang nay thong qua prompt engineering.",
+      "formula_latex": null,
+      "significance": "Giam chi phi trien khai — khong can thu thap va gan nhan du lieu cho moi loai tai lieu moi. Dac biet huu ich cho MVP va prototype. Chi phi: ~$0.01-0.05/trang."
+    },
+    {
+      "name": "Document Pre-processing (Tien xu ly Tai lieu)",
+      "definition": "Cac ky thuat xu ly anh truoc OCR: Binarization (Otsu, Sauvola), De-skew (Hough Transform), De-noise (Gaussian blur, median filter), De-warp (DocUNet), Resolution Enhancement (Real-ESRGAN). Toi thieu 150 DPI, ly tuong 300 DPI.",
+      "formula_latex": null,
+      "significance": "Garbage in, garbage out — chat luong anh dau vao anh huong truc tiep den do chinh xac toan bo pipeline. Pre-processing tot co the tang accuracy 5-15%."
+    },
+    {
+      "name": "Document Q&A (Hoi dap Tai lieu)",
+      "definition": "He thong tra loi cau hoi dua tren noi dung tai lieu. Ba phuong phap: Extractive (tim doan tra loi tu tai lieu), Generative (LLM tao cau tra loi), Retrieval-Augmented (RAG — ket hop tim kiem va sinh).",
+      "formula_latex": null,
+      "significance": "Cho phep tuong tac tu nhien voi tai lieu. Thay vi doc ca tai lieu dai, nguoi dung chi can hoi cau hoi cu the. Ket noi truc tiep voi B12 (Search & RAG)."
+    }
+  ],
+  "algorithms": [
+    {
+      "name": "PaddleOCR",
+      "category": "OCR Framework",
+      "complexity": "Text detection O(H*W), recognition O(W/stride * T), toan bo <100ms/trang tren GPU",
+      "pros": [
+        "Hieu suat tot cho tieng Viet va ngon ngu Chau A (8/10)",
+        "Mo hinh nhe — PP-OCRv4 mobile chi 4.4MB",
+        "Toan bo pipeline tu detection den table extraction",
+        "Ho tro 80+ ngon ngu, toi uu cho server va mobile/edge"
+      ],
+      "cons": [
+        "Phu thuoc PaddlePaddle framework (it pho bien hon PyTorch)",
+        "Tai lieu chinh bang tieng Trung, ban tieng Anh khong day du",
+        "Do chinh xac tieng Viet chua bang cac giai phap chuyen biet (vietocr)"
+      ],
+      "use_cases": [
+        "Production OCR pipeline cho moi loai tai lieu",
+        "Mobile/edge OCR cho ung dung di dong",
+        "Layout analysis va table detection"
+      ],
+      "key_papers": [
+        "Du, Y. et al. (2020). PP-OCR: A Practical Ultra Lightweight OCR System. arXiv:2009.09941"
+      ]
+    },
+    {
+      "name": "LayoutLMv3",
+      "category": "Pre-trained Document Understanding",
+      "complexity": "O(n^2) attention tren so token; 125M-368M tham so",
+      "pros": [
+        "SOTA tren nhieu benchmark: FUNSD, CORD, SROIE, RVL-CDIP, DocVQA",
+        "Unified multimodal pre-training: text + 2D position + image patches",
+        "Transfer learning tot qua pre-training tren du lieu lon",
+        "Ho tro da ngon ngu qua LayoutXLM"
+      ],
+      "cons": [
+        "Van can OCR truoc (khong phai end-to-end)",
+        "Mo hinh lon, can GPU de inference",
+        "Pre-training ton kem (nhieu ngay tren nhieu GPU)"
+      ],
+      "use_cases": [
+        "Form understanding va information extraction (production)",
+        "Document classification",
+        "Document VQA"
+      ],
+      "key_papers": [
+        "Huang, Y. et al. (2022). LayoutLMv3: Pre-training for Document AI with Unified Text and Image Masking. ACM MM 2022. arXiv:2204.08387"
+      ]
+    },
+    {
+      "name": "Donut (OCR-free Document Understanding Transformer)",
+      "category": "End-to-end Document Understanding",
+      "complexity": "O(n^2) attention; Swin Transformer encoder + BART decoder",
+      "pros": [
+        "Khong can OCR engine rieng — don gian hoa pipeline",
+        "Khong bi anh huong boi loi OCR",
+        "Linh hoat: fine-tune cho nhieu tac vu (IE, classification, VQA)",
+        "SynthDoG pre-training ho tro tieng Viet"
+      ],
+      "cons": [
+        "Can nhieu du lieu huan luyen tong hop",
+        "Do chinh xac van ban chua bang OCR chuyen dung tren mot so truong hop",
+        "Xu ly tai lieu nhieu trang con han che"
+      ],
+      "use_cases": [
+        "Receipt/invoice parsing khong can OCR",
+        "Document classification tu anh",
+        "Rapid prototyping cho loai tai lieu moi"
+      ],
+      "key_papers": [
+        "Kim, G. et al. (2022). OCR-free Document Understanding Transformer. ECCV 2022. arXiv:2111.15664"
+      ]
+    },
+    {
+      "name": "Tesseract OCR",
+      "category": "Classical OCR Engine",
+      "complexity": "O(n) voi n la so pixel, thuc te phu thuoc kich thuoc anh",
+      "pros": [
+        "Ma nguon mo, mien phi hoan toan",
+        "Ho tro 100+ ngon ngu bao gom tieng Viet",
+        "Cong dong lon, tai lieu phong phu",
+        "Co the fine-tune cho font/ngon ngu cu the"
+      ],
+      "cons": [
+        "Chat luong thap tren anh nhieu, nghieng, tai lieu phuc tap",
+        "Khong co layout analysis tot",
+        "Cham hon cac giai phap hien dai"
+      ],
+      "use_cases": [
+        "Prototype nhanh (cai dat don gian nhat)",
+        "OCR co ban cho tai lieu chat luong cao",
+        "Baseline benchmark"
+      ],
+      "key_papers": [
+        "Smith, R. (2007). An Overview of the Tesseract OCR Engine. ICDAR 2007."
+      ]
+    },
+    {
+      "name": "vietocr",
+      "category": "Vietnamese-specialized OCR",
+      "complexity": "Transformer-based seq2seq, inference ~50-100ms/text region",
+      "pros": [
+        "Do chinh xac dau thanh dieu tieng Viet cao nhat (9/10)",
+        "Transformer-based seq2seq, huan luyen rieng cho tieng Viet",
+        "Mo hinh nhe, chay duoc tren CPU"
+      ],
+      "cons": [
+        "Chi lam text recognition (khong co text detection)",
+        "Cong dong nho, it tai lieu",
+        "Can ket hop voi text detector rieng (CRAFT/DBNet)"
+      ],
+      "use_cases": [
+        "Text recognition tieng Viet khi can do chinh xac dau cao nhat",
+        "Ket hop voi PaddleOCR text detection",
+        "Fine-tune cho tai lieu dac thu tieng Viet"
+      ],
+      "key_papers": [
+        "pbcquoc/vietocr (2020). Vietnamese OCR using Transformer. GitHub."
+      ]
+    },
+    {
+      "name": "DiT (Document Image Transformer)",
+      "category": "Pre-trained Vision Model cho tai lieu",
+      "complexity": "ViT backbone, masked image modeling tren 42M anh tai lieu",
+      "pros": [
+        "Hieu qua cao cho layout analysis va document classification",
+        "Khong can OCR — lam viec truc tiep tren anh",
+        "SOTA tren PubLayNet va RVL-CDIP tai thoi diem ra mat"
+      ],
+      "cons": [
+        "Chi su dung thong tin thi giac (khong co van ban)",
+        "Can fine-tune cho tac vu cu the"
+      ],
+      "use_cases": [
+        "Document layout analysis",
+        "Document image classification",
+        "Page segmentation"
+      ],
+      "key_papers": [
+        "Li, J. et al. (2022). DiT: Self-supervised Pre-training for Document Image Transformer. AAAI 2022. arXiv:2203.02378"
+      ]
+    },
+    {
+      "name": "Table Transformer (DETR-based)",
+      "category": "Table Detection & Structure Recognition",
+      "complexity": "ResNet backbone + Transformer encoder-decoder voi object queries",
+      "pros": [
+        "Xu ly tot merged cells va bang phuc tap",
+        "DETR architecture khong can NMS va anchor boxes",
+        "Huan luyen tren PubTables-1M (1 trieu bang)"
+      ],
+      "cons": [
+        "Kem hon tren bang khong co duong ke (borderless tables)",
+        "Can nhieu bo nho cho anh co do phan giai cao",
+        "Chua toi uu cho bang tieng Viet dac thu"
+      ],
+      "use_cases": [
+        "Trich xuat bang tu bao cao tai chinh",
+        "Xu ly bang trong hop dong va tai lieu ky thuat",
+        "Table detection trong document pipeline"
+      ],
+      "key_papers": [
+        "Smock, B. et al. (2022). PubTables-1M: Towards comprehensive table extraction from unstructured documents. CVPR 2022. arXiv:2110.00061"
+      ]
+    },
+    {
+      "name": "Vision LLM (Claude Vision, GPT-4V)",
+      "category": "Multimodal Large Language Model",
+      "complexity": "O(1) inference (API call), ~2-5s/trang, ~$0.01-0.05/trang",
+      "pros": [
+        "Zero-shot: xu ly bat ky loai tai lieu nao khong can fine-tune",
+        "Do chinh xac cao cho tai lieu phuc tap, da dang",
+        "Khong can GPU local, khong can pipeline setup",
+        "Structured output (JSON) truc tiep"
+      ],
+      "cons": [
+        "Chi phi token-based tang nhanh khi scale",
+        "Khong dap ung yeu cau privacy/on-premise",
+        "Latency cao (2-5s/trang) so voi pipeline local",
+        "Khong the fine-tune cho domain cu the"
+      ],
+      "use_cases": [
+        "MVP/Prototype validation nhanh",
+        "Xu ly tai lieu kho ma pipeline truyen thong that bai",
+        "Fallback trong hybrid pipeline (~20% tai lieu)"
+      ],
+      "key_papers": [
+        "OpenAI (2023). GPT-4V(ision) System Card. Technical Report.",
+        "Anthropic (2024). Claude 3 Model Card. Technical Report."
+      ]
+    },
+    {
+      "name": "GNN cho Document Understanding",
+      "category": "Graph Neural Network",
+      "complexity": "O(|V| + |E|) moi lop; thuong 3-5 lop",
+      "pros": [
+        "Mo hinh hoa tu nhien quan he khong gian giua cac thanh phan tai lieu",
+        "Hieu qua cho form understanding va key-value extraction",
+        "Xu ly tot tai lieu co cau truc phuc tap"
+      ],
+      "cons": [
+        "Can xay dung do thi tu ket qua OCR (them mot buoc)",
+        "It thu vien san co so voi Transformer-based approaches",
+        "Kho scale cho tai lieu lon"
+      ],
+      "use_cases": [
+        "Form understanding voi quan he khong gian phuc tap",
+        "Invoice key-value pair extraction",
+        "Document structure analysis"
+      ],
+      "key_papers": [
+        "Liu, X. et al. (2019). Graph Convolution for Multimodal Information Extraction from Visually Rich Documents. NAACL 2019."
+      ]
+    }
+  ],
+  "sota_2024_2026": {
+    "summary": "2024-2026 la giai doan Vision LLM cach mang hoa Document Intelligence. GPT-4V, Claude Vision, Gemini co the doc va hieu bat ky tai lieu nao theo kieu zero-shot. Dong thoi, cac mo hinh OCR-free (Donut, GOT, Nougat) ngay cang manh, loai bo hoan toan buoc OCR. LayoutLMv3 va UDOP van la lua chon hang dau cho production on-premise. Xu huong chinh: hybrid pipeline ket hop mo hinh local (re, nhanh) voi VLM (chinh xac, linh hoat) de toi uu ca chi phi va chat luong.",
+    "key_models": [
+      { "name": "LayoutLMv3", "org": "Microsoft Research", "params": "125M-368M", "venue": "ACM MM 2022", "innovation": "Unified multimodal pre-training voi MLM + MIM + WPA" },
+      { "name": "Donut", "org": "Clova AI (Naver)", "params": "~200M", "venue": "ECCV 2022", "innovation": "OCR-free end-to-end voi Swin + BART, SynthDoG pre-training" },
+      { "name": "DiT", "org": "Microsoft Research", "params": "~300M", "venue": "AAAI 2022", "innovation": "BEiT-style masked image modeling tren 42M anh tai lieu" },
+      { "name": "UDOP", "org": "Microsoft", "params": "~770M", "venue": "CVPR 2023", "innovation": "Unified Document Processing — mot mo hinh cho nhieu tac vu" },
+      { "name": "GOT (General OCR Theory)", "org": "StepFun", "params": "~580M", "venue": "2024", "innovation": "OCR 2.0 — end-to-end doc moi loai van ban, cong thuc, nhac, bieu do" }
+    ],
+    "ongoing_debates": [
+      "Pipeline truyen thong vs OCR-free end-to-end: pipeline van chinh xac hon cho tieng Viet, nhung OCR-free dang bat kip nhanh",
+      "Cloud VLM vs Local models: VLM tot hon cho zero-shot nhung khong dap ung privacy; can hybrid",
+      "Fine-tuned vs Foundation models: fine-tuned van thang tren domain cu the, nhung VLMs cho phep trien khai nhanh hon nhieu"
+    ]
+  },
+  "key_papers": [
+    {
+      "title": "LayoutLMv3: Pre-training for Document AI with Unified Text and Image Masking",
+      "authors": "Huang, Y., Lv, T., Cui, L., Lu, Y., Wei, F.",
+      "year": 2022,
+      "venue": "ACM Multimedia 2022",
+      "arxiv_id": "2204.08387",
+      "contribution": "Tien phong unified multimodal pre-training cho Document AI, ket hop text + 2D position + image patches. Dat SOTA tren FUNSD, CORD, SROIE, RVL-CDIP, DocVQA. La lua chon hang dau cho production document understanding."
+    },
+    {
+      "title": "OCR-free Document Understanding Transformer (Donut)",
+      "authors": "Kim, G., Hong, T., Yim, M., et al. (Clova AI)",
+      "year": 2022,
+      "venue": "ECCV 2022",
+      "arxiv_id": "2111.15664",
+      "contribution": "Loai bo hoan toan buoc OCR — doc truc tiep tu anh tai lieu va sinh output co cau truc. Su dung SynthDoG de tao du lieu tong hop da ngon ngu (bao gom tieng Viet). Mo ra xu huong OCR-free."
+    },
+    {
+      "title": "DiT: Self-supervised Pre-training for Document Image Transformer",
+      "authors": "Li, J., Xu, Y., Lv, T., Cui, L., Zhang, C., Wei, F.",
+      "year": 2022,
+      "venue": "AAAI 2022",
+      "arxiv_id": "2203.02378",
+      "contribution": "Ap dung BEiT masked image modeling vao linh vuc tai lieu voi 42M anh. SOTA tren PubLayNet (layout analysis) va RVL-CDIP (classification). Cung cap backbone manh cho document vision tasks."
+    },
+    {
+      "title": "PubTables-1M: Towards Comprehensive Table Extraction from Unstructured Documents",
+      "authors": "Smock, B., Pesala, R., Abraham, R.",
+      "year": 2022,
+      "venue": "CVPR 2022",
+      "arxiv_id": "2110.00061",
+      "contribution": "Dataset 1 trieu bang tu bai bao khoa hoc va DETR-based Table Transformer. Giai quyet van de table detection va structure recognition tren quy mo lon."
+    },
+    {
+      "title": "XFUND: A Benchmark Dataset for Multilingual Visually Rich Form Understanding",
+      "authors": "Xu, Y., Lv, T., Cui, L., et al.",
+      "year": 2022,
+      "venue": "ACL 2022 Findings",
+      "arxiv_id": "2104.08836",
+      "contribution": "Benchmark da ngon ngu (7 ngon ngu bao gom tieng Viet) cho form understanding. La benchmark cong khai duy nhat co du lieu form tieng Viet, du chi ~200 mau."
+    },
+    {
+      "title": "PP-OCR: A Practical Ultra Lightweight OCR System",
+      "authors": "Du, Y., Li, C., Guo, R., et al. (Baidu)",
+      "year": 2020,
+      "venue": "arXiv preprint",
+      "arxiv_id": "2009.09941",
+      "contribution": "He thong OCR sieu nhe cho production: text detection (DBNet++) + recognition (SVTR) + direction classifier. PP-OCRv4 mobile chi 4.4MB, ho tro 80+ ngon ngu. La OCR engine ma nguon mo pho bien nhat cho tieng Chau A."
+    },
+    {
+      "title": "Unifying Vision, Text, and Layout for Universal Document Processing (UDOP)",
+      "authors": "Tang, Z., Yang, Z., Wang, G., et al.",
+      "year": 2023,
+      "venue": "CVPR 2023",
+      "arxiv_id": "2212.02623",
+      "contribution": "Mot mo hinh duy nhat cho nhieu tac vu Document AI (classification, IE, VQA, layout analysis). Thong nhat vision + text + layout trong mot kien truc encoder-decoder."
+    },
+    {
+      "title": "LayoutXLM: Multimodal Pre-training for Multilingual Visually-rich Document Understanding",
+      "authors": "Xu, Y., Lv, T., Cui, L., et al.",
+      "year": 2022,
+      "venue": "arXiv preprint",
+      "arxiv_id": "2104.08836",
+      "contribution": "Mo rong LayoutLMv2 cho da ngon ngu, huan luyen tren 30 trieu trang tai lieu tu 53 ngon ngu. La giai phap tot nhat cho document understanding da ngon ngu bao gom tieng Viet."
+    }
+  ],
+  "tech_stack": {
+    "layer_1_ingestion_storage": {
+      "file_storage": { "recommended": "MinIO (S3-compatible)", "rationale": "Ma nguon mo, tu host, tuong thich S3 API, luu tru anh va PDF goc", "alternatives": ["AWS S3", "Google Cloud Storage"] },
+      "database": { "recommended": "PostgreSQL 16+", "rationale": "Luu tru metadata tai lieu, ket qua trich xuat, audit log. JSONB cho du lieu phi cau truc", "alternatives": ["MongoDB", "MySQL 8"] },
+      "search": { "recommended": "Elasticsearch 8+", "rationale": "Full-text search tren van ban trich xuat, faceted search theo loai tai lieu, ngay, nguon", "alternatives": ["OpenSearch", "Meilisearch"] },
+      "queue": { "recommended": "Celery + Redis", "rationale": "Task queue cho xu ly tai lieu bat dong bo, retry, priority queue", "alternatives": ["RabbitMQ", "AWS SQS"] }
+    },
+    "layer_2_ocr_extraction": {
+      "ocr_engine": { "recommended": "PaddleOCR v4", "rationale": "Diem tong hop 8.15/10, tot nhat cho tieng Viet va ngon ngu Chau A, production-ready", "alternatives": ["vietocr (text recognition)", "Tesseract 5", "EasyOCR"] },
+      "document_understanding": { "recommended": "LayoutLMv3 (Microsoft)", "rationale": "SOTA tren nhieu benchmark, multimodal (text + layout + image), fine-tune duoc", "alternatives": ["Donut", "UDOP", "DocOwl 1.5"] },
+      "layout_analysis": { "recommended": "DiT + PP-Structure", "rationale": "DiT cho layout detection, PP-Structure cho table structure recognition", "alternatives": ["Detectron2", "YOLO fine-tuned"] },
+      "vlm_fallback": { "recommended": "Claude Vision API", "rationale": "Zero-shot chinh xac cao nhat, structured output, ho tro tieng Viet tot", "alternatives": ["GPT-4o", "Gemini Pro Vision"] }
+    },
+    "layer_3_serving": {
+      "api_framework": { "recommended": "FastAPI 0.111+", "rationale": "Async, auto-generated docs, type hints, nhanh nhat cho Python APIs", "alternatives": ["Flask", "Django REST"] },
+      "model_serving": { "recommended": "Triton Inference Server", "rationale": "Multi-model serving, GPU sharing, dynamic batching, model versioning", "alternatives": ["TorchServe", "BentoML"] },
+      "ml_ops": { "recommended": "MLflow 2.13+ + Label Studio", "rationale": "MLflow cho experiment tracking va model registry; Label Studio cho annotation", "alternatives": ["Weights & Biases", "Prodigy"] }
+    },
+    "layer_4_orchestration_monitoring": {
+      "orchestration": { "recommended": "Apache Airflow 2.9+", "rationale": "Batch retraining pipelines, data pipeline DAGs, scheduling", "alternatives": ["Prefect 2", "Dagster"] },
+      "containerisation": { "recommended": "Docker 26+ + Kubernetes 1.29+", "rationale": "GPU pod scheduling, auto-scaling, multi-model deployment", "alternatives": ["Docker Compose (MVP)", "AWS ECS"] },
+      "monitoring": { "recommended": "Prometheus + Grafana + Evidently AI", "rationale": "SLA metrics (latency, throughput), ML-specific drift detection, accuracy monitoring", "alternatives": ["Datadog", "Arize AI"] }
+    }
+  },
+  "feasibility_score": {
+    "overall_score": 7.05,
+    "verdict": "CONDITIONAL GO",
+    "summary": "Document Intelligence co tiem nang ung dung thuc te lon nhat tai Viet Nam. Cong nghe da truong thanh (OCR, LayoutLM, VLMs), nhu cau thi truong rat cao ($30-50 trieu USD). Thach thuc chinh: thieu du lieu huan luyen tieng Viet, dau thanh dieu, yeu cau privacy. Co the trien khai thanh cong voi dieu kien tap trung vao nich cu the (hoa don, CCCD) va dau tu du lieu.",
+    "dimensions": {
+      "technical_feasibility": { "score": 8, "weight": 0.25, "weighted": 2.00, "notes": "Cong nghe truong thanh: PaddleOCR, LayoutLMv3, Vision LLMs deu production-ready. Tru diem: OCR tieng Viet chua dat do chinh xac tuong duong tieng Anh; HWR tieng Viet chua co giai phap." },
+      "market_demand": { "score": 9, "weight": 0.25, "weighted": 2.25, "notes": "Nhu cau cuc lon: ngan hang (eKYC bat buoc), hanh chinh cong (chuyen doi so quoc gia), logistics (xuat nhap khau). Chinh sach ho tro: ND 123/2020, TT 16/2020, De an 06." },
+      "data_availability": { "score": 5, "weight": 0.20, "weighted": 1.00, "notes": "Diem yeu lon nhat. XFUND-VI chi ~200 mau. Thieu dataset OCR, form, table, HWR tieng Viet lon. Can tu thu thap, synthetic data, active learning." },
+      "implementation_risk": { "score": 6, "weight": 0.15, "weighted": 0.90, "notes": "Rui ro trung binh: dau thanh dieu sai gay sai nghia; tai lieu cu chat luong thap; privacy nghiem ngat (ngan hang, y te)." },
+      "competitive_landscape": { "score": 6, "weight": 0.15, "weighted": 0.90, "notes": "Doi thu manh: FPT.AI (lon nhat), VinAI (nghien cuu), Cinnamon (Nhat-Viet). Co hoi: cac nich chua duoc phuc vu tot (chung tu logistics, don thuoc)." }
+    },
+    "key_risks": [
+      "Do chinh xac OCR/IE tieng Viet khong dat >90% cho production (xac suat 70%)",
+      "Chi phi VLM API tang khong kiem soat khi scale (xac suat 50%)",
+      "Lo lot du lieu PII tu tai lieu nhay cam (xac suat 30%, tac dong rat cao)",
+      "Doi thu (FPT.AI, VinAI) ra san pham tot hon truoc (xac suat 50%)",
+      "Thieu du lieu huan luyen tieng Viet chat luong cao (xac suat 60%)"
+    ],
+    "go_conditions": [
+      "Dieu kien 1: Tap trung vao 1-2 nich cu the (hoa don + CCCD), khong lam rong",
+      "Dieu kien 2: Dau tu thu thap >5,000 anh/loai tai lieu de fine-tune",
+      "Dieu kien 3: Su dung hybrid pipeline (local OCR + VLM fallback) de giam rui ro",
+      "Dieu kien 4: Co ke hoach HITL (human-in-the-loop) cho giai doan dau"
+    ]
+  },
+  "industry_applications": [
+    {
+      "industry": "I02 — Finance & Banking (Tai chinh & Ngan hang)",
+      "use_cases": [
+        "eKYC: Xac thuc CMND/CCCD cho mo tai khoan online (bat buoc theo TT 16/2020)",
+        "Xu ly uy nhiem chi, phieu chuyen tien: hang trieu giao dich/ngay",
+        "Phe duyet tin dung: doc va phan tich bao cao tai chinh, giay to dam bao",
+        "KYB (Know Your Business): Xac minh giay phep kinh doanh",
+        "Hoa don dien tu: xu ly va doi soat tu dong"
+      ],
+      "key_data_sources": ["CMND/CCCD scan", "Bao cao tai chinh PDF", "Giay phep kinh doanh", "Hoa don", "Uy nhiem chi"],
+      "target_accuracy": "OCR >95% cho CCCD; IE >92% cho hoa don",
+      "special_considerations": "Yeu cau on-premise bat buoc. Tuan thu TT 16/2020. Dau thanh dieu tieng Viet tren ten nguoi la thach thuc lon."
+    },
+    {
+      "industry": "I06 — Logistics & Supply Chain (Logistics & Chuoi cung ung)",
+      "use_cases": [
+        "To khai hai quan: doc va trich xuat tu dong",
+        "Bill of Lading (Van don): trich xuat thong tin hang hoa, nguoi gui, nguoi nhan",
+        "Certificate of Origin (C/O): xac minh xuat xu hang hoa",
+        "Packing list: trich xuat danh sach hang hoa, so luong, trong luong",
+        "Delivery order: xu ly lenh giao hang tu dong"
+      ],
+      "key_data_sources": ["To khai hai quan scan/PDF", "Van don (B/L)", "C/O", "Packing list", "Commercial invoice"],
+      "target_accuracy": "IE >90% cho cac truong chinh; >85% cho bang hang hoa",
+      "special_considerations": "Tai lieu da ngon ngu (Viet, Anh, Trung). Nhieu dinh dang khac nhau theo hang tau va cang. Can xu ly nhanh de khong lam cham thong quan."
+    },
+    {
+      "industry": "I03 — Insurance (Bao hiem)",
+      "use_cases": [
+        "Ho so boi thuong suc khoe: don thuoc + hoa don vien phi + giay ra vien",
+        "Hop dong bao hiem: trich xuat dieu khoan, quyen loi, loai tru",
+        "Xac minh tai lieu: phat hien giay to gia mao",
+        "Tu dong hoa xet duyet boi thuong"
+      ],
+      "key_data_sources": ["Don thuoc", "Hoa don vien phi", "Giay ra vien", "Hop dong bao hiem"],
+      "target_accuracy": "IE >88% cho truong thong tin chinh; phat hien gia mao >80%",
+      "special_considerations": "Don thuoc bac si viet tay — thach thuc HWR lon nhat. Can do bao mat cao cho thong tin suc khoe."
+    },
+    {
+      "industry": "I08 — Government & Public Services (Hanh chinh cong)",
+      "use_cases": [
+        "Dich vu cong truc tuyen muc do 4: so hoa va xu ly giay to cong dan",
+        "Chuyen doi so tai lieu hanh chinh: so ho khau -> du lieu dien tu",
+        "Luu tru quoc gia: so hoa tai lieu lich su",
+        "Xac thuc giay to: giay khai sinh, giay dang ky ket hon"
+      ],
+      "key_data_sources": ["CMND/CCCD", "So ho khau", "Giay khai sinh", "Giay phep", "Cac loai don tu"],
+      "target_accuracy": "OCR >90%; classification >95%",
+      "special_considerations": "Tai lieu da the he (truoc 1975, 1975-2000, hien dai). Can tuan thu Luat An ninh Mang VN. Yeu cau luu tru du lieu tai Viet Nam."
+    }
+  ],
+  "cross_domain_connections": [
+    {
+      "target": "B03",
+      "connection_type": "prerequisite",
+      "description": "Document Intelligence su dung cac ky thuat Computer Vision lam nen tang: CNN cho OCR, object detection (DETR, Faster R-CNN) cho layout analysis, image preprocessing (de-skew, de-noise, binarization). Khong co Computer Vision, khong co Document Intelligence.",
+      "bidirectional": false
+    },
+    {
+      "target": "B04",
+      "connection_type": "related",
+      "description": "NLP xu ly van ban sau khi trich xuat tu tai lieu: Named Entity Recognition, Relation Extraction, Text Classification, Summarization. PhoBERT cho NLP tieng Viet la bo sung quan trong cho Document Intelligence pipeline.",
+      "bidirectional": false
+    },
+    {
+      "target": "B12",
+      "connection_type": "complementary",
+      "description": "Document Intelligence trich xuat van ban va thong tin tu tai lieu; Search & RAG (B12) to chuc, luu tru, va tim kiem thong tin do. Ket hop tao he thong hoi dap tai lieu (Document Q&A) voi retrieval-augmented generation.",
+      "bidirectional": true
+    },
+    {
+      "target": "B08",
+      "connection_type": "complementary",
+      "description": "Conversational AI (B08) su dung Document Intelligence de doc va hieu tai lieu trong cac cuoc hoi thoai. Vi du: chatbot doc hop dong va tra loi cau hoi cua khach hang ve dieu khoan.",
+      "bidirectional": false
+    }
+  ],
+  "effort_estimate": {
+    "mvp": {
+      "scope": "1 loai tai lieu (hoa don), PaddleOCR + LayoutLMv3 fine-tuned, FastAPI endpoint, validation UI",
+      "duration": "6-8 tuan",
+      "duration_optimistic": "6 tuan",
+      "duration_realistic": "8 tuan",
+      "engineers": "2-3",
+      "team": "1 ML engineer + 1 backend + 0.5 frontend",
+      "notes": "Phu thuoc vao toc do thu thap du lieu huan luyen. 6 tuan neu co san ~500 anh hoa don gan nhan."
+    },
+    "production_v1": {
+      "scope": "2 loai tai lieu (hoa don + CCCD), hybrid pipeline (OCR + VLM), HITL, monitoring, on-premise, >5K anh/loai",
+      "duration": "4-5 thang",
+      "duration_optimistic": "4 thang",
+      "duration_realistic": "5 thang",
+      "engineers": "5-7",
+      "team": "2 ML + 2 backend + 1 MLOps + 1 frontend + 0.5 QA",
+      "notes": "Bao gom thoi gian thu thap va gan nhan du lieu. Can pilot voi 2-3 khach hang."
+    },
+    "full_platform": {
+      "scope": "10+ loai tai lieu, multi-tenant SaaS, Document Q&A, HWR, forensics, self-service onboarding",
+      "duration": "12-18 thang",
+      "duration_optimistic": "12 thang",
+      "duration_realistic": "18 thang",
+      "engineers": "8-12",
+      "team": "3 ML + 3 backend + 2 MLOps + 2 frontend + 1 QA + 1 PM",
+      "notes": "Can strict feature freeze sau thang 8. GPU cost model phai duoc validate truoc khi commit infrastructure."
+    }
+  },
+  "risks": [
+    {
+      "rank": 1,
+      "name": "Do chinh xac OCR/IE khong du cho production",
+      "probability": "CAO",
+      "impact": "RAT CAO",
+      "description": "OCR va IE tren tai lieu tieng Viet thuc te khong dat accuracy yeu cau (>90%), dac biet voi dau thanh dieu va tai lieu chat luong thap. Xac suat 70%.",
+      "mitigation": "Thu thap >5,000 anh/loai de fine-tune. Hybrid pipeline voi VLM fallback. HITL cho giai doan dau. Fine-tune vietocr cho text recognition tieng Viet."
+    },
+    {
+      "rank": 2,
+      "name": "Bao mat va Privacy — lo lot PII",
+      "probability": "THAP-TRUNG BINH",
+      "impact": "RAT CAO",
+      "description": "Lo lot du lieu tai lieu nhay cam (CMND, thong tin tai chinh, ho so benh an). Vi pham Luat An ninh Mang VN. Xac suat 30% nhung tac dong huy diet.",
+      "mitigation": "On-premise deployment. Encryption at rest va in transit. PII masking tu dong. Access control va audit logging. Tuan thu Luat An ninh Mang VN."
+    },
+    {
+      "rank": 3,
+      "name": "Chi phi VLM API khong kiem soat",
+      "probability": "TRUNG BINH-CAO",
+      "impact": "CAO",
+      "description": "Khi scale, chi phi VLM API tang nhanh: 100,000 trang/thang = $1,000-5,000. An mon loi nhuan.",
+      "mitigation": "Hybrid pipeline (80% local, 20% VLM). Budget limits hang ngay/thang. Cache ket qua. Dan chuyen sang mo hinh local khi du du lieu."
+    },
+    {
+      "rank": 4,
+      "name": "Thieu du lieu huan luyen tieng Viet",
+      "probability": "CAO",
+      "impact": "CAO",
+      "description": "Chi co XFUND-VI (~200 mau). Thieu dataset OCR, form, table, HWR tieng Viet lon. Lam cham tien do va giam chat luong.",
+      "mitigation": "Synthetic data (SynthDoG). Active learning qua HITL. Partnership voi doanh nghiep. Data augmentation."
+    },
+    {
+      "rank": 5,
+      "name": "Doi thu canh tranh vuot mat",
+      "probability": "TRUNG BINH-CAO",
+      "impact": "TRUNG BINH",
+      "description": "FPT.AI, VinAI, Cinnamon ra san pham tot hon, gia re hon truoc khi hoan thien.",
+      "mitigation": "Tap trung nich chuyen sau. Speed-to-market. Khac biet hoa bang trai nghiem khach hang. Open-source component de xay community."
+    }
+  ],
+  "overview": {
+    "description": "Document Intelligence (Tri tue Tai lieu) la linh vuc AI tu dong hieu, phan tich va trich xuat thong tin tu tai lieu. Ket hop Computer Vision, NLP, va Multimodal AI de xay dung pipeline: tien xu ly -> OCR -> layout analysis -> information extraction -> validation. Tai Viet Nam, nhu cau rat cao ($30-50 trieu USD) tu ngan hang, hanh chinh cong, logistics, bao hiem.",
+    "keyQuestions": [
+      "Lam the nao de dat do chinh xac OCR >90% cho tieng Viet voi dau thanh dieu?",
+      "Nen dung pipeline truyen thong (PaddleOCR + LayoutLMv3) hay Vision LLM (Claude/GPT-4V)?",
+      "Lam sao thu thap du lieu huan luyen tieng Viet khi chua co dataset cong khai lon?",
+      "Lam the nao can bang giua chi phi VLM API va do chinh xac?",
+      "Cach trien khai on-premise cho khach hang yeu cau bao mat cao (ngan hang, chinh phu)?"
+    ],
+    "whenToUse": [
+      "Can tu dong hoa xu ly tai lieu giay voi so luong lon (>100 tai lieu/ngay)",
+      "eKYC: xac thuc giay to tuy than tu dong",
+      "Trich xuat thong tin tu hoa don, hop dong, chung tu de nhap vao he thong",
+      "So hoa tai lieu cu de luu tru va tim kiem",
+      "Xay dung he thong hoi dap tai lieu (Document Q&A)"
+    ],
+    "whenNotToUse": [
+      "Tai lieu da o dinh dang so co cau truc (XML, JSON) — khong can OCR",
+      "So luong tai lieu qua it (<10/ngay) — nhap lieu thu cong re hon",
+      "Yeu cau do chinh xac 100% tuyet doi — AI chua dat duoc, can HITL",
+      "Tai lieu hoan toan la chu viet tay tieng Viet — HWR chua san sang",
+      "Khong co ngan sach cho GPU hoac API costs"
+    ]
+  },
+  "tags": [
+    "document-intelligence",
+    "OCR",
+    "IDP",
+    "document-ai",
+    "PaddleOCR",
+    "LayoutLMv3",
+    "Donut",
+    "DiT",
+    "vision-LLM",
+    "information-extraction",
+    "layout-analysis",
+    "table-extraction",
+    "handwriting-recognition",
+    "document-classification",
+    "document-QA",
+    "tieng-Viet",
+    "eKYC",
+    "invoice-processing",
+    "multimodal",
+    "hybrid-pipeline",
+    "HITL",
+    "on-premise"
+  ],
+  "created_at": "2026-03-31",
+  "updated_at": "2026-03-31",
+  "data_sources": [
+    "Dr. Archon (R-alpha) Research Report — B02 — 2026-03-31",
+    "Dr. Praxis (R-beta) Tech Report — B02 — 2026-03-31",
+    "Dr. Sentinel (R-gamma) Feasibility Report — B02 — 2026-03-31",
+    "R-MLE, R-DE, R-DA, R-BE, R-DO, R-QA, R-SA, R-FE, R-D02 Practitioner Notes — B02 — 2026-03-31"
+  ],
+  "metadata": {
+    "createdAt": "2026-03-31",
+    "updatedAt": "2026-03-31",
+    "researchedBy": ["R-alpha", "R-beta", "R-gamma", "R-sigma", "R-MLE", "R-DE", "R-DA", "R-BE", "R-DO", "R-QA", "R-SA", "R-FE", "R-D02"],
+    "synthesisedBy": "R-sigma (Ms. Scribe)",
+    "version": "1.0",
+    "status": "reviewed",
+    "normalizedAt": "2026-03-31",
+    "normalizedBy": "R-BE-normalizer"
+  }
+}

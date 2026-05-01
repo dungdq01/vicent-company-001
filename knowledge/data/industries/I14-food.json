@@ -1,0 +1,105 @@
+{
+  "id": "I14",
+  "name": "Food & Beverage / Hospitality",
+  "slug": "food-beverage-hospitality",
+  "category": "industry",
+  "icon": "UtensilsCrossed",
+  "color": "#FFA000",
+  "depthLevel": 1,
+  "overview": {
+    "description": "Vietnam's F&B and hospitality sector is large and fragmented with a booming restaurant scene and growing hotel industry driven by tourism. AI use cases include demand forecasting, personalized recommendations, chatbot reservations, and dynamic pricing.",
+    "marketSizeVietnam": "~$35B F&B market; ~$30B tourism contributing 10%+ of GDP pre-COVID",
+    "marketSizeSEA": "~$250B F&B and hospitality market; strong post-COVID recovery",
+    "aiMaturity": "L1",
+    "aiAppetite": "low"
+  },
+  "domainKnowledge": {
+    "keyEntities": [
+      "Customers",
+      "Menu items",
+      "Orders",
+      "Inventory",
+      "Hotels",
+      "Reservations"
+    ],
+    "keyProcesses": [
+      "Order taking",
+      "Inventory management",
+      "Kitchen operations",
+      "Reservation",
+      "Revenue management"
+    ],
+    "dataTypes": [
+      "POS transaction data",
+      "Inventory logs",
+      "Reservation data",
+      "Review data",
+      "Pricing history"
+    ],
+    "typicalDataVolume": "Medium — fragmented across millions of small restaurants; chain restaurants data-rich",
+    "dataQuality": "Low — most F&B businesses lack digital POS; hospitality chains have better data"
+  },
+  "painPoints": [
+    {
+      "problem": "Food waste from poor demand forecasting costs restaurants significantly",
+      "severity": 8,
+      "aiSolvable": true,
+      "mapsToBaseline": [
+        "B01"
+      ]
+    },
+    {
+      "problem": "Menu and offer personalization is minimal; recommendation engines are rare",
+      "severity": 6,
+      "aiSolvable": true,
+      "mapsToBaseline": [
+        "B05"
+      ]
+    },
+    {
+      "problem": "Reservation and customer service chatbots are underutilized",
+      "severity": 6,
+      "aiSolvable": true,
+      "mapsToBaseline": [
+        "B08"
+      ]
+    },
+    {
+      "problem": "Dynamic pricing for hotels and restaurants is manual",
+      "severity": 7,
+      "aiSolvable": true,
+      "mapsToBaseline": [
+        "B01",
+        "B13"
+      ]
+    }
+  ],
+  "regulations": [],
+  "priorityBaselines": {
+    "high": [
+      "B01",
+      "B05"
+    ],
+    "medium": [
+      "B08",
+      "B13"
+    ],
+    "low": [
+      "B12"
+    ]
+  },
+  "competitiveLandscape": [],
+  "relatedNodes": [
+    {
+      "nodeId": "I01",
+      "relationship": "adjacent",
+      "description": "F&B and retail share inventory management and demand forecasting needs."
+    }
+  ],
+  "metadata": {
+    "createdAt": "2026-04-03",
+    "updatedAt": "2026-04-03",
+    "version": "0.1",
+    "status": "skeleton"
+  }
+}

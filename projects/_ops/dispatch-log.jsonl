@@ -1,0 +1,1 @@
+{"_comment":"Append-only dispatch log per R-ORC-01. Each line = JSON event. Schema in projects/_ops/README.md.","_schema_version":"1.0","_created":"2026-04-27"}

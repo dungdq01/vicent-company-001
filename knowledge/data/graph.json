@@ -1,0 +1,1552 @@
+{
+  "nodes": [
+    {
+      "id": "B01",
+      "name": "Forecasting & Time Series",
+      "category": "baseline",
+      "color": "#80DEEA",
+      "size": 14,
+      "depthLevel": 3,
+      "group": 1,
+      "layer": 1
+    },
+    {
+      "id": "B07",
+      "name": "Anomaly Detection & Monitoring",
+      "category": "baseline",
+      "color": "#4DD0E1",
+      "size": 14,
+      "depthLevel": 3,
+      "group": 1,
+      "layer": 1
+    },
+    {
+      "id": "B13",
+      "name": "Tabular ML & Predictive Analytics",
+      "category": "baseline",
+      "color": "#26C6DA",
+      "size": 14,
+      "depthLevel": 3,
+      "group": 1,
+      "layer": 1
+    },
+    {
+      "id": "B02",
+      "name": "Document Intelligence",
+      "category": "baseline",
+      "color": "#FFB74D",
+      "size": 13,
+      "depthLevel": 3,
+      "group": 1,
+      "layer": 2
+    },
+    {
+      "id": "B03",
+      "name": "Computer Vision",
+      "category": "baseline",
+      "color": "#FFA726",
+      "size": 14,
+      "depthLevel": 3,
+      "group": 1,
+      "layer": 2
+    },
+    {
+      "id": "B04",
+      "name": "Natural Language Processing",
+      "category": "baseline",
+      "color": "#FF9800",
+      "size": 16,
+      "depthLevel": 3,
+      "group": 1,
+      "layer": 2
+    },
+    {
+      "id": "B14",
+      "name": "Speech & Audio AI",
+      "category": "baseline",
+      "color": "#FB8C00",
+      "size": 13,
+      "depthLevel": 3,
+      "group": 1,
+      "layer": 2
+    },
+    {
+      "id": "B05",
+      "name": "Recommendation Systems",
+      "category": "baseline",
+      "color": "#CE93D8",
+      "size": 14,
+      "depthLevel": 3,
+      "group": 1,
+      "layer": 3
+    },
+    {
+      "id": "B06",
+      "name": "Optimization & Operations Research",
+      "category": "baseline",
+      "color": "#BA68C8",
+      "size": 15,
+      "depthLevel": 3,
+      "group": 1,
+      "layer": 3
+    },
+    {
+      "id": "B09",
+      "name": "Generative AI",
+      "category": "baseline",
+      "color": "#AB47BC",
+      "size": 16,
+      "depthLevel": 3,
+      "group": 1,
+      "layer": 3
+    },
+    {
+      "id": "B11",
+      "name": "Knowledge Graph",
+      "category": "baseline",
+      "color": "#9C27B0",
+      "size": 14,
+      "depthLevel": 3,
+      "group": 1,
+      "layer": 3
+    },
+    {
+      "id": "B12",
+      "name": "Search & RAG",
+      "category": "baseline",
+      "color": "#E040FB",
+      "size": 15,
+      "depthLevel": 3,
+      "group": 1,
+      "layer": 3
+    },
+    {
+      "id": "B08",
+      "name": "Conversational AI & Chatbots",
+      "category": "baseline",
+      "color": "#66BB6A",
+      "size": 15,
+      "depthLevel": 3,
+      "group": 1,
+      "layer": 4
+    },
+    {
+      "id": "B10",
+      "name": "Agentic AI",
+      "category": "baseline",
+      "color": "#4CAF50",
+      "size": 15,
+      "depthLevel": 3,
+      "group": 1,
+      "layer": 4
+    },
+    {
+      "id": "B15",
+      "name": "Simulation & Digital Twin",
+      "category": "baseline",
+      "color": "#43A047",
+      "size": 13,
+      "depthLevel": 3,
+      "group": 1,
+      "layer": 4
+    },
+    {
+      "id": "I05",
+      "name": "Agriculture & AgriTech",
+      "category": "industry",
+      "color": "#FF8F00",
+      "size": 12,
+      "depthLevel": 1,
+      "layer": 0
+    },
+    {
+      "id": "I02",
+      "name": "Finance & Banking",
+      "category": "industry",
+      "color": "#FFB300",
+      "size": 13,
+      "depthLevel": 1,
+      "layer": 0
+    },
+    {
+      "id": "I01",
+      "name": "Retail & E-commerce",
+      "category": "industry",
+      "color": "#FFD54F",
+      "size": 14,
+      "depthLevel": 1,
+      "layer": 0
+    },
+    {
+      "id": "I06",
+      "name": "Logistics & Supply Chain",
+      "category": "industry",
+      "color": "#FF8F00",
+      "size": 13,
+      "depthLevel": 1,
+      "layer": 0
+    },
+    {
+      "id": "I07",
+      "name": "Energy & Utilities",
+      "category": "industry",
+      "color": "#FF6F00",
+      "size": 12,
+      "depthLevel": 1,
+      "layer": 0
+    },
+    {
+      "id": "I03",
+      "label": "Healthcare & Hospital",
+      "type": "industry",
+      "tier": 3,
+      "color": "#00D4B8",
+      "size": 12,
+      "description": "",
+      "val": 8
+    },
+    {
+      "id": "I04",
+      "label": "Manufacturing",
+      "type": "industry",
+      "tier": 3,
+      "color": "#00B8A0",
+      "size": 12,
+      "description": "",
+      "val": 8
+    },
+    {
+      "id": "I08",
+      "label": "Construction & Built Environment",
+      "type": "industry",
+      "tier": 3,
+      "color": "#008870",
+      "size": 12,
+      "description": "",
+      "val": 8
+    },
+    {
+      "id": "I09",
+      "label": "Education & EdTech",
+      "type": "industry",
+      "tier": 3,
+      "color": "#009988",
+      "size": 12,
+      "description": "",
+      "val": 8
+    },
+    {
+      "id": "I10",
+      "label": "Telecom",
+      "type": "industry",
+      "tier": 3,
+      "color": "#00B898",
+      "size": 12,
+      "description": "",
+      "val": 8
+    },
+    {
+      "id": "I11",
+      "label": "Legal & Government",
+      "type": "industry",
+      "tier": 3,
+      "color": "#008878",
+      "size": 12,
+      "description": "",
+      "val": 8
+    },
+    {
+      "id": "I12",
+      "label": "Media & Entertainment",
+      "type": "industry",
+      "tier": 3,
+      "color": "#00A888",
+      "size": 12,
+      "description": "",
+      "val": 8
+    },
+    {
+      "id": "I13",
+      "label": "Transportation & Mobility",
+      "type": "industry",
+      "tier": 3,
+      "color": "#009878",
+      "size": 12,
+      "description": "",
+      "val": 8
+    },
+    {
+      "id": "I14",
+      "label": "Food & Beverage / Hospitality",
+      "type": "industry",
+      "tier": 3,
+      "color": "#008068",
+      "size": 12,
+      "description": "",
+      "val": 8
+    },
+    {
+      "id": "I15",
+      "label": "Insurance",
+      "type": "industry",
+      "tier": 3,
+      "color": "#009880",
+      "size": 12,
+      "description": "",
+      "val": 8
+    },
+    {
+      "id": "I16",
+      "label": "Pharmaceutical & Life Sciences",
+      "type": "industry",
+      "tier": 3,
+      "color": "#00A890",
+      "size": 12,
+      "description": "",
+      "val": 8
+    },
+    {
+      "id": "I17",
+      "label": "Gaming & Interactive",
+      "type": "industry",
+      "tier": 3,
+      "color": "#00A080",
+      "size": 12,
+      "description": "",
+      "val": 8
+    },
+    {
+      "id": "I18",
+      "label": "Marketing & Advertising",
+      "type": "industry",
+      "tier": 3,
+      "color": "#00B088",
+      "size": 12,
+      "description": "",
+      "val": 8
+    },
+    {
+      "id": "I19",
+      "label": "HR & Workforce Management",
+      "type": "industry",
+      "tier": 3,
+      "color": "#008878",
+      "size": 12,
+      "description": "",
+      "val": 8
+    },
+    {
+      "id": "I20",
+      "label": "Cybersecurity & IT Operations",
+      "type": "industry",
+      "tier": 3,
+      "color": "#00C0A0",
+      "size": 12,
+      "description": "",
+      "val": 8
+    },
+    {
+      "id": "B01-I06",
+      "name": "Shipment Volume Forecasting",
+      "category": "matrix",
+      "color": "#00C8A0",
+      "size": 8,
+      "depthLevel": 2,
+      "layer": 3
+    }
+  ],
+  "edges": [
+    {
+      "source": "B01",
+      "target": "B07",
+      "relationship": "complementary",
+      "weight": 7
+    },
+    {
+      "source": "B01",
+      "target": "B08",
+      "relationship": "enhances",
+      "weight": 5
+    },
+    {
+      "source": "B02",
+      "target": "B03",
+      "relationship": "uses",
+      "weight": 8
+    },
+    {
+      "source": "B07",
+      "target": "B03",
+      "relationship": "uses",
+      "weight": 6
+    },
+    {
+      "source": "B08",
+      "target": "B02",
+      "relationship": "uses",
+      "weight": 6
+    },
+    {
+      "source": "I01",
+      "target": "I06",
+      "relationship": "supply_chain",
+      "weight": 9
+    },
+    {
+      "source": "I05",
+      "target": "I06",
+      "relationship": "supply_chain",
+      "weight": 7
+    },
+    {
+      "source": "B01",
+      "target": "I01",
+      "relationship": "applies_to",
+      "weight": 9
+    },
+    {
+      "source": "B01",
+      "target": "I06",
+      "relationship": "applies_to",
+      "weight": 8
+    },
+    {
+      "source": "B02",
+      "target": "I06",
+      "relationship": "applies_to",
+      "weight": 7
+    },
+    {
+      "source": "B07",
+      "target": "I01",
+      "relationship": "applies_to",
+      "weight": 7
+    },
+    {
+      "source": "B03",
+      "target": "I05",
+      "relationship": "applies_to",
+      "weight": 8
+    },
+    {
+      "source": "B03",
+      "target": "B02",
+      "relationship": "closely_related",
+      "weight": 9
+    },
+    {
+      "source": "B03",
+      "target": "B07",
+      "relationship": "complementary",
+      "weight": 8
+    },
+    {
+      "source": "B03",
+      "target": "B01",
+      "relationship": "enhances",
+      "weight": 5
+    },
+    {
+      "source": "B03",
+      "target": "I01",
+      "relationship": "applies_to",
+      "weight": 9
+    },
+    {
+      "source": "B03",
+      "target": "I06",
+      "relationship": "applies_to",
+      "weight": 8
+    },
+    {
+      "source": "B03",
+      "target": "I02",
+      "relationship": "applies_to",
+      "weight": 7
+    },
+    {
+      "source": "B01",
+      "target": "I07",
+      "relationship": "applies_to",
+      "weight": 9
+    },
+    {
+      "source": "B01",
+      "target": "I02",
+      "relationship": "applies_to",
+      "weight": 7
+    },
+    {
+      "source": "B01",
+      "target": "I05",
+      "relationship": "applies_to",
+      "weight": 5
+    },
+    {
+      "source": "B02",
+      "target": "B04",
+      "relationship": "uses",
+      "weight": 7
+    },
+    {
+      "source": "B04",
+      "target": "B02",
+      "relationship": "core_component",
+      "weight": 9
+    },
+    {
+      "source": "B04",
+      "target": "B08",
+      "relationship": "foundation_of",
+      "weight": 10
+    },
+    {
+      "source": "B04",
+      "target": "B03",
+      "relationship": "complements_multimodal",
+      "weight": 7
+    },
+    {
+      "source": "B04",
+      "target": "B01",
+      "relationship": "text_signals",
+      "weight": 5
+    },
+    {
+      "source": "B02",
+      "target": "B12",
+      "relationship": "complementary",
+      "weight": 6
+    },
+    {
+      "source": "B02",
+      "target": "I02",
+      "relationship": "applies_to",
+      "weight": 8
+    },
+    {
+      "source": "B05",
+      "target": "B04",
+      "relationship": "uses_nlp_features",
+      "weight": 7
+    },
+    {
+      "source": "B05",
+      "target": "B03",
+      "relationship": "visual_recommendations",
+      "weight": 6
+    },
+    {
+      "source": "B05",
+      "target": "B01",
+      "relationship": "demand_prediction",
+      "weight": 6
+    },
+    {
+      "source": "B05",
+      "target": "B02",
+      "relationship": "catalog_processing",
+      "weight": 4
+    },
+    {
+      "source": "B06",
+      "target": "B01",
+      "relationship": "optimizes_forecasts",
+      "weight": 8
+    },
+    {
+      "source": "B06",
+      "target": "B05",
+      "relationship": "pricing_optimization",
+      "weight": 6
+    },
+    {
+      "source": "B06",
+      "target": "B04",
+      "relationship": "constraint_extraction",
+      "weight": 5
+    },
+    {
+      "source": "B06",
+      "target": "B03",
+      "relationship": "vision_for_inspection",
+      "weight": 4
+    },
+    {
+      "source": "B06",
+      "target": "B02",
+      "relationship": "document_constraints",
+      "weight": 4
+    },
+    {
+      "source": "B07",
+      "target": "B01",
+      "relationship": "forecast_residual_anomaly",
+      "weight": 8
+    },
+    {
+      "source": "B07",
+      "target": "B13",
+      "relationship": "tabular_anomaly_scoring",
+      "weight": 7
+    },
+    {
+      "source": "B07",
+      "target": "B04",
+      "relationship": "log_text_anomaly",
+      "weight": 6
+    },
+    {
+      "source": "B07",
+      "target": "B06",
+      "relationship": "monitors_optimization",
+      "weight": 5
+    },
+    {
+      "source": "B07",
+      "target": "I02",
+      "relationship": "applies_to",
+      "weight": 9
+    },
+    {
+      "source": "B07",
+      "target": "I06",
+      "relationship": "applies_to",
+      "weight": 8
+    },
+    {
+      "source": "B08",
+      "target": "B04",
+      "relationship": "nlp_foundation",
+      "weight": 10
+    },
+    {
+      "source": "B08",
+      "target": "B12",
+      "relationship": "rag_retrieval",
+      "weight": 9
+    },
+    {
+      "source": "B08",
+      "target": "B09",
+      "relationship": "generative_responses",
+      "weight": 8
+    },
+    {
+      "source": "B08",
+      "target": "B10",
+      "relationship": "agentic_orchestration",
+      "weight": 8
+    },
+    {
+      "source": "B08",
+      "target": "B11",
+      "relationship": "knowledge_grounding",
+      "weight": 7
+    },
+    {
+      "source": "B08",
+      "target": "I01",
+      "relationship": "applies_to",
+      "weight": 9
+    },
+    {
+      "source": "B08",
+      "target": "I02",
+      "relationship": "applies_to",
+      "weight": 9
+    },
+    {
+      "source": "B09",
+      "target": "B04",
+      "relationship": "text_generation_foundation",
+      "weight": 9
+    },
+    {
+      "source": "B09",
+      "target": "B03",
+      "relationship": "image_video_generation",
+      "weight": 8
+    },
+    {
+      "source": "B09",
+      "target": "B08",
+      "relationship": "powers_conversational",
+      "weight": 9
+    },
+    {
+      "source": "B09",
+      "target": "B10",
+      "relationship": "enables_agentic",
+      "weight": 8
+    },
+    {
+      "source": "B09",
+      "target": "B12",
+      "relationship": "rag_augmented_generation",
+      "weight": 7
+    },
+    {
+      "source": "B09",
+      "target": "B02",
+      "relationship": "document_generation",
+      "weight": 6
+    },
+    {
+      "source": "B09",
+      "target": "I01",
+      "relationship": "applies_to",
+      "weight": 9
+    },
+    {
+      "source": "B09",
+      "target": "I02",
+      "relationship": "applies_to",
+      "weight": 7
+    },
+    {
+      "source": "B10",
+      "target": "B09",
+      "relationship": "powered_by_genai",
+      "weight": 9
+    },
+    {
+      "source": "B10",
+      "target": "B08",
+      "relationship": "extends_conversational",
+      "weight": 8
+    },
+    {
+      "source": "B10",
+      "target": "B04",
+      "relationship": "nlp_reasoning",
+      "weight": 8
+    },
+    {
+      "source": "B10",
+      "target": "B11",
+      "relationship": "knowledge_memory",
+      "weight": 7
+    },
+    {
+      "source": "B10",
+      "target": "B12",
+      "relationship": "rag_for_agent_knowledge",
+      "weight": 7
+    },
+    {
+      "source": "B10",
+      "target": "B06",
+      "relationship": "planning_optimization",
+      "weight": 6
+    },
+    {
+      "source": "B10",
+      "target": "I01",
+      "relationship": "applies_to",
+      "weight": 8
+    },
+    {
+      "source": "B10",
+      "target": "I02",
+      "relationship": "applies_to",
+      "weight": 8
+    },
+    {
+      "source": "B11",
+      "target": "B04",
+      "relationship": "nlp_for_kg_construction",
+      "weight": 9
+    },
+    {
+      "source": "B11",
+      "target": "B12",
+      "relationship": "graphrag_retrieval",
+      "weight": 9
+    },
+    {
+      "source": "B11",
+      "target": "B10",
+      "relationship": "agent_memory_grounding",
+      "weight": 8
+    },
+    {
+      "source": "B11",
+      "target": "B08",
+      "relationship": "knowledge_grounded_dialogue",
+      "weight": 7
+    },
+    {
+      "source": "B11",
+      "target": "B05",
+      "relationship": "graph_based_recommendation",
+      "weight": 7
+    },
+    {
+      "source": "B11",
+      "target": "B02",
+      "relationship": "document_kg_extraction",
+      "weight": 6
+    },
+    {
+      "source": "B11",
+      "target": "I02",
+      "relationship": "applies_to",
+      "weight": 9
+    },
+    {
+      "source": "B11",
+      "target": "I01",
+      "relationship": "applies_to",
+      "weight": 7
+    },
+    {
+      "source": "B12",
+      "target": "B04",
+      "relationship": "nlp_for_search",
+      "weight": 9
+    },
+    {
+      "source": "B12",
+      "target": "B11",
+      "relationship": "graphrag_integration",
+      "weight": 9
+    },
+    {
+      "source": "B12",
+      "target": "B09",
+      "relationship": "generation_in_rag",
+      "weight": 8
+    },
+    {
+      "source": "B12",
+      "target": "B02",
+      "relationship": "document_retrieval",
+      "weight": 8
+    },
+    {
+      "source": "B12",
+      "target": "B08",
+      "relationship": "conversational_search",
+      "weight": 7
+    },
+    {
+      "source": "B12",
+      "target": "B10",
+      "relationship": "agentic_rag",
+      "weight": 7
+    },
+    {
+      "source": "B12",
+      "target": "I02",
+      "relationship": "applies_to",
+      "weight": 8
+    },
+    {
+      "source": "B12",
+      "target": "I01",
+      "relationship": "applies_to",
+      "weight": 9
+    },
+    {
+      "source": "B13",
+      "target": "B01",
+      "relationship": "feature_backbone_for_forecasting",
+      "weight": 8
+    },
+    {
+      "source": "B13",
+      "target": "B07",
+      "relationship": "supervised_anomaly_scoring",
+      "weight": 8
+    },
+    {
+      "source": "B13",
+      "target": "B05",
+      "relationship": "ctr_prediction_features",
+      "weight": 7
+    },
+    {
+      "source": "B13",
+      "target": "B06",
+      "relationship": "predict_then_optimize",
+      "weight": 7
+    },
+    {
+      "source": "B13",
+      "target": "B12",
+      "relationship": "feature_retrieval",
+      "weight": 5
+    },
+    {
+      "source": "B13",
+      "target": "I02",
+      "relationship": "applies_to",
+      "weight": 10
+    },
+    {
+      "source": "B13",
+      "target": "I01",
+      "relationship": "applies_to",
+      "weight": 8
+    },
+    {
+      "source": "B13",
+      "target": "I06",
+      "relationship": "applies_to",
+      "weight": 7
+    },
+    {
+      "source": "B14",
+      "target": "B04",
+      "relationship": "nlp_after_asr",
+      "weight": 9
+    },
+    {
+      "source": "B14",
+      "target": "B08",
+      "relationship": "voice_interface",
+      "weight": 9
+    },
+    {
+      "source": "B14",
+      "target": "B09",
+      "relationship": "audio_generation",
+      "weight": 7
+    },
+    {
+      "source": "B14",
+      "target": "B02",
+      "relationship": "document_dictation",
+      "weight": 5
+    },
+    {
+      "source": "B14",
+      "target": "B07",
+      "relationship": "audio_anomaly_detection",
+      "weight": 5
+    },
+    {
+      "source": "B14",
+      "target": "I02",
+      "relationship": "applies_to",
+      "weight": 7
+    },
+    {
+      "source": "B14",
+      "target": "I01",
+      "relationship": "applies_to",
+      "weight": 6
+    },
+    {
+      "source": "B15",
+      "target": "B06",
+      "relationship": "simulation_optimization",
+      "weight": 9
+    },
+    {
+      "source": "B15",
+      "target": "B01",
+      "relationship": "what_if_forecasting",
+      "weight": 7
+    },
+    {
+      "source": "B15",
+      "target": "B07",
+      "relationship": "simulated_baseline_anomaly",
+      "weight": 6
+    },
+    {
+      "source": "B15",
+      "target": "B10",
+      "relationship": "simulated_agent_environment",
+      "weight": 7
+    },
+    {
+      "source": "B15",
+      "target": "B03",
+      "relationship": "synthetic_training_data",
+      "weight": 6
+    },
+    {
+      "source": "B15",
+      "target": "B13",
+      "relationship": "surrogate_model_inputs",
+      "weight": 5
+    },
+    {
+      "source": "B15",
+      "target": "I06",
+      "relationship": "applies_to",
+      "weight": 8
+    },
+    {
+      "source": "B15",
+      "target": "I07",
+      "relationship": "applies_to",
+      "weight": 9
+    },
+    {
+      "source": "B02",
+      "target": "I01",
+      "type": "industry_baseline",
+      "strength": "medium"
+    },
+    {
+      "source": "B04",
+      "target": "I02",
+      "type": "industry_baseline",
+      "strength": "medium"
+    },
+    {
+      "source": "B03",
+      "target": "I03",
+      "type": "industry_baseline",
+      "strength": "high"
+    },
+    {
+      "source": "B02",
+      "target": "I03",
+      "type": "industry_baseline",
+      "strength": "high"
+    },
+    {
+      "source": "B13",
+      "target": "I03",
+      "type": "industry_baseline",
+      "strength": "medium"
+    },
+    {
+      "source": "B04",
+      "target": "I03",
+      "type": "industry_baseline",
+      "strength": "medium"
+    },
+    {
+      "source": "B01",
+      "target": "I03",
+      "type": "industry_baseline",
+      "strength": "medium"
+    },
+    {
+      "source": "B08",
+      "target": "I03",
+      "type": "industry_baseline",
+      "strength": "medium"
+    },
+    {
+      "source": "B07",
+      "target": "I04",
+      "type": "industry_baseline",
+      "strength": "high"
+    },
+    {
+      "source": "B03",
+      "target": "I04",
+      "type": "industry_baseline",
+      "strength": "high"
+    },
+    {
+      "source": "B01",
+      "target": "I04",
+      "type": "industry_baseline",
+      "strength": "medium"
+    },
+    {
+      "source": "B06",
+      "target": "I04",
+      "type": "industry_baseline",
+      "strength": "medium"
+    },
+    {
+      "source": "B02",
+      "target": "I04",
+      "type": "industry_baseline",
+      "strength": "medium"
+    },
+    {
+      "source": "B15",
+      "target": "I04",
+      "type": "industry_baseline",
+      "strength": "medium"
+    },
+    {
+      "source": "B07",
+      "target": "I05",
+      "type": "industry_baseline",
+      "strength": "medium"
+    },
+    {
+      "source": "B08",
+      "target": "I05",
+      "type": "industry_baseline",
+      "strength": "medium"
+    },
+    {
+      "source": "B08",
+      "target": "I06",
+      "type": "industry_baseline",
+      "strength": "medium"
+    },
+    {
+      "source": "B07",
+      "target": "I07",
+      "type": "industry_baseline",
+      "strength": "high"
+    },
+    {
+      "source": "B06",
+      "target": "I07",
+      "type": "industry_baseline",
+      "strength": "medium"
+    },
+    {
+      "source": "B13",
+      "target": "I07",
+      "type": "industry_baseline",
+      "strength": "medium"
+    },
+    {
+      "source": "B03",
+      "target": "I08",
+      "type": "industry_baseline",
+      "strength": "high"
+    },
+    {
+      "source": "B07",
+      "target": "I08",
+      "type": "industry_baseline",
+      "strength": "high"
+    },
+    {
+      "source": "B02",
+      "target": "I08",
+      "type": "industry_baseline",
+      "strength": "medium"
+    },
+    {
+      "source": "B06",
+      "target": "I08",
+      "type": "industry_baseline",
+      "strength": "medium"
+    },
+    {
+      "source": "B01",
+      "target": "I08",
+      "type": "industry_baseline",
+      "strength": "medium"
+    },
+    {
+      "source": "B15",
+      "target": "I08",
+      "type": "industry_baseline",
+      "strength": "medium"
+    },
+    {
+      "source": "B05",
+      "target": "I09",
+      "type": "industry_baseline",
+      "strength": "high"
+    },
+    {
+      "source": "B08",
+      "target": "I09",
+      "type": "industry_baseline",
+      "strength": "high"
+    },
+    {
+      "source": "B09",
+      "target": "I09",
+      "type": "industry_baseline",
+      "strength": "medium"
+    },
+    {
+      "source": "B13",
+      "target": "I09",
+      "type": "industry_baseline",
+      "strength": "medium"
+    },
+    {
+      "source": "B12",
+      "target": "I09",
+      "type": "industry_baseline",
+      "strength": "medium"
+    },
+    {
+      "source": "B04",
+      "target": "I09",
+      "type": "industry_baseline",
+      "strength": "medium"
+    },
+    {
+      "source": "B07",
+      "target": "I10",
+      "type": "industry_baseline",
+      "strength": "high"
+    },
+    {
+      "source": "B01",
+      "target": "I10",
+      "type": "industry_baseline",
+      "strength": "high"
+    },
+    {
+      "source": "B13",
+      "target": "I10",
+      "type": "industry_baseline",
+      "strength": "medium"
+    },
+    {
+      "source": "B08",
+      "target": "I10",
+      "type": "industry_baseline",
+      "strength": "medium"
+    },
+    {
+      "source": "B04",
+      "target": "I10",
+      "type": "industry_baseline",
+      "strength": "medium"
+    },
+    {
+      "source": "B12",
+      "target": "I10",
+      "type": "industry_baseline",
+      "strength": "medium"
+    },
+    {
+      "source": "B02",
+      "target": "I11",
+      "type": "industry_baseline",
+      "strength": "high"
+    },
+    {
+      "source": "B04",
+      "target": "I11",
+      "type": "industry_baseline",
+      "strength": "high"
+    },
+    {
+      "source": "B12",
+      "target": "I11",
+      "type": "industry_baseline",
+      "strength": "medium"
+    },
+    {
+      "source": "B09",
+      "target": "I11",
+      "type": "industry_baseline",
+      "strength": "medium"
+    },
+    {
+      "source": "B08",
+      "target": "I11",
+      "type": "industry_baseline",
+      "strength": "medium"
+    },
+    {
+      "source": "B05",
+      "target": "I12",
+      "type": "industry_baseline",
+      "strength": "high"
+    },
+    {
+      "source": "B09",
+      "target": "I12",
+      "type": "industry_baseline",
+      "strength": "high"
+    },
+    {
+      "source": "B03",
+      "target": "I12",
+      "type": "industry_baseline",
+      "strength": "medium"
+    },
+    {
+      "source": "B04",
+      "target": "I12",
+      "type": "industry_baseline",
+      "strength": "medium"
+    },
+    {
+      "source": "B12",
+      "target": "I12",
+      "type": "industry_baseline",
+      "strength": "medium"
+    },
+    {
+      "source": "B13",
+      "target": "I12",
+      "type": "industry_baseline",
+      "strength": "medium"
+    },
+    {
+      "source": "B01",
+      "target": "I13",
+      "type": "industry_baseline",
+      "strength": "high"
+    },
+    {
+      "source": "B06",
+      "target": "I13",
+      "type": "industry_baseline",
+      "strength": "high"
+    },
+    {
+      "source": "B07",
+      "target": "I13",
+      "type": "industry_baseline",
+      "strength": "medium"
+    },
+    {
+      "source": "B15",
+      "target": "I13",
+      "type": "industry_baseline",
+      "strength": "medium"
+    },
+    {
+      "source": "B03",
+      "target": "I13",
+      "type": "industry_baseline",
+      "strength": "medium"
+    },
+    {
+      "source": "B01",
+      "target": "I14",
+      "type": "industry_baseline",
+      "strength": "high"
+    },
+    {
+      "source": "B05",
+      "target": "I14",
+      "type": "industry_baseline",
+      "strength": "high"
+    },
+    {
+      "source": "B08",
+      "target": "I14",
+      "type": "industry_baseline",
+      "strength": "medium"
+    },
+    {
+      "source": "B13",
+      "target": "I14",
+      "type": "industry_baseline",
+      "strength": "medium"
+    },
+    {
+      "source": "B12",
+      "target": "I14",
+      "type": "industry_baseline",
+      "strength": "medium"
+    },
+    {
+      "source": "B07",
+      "target": "I15",
+      "type": "industry_baseline",
+      "strength": "high"
+    },
+    {
+      "source": "B13",
+      "target": "I15",
+      "type": "industry_baseline",
+      "strength": "high"
+    },
+    {
+      "source": "B02",
+      "target": "I15",
+      "type": "industry_baseline",
+      "strength": "medium"
+    },
+    {
+      "source": "B03",
+      "target": "I15",
+      "type": "industry_baseline",
+      "strength": "medium"
+    },
+    {
+      "source": "B08",
+      "target": "I15",
+      "type": "industry_baseline",
+      "strength": "medium"
+    },
+    {
+      "source": "B12",
+      "target": "I15",
+      "type": "industry_baseline",
+      "strength": "medium"
+    },
+    {
+      "source": "B15",
+      "target": "I16",
+      "type": "industry_baseline",
+      "strength": "high"
+    },
+    {
+      "source": "B07",
+      "target": "I16",
+      "type": "industry_baseline",
+      "strength": "high"
+    },
+    {
+      "source": "B09",
+      "target": "I16",
+      "type": "industry_baseline",
+      "strength": "medium"
+    },
+    {
+      "source": "B13",
+      "target": "I16",
+      "type": "industry_baseline",
+      "strength": "medium"
+    },
+    {
+      "source": "B02",
+      "target": "I16",
+      "type": "industry_baseline",
+      "strength": "medium"
+    },
+    {
+      "source": "B12",
+      "target": "I16",
+      "type": "industry_baseline",
+      "strength": "medium"
+    },
+    {
+      "source": "B13",
+      "target": "I17",
+      "type": "industry_baseline",
+      "strength": "high"
+    },
+    {
+      "source": "B07",
+      "target": "I17",
+      "type": "industry_baseline",
+      "strength": "high"
+    },
+    {
+      "source": "B09",
+      "target": "I17",
+      "type": "industry_baseline",
+      "strength": "medium"
+    },
+    {
+      "source": "B10",
+      "target": "I17",
+      "type": "industry_baseline",
+      "strength": "medium"
+    },
+    {
+      "source": "B05",
+      "target": "I17",
+      "type": "industry_baseline",
+      "strength": "medium"
+    },
+    {
+      "source": "B04",
+      "target": "I17",
+      "type": "industry_baseline",
+      "strength": "medium"
+    },
+    {
+      "source": "B13",
+      "target": "I18",
+      "type": "industry_baseline",
+      "strength": "high"
+    },
+    {
+      "source": "B12",
+      "target": "I18",
+      "type": "industry_baseline",
+      "strength": "high"
+    },
+    {
+      "source": "B09",
+      "target": "I18",
+      "type": "industry_baseline",
+      "strength": "medium"
+    },
+    {
+      "source": "B05",
+      "target": "I18",
+      "type": "industry_baseline",
+      "strength": "medium"
+    },
+    {
+      "source": "B08",
+      "target": "I18",
+      "type": "industry_baseline",
+      "strength": "medium"
+    },
+    {
+      "source": "B13",
+      "target": "I19",
+      "type": "industry_baseline",
+      "strength": "high"
+    },
+    {
+      "source": "B05",
+      "target": "I19",
+      "type": "industry_baseline",
+      "strength": "high"
+    },
+    {
+      "source": "B04",
+      "target": "I19",
+      "type": "industry_baseline",
+      "strength": "medium"
+    },
+    {
+      "source": "B08",
+      "target": "I19",
+      "type": "industry_baseline",
+      "strength": "medium"
+    },
+    {
+      "source": "B12",
+      "target": "I19",
+      "type": "industry_baseline",
+      "strength": "medium"
+    },
+    {
+      "source": "B07",
+      "target": "I20",
+      "type": "industry_baseline",
+      "strength": "high"
+    },
+    {
+      "source": "B13",
+      "target": "I20",
+      "type": "industry_baseline",
+      "strength": "high"
+    },
+    {
+      "source": "B10",
+      "target": "I20",
+      "type": "industry_baseline",
+      "strength": "medium"
+    },
+    {
+      "source": "B04",
+      "target": "I20",
+      "type": "industry_baseline",
+      "strength": "medium"
+    },
+    {
+      "source": "B12",
+      "target": "I20",
+      "type": "industry_baseline",
+      "strength": "medium"
+    },
+    {
+      "source": "B01",
+      "target": "B01-I06",
+      "type": "matrix_baseline"
+    },
+    {
+      "source": "I06",
+      "target": "B01-I06",
+      "type": "matrix_industry"
+    }
+  ]
+}

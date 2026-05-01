@@ -1,0 +1,107 @@
+{
+  "id": "I09",
+  "name": "Education & EdTech",
+  "slug": "education-edtech",
+  "category": "industry",
+  "icon": "GraduationCap",
+  "color": "#FFB300",
+  "depthLevel": 1,
+  "overview": {
+    "description": "Vietnam has 24M K-12 students and 2M+ university students. EdTech is booming post-COVID. AI applications include adaptive learning, AI tutoring bots, automated assessment, and student dropout prediction.",
+    "marketSizeVietnam": "~$4B EdTech market; Vietnam ranks top 3 SEA for online learning growth",
+    "marketSizeSEA": "~$40B EdTech market; strong demand for English learning, STEM, upskilling",
+    "aiMaturity": "L1",
+    "aiAppetite": "medium"
+  },
+  "domainKnowledge": {
+    "keyEntities": [
+      "Students",
+      "Teachers",
+      "Courses",
+      "Assessments",
+      "Learning paths",
+      "Certificates"
+    ],
+    "keyProcesses": [
+      "Enrollment",
+      "Content delivery",
+      "Assessment",
+      "Feedback",
+      "Certification"
+    ],
+    "dataTypes": [
+      "Learning logs",
+      "Assessment scores",
+      "Video engagement data",
+      "Assignment submissions",
+      "Student profiles"
+    ],
+    "typicalDataVolume": "Medium — millions of learners on major platforms; engagement data rich",
+    "dataQuality": "Medium — structured on modern LMS; poor on legacy school systems"
+  },
+  "painPoints": [
+    {
+      "problem": "One-size-fits-all curriculum fails diverse learners; personalization is manual",
+      "severity": 8,
+      "aiSolvable": true,
+      "mapsToBaseline": [
+        "B05"
+      ]
+    },
+    {
+      "problem": "Teacher shortage limits 1:1 tutoring; AI tutors can fill the gap",
+      "severity": 9,
+      "aiSolvable": true,
+      "mapsToBaseline": [
+        "B08",
+        "B09"
+      ]
+    },
+    {
+      "problem": "Student dropout prediction is reactive; interventions come too late",
+      "severity": 7,
+      "aiSolvable": true,
+      "mapsToBaseline": [
+        "B13"
+      ]
+    },
+    {
+      "problem": "Content search and discovery on large course platforms is poor",
+      "severity": 6,
+      "aiSolvable": true,
+      "mapsToBaseline": [
+        "B12",
+        "B05"
+      ]
+    }
+  ],
+  "regulations": [],
+  "priorityBaselines": {
+    "high": [
+      "B05",
+      "B08"
+    ],
+    "medium": [
+      "B09",
+      "B13"
+    ],
+    "low": [
+      "B12",
+      "B04"
+    ]
+  },
+  "competitiveLandscape": [],
+  "relatedNodes": [
+    {
+      "nodeId": "I19",
+      "relationship": "adjacent",
+      "description": "EdTech and HR share upskilling and workforce development use cases."
+    }
+  ],
+  "metadata": {
+    "createdAt": "2026-04-03",
+    "updatedAt": "2026-04-03",
+    "version": "0.1",
+    "status": "skeleton"
+  }
+}

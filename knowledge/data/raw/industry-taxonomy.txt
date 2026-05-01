@@ -1,0 +1,1261 @@
+# MAESTRO — Industry Taxonomy
+
+**Version:** 1.0  
+**Date:** 2026-03-30  
+**Status:** Approved  
+**Purpose:** Phân loại toàn bộ ngành công nghiệp thành 5 tầng × 20 industries. Kết hợp với AI Capability Taxonomy tạo ma trận 15 × 20 = 300 deployable solutions.
+
+---
+
+## Nguyên lý phân loại
+
+**Tiêu chí chính:** Hybrid — Ngành kinh tế (vertical) + Cross-industry domains có buyer và budget riêng.
+
+**Tiêu chí gom/tách:**
+- Tách khi: data khác, pain points khác, buyer khác, pipeline AI khác, regulations khác
+- Gom khi: cùng buyer, cùng data patterns, cùng domain knowledge
+
+**Phân tầng theo:** Mức độ trừu tượng của sản phẩm/dịch vụ — từ vật lý → dịch vụ → tri thức → thông tin → cross-cutting.
+
+---
+
+## Kiến trúc 5 tầng
+
+```
+TẦNG E — CROSS-INDUSTRY          I18 Marketing    I19 HR/Workforce    I20 Cybersecurity
+(Tồn tại trong MỌI ngành)         Buyer: CMO       Buyer: CHRO         Buyer: CISO
+                                   ▲                ▲                   ▲
+                                   │ phục vụ        │ phục vụ           │ phục vụ
+                                   │ mọi ngành      │ mọi ngành         │ mọi ngành
+───────────────────────────────────┼────────────────┼───────────────────┼──────────────
+TẦNG D — THÔNG TIN & SÁNG TẠO    I15 Media    I16 Telecom    I17 Gaming
+(Tạo & phân phối nội dung)        
+───────────────────────────────────────────────────────────────────────────────────────
+TẦNG C — TRI THỨC & QUY ĐỊNH     I9 Finance  I10 Insurance  I11 Healthcare  I12 Pharma  I13 Legal  I14 Education
+(Bán chuyên môn, regulated)        
+───────────────────────────────────────────────────────────────────────────────────────
+TẦNG B — DỊCH VỤ & PHÂN PHỐI     I5 Retail    I6 Logistics    I7 Transport    I8 F&B
+(Đưa sản phẩm đến người dùng)     
+───────────────────────────────────────────────────────────────────────────────────────
+TẦNG A — SẢN XUẤT & KHAI THÁC    I1 Agriculture    I2 Manufacturing    I3 Construction    I4 Energy
+(Tạo ra sản phẩm vật lý)          
+```
+
+---
+
+## Tầng A — SẢN XUẤT & KHAI THÁC (Physical Production)
+
+Ngành tạo ra sản phẩm vật lý từ tài nguyên thiên nhiên hoặc nguyên liệu.
+
+**Đặc điểm chung:** Dữ liệu IoT/sensor nhiều, bài toán optimization nặng, AI gắn với vật lý (máy móc, đất đai, năng lượng). Budget AI thường gắn với CAPEX lớn.
+
+---
+
+### I1. Agriculture & Agritech
+
+```yaml
+id: I1
+tier: A
+name: "Agriculture & Agritech"
+tagline: "Nuôi trồng thông minh hơn — từ hạt giống đến thị trường"
+
+overview: |
+  Ngành nông nghiệp đang chuyển từ kinh nghiệm sang data-driven.
+  AI giúp tối ưu năng suất, giảm lãng phí, dự báo thị trường.
+  Thách thức lớn nhất: dữ liệu sparse, infrastructure hạn chế ở vùng nông thôn.
+
+market_context:
+  vietnam: "Nông nghiệp chiếm ~12% GDP, 30%+ lao động. Nhiều startup agritech mới."
+  sea: "SEA là vựa lúa, trái cây, thủy sản lớn nhất thế giới."
+  ai_maturity: "L1 — Mostly rule-based, bắt đầu pilot AI"
+  ai_appetite: "Medium — Budget hạn chế nhưng nhu cầu thực"
+  key_buyers: "Nông trại lớn, Hợp tác xã, Agri-corporates, Chính phủ"
+
+data_characteristics:
+  types: ["Satellite imagery", "IoT sensors (soil, weather)", "Drone images", "Market prices", "Yield records"]
+  volume: "Small to Medium"
+  quality: "Sparse, unstructured, seasonal gaps"
+  special: "Spatial data (GIS), weather dependency, long feedback loops (1 crop cycle = months)"
+
+key_pain_points:
+  - problem: "Dự báo năng suất không chính xác"
+    ai_capability: ["B2 Forecasting", "B1 Tabular ML"]
+  - problem: "Phát hiện sâu bệnh quá muộn"
+    ai_capability: ["B3 Computer Vision", "B7 Anomaly Detection"]
+  - problem: "Giá thị trường biến động, không biết khi nào bán"
+    ai_capability: ["B2 Forecasting", "B11 Optimization"]
+  - problem: "Thiếu tư vấn kỹ thuật cho nông dân"
+    ai_capability: ["B14 Conversational AI", "B9 Search & RAG"]
+  - problem: "Quản lý chuỗi cung ứng nông sản kém hiệu quả"
+    ai_capability: ["B6 Logistics-related", "B11 Optimization"]
+
+priority_capabilities:
+  high: ["B3 Computer Vision", "B2 Forecasting", "B1 Tabular ML"]
+  medium: ["B7 Anomaly Detection", "B14 Conversational AI"]
+  low: ["B8 Knowledge Graph", "B13 Simulation"]
+
+regulations: "Tiêu chuẩn VietGAP, GlobalGAP, organic certification, food safety"
+
+competitive_landscape:
+  - "Cropin (India) — crop monitoring platform"
+  - "Arable — field sensing + analytics"
+  - "FarmEye, MimosaTEK (Vietnam) — local agritech"
+```
+
+---
+
+### I2. Manufacturing & Industrial
+
+```yaml
+id: I2
+tier: A
+name: "Manufacturing & Industrial"
+tagline: "Nhà máy thông minh — từ chất lượng đến bảo trì đến tự động hóa"
+
+overview: |
+  Manufacturing đang trong cuộc cách mạng Industry 4.0.
+  AI giúp phát hiện lỗi, dự đoán hỏng máy, tối ưu sản xuất, giảm waste.
+  Dữ liệu IoT real-time là tài sản lớn nhất.
+
+market_context:
+  vietnam: "Manufacturing chiếm ~25% GDP. FDI lớn (Samsung, Intel, Foxconn)."
+  sea: "Hub sản xuất toàn cầu, đang lên Industry 4.0."
+  ai_maturity: "L2 — Đã có sensors/IoT, bắt đầu ML"
+  ai_appetite: "High — ROI rõ ràng (giảm defect, giảm downtime)"
+  key_buyers: "Plant managers, Quality directors, COOs"
+
+data_characteristics:
+  types: ["IoT sensors (temp, vibration, pressure)", "Camera feeds", "MES logs", "ERP data", "Quality records"]
+  volume: "Large, real-time streaming"
+  quality: "Structured but noisy, sensor drift"
+  special: "High-frequency time series, image data from production line, edge deployment needed"
+
+key_pain_points:
+  - problem: "Phát hiện lỗi sản phẩm chậm, tốn nhân công"
+    ai_capability: ["B3 Computer Vision", "B7 Anomaly Detection"]
+  - problem: "Máy hỏng bất ngờ, downtime tốn kém"
+    ai_capability: ["B2 Forecasting", "B7 Anomaly Detection", "B6 Audio (sound-based)"]
+  - problem: "Lập lịch sản xuất chưa tối ưu"
+    ai_capability: ["B11 Optimization", "B13 Simulation"]
+  - problem: "Chất lượng không ổn định giữa các ca/line"
+    ai_capability: ["B1 Tabular ML", "B7 Anomaly Detection"]
+  - problem: "Thiếu visibility toàn nhà máy"
+    ai_capability: ["B8 Knowledge Graph", "B13 Simulation (Digital Twin)"]
+
+priority_capabilities:
+  high: ["B3 Computer Vision", "B7 Anomaly Detection", "B2 Forecasting"]
+  medium: ["B11 Optimization", "B13 Simulation", "B1 Tabular ML"]
+  low: ["B9 Search & RAG", "B14 Conversational AI"]
+
+regulations: "ISO 9001, ISO 14001, industry-specific (FDA for pharma manufacturing, IATF for automotive)"
+
+competitive_landscape:
+  - "Sight Machine — manufacturing analytics"
+  - "Uptake — industrial AI for asset performance"
+  - "Landing AI — visual inspection"
+  - "Siemens MindSphere, GE Predix — industrial IoT platforms"
+```
+
+---
+
+### I3. Construction & Built Environment
+
+```yaml
+id: I3
+tier: A
+name: "Construction & Built Environment"
+tagline: "Xây dựng thông minh — từ thiết kế đến vận hành công trình"
+
+overview: |
+  Ngành xây dựng là một trong những ngành chậm digitalize nhất.
+  AI opportunities lớn: safety monitoring, progress tracking, BIM integration,
+  cost estimation, defect detection, building energy optimization.
+  Bao gồm cả real estate development và facility management.
+
+market_context:
+  vietnam: "Xây dựng chiếm ~6% GDP. Đô thị hóa nhanh, nhiều dự án lớn."
+  sea: "Infrastructure boom, smart city initiatives."
+  ai_maturity: "L1 — Very early, mostly manual processes"
+  ai_appetite: "Medium — Aware but hesitant, traditional industry"
+  key_buyers: "Construction companies, Developers, Facility managers, Government"
+
+data_characteristics:
+  types: ["Drone imagery", "BIM models", "IoT sensors (structural)", "Project schedules", "Cost records", "Safety reports"]
+  volume: "Medium, project-based (not continuous)"
+  quality: "Unstructured, inconsistent across projects"
+  special: "3D data (BIM/point cloud), temporal (project timeline), spatial (GIS)"
+
+key_pain_points:
+  - problem: "Theo dõi tiến độ thi công chậm, thiếu chính xác"
+    ai_capability: ["B3 Computer Vision (drone)", "B2 Forecasting"]
+  - problem: "Tai nạn lao động — safety monitoring kém"
+    ai_capability: ["B3 Computer Vision", "B7 Anomaly Detection"]
+  - problem: "Ước lượng chi phí sai lệch lớn"
+    ai_capability: ["B1 Tabular ML", "B13 Simulation"]
+  - problem: "Quản lý tài liệu dự án hỗn loạn"
+    ai_capability: ["B4 Document Intelligence", "B9 Search & RAG"]
+  - problem: "Vận hành tòa nhà sau xây dựng chưa tối ưu"
+    ai_capability: ["B2 Forecasting (energy)", "B11 Optimization"]
+
+priority_capabilities:
+  high: ["B3 Computer Vision", "B1 Tabular ML", "B4 Document Intelligence"]
+  medium: ["B13 Simulation", "B11 Optimization", "B7 Anomaly Detection"]
+  low: ["B14 Conversational AI", "B8 Knowledge Graph"]
+
+regulations: "Building codes, safety regulations (OSHA), environmental impact, BIM standards"
+
+competitive_landscape:
+  - "OpenSpace — construction photo documentation + AI"
+  - "Buildots — AI progress monitoring"
+  - "Procore — construction management (adding AI)"
+  - "nPlan — construction planning AI"
+```
+
+---
+
+### I4. Energy & Utilities
+
+```yaml
+id: I4
+tier: A
+name: "Energy & Utilities"
+tagline: "Năng lượng thông minh — dự báo, tối ưu, tích hợp renewable"
+
+overview: |
+  Ngành năng lượng đang chuyển đổi: renewable integration, smart grid, 
+  decentralization. AI critical cho load forecasting, grid optimization,
+  predictive maintenance, demand response.
+
+market_context:
+  vietnam: "Chuyển đổi năng lượng mạnh. Solar, wind tăng nhanh. EVN digitalization."
+  sea: "Energy demand tăng 3-4%/năm. Renewable targets aggressive."
+  ai_maturity: "L2 — SCADA/IoT có sẵn, bắt đầu ML"
+  ai_appetite: "High — Grid stability là critical, AI budget tăng"
+  key_buyers: "Utilities, Grid operators, Renewable developers, Energy traders"
+
+data_characteristics:
+  types: ["SCADA/IoT (real-time grid data)", "Smart meter data", "Weather data", "Market prices", "Equipment logs"]
+  volume: "Very large, streaming, high-frequency"
+  quality: "Structured but noisy sensors, missing data gaps"
+  special: "Real-time requirements, spatial (grid topology), weather-dependent"
+
+key_pain_points:
+  - problem: "Dự báo tải điện không chính xác → lãng phí hoặc thiếu hụt"
+    ai_capability: ["B2 Forecasting"]
+  - problem: "Tích hợp renewable (solar, wind) — biến động cao"
+    ai_capability: ["B2 Forecasting", "B11 Optimization"]
+  - problem: "Thiết bị hỏng bất ngờ (transformer, turbine)"
+    ai_capability: ["B7 Anomaly Detection", "B2 Forecasting"]
+  - problem: "Tối ưu dispatch và grid balancing"
+    ai_capability: ["B11 Optimization", "B13 Simulation"]
+  - problem: "Đọc và xử lý hóa đơn, meter reading"
+    ai_capability: ["B4 Document Intelligence", "B3 Computer Vision"]
+
+priority_capabilities:
+  high: ["B2 Forecasting", "B7 Anomaly Detection", "B11 Optimization"]
+  medium: ["B13 Simulation", "B3 Computer Vision", "B1 Tabular ML"]
+  low: ["B9 Search & RAG", "B14 Conversational AI"]
+
+regulations: "Energy regulations, grid codes, environmental standards, carbon reporting"
+
+competitive_landscape:
+  - "AutoGrid — AI for energy optimization"
+  - "Uplight — customer energy management"
+  - "SparkCognition — industrial AI (energy focus)"
+  - "Google DeepMind — data center energy optimization"
+```
+
+---
+
+## Tầng B — DỊCH VỤ & PHÂN PHỐI (Service & Distribution)
+
+Ngành đưa sản phẩm/dịch vụ đến người dùng cuối.
+
+**Đặc điểm chung:** Dữ liệu transaction lớn, real-time, bài toán demand/supply matching, customer-facing. AI trực tiếp impact revenue.
+
+---
+
+### I5. Retail & E-commerce
+
+```yaml
+id: I5
+tier: B
+name: "Retail & E-commerce"
+tagline: "Bán lẻ thông minh — dự báo, cá nhân hóa, tối ưu giá"
+
+overview: |
+  Ngành bán lẻ là nơi AI có ROI rõ ràng nhất.
+  Demand forecasting, recommendation, pricing, inventory optimization,
+  customer analytics — tất cả đều proven và scalable.
+
+market_context:
+  vietnam: "E-commerce tăng 20%+/năm. Shopee, Lazada, Tiki. Retail truyền thống đang digitalize."
+  sea: "E-commerce market $100B+. Hyper-competitive."
+  ai_maturity: "L2-L3 — E-commerce platforms đã dùng ML, traditional retail đang catch up"
+  ai_appetite: "Very High — AI = competitive advantage"
+  key_buyers: "E-commerce platforms, Retail chains, CPG companies, Marketing teams"
+
+data_characteristics:
+  types: ["Transaction logs", "Customer profiles", "Product catalogs", "Clickstream", "Inventory levels", "Promotion calendars"]
+  volume: "Very large (millions of transactions/day for big retailers)"
+  quality: "Structured, relatively clean for e-commerce; messier for traditional retail"
+  special: "High seasonality, promotion effects, long-tail products, cold-start for new items"
+
+key_pain_points:
+  - problem: "Dự báo nhu cầu sai → stockout hoặc overstock"
+    ai_capability: ["B2 Forecasting", "B1 Tabular ML"]
+  - problem: "Khách hàng không tìm thấy sản phẩm phù hợp"
+    ai_capability: ["B10 Recommendation", "B9 Search & RAG"]
+  - problem: "Pricing chưa tối ưu — để lại margin trên bàn"
+    ai_capability: ["B11 Optimization", "B1 Tabular ML"]
+  - problem: "Churn cao, không giữ được khách"
+    ai_capability: ["B1 Tabular ML", "B10 Recommendation"]
+  - problem: "Fraud trong online transactions"
+    ai_capability: ["B7 Anomaly Detection", "B1 Tabular ML"]
+
+priority_capabilities:
+  high: ["B2 Forecasting", "B10 Recommendation", "B1 Tabular ML"]
+  medium: ["B11 Optimization", "B7 Anomaly Detection", "B9 Search & RAG"]
+  low: ["B3 Computer Vision", "B14 Conversational AI"]
+
+regulations: "Consumer protection, data privacy, e-commerce regulations"
+
+competitive_landscape:
+  - "Algolia — AI search for e-commerce"
+  - "Dynamic Yield (Mastercard) — personalization"
+  - "Blue Yonder — demand forecasting + supply chain"
+  - "Relex Solutions — retail planning"
+```
+
+---
+
+### I6. Logistics & Supply Chain
+
+```yaml
+id: I6
+tier: B
+name: "Logistics & Supply Chain"
+tagline: "Chuỗi cung ứng thông minh — từ dự báo đến giao hàng chặng cuối"
+
+overview: |
+  Freight logistics, warehousing, supply chain planning.
+  AI giúp dự báo nhu cầu, tối ưu routing, tự động hóa chứng từ,
+  quản lý kho, và hướng tới supply chain tự hành.
+  
+  ★ Đây là home turf của Smartlog.
+
+market_context:
+  vietnam: "Logistics chiếm ~16% GDP. Nhiều room cho improvement."
+  sea: "Cross-border logistics phức tạp. Last-mile delivery boom."
+  ai_maturity: "L2 — TMS/WMS có sẵn, bắt đầu AI"
+  ai_appetite: "High — Cost pressure drives AI adoption"
+  key_buyers: "3PLs, Manufacturers (SCM team), E-commerce logistics, Port operators"
+
+data_characteristics:
+  types: ["Shipment records", "GPS tracking", "Warehouse transactions", "Customs documents", "Demand signals"]
+  volume: "Large, multi-source, semi-structured"
+  quality: "Mixed — structured ERP data + messy documents + real-time GPS"
+  special: "Graph-like (network of routes, suppliers, warehouses), multi-echelon"
+
+key_pain_points:
+  - problem: "Dự báo nhu cầu vận chuyển không chính xác"
+    ai_capability: ["B2 Forecasting"]
+  - problem: "Routing chưa tối ưu — xe chạy không đầy, route dài"
+    ai_capability: ["B11 Optimization"]
+  - problem: "Xử lý chứng từ thủ công (BOL, customs, weighbridge)"
+    ai_capability: ["B4 Document Intelligence"]
+  - problem: "Thiếu visibility toàn chuỗi"
+    ai_capability: ["B8 Knowledge Graph", "B7 Anomaly Detection"]
+  - problem: "Planning multi-echelon phức tạp"
+    ai_capability: ["B11 Optimization", "B13 Simulation", "B15 Agentic AI"]
+
+priority_capabilities:
+  high: ["B2 Forecasting", "B11 Optimization", "B4 Document Intelligence"]
+  medium: ["B7 Anomaly Detection", "B13 Simulation", "B15 Agentic AI"]
+  low: ["B10 Recommendation", "B12 Generative AI"]
+
+regulations: "Customs regulations, dangerous goods (IATA/IMDG), cabotage laws, driver hours"
+
+competitive_landscape:
+  - "FourKites, project44 — visibility platforms"
+  - "Blue Yonder — SC planning"
+  - "Locus, Routific — route optimization"
+  - "Smartlog — Vietnamese SC platform (us)"
+```
+
+---
+
+### I7. Transportation & Mobility
+
+```yaml
+id: I7
+tier: B
+name: "Transportation & Mobility"
+tagline: "Vận chuyển hành khách — từ airline đến ride-hailing đến autonomous"
+
+overview: |
+  KHÁC với I6 (Logistics = hàng hóa). I7 = vận chuyển NGƯỜI.
+  Airline, railway, bus, ride-hailing, autonomous vehicles, fleet management.
+  Bài toán: revenue management, dynamic pricing, scheduling, safety.
+
+market_context:
+  vietnam: "VietJet, Vietnam Airlines. Grab dominant. Railway modernization."
+  sea: "Grab, GoTo. Airline growth. MRT expansion."
+  ai_maturity: "L2-L3 — Airlines mature, ride-hailing advanced, public transit catching up"
+  ai_appetite: "High — Revenue management = directly profitable"
+  key_buyers: "Airlines, Railway operators, Ride-hailing platforms, City transport authorities"
+
+data_characteristics:
+  types: ["Booking/reservation data", "GPS/telematics", "Passenger flow", "Pricing history", "Schedule data"]
+  volume: "Very large (ride-hailing), Large (airlines), Medium (public transit)"
+  quality: "Structured, real-time"
+  special: "Dynamic pricing critical, network effects, peak/off-peak patterns"
+
+key_pain_points:
+  - problem: "Revenue management — pricing không tối ưu"
+    ai_capability: ["B11 Optimization", "B1 Tabular ML", "B2 Forecasting"]
+  - problem: "Scheduling (crew, vehicle) phức tạp"
+    ai_capability: ["B11 Optimization"]
+  - problem: "Dự báo demand theo route/time"
+    ai_capability: ["B2 Forecasting"]
+  - problem: "Autonomous driving / ADAS"
+    ai_capability: ["B3 Computer Vision", "B15 Agentic AI"]
+  - problem: "Fleet maintenance prediction"
+    ai_capability: ["B7 Anomaly Detection", "B2 Forecasting"]
+
+priority_capabilities:
+  high: ["B11 Optimization", "B2 Forecasting", "B1 Tabular ML"]
+  medium: ["B3 Computer Vision", "B7 Anomaly Detection"]
+  low: ["B13 Simulation", "B14 Conversational AI"]
+
+regulations: "Aviation regulations (IATA), transportation safety, ride-hailing regulations"
+
+competitive_landscape:
+  - "FLYR — airline revenue management AI"
+  - "Optibus — public transit optimization"
+  - "Waymo, Cruise — autonomous vehicles"
+  - "Grab, Uber — ride-hailing (heavy AI)"
+```
+
+---
+
+### I8. Food & Beverage / Hospitality
+
+```yaml
+id: I8
+tier: B
+name: "Food & Beverage / Hospitality"
+tagline: "Nhà hàng, khách sạn, F&B — từ menu đến trải nghiệm khách hàng"
+
+overview: |
+  F&B và Hospitality có bài toán AI riêng biệt: menu optimization,
+  food waste prediction, kitchen scheduling, demand forecasting per outlet,
+  hotel revenue management, guest personalization.
+  
+  KHÁC Retail (I5): I5 = bán hàng hóa. I8 = bán trải nghiệm + thực phẩm chế biến.
+
+market_context:
+  vietnam: "F&B tăng trưởng mạnh. Chuỗi nhà hàng, cloud kitchen, food delivery."
+  sea: "Grab Food, ShopeeFood. Hospitality recovery post-COVID."
+  ai_maturity: "L1-L2 — POS data có sẵn, AI rất early"
+  ai_appetite: "Medium — Margin mỏng nhưng volume lớn, AI tiết kiệm chi phí"
+  key_buyers: "Restaurant chains, Hotel groups, Food delivery platforms, QSR (Quick Service Restaurant)"
+
+data_characteristics:
+  types: ["POS transactions", "Inventory/ingredients", "Customer reviews", "Reservation data", "Delivery data"]
+  volume: "Medium to Large (chains)"
+  quality: "Structured POS, unstructured reviews"
+  special: "Perishable inventory, high seasonality (holidays, weather), labor-intensive"
+
+key_pain_points:
+  - problem: "Food waste quá cao — dự báo demand per dish không chính xác"
+    ai_capability: ["B2 Forecasting", "B11 Optimization"]
+  - problem: "Menu pricing và composition chưa tối ưu"
+    ai_capability: ["B1 Tabular ML", "B11 Optimization"]
+  - problem: "Staffing/scheduling khó — peak hours biến động"
+    ai_capability: ["B2 Forecasting", "B11 Optimization"]
+  - problem: "Hotel revenue management (room pricing)"
+    ai_capability: ["B11 Optimization", "B2 Forecasting"]
+  - problem: "Guest experience personalization"
+    ai_capability: ["B10 Recommendation", "B14 Conversational AI"]
+
+priority_capabilities:
+  high: ["B2 Forecasting", "B11 Optimization", "B1 Tabular ML"]
+  medium: ["B10 Recommendation", "B5 NLP (review analysis)", "B14 Conversational AI"]
+  low: ["B3 Computer Vision", "B7 Anomaly Detection"]
+
+regulations: "Food safety (HACCP), health inspections, labor laws, hotel ratings"
+
+competitive_landscape:
+  - "Winnow — food waste AI"
+  - "IDeaS (SAS) — hotel revenue management"
+  - "Toast, Square — POS with analytics"
+  - "Tastewise — F&B trend analytics"
+```
+
+---
+
+## Tầng C — TRI THỨC & QUY ĐỊNH (Knowledge & Regulated)
+
+Ngành bán chuyên môn, không bán hàng vật lý. Heavily regulated.
+
+**Đặc điểm chung:** Dữ liệu sensitive, regulated, domain knowledge rất sâu, compliance là bắt buộc. AI phải interpretable và auditable.
+
+---
+
+### I9. Finance & Banking
+
+```yaml
+id: I9
+tier: C
+name: "Finance & Banking"
+tagline: "Ngân hàng và tài chính — risk, fraud, compliance, lending"
+
+overview: |
+  Banking, investment, payment, fintech.
+  AI cho credit scoring, fraud detection, AML/KYC, algorithmic trading,
+  customer analytics, process automation.
+  
+  TÁCH khỏi Insurance (I10) vì: data khác, regulations khác, 
+  buyer khác, pipeline AI khác.
+
+market_context:
+  vietnam: "Fintech boom. Digital banking tăng mạnh. VNPay, MoMo."
+  sea: "SEA digital finance hotspot. GrabFinance, SeaMoney."
+  ai_maturity: "L3 — Banks đã dùng ML cho scoring, fraud. Fintech native AI."
+  ai_appetite: "Very High — Regulated but high budget"
+  key_buyers: "Banks (CTO, CRO), Fintechs, Payment companies, Asset managers"
+
+data_characteristics:
+  types: ["Transaction records", "Customer profiles", "Market data", "KYC documents", "Regulatory filings"]
+  volume: "Very large, real-time streaming"
+  quality: "Structured, high quality (regulated)"
+  special: "Time-sensitive (real-time fraud), sequential (transaction chains), regulated (audit trail)"
+
+key_pain_points:
+  - problem: "Fraud detection — giao dịch gian lận"
+    ai_capability: ["B7 Anomaly Detection", "B1 Tabular ML", "B8 Knowledge Graph"]
+  - problem: "Credit scoring — đánh giá rủi ro cho vay"
+    ai_capability: ["B1 Tabular ML"]
+  - problem: "KYC/AML — xác minh danh tính thủ công"
+    ai_capability: ["B4 Document Intelligence", "B3 Computer Vision"]
+  - problem: "Customer churn và cross-sell"
+    ai_capability: ["B1 Tabular ML", "B10 Recommendation"]
+  - problem: "Regulatory compliance tốn resources"
+    ai_capability: ["B5 NLP", "B9 Search & RAG", "B4 Document Intelligence"]
+
+priority_capabilities:
+  high: ["B7 Anomaly Detection", "B1 Tabular ML", "B4 Document Intelligence"]
+  medium: ["B2 Forecasting", "B10 Recommendation", "B5 NLP"]
+  low: ["B13 Simulation", "B12 Generative AI"]
+
+regulations: "Basel III/IV, AML/KYC, PCI-DSS, data privacy, central bank regulations"
+
+competitive_landscape:
+  - "Featurespace — fraud detection"
+  - "Zest AI — credit scoring"
+  - "Ayasdi (SymphonyAI) — AML"
+  - "Temenos, FIS — banking platforms (adding AI)"
+```
+
+---
+
+### I10. Insurance
+
+```yaml
+id: I10
+tier: C
+name: "Insurance"
+tagline: "Bảo hiểm thông minh — underwriting, claims, actuarial, fraud"
+
+overview: |
+  TÁCH khỏi Finance vì: pipeline AI rất khác.
+  Underwriting (đánh giá rủi ro BH), Claims processing (xử lý bồi thường),
+  Actuarial modeling (tính phí BH), Fraud detection (gian lận BH).
+  Document-heavy, long-tail risk, very different data patterns vs banking.
+
+market_context:
+  vietnam: "Thị trường BH tăng 15-20%/năm. Life + non-life. Nhiều room."
+  sea: "Insurance penetration thấp → growth potential lớn."
+  ai_maturity: "L1-L2 — Rất traditional, đang bắt đầu digitalize"
+  ai_appetite: "High — Insurtech startups pushing innovation"
+  key_buyers: "Insurance companies, Reinsurers, Insurtechs, Brokers"
+
+data_characteristics:
+  types: ["Policy data", "Claims records", "Medical records", "Photos (damage)", "Actuarial tables", "External risk data"]
+  volume: "Medium to Large"
+  quality: "Mixed — structured policies + unstructured claims + images"
+  special: "Long-tail events, class imbalance (fraud is rare), document-heavy claims"
+
+key_pain_points:
+  - problem: "Underwriting thủ công, chậm, inconsistent"
+    ai_capability: ["B1 Tabular ML", "B4 Document Intelligence"]
+  - problem: "Claims processing tốn thời gian"
+    ai_capability: ["B4 Document Intelligence", "B3 Computer Vision (damage photos)", "B5 NLP"]
+  - problem: "Fraud detection trong claims"
+    ai_capability: ["B7 Anomaly Detection", "B1 Tabular ML", "B8 Knowledge Graph"]
+  - problem: "Pricing/actuarial không granular"
+    ai_capability: ["B1 Tabular ML", "B13 Simulation"]
+  - problem: "Customer retention thấp"
+    ai_capability: ["B1 Tabular ML", "B10 Recommendation"]
+
+priority_capabilities:
+  high: ["B1 Tabular ML", "B4 Document Intelligence", "B7 Anomaly Detection"]
+  medium: ["B3 Computer Vision", "B5 NLP", "B13 Simulation"]
+  low: ["B14 Conversational AI", "B8 Knowledge Graph"]
+
+regulations: "Insurance regulations, solvency requirements, claims handling standards"
+
+competitive_landscape:
+  - "Shift Technology — fraud detection for insurance"
+  - "Tractable — CV for vehicle damage assessment"
+  - "Akur8 — pricing/actuarial AI"
+  - "Lemonade — AI-native insurance"
+```
+
+---
+
+### I11. Healthcare & Hospital
+
+```yaml
+id: I11
+tier: C
+name: "Healthcare & Hospital"
+tagline: "Bệnh viện thông minh — chẩn đoán, patient flow, clinical support"
+
+overview: |
+  Hospital operations, clinical decision support, medical imaging,
+  patient flow optimization, EHR analytics, telemedicine.
+  
+  TÁCH khỏi Pharma (I12) vì: buyer khác (hospital vs pharma company),
+  data khác (patient records vs drug data), pipeline khác.
+
+market_context:
+  vietnam: "Hệ thống y tế đang modernize. Bệnh viện tư tăng. Telemedicine growth."
+  sea: "Healthcare spending tăng. Medical tourism (Thailand, Singapore)."
+  ai_maturity: "L1-L2 — HIS/EHR deploying, AI very early in most hospitals"
+  ai_appetite: "Medium — Budget constraints but high-impact potential"
+  key_buyers: "Hospital administrators, Clinical directors, Health tech companies"
+
+data_characteristics:
+  types: ["EHR/EMR", "Medical images (X-ray, CT, MRI)", "Lab results", "Patient flow data", "Insurance claims"]
+  volume: "Medium"
+  quality: "Sensitive, semi-structured, often siloed"
+  special: "HIPAA/privacy critical, small datasets per condition, class imbalance, life-critical accuracy requirements"
+
+key_pain_points:
+  - problem: "Bác sĩ quá tải — cần decision support"
+    ai_capability: ["B1 Tabular ML", "B3 Computer Vision (imaging)", "B9 Search & RAG"]
+  - problem: "Patient flow không tối ưu — wait time dài"
+    ai_capability: ["B2 Forecasting", "B11 Optimization"]
+  - problem: "Hồ sơ bệnh án xử lý thủ công"
+    ai_capability: ["B4 Document Intelligence", "B5 NLP"]
+  - problem: "Dịch bệnh — phát hiện sớm"
+    ai_capability: ["B7 Anomaly Detection", "B13 Simulation"]
+  - problem: "Staffing/scheduling phức tạp"
+    ai_capability: ["B11 Optimization", "B2 Forecasting"]
+
+priority_capabilities:
+  high: ["B3 Computer Vision", "B2 Forecasting", "B4 Document Intelligence"]
+  medium: ["B1 Tabular ML", "B5 NLP", "B11 Optimization"]
+  low: ["B10 Recommendation", "B12 Generative AI"]
+
+regulations: "HIPAA, HL7/FHIR, FDA (for clinical AI), medical device regulations"
+
+competitive_landscape:
+  - "Aidoc — radiology AI"
+  - "Tempus — clinical data analytics"
+  - "Epic, Cerner — EHR platforms (adding AI)"
+  - "Viz.ai — stroke detection"
+```
+
+---
+
+### I12. Pharmaceutical & Life Sciences
+
+```yaml
+id: I12
+tier: C
+name: "Pharmaceutical & Life Sciences"
+tagline: "Dược phẩm — drug discovery, clinical trials, pharmacovigilance"
+
+overview: |
+  Drug discovery, clinical trial optimization, pharmacovigilance,
+  manufacturing quality, regulatory submissions.
+  
+  KHÁC hoàn toàn Hospital (I11): buyer là pharma company, not hospital.
+  Data là molecular/genomic, not patient records. Timeline là years, not hours.
+
+market_context:
+  vietnam: "Pharma market growing. Local manufacturing + imports."
+  sea: "Singapore as biotech hub. Clinical trial destinations."
+  ai_maturity: "L2-L3 — Big pharma investing heavily in AI R&D"
+  ai_appetite: "Very High — Drug discovery AI = billions in potential savings"
+  key_buyers: "Pharma R&D teams, Biotech startups, CROs, Regulatory affairs"
+
+data_characteristics:
+  types: ["Molecular data", "Genomic data", "Clinical trial results", "Adverse event reports", "Scientific literature"]
+  volume: "Small per study, Large aggregate"
+  quality: "High quality (regulated) but expensive to generate"
+  special: "Very long feedback loops (drug development = 10-15 years), high-dimensional (genomic), small sample sizes"
+
+key_pain_points:
+  - problem: "Drug discovery quá lâu và đắt ($2B+ per drug)"
+    ai_capability: ["B1 Tabular ML", "B8 Knowledge Graph", "B13 Simulation"]
+  - problem: "Clinical trial design không tối ưu"
+    ai_capability: ["B11 Optimization", "B1 Tabular ML", "B13 Simulation"]
+  - problem: "Pharmacovigilance — phát hiện adverse events"
+    ai_capability: ["B5 NLP", "B7 Anomaly Detection"]
+  - problem: "Literature review tốn thời gian"
+    ai_capability: ["B9 Search & RAG", "B5 NLP"]
+  - problem: "Manufacturing quality control"
+    ai_capability: ["B3 Computer Vision", "B7 Anomaly Detection"]
+
+priority_capabilities:
+  high: ["B1 Tabular ML", "B8 Knowledge Graph", "B5 NLP"]
+  medium: ["B13 Simulation", "B9 Search & RAG", "B7 Anomaly Detection"]
+  low: ["B14 Conversational AI", "B2 Forecasting"]
+
+regulations: "FDA, EMA, GxP (GLP, GMP, GCP), ICH guidelines, pharmacovigilance regulations"
+
+competitive_landscape:
+  - "Recursion Pharmaceuticals — AI drug discovery"
+  - "Insilico Medicine — generative chemistry"
+  - "BenevolentAI — knowledge graph for drug discovery"
+  - "Veeva — pharma cloud (adding AI)"
+```
+
+---
+
+### I13. Legal & Compliance
+
+```yaml
+id: I13
+tier: C
+name: "Legal & Compliance"
+tagline: "Pháp lý thông minh — tìm kiếm, phân tích, tự động hóa văn bản"
+
+overview: |
+  Legal research, contract analysis, compliance monitoring,
+  case prediction, document automation, due diligence.
+  Text-heavy, precedent-based, regulatory-intensive.
+
+market_context:
+  vietnam: "Legal tech very early. Mostly manual. Opportunity for first-movers."
+  sea: "Singapore, Thailand advancing in legal tech."
+  ai_maturity: "L1 — Very manual, enormous room for AI"
+  ai_appetite: "Medium — Conservative industry but pain is real"
+  key_buyers: "Law firms, Corporate legal teams, Compliance departments, GovTech"
+
+data_characteristics:
+  types: ["Legal documents", "Case law", "Regulations", "Contracts", "Court filings"]
+  volume: "Large (text volume), but specialized"
+  quality: "High quality text, well-structured legally, but complex language"
+  special: "Precedent-based reasoning, jurisdiction-specific, interpretation-heavy"
+
+key_pain_points:
+  - problem: "Legal research tốn hàng giờ tìm precedent"
+    ai_capability: ["B9 Search & RAG", "B8 Knowledge Graph"]
+  - problem: "Contract review thủ công, dễ miss clauses"
+    ai_capability: ["B5 NLP", "B4 Document Intelligence"]
+  - problem: "Compliance monitoring across regulations"
+    ai_capability: ["B5 NLP", "B7 Anomaly Detection"]
+  - problem: "Case outcome prediction"
+    ai_capability: ["B1 Tabular ML"]
+  - problem: "Document drafting repetitive"
+    ai_capability: ["B12 Generative AI", "B9 Search & RAG"]
+
+priority_capabilities:
+  high: ["B9 Search & RAG", "B5 NLP", "B4 Document Intelligence"]
+  medium: ["B8 Knowledge Graph", "B12 Generative AI", "B1 Tabular ML"]
+  low: ["B14 Conversational AI", "B7 Anomaly Detection"]
+
+regulations: "Bar regulations, client privilege, data privacy, court procedures"
+
+competitive_landscape:
+  - "Harvey AI — AI for law firms (GPT-powered)"
+  - "Casetext (Thomson Reuters) — legal search AI"
+  - "Kira Systems (Litera) — contract analysis"
+  - "Ironclad — contract lifecycle management"
+```
+
+---
+
+### I14. Education & EdTech
+
+```yaml
+id: I14
+tier: C
+name: "Education & EdTech"
+tagline: "Giáo dục cá nhân hóa — tutoring, assessment, content, analytics"
+
+overview: |
+  AI tutor, adaptive learning, automated grading,
+  content generation, student analytics, plagiarism detection.
+  Post-COVID EdTech boom accelerated AI adoption.
+
+market_context:
+  vietnam: "EdTech tăng mạnh. Mô hình online/hybrid. Nhiều startup."
+  sea: "Byju's, Ruangguru, Topica. Large young population."
+  ai_maturity: "L1-L2 — LMS deployed, AI features emerging"
+  ai_appetite: "High — AI tutor is the holy grail"
+  key_buyers: "EdTech companies, Universities, K-12 schools, Corporate training"
+
+data_characteristics:
+  types: ["Student performance data", "Learning behavior logs", "Content library", "Assessment results", "Engagement metrics"]
+  volume: "Medium"
+  quality: "Structured LMS data + unstructured content"
+  special: "Sequential learning paths, engagement patterns, diverse learner profiles"
+
+key_pain_points:
+  - problem: "Mỗi học sinh cần lộ trình khác nhau"
+    ai_capability: ["B10 Recommendation", "B1 Tabular ML"]
+  - problem: "Chấm bài tốn thời gian"
+    ai_capability: ["B5 NLP", "B12 Generative AI"]
+  - problem: "Tạo content giáo dục tốn resources"
+    ai_capability: ["B12 Generative AI", "B9 Search & RAG"]
+  - problem: "Phát hiện học sinh gặp khó khăn sớm"
+    ai_capability: ["B1 Tabular ML", "B7 Anomaly Detection"]
+  - problem: "AI Tutor — trợ giảng thông minh"
+    ai_capability: ["B14 Conversational AI", "B9 Search & RAG"]
+
+priority_capabilities:
+  high: ["B14 Conversational AI", "B10 Recommendation", "B12 Generative AI"]
+  medium: ["B5 NLP", "B1 Tabular ML", "B9 Search & RAG"]
+  low: ["B3 Computer Vision", "B2 Forecasting"]
+
+regulations: "FERPA, COPPA (children's data), accessibility standards, academic integrity"
+
+competitive_landscape:
+  - "Khan Academy + Khanmigo (GPT-powered tutor)"
+  - "Duolingo — adaptive language learning"
+  - "Coursera, edX — AI-enhanced platforms"
+  - "Century Tech — adaptive learning AI"
+```
+
+---
+
+## Tầng D — THÔNG TIN & SÁNG TẠO (Information & Creative)
+
+Ngành tạo và phân phối nội dung, kết nối.
+
+**Đặc điểm chung:** Dữ liệu massive, behavioral, multi-modal. AI cho recommendation, moderation, personalization, content creation.
+
+---
+
+### I15. Media & Entertainment
+
+```yaml
+id: I15
+tier: D
+name: "Media & Entertainment"
+tagline: "Nội dung thông minh — recommendation, moderation, production"
+
+overview: |
+  Content recommendation, moderation, automated production,
+  audience analytics, ad optimization, rights management.
+  
+  TÁCH Gaming (I17) vì: interactive vs passive, tech stack khác,
+  business model khác (subscription vs in-app purchase).
+
+market_context:
+  vietnam: "Social media active. Local streaming platforms emerging. News digitalization."
+  sea: "TikTok, YouTube dominant. Local content creation boom."
+  ai_maturity: "L2-L3 — Platforms use heavy ML, publishers catching up"
+  ai_appetite: "Very High — Recommendation = engagement = revenue"
+  key_buyers: "Streaming platforms, Publishers, News organizations, Content creators"
+
+data_characteristics:
+  types: ["Content metadata", "User behavior (views, clicks, time)", "Social interactions", "Multi-modal content (text, image, video, audio)"]
+  volume: "Very large, real-time"
+  quality: "Structured behavioral data, unstructured content"
+  special: "Cold-start problem (new content), multi-modal, attention economics"
+
+key_pain_points:
+  - problem: "Content recommendation không chính xác"
+    ai_capability: ["B10 Recommendation"]
+  - problem: "Content moderation at scale"
+    ai_capability: ["B5 NLP", "B3 Computer Vision", "B7 Anomaly Detection"]
+  - problem: "Content creation tốn resources"
+    ai_capability: ["B12 Generative AI"]
+  - problem: "Audience analytics và segmentation"
+    ai_capability: ["B1 Tabular ML", "B7 Anomaly Detection"]
+  - problem: "Copyright và rights management"
+    ai_capability: ["B8 Knowledge Graph", "B3 Computer Vision"]
+
+priority_capabilities:
+  high: ["B10 Recommendation", "B12 Generative AI", "B5 NLP"]
+  medium: ["B3 Computer Vision", "B7 Anomaly Detection", "B1 Tabular ML"]
+  low: ["B2 Forecasting", "B11 Optimization"]
+
+regulations: "Copyright, content regulations, data privacy, age restrictions"
+
+competitive_landscape:
+  - "Spotify, Netflix, YouTube — recommendation engines"
+  - "OpenAI, Anthropic — content generation"
+  - "Hive — content moderation AI"
+```
+
+---
+
+### I16. Telecom & Connectivity
+
+```yaml
+id: I16
+tier: D
+name: "Telecom & Connectivity"
+tagline: "Viễn thông thông minh — network optimization, churn, customer service"
+
+overview: |
+  Network optimization, predictive maintenance, churn prediction,
+  customer service automation, fraud detection, 5G/edge intelligence.
+
+market_context:
+  vietnam: "Viettel, VNPT, MobiFone. 5G rolling out."
+  sea: "High mobile penetration. Data consumption growing fast."
+  ai_maturity: "L2-L3 — Network data rich, AI teams exist at major telcos"
+  ai_appetite: "High — Cost reduction + network quality"
+  key_buyers: "Telecom operators (CTO, CMO), Tower companies, MVNOs"
+
+data_characteristics:
+  types: ["CDR (Call Detail Records)", "Network performance data", "Customer profiles", "Billing data", "IoT device data"]
+  volume: "Very large, streaming"
+  quality: "Structured, high-frequency"
+  special: "Network topology (graph), real-time requirements, massive scale"
+
+key_pain_points:
+  - problem: "Network congestion và optimization"
+    ai_capability: ["B11 Optimization", "B2 Forecasting", "B7 Anomaly Detection"]
+  - problem: "Customer churn cao"
+    ai_capability: ["B1 Tabular ML", "B10 Recommendation"]
+  - problem: "Customer service tốn chi phí"
+    ai_capability: ["B14 Conversational AI", "B9 Search & RAG"]
+  - problem: "Fraud (SIM swap, subscription fraud)"
+    ai_capability: ["B7 Anomaly Detection", "B8 Knowledge Graph"]
+  - problem: "Predictive maintenance cho network equipment"
+    ai_capability: ["B2 Forecasting", "B7 Anomaly Detection"]
+
+priority_capabilities:
+  high: ["B7 Anomaly Detection", "B1 Tabular ML", "B2 Forecasting"]
+  medium: ["B11 Optimization", "B14 Conversational AI", "B10 Recommendation"]
+  low: ["B12 Generative AI", "B3 Computer Vision"]
+
+regulations: "Telecom regulations, spectrum licensing, data privacy, lawful interception"
+
+competitive_landscape:
+  - "Nokia AVA — network AI"
+  - "Amdocs — telecom AI/ML"
+  - "Subex — fraud management"
+  - "ASOCS, Parallel Wireless — network optimization"
+```
+
+---
+
+### I17. Gaming & Interactive Entertainment
+
+```yaml
+id: I17
+tier: D
+name: "Gaming & Interactive Entertainment"
+tagline: "Game thông minh — matchmaking, procedural gen, anti-cheat, economy"
+
+overview: |
+  Player behavior prediction, matchmaking, procedural content generation,
+  anti-cheat, in-game economy balancing, NPC AI, testing automation.
+  
+  KHÁC Media (I15): interactive, real-time, complex systems, different tech stack.
+
+market_context:
+  vietnam: "Gaming market growing. VNG, Garena presence. Mobile gaming dominant."
+  sea: "SEA = one of fastest growing gaming markets globally."
+  ai_maturity: "L2-L3 — Large studios advanced, indie catching up"
+  ai_appetite: "Very High — AI = competitive advantage in engagement"
+  key_buyers: "Game studios, Publishers, Platform operators, Esports"
+
+data_characteristics:
+  types: ["Player telemetry", "In-game events", "Purchase records", "Social interactions", "Replay data"]
+  volume: "Very large, real-time streaming"
+  quality: "Structured, high-frequency"
+  special: "Real-time decision making, complex multi-agent environments, balance between fun and fairness"
+
+key_pain_points:
+  - problem: "Matchmaking không công bằng → player frustration"
+    ai_capability: ["B1 Tabular ML", "B11 Optimization"]
+  - problem: "Content creation quá đắt (assets, levels, NPCs)"
+    ai_capability: ["B12 Generative AI", "B13 Simulation"]
+  - problem: "Cheating và fraud"
+    ai_capability: ["B7 Anomaly Detection"]
+  - problem: "In-game economy inflation/deflation"
+    ai_capability: ["B13 Simulation", "B11 Optimization"]
+  - problem: "Player churn prediction"
+    ai_capability: ["B1 Tabular ML", "B2 Forecasting"]
+
+priority_capabilities:
+  high: ["B1 Tabular ML", "B12 Generative AI", "B7 Anomaly Detection"]
+  medium: ["B11 Optimization", "B13 Simulation", "B10 Recommendation"]
+  low: ["B5 NLP", "B9 Search & RAG"]
+
+regulations: "Loot box regulations, age ratings, gambling laws, data privacy (children)"
+
+competitive_landscape:
+  - "Unity Sentis — in-engine ML"
+  - "modl.ai — game testing AI"
+  - "Latitude (AI Dungeon) — procedural narrative"
+  - "Hive — game moderation"
+```
+
+---
+
+## Tầng E — CROSS-INDUSTRY DOMAINS
+
+Không phải ngành kinh tế — nhưng là domain có buyer riêng, budget riêng, tồn tại trong MỌI ngành.
+
+**Đặc điểm chung:** CMO, CHRO, CISO là buyers thật. Họ mua AI solutions cho department của mình, không phụ thuộc vertical industry.
+
+---
+
+### I18. Marketing & Advertising
+
+```yaml
+id: I18
+tier: E
+name: "Marketing & Advertising"
+tagline: "Marketing thông minh — targeting, attribution, creative, automation"
+
+overview: |
+  Ad targeting, audience segmentation, attribution modeling,
+  creative optimization, campaign automation, content marketing AI.
+  
+  Cross-industry: MỌI công ty có marketing department.
+  Buyer: CMO, VP Marketing, Growth leads.
+
+market_context:
+  vietnam: "Digital marketing tăng mạnh. Facebook, Google Ads dominant."
+  sea: "Programmatic ads growing. Influencer marketing AI emerging."
+  ai_maturity: "L2-L3 — MarTech stack mature, AI features built-in"
+  ai_appetite: "Very High — Direct revenue impact measurable"
+  key_buyers: "CMOs, Marketing agencies, AdTech platforms, Growth teams"
+
+data_characteristics:
+  types: ["Campaign data", "Click/impression logs", "Customer journeys", "Creative assets", "CRM data", "Social media data"]
+  volume: "Very large (billions of impressions)"
+  quality: "Structured but noisy (attribution is hard)"
+  special: "Multi-touch attribution, privacy changes (cookie deprecation), creative fatigue"
+
+key_pain_points:
+  - problem: "Ad targeting không chính xác, CAC cao"
+    ai_capability: ["B1 Tabular ML", "B10 Recommendation"]
+  - problem: "Attribution modeling — không biết channel nào hiệu quả"
+    ai_capability: ["B1 Tabular ML", "B13 Simulation"]
+  - problem: "Creative production quá chậm và đắt"
+    ai_capability: ["B12 Generative AI"]
+  - problem: "Campaign optimization thủ công"
+    ai_capability: ["B11 Optimization", "B15 Agentic AI"]
+  - problem: "Customer segmentation quá thô"
+    ai_capability: ["B1 Tabular ML"]
+
+priority_capabilities:
+  high: ["B1 Tabular ML", "B12 Generative AI", "B10 Recommendation"]
+  medium: ["B11 Optimization", "B5 NLP", "B15 Agentic AI"]
+  low: ["B2 Forecasting", "B3 Computer Vision"]
+
+regulations: "GDPR, CCPA, cookie/tracking regulations, advertising standards"
+
+competitive_landscape:
+  - "The Trade Desk — programmatic AI"
+  - "Jasper, Copy.ai — AI copywriting"
+  - "Albert AI — autonomous marketing"
+  - "HubSpot, Salesforce Marketing — CRM + AI"
+```
+
+---
+
+### I19. HR & Workforce Management
+
+```yaml
+id: I19
+tier: E
+name: "HR & Workforce Management"
+tagline: "Nhân sự thông minh — tuyển dụng, giữ người, scheduling, upskilling"
+
+overview: |
+  Recruitment AI, employee attrition prediction, workforce scheduling,
+  skills matching, performance analytics, compensation optimization.
+  
+  Cross-industry: MỌI công ty có HR department.
+  Buyer: CHRO, VP People, Talent Acquisition leads.
+
+market_context:
+  vietnam: "HR tech growing. Recruitment platforms (VietnamWorks, TopCV). Labor market tight for tech."
+  sea: "Diverse labor markets. Gig economy growing."
+  ai_maturity: "L1-L2 — HRIS deployed, AI features emerging"
+  ai_appetite: "Medium-High — Talent war drives investment"
+  key_buyers: "CHROs, Talent Acquisition, Workforce Planning teams"
+
+data_characteristics:
+  types: ["Employee records", "Resumes/CVs", "Performance reviews", "Engagement surveys", "Attendance/scheduling data", "Compensation data"]
+  volume: "Small to Medium (per company)"
+  quality: "Mixed — structured HRIS + unstructured resumes/reviews"
+  special: "Bias sensitivity (fairness in hiring), small datasets, privacy concerns"
+
+key_pain_points:
+  - problem: "Tuyển dụng chậm, screen CV thủ công"
+    ai_capability: ["B5 NLP", "B1 Tabular ML", "B10 Recommendation"]
+  - problem: "Employee attrition — mất người bất ngờ"
+    ai_capability: ["B1 Tabular ML"]
+  - problem: "Workforce scheduling phức tạp (shifts, skills, preferences)"
+    ai_capability: ["B11 Optimization"]
+  - problem: "Skills gap analysis"
+    ai_capability: ["B8 Knowledge Graph", "B1 Tabular ML"]
+  - problem: "Compensation benchmarking"
+    ai_capability: ["B1 Tabular ML", "B9 Search & RAG"]
+
+priority_capabilities:
+  high: ["B1 Tabular ML", "B5 NLP", "B11 Optimization"]
+  medium: ["B10 Recommendation", "B14 Conversational AI", "B8 Knowledge Graph"]
+  low: ["B2 Forecasting", "B3 Computer Vision"]
+
+regulations: "Labor laws, anti-discrimination (EEOC), data privacy, bias auditing requirements"
+
+competitive_landscape:
+  - "HireVue — AI video interviewing"
+  - "Eightfold AI — talent intelligence"
+  - "Visier — people analytics"
+  - "Workday — HR platform (adding AI)"
+```
+
+---
+
+### I20. Cybersecurity & IT Operations
+
+```yaml
+id: I20
+tier: E
+name: "Cybersecurity & IT Operations"
+tagline: "An ninh mạng & vận hành IT — threat detection, SOC automation, AIOps"
+
+overview: |
+  Threat detection, SIEM/SOC automation, vulnerability management,
+  AIOps (IT operations AI), incident response, compliance monitoring.
+  
+  Cross-industry: MỌI công ty có IT & security needs.
+  Buyer: CISO, VP Engineering, IT Operations leads.
+
+market_context:
+  vietnam: "Cybersecurity awareness tăng mạnh. Government pushing regulations."
+  sea: "Cybercrime tăng. Data protection laws mới (PDPA Thailand, Indonesia)."
+  ai_maturity: "L2-L3 — Security tools đã dùng ML, AIOps emerging"
+  ai_appetite: "Very High — Threat landscape expanding faster than human capacity"
+  key_buyers: "CISOs, SOC teams, IT Operations, Managed Security Providers"
+
+data_characteristics:
+  types: ["Network logs", "System events", "Threat intelligence feeds", "Vulnerability scans", "User behavior data", "Email/endpoint data"]
+  volume: "Very large, streaming, high-velocity"
+  quality: "Structured logs, massive volume, needle-in-haystack problem"
+  special: "Adversarial (attackers adapt), extreme class imbalance, real-time requirements, false positive sensitivity"
+
+key_pain_points:
+  - problem: "Alert fatigue — quá nhiều alerts, SOC team overwhelmed"
+    ai_capability: ["B7 Anomaly Detection", "B1 Tabular ML"]
+  - problem: "Threat detection chậm — attacker dwell time cao"
+    ai_capability: ["B7 Anomaly Detection", "B8 Knowledge Graph"]
+  - problem: "Incident response thủ công, chậm"
+    ai_capability: ["B15 Agentic AI", "B14 Conversational AI"]
+  - problem: "Vulnerability prioritization — patch cái nào trước?"
+    ai_capability: ["B1 Tabular ML", "B11 Optimization"]
+  - problem: "Compliance monitoring tốn resources"
+    ai_capability: ["B5 NLP", "B9 Search & RAG"]
+
+priority_capabilities:
+  high: ["B7 Anomaly Detection", "B1 Tabular ML", "B15 Agentic AI"]
+  medium: ["B8 Knowledge Graph", "B5 NLP", "B14 Conversational AI"]
+  low: ["B2 Forecasting", "B12 Generative AI"]
+
+regulations: "GDPR, SOC2, ISO 27001, NIST framework, PCI-DSS, local data protection laws"
+
+competitive_landscape:
+  - "CrowdStrike — endpoint + AI"
+  - "Darktrace — autonomous response"
+  - "SentinelOne — AI-powered EDR"
+  - "Splunk, Elastic — SIEM + ML"
+  - "BigPanda, Moogsoft — AIOps"
+```
+
+---
+
+## Tổng hợp — 20 Industries
+
+| Tier | ID | Industry | AI Maturity | AI Appetite | Key Buyer |
+|------|-----|---------|------------|------------|-----------|
+| A | I1 | Agriculture & Agritech | L1 | Medium | Agri-corporates, Co-ops |
+| A | I2 | Manufacturing & Industrial | L2 | High | Plant managers, COOs |
+| A | I3 | Construction & Built Environment | L1 | Medium | Construction firms, Developers |
+| A | I4 | Energy & Utilities | L2 | High | Utilities, Grid operators |
+| B | I5 | Retail & E-commerce | L2-L3 | Very High | E-commerce, Retail chains |
+| B | I6 | Logistics & Supply Chain | L2 | High | 3PLs, SC teams |
+| B | I7 | Transportation & Mobility | L2-L3 | High | Airlines, Ride-hailing |
+| B | I8 | Food & Beverage / Hospitality | L1-L2 | Medium | Restaurant chains, Hotels |
+| C | I9 | Finance & Banking | L3 | Very High | Banks, Fintechs |
+| C | I10 | Insurance | L1-L2 | High | Insurers, Insurtechs |
+| C | I11 | Healthcare & Hospital | L1-L2 | Medium | Hospitals, Health tech |
+| C | I12 | Pharmaceutical & Life Sciences | L2-L3 | Very High | Pharma R&D, Biotech |
+| C | I13 | Legal & Compliance | L1 | Medium | Law firms, Corporate legal |
+| C | I14 | Education & EdTech | L1-L2 | High | EdTech, Universities |
+| D | I15 | Media & Entertainment | L2-L3 | Very High | Platforms, Publishers |
+| D | I16 | Telecom & Connectivity | L2-L3 | High | Telco operators |
+| D | I17 | Gaming & Interactive | L2-L3 | Very High | Game studios |
+| E | I18 | Marketing & Advertising | L2-L3 | Very High | CMOs, Agencies |
+| E | I19 | HR & Workforce Management | L1-L2 | Medium-High | CHROs, HR Tech |
+| E | I20 | Cybersecurity & IT Operations | L2-L3 | Very High | CISOs, IT Ops |
+
+---
+
+## Ma trận đầy đủ — 15 Capabilities × 20 Industries = 300 Solutions
+
+```
+AI CAPABILITY    │Agri│Mfg │Cons│Ener│Retl│Logi│Tran│F&B │Fina│Insu│Heal│Phar│Legl│Edu │Medi│Tele│Game│Mktg│HR  │Cybe│
+                 │ I1 │ I2 │ I3 │ I4 │ I5 │ I6 │ I7 │ I8 │ I9 │I10 │I11 │I12 │I13 │I14 │I15 │I16 │I17 │I18 │I19 │I20 │
+═════════════════╪════╪════╪════╪════╪════╪════╪════╪════╪════╪════╪════╪════╪════╪════╪════╪════╪════╪════╪════╪════╡
+B1  Tabular ML   │ ★★ │ ★★ │ ★★ │ ★  │★★★│ ★★ │ ★★ │ ★★ │★★★│★★★│ ★★ │★★★│ ★  │ ★★ │ ★★ │★★★│★★★│★★★│★★★│★★★│
+B2  Forecasting  │★★★│ ★★ │ ★★ │★★★│★★★│★★★│★★★│★★★│ ★★ │ ★  │ ★★ │ ★  │ ★  │ ★  │ ★  │★★★│ ★★ │ ★  │ ★  │ ★  │
+B3  Vision       │★★★│★★★│★★★│ ★★ │ ★★ │ ★★ │ ★★ │ ★  │ ★  │ ★★ │★★★│ ★★ │ ★  │ ★  │ ★★ │ ★  │ ★  │ ★  │ ★  │ ★  │
+B4  DocIntel     │ ★  │ ★★ │ ★★ │ ★  │ ★  │★★★│ ★  │ ★  │★★★│★★★│ ★★ │ ★  │★★★│ ★  │ ★  │ ★  │ ★  │ ★  │ ★★ │ ★  │
+B5  NLP          │ ★  │ ★  │ ★  │ ★  │ ★★ │ ★  │ ★  │ ★★ │ ★★ │ ★★ │ ★★ │★★★│★★★│ ★★ │★★★│ ★  │ ★  │ ★★ │★★★│ ★★ │
+B6  Audio        │ ★  │ ★★ │ ★  │ ★  │ ★  │ ★  │ ★  │ ★  │ ★  │ ★  │ ★★ │ ★  │ ★  │ ★★ │ ★★ │ ★★ │ ★  │ ★  │ ★  │ ★  │
+B7  Anomaly      │ ★★ │★★★│ ★★ │★★★│ ★★ │ ★★ │ ★★ │ ★  │★★★│★★★│ ★★ │ ★★ │ ★  │ ★  │ ★★ │★★★│★★★│ ★  │ ★  │★★★│
+B8  KGraph       │ ★  │ ★  │ ★  │ ★  │ ★  │ ★★ │ ★  │ ★  │ ★★ │ ★  │ ★★ │★★★│ ★★ │ ★  │ ★  │ ★  │ ★  │ ★  │ ★★ │ ★★ │
+B9  RAG          │ ★  │ ★  │ ★★ │ ★  │ ★★ │ ★★ │ ★  │ ★  │ ★★ │ ★  │ ★★ │ ★★ │★★★│ ★★ │ ★  │ ★  │ ★  │ ★  │ ★  │ ★★ │
+B10 Recommend    │ ★  │ ★  │ ★  │ ★  │★★★│ ★  │ ★  │ ★★ │ ★★ │ ★  │ ★  │ ★  │ ★  │★★★│★★★│ ★★ │ ★★ │★★★│ ★★ │ ★  │
+B11 Optimize     │ ★★ │★★★│ ★★ │★★★│ ★★ │★★★│★★★│ ★★ │ ★★ │ ★  │ ★★ │ ★★ │ ★  │ ★  │ ★  │ ★★ │ ★★ │ ★★ │ ★★ │ ★  │
+B12 GenAI        │ ★  │ ★  │ ★  │ ★  │ ★★ │ ★  │ ★  │ ★  │ ★  │ ★  │ ★  │ ★  │ ★★ │★★★│★★★│ ★  │★★★│★★★│ ★  │ ★  │
+B13 Simulation   │ ★★ │★★★│ ★★ │★★★│ ★  │ ★★ │ ★  │ ★  │ ★★ │ ★★ │ ★  │ ★★ │ ★  │ ★  │ ★  │ ★  │ ★★ │ ★  │ ★  │ ★  │
+B14 Converse     │ ★  │ ★  │ ★  │ ★  │ ★★ │ ★  │ ★  │ ★★ │ ★★ │ ★  │ ★★ │ ★  │ ★  │★★★│ ★  │ ★★ │ ★  │ ★  │ ★★ │ ★★ │
+B15 Agentic      │ ★  │ ★  │ ★  │ ★  │ ★  │ ★★ │ ★  │ ★  │ ★  │ ★  │ ★  │ ★  │ ★  │ ★  │ ★  │ ★  │ ★  │ ★★ │ ★  │★★★│
+
+★★★ = high demand, proven ROI
+★★  = moderate demand, growing
+★   = exists, niche
+(blank) = rare/not applicable
+```
+
+---
+
+## Cross-reference với Capabilities Taxonomy
+
+```
+Tài liệu liên quan:
+├── AI-CAPABILITY-TAXONOMY.md  → 15 AI Capabilities (4 tiers)
+├── AI-INDUSTRY-TAXONOMY.md    → 20 Industries (5 tiers) — FILE NÀY
+└── Ma trận 15 × 20 = 300 deployable solutions
+    Trong đó:
+    ├── ★★★ cells: ~60-70 (high priority, research first)
+    ├── ★★ cells:  ~80-90 (medium priority)
+    └── ★ cells:   ~100+ (niche, research on demand)
+```
+
+---
+
+*Industry Taxonomy v1.0 — MAESTRO Knowledge Graph Platform*  
+*20 Industries × 5 Tiers*  
+*This is the demand side. Capabilities Taxonomy is the supply side.*  
+*Together they form the complete MAESTRO matrix.*

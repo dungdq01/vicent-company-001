@@ -1,0 +1,702 @@
+{
+  "id": "B10",
+  "name": "Agentic AI",
+  "type": "baseline",
+  "slug": "agentic-ai",
+  "tagline": "Xây dựng hệ thống AI tự hành — agent có khả năng lập kế hoạch, sử dụng công cụ, ghi nhớ và thực thi đa bước — sử dụng LLMs, tool use, memory và orchestration frameworks, phục vụ tự động hoá quy trình doanh nghiệp, coding agents và nghiên cứu tự động",
+  "category": "baseline",
+  "icon": "Bot",
+  "color": "#00BFA5",
+  "depthLevel": 3,
+  "selectedAgents": ["R-alpha", "R-beta", "R-gamma", "R-MLE", "R-DE", "R-NLP", "R-DLE", "R-BE", "R-FE", "R-DO", "R-SE", "R-QA", "R-SA", "R-D01", "R-D02", "R-sigma"],
+  "description": "Agentic AI là lĩnh vực xây dựng hệ thống AI tự hành dựa trên LLM — có khả năng nhận thức môi trường, lập kế hoạch đa bước, sử dụng công cụ (tool use), duy trì bộ nhớ (memory) và tự điều chỉnh qua phản hồi (self-reflection). Khác với chatbot (B08) chỉ phản hồi đơn lẻ hoặc Generative AI (B09) sinh nội dung theo yêu cầu, agentic systems duy trì trạng thái liên tục, phân rã mục tiêu phức tạp thành subtasks, gọi công cụ bên ngoài, và lặp lại cho đến khi hoàn thành. Thị trường toàn cầu dự kiến vượt $13.2B năm 2027, tăng 42% CAGR. Với stack đang trưởng thành (LangGraph, Claude Agent SDK, AutoGen, CrewAI), hệ thống có thể triển khai từ single-agent research assistant đến multi-agent enterprise platform. TRL 5, emerging — khoảng cách giữa demo và production còn rất lớn.",
+  "description_paragraphs": [
+    "Agentic AI là giao điểm giữa Large Language Models, Tool Use, Planning và Memory, tập trung vào việc xây dựng hệ thống tự hành có khả năng thực thi nhiệm vụ phức tạp với sự giám sát tối thiểu của con người. Lĩnh vực bao gồm 7 sub-fields: Single-agent systems (ReAct, tool-use loops), Multi-agent systems (MetaGPT, ChatDev, AutoGen, CrewAI), Workflow orchestration (LangGraph state machines), Code agents (Devin, SWE-Agent, Claude Code, Cursor Agent), Research agents (Deep Research, web browsing), Robotic agents (RT-2, SayCan), và Simulation agents (Generative Agents, AgentSims). Nền tảng toán học bao gồm Markov Decision Processes, Monte Carlo Tree Search, ReAct framework, BDI model và multi-agent game theory.",
+    "Tại Việt Nam, B10 có điểm khả thi 5.1/10 (CONDITIONAL GO) với Market Demand cao nhất (9/10): mọi doanh nghiệp đều muốn AI agents. Tuy nhiên, Implementation Risk (3/10) và Data Availability (5/10) là thách thức lớn nhất. Agent reliability chưa đạt mức production — tỷ lệ hoàn thành task phức tạp chỉ 60-80%, chi phí mỗi agent task từ $0.10 đến $5.00+, và testing hệ thống non-deterministic chưa có giải pháp triệt để. Tiếng Việt reasoning trong LLMs kém hơn tiếng Anh 15-30%, compounding qua nhiều bước agent.",
+    "Chiến lược triển khai: bắt đầu với single-agent, internal use cases (code review agent, document processing agent). Xây evaluation infrastructure trước khi xây agent. Set hard cost limits từ ngày 1 (token budgets, step limits, circuit breakers). Chọn Claude + LangGraph làm initial stack. Điều kiện full GO: agent task success rate ≥ 95% trên defined benchmarks, chi phí per agent task dưới 5x chi phí nhân công tương đương, ít nhất 1 deployment production chạy 90+ ngày không có critical failure."
+  ],
+  "aliases": [
+    "AI tự hành",
+    "AI đại lý",
+    "Agentic AI",
+    "AI Agents",
+    "Hệ thống agent thông minh",
+    "LLM Agents",
+    "Autonomous AI Systems",
+    "AI tác tử"
+  ],
+  "maturity_level": "emerging",
+  "trl": 5,
+  "core_concepts": [
+    {
+      "name": "Agent Equation: LLM + Tools + Memory + Planning",
+      "definition": "Định nghĩa chuẩn của AI agent trong kỷ nguyên LLM: Agent = LLM_θ + Tools + Memory + Planning. LLM cung cấp reasoning engine (hiểu ngôn ngữ, sinh text, in-context learning). Tools mở rộng khả năng (code execution, web search, API calls, file I/O). Memory duy trì trạng thái xuyên phiên (conversation history, vector stores, knowledge graphs). Planning cho phép phân rã mục tiêu đa bước. Công thức này phân biệt agent với chatbot (chỉ LLM), RAG systems (LLM + retrieval), và pipelines (chuỗi công cụ cố định). Agent thực sự thể hiện tự chủ trong quyết định dùng tool nào, khi nào, và điều chỉnh kế hoạch dựa trên kết quả trung gian.",
+      "difficulty": "Intermediate",
+      "prerequisites": ["LLM fundamentals", "Hiểu biết cơ bản về API"]
+    },
+    {
+      "name": "ReAct Framework (Reasoning + Acting)",
+      "definition": "Framework nền tảng của mọi agent hiện đại (Yao et al., 2023). Đan xen reasoning traces và actions trong quá trình sinh: τ = (t₁, a₁, o₁, t₂, a₂, o₂, ..., tₙ, aₙ, oₙ, ŷ). t_i là thought (suy luận tự do), a_i ∈ A là action (Search[query], Lookup[term], Finish[answer]), o_i là observation từ environment. Sinh theo: t_i, a_i ~ P_θ(·|q, t₁, a₁, o₁, ..., o_{i-1}). Key insight: bằng cách sinh reasoning traces trước actions, model có thể lập kế hoạch tool nào dùng, diễn giải observations, và điều chỉnh chiến lược. ReAct vượt trội cả pure reasoning (CoT alone) lẫn pure acting trên HotpotQA (+6%), FEVER (+5%), ALFWorld (+10%). Là pattern nền tảng được LangChain, LlamaIndex và hầu hết frameworks áp dụng.",
+      "difficulty": "Intermediate",
+      "prerequisites": ["Prompt engineering cơ bản", "LLM fundamentals"]
+    },
+    {
+      "name": "Tool Use / Function Calling",
+      "definition": "Cơ chế giúp LLM agents tương tác với hệ thống bên ngoài. Model sinh structured function calls (thường JSON) được parse và thực thi bởi runtime. Các bước phát triển: OpenAI function calling (6/2023), Anthropic tool use (2024) với native tool calling và forced tool use, Claude computer use (2024) cho GUI interaction qua screenshot + mouse/keyboard, Model Context Protocol (MCP, 2025) — giao thức chuẩn hoá kết nối LLM với tools và data sources. Tool use biến LLM từ text generator thuần tuý thành general-purpose interface cho mọi hệ thống tính toán. Approaches: fine-tuning trên tool-use data (Toolformer), in-context learning (system prompt), RLHF trên tool-use trajectories.",
+      "difficulty": "Intermediate",
+      "prerequisites": ["API design cơ bản", "JSON/structured output"]
+    },
+    {
+      "name": "Chain-of-Thought (CoT) và Tree-of-Thought (ToT)",
+      "definition": "CoT (Wei et al., 2022): prompting LLM 'suy nghĩ từng bước' cải thiện dramatic reasoning performance. P(y|x) ≈ Σ Π P(z_i|x, z₁,...,z_{i-1}) · P(y|x, z₁,...,zₙ). Hiệu quả đặc biệt với models >100B parameters. ToT (Yao et al., 2023): tổng quát hoá CoT từ chuỗi đơn thành cây reasoning. Tại mỗi bước, model sinh nhiều 'thoughts' ứng viên, đánh giá (self-evaluation hoặc voting), sử dụng BFS/DFS để khám phá thought space. Cho phép backtracking — model có thể bỏ nhánh kém và thử phương án khác. Mở rộng: Graph-of-Thought (gộp nhánh), Algorithm-of-Thought (nội hoá search patterns), Stream-of-Search.",
+      "difficulty": "Intermediate",
+      "prerequisites": ["LLM fundamentals", "Prompt engineering"]
+    },
+    {
+      "name": "Planning và Task Decomposition",
+      "definition": "Nhiệm vụ phức tạp cần phân rã thành subtasks quản lý được. Agent planning hoạt động ở nhiều tầng: Hierarchical Task Networks (HTN) phân rã goal thành sub-goals rồi actions. Plan-and-Execute pattern: sinh toàn bộ kế hoạch trước (planner LLM), rồi thực thi từng bước (executor LLM). Planner có thể sửa kế hoạch nếu thực thi gặp kết quả bất ngờ. Thách thức: plan fidelity (LLM có theo kế hoạch của chính nó không?), re-planning (khi nào nên sửa/bỏ kế hoạch?), plan verification (kế hoạch có đúng trước khi thực thi?). Nền tảng toán học từ MDP: V*(s) = max_a [R(s,a) + γ Σ T(s,a,s')V*(s')].",
+      "difficulty": "Advanced",
+      "prerequisites": ["ReAct framework", "Tư duy hệ thống"]
+    },
+    {
+      "name": "Memory Systems (Short-term, Long-term, Retrieval-Augmented)",
+      "definition": "Bộ nhớ agent theo mô hình cognitive science: M = (W, E, S, encode, retrieve). Working Memory W: context window hiện tại, giới hạn token (128K-1M tokens 2025-2026). Episodic Memory E: lưu trữ trải nghiệm (s, a, o, t, timestamp). Semantic Memory S: kiến thức có cấu trúc (facts, procedures) trong vector DB hoặc knowledge graphs. Hàm retrieval: retrieve(q, M) = top-k(α·sim(q,m) + β·recency(m) + γ·importance(m)). Cân bằng relevance, temporal proximity và significance. Triển khai: MemGPT (virtual context management), Generative Agents (retrieval với recency + importance + relevance), Claude memory/ChatGPT memory (persistent user-level memory).",
+      "difficulty": "Advanced",
+      "prerequisites": ["Vector databases cơ bản", "RAG cơ bản (B12)"]
+    },
+    {
+      "name": "Multi-Agent Collaboration và Debate",
+      "definition": "Nhiều agents phối hợp cho tasks vượt khả năng single-agent. Các patterns: Sequential pipeline (Agent A sinh → Agent B tinh chỉnh → Agent C kiểm tra), Hierarchical (manager agent phân công cho specialist agents), Debate/adversarial (agents tranh luận, judge tổng hợp), Ensemble (nhiều agents giải độc lập, gộp kết quả). Game theory: Nash Equilibrium cho multi-agent strategy, Shapley values cho phân bổ đóng góp φ_i(v). Lưu ý quan trọng từ R-γ: 80% use cases thực tế chỉ cần single agent với good tools, không cần multi-agent. Multi-agent overhead (shared memory, conflict resolution, message passing) thêm latency, cost và failure modes.",
+      "difficulty": "Advanced",
+      "prerequisites": ["Single-agent systems", "Game theory cơ bản"]
+    },
+    {
+      "name": "Human-in-the-Loop và Autonomy Levels",
+      "definition": "Agentic AI hoạt động trên phổ tự chủ 6 cấp: L0 (không tự chủ — con người làm hết), L1 (gợi ý — agent đề xuất, người quyết), L2 (thực thi có giám sát — agent hành động, người duyệt từng bước), L3 (tự chủ có điều kiện — agent hoạt động tự do trong guardrails), L4 (tự chủ được uỷ quyền — người đặt mục tiêu, agent thực thi end-to-end), L5 (tự chủ hoàn toàn — agent tự xác định mục tiêu, chưa đạt an toàn). Tension giữa capability và control là trung tâm của agentic AI deployment. Hầu hết production systems hoạt động ở L2-L3, L4 đang xuất hiện trong controlled domains (coding, research).",
+      "difficulty": "Intermediate",
+      "prerequisites": ["Hiểu biết AI safety cơ bản"]
+    },
+    {
+      "name": "Guardrails và Sandboxing",
+      "definition": "Cơ chế an toàn cho hệ thống agent: Input guardrails (kiểm tra instructions theo policy, từ chối yêu cầu có hại), Output guardrails (kiểm tra outputs cho safety, correctness, policy compliance), Tool-level permissions (giới hạn tools: read-only vs read-write, network access), Sandboxing (thực thi code agent trong môi trường cô lập — containers, VMs — giới hạn blast radius), Budget constraints (giới hạn API calls, tokens, thời gian, chi phí mỗi task), Human approval gates (yêu cầu xác nhận cho high-stakes actions: deploy code, gửi email, giao dịch tài chính). Frameworks: Anthropic Claude model spec, Guardrails AI, NeMo Guardrails.",
+      "difficulty": "Intermediate",
+      "prerequisites": ["Security cơ bản", "Container/sandbox concepts"]
+    },
+    {
+      "name": "Agent Evaluation và Benchmarks",
+      "definition": "Đánh giá agent yêu cầu đo lường task completion trong môi trường thực tế. Benchmarks chính: SWE-bench (software engineering — % GitHub issues giải được, best ~50%), WebArena (web navigation — task success rate, best ~35%), GAIA (general AI assistants), AgentBench (multi-domain: OS, DB, web), HumanEval/MBPP (code generation — pass@k), OSWorld (computer use), TAU-bench (tool-augmented understanding), MLE-bench (ML engineering — Kaggle performance). Thách thức: reproducibility, chi phí cao (mỗi eval cần full agent execution), gaming benchmarks, metric validity. Approach: evaluation-driven development, behavioral tests (outcome-based, không path-based), statistical evaluations (100+ runs per test case).",
+      "difficulty": "Advanced",
+      "prerequisites": ["ML evaluation cơ bản", "Statistical testing"]
+    },
+    {
+      "name": "Autonomous Coding Agents",
+      "definition": "Code agents là ứng dụng thương mại trưởng thành nhất của Agentic AI (2026). Devin (Cognition, 2024): 'AI software engineer' đầu tiên — lập kế hoạch, code, debug, deploy trong sandbox. SWE-Agent (Princeton, 2024): open-source, thiết kế Agent-Computer Interface (ACI) tối ưu, đạt 12.5% SWE-bench. Claude Code (Anthropic, 2025): terminal-based coding agent với file system access, git integration, multi-tool orchestration. Cursor Agent (2025): IDE-integrated với codebase-aware planning. Codex CLI (OpenAI, 2025): terminal agent cho code generation. GitHub Copilot Agent (2025): background agent cho issue resolution và PR generation. Hoạt động ở L3-L4 autonomy.",
+      "difficulty": "Intermediate",
+      "prerequisites": ["Software engineering cơ bản", "Git/CLI proficiency"]
+    },
+    {
+      "name": "Model Context Protocol (MCP) và Agent-to-Agent (A2A)",
+      "definition": "MCP (Anthropic, 2025): giao thức mở chuẩn hoá kết nối LLM với tools và data sources bên ngoài. Cho phép agent ecosystem có interoperability — tools viết theo MCP hoạt động với mọi LLM provider hỗ trợ MCP. A2A Protocol (Google, 2025): chuẩn giao tiếp inter-agent giữa các platforms khác nhau. Claude Agent SDK, OpenAI Agents SDK (2025): production-grade SDKs cho multi-agent systems với built-in guardrails, handoffs và tracing. Background Agents (Anthropic, OpenAI, 2025-2026): agents thực thi tasks bất đồng bộ không cần persistent connection, hoạt động ở L4 autonomy. Đây là lớp infrastructure đang trưởng thành cho production agent deployment.",
+      "difficulty": "Intermediate",
+      "prerequisites": ["API protocols cơ bản", "Distributed systems"]
+    }
+  ],
+  "algorithms": [
+    {
+      "name": "ReAct (Reason + Act)",
+      "category": "Single-agent reasoning-action loop",
+      "complexity": "O(n) bước tuần tự, mỗi bước cần 1 LLM call + 0-1 tool call. Context window tăng tuyến tính theo số bước.",
+      "pros": ["Reasoning traces có thể giải thích được (interpretable)", "Grounded trong tool outputs thực tế", "Đơn giản triển khai — pattern nền tảng", "Được hầu hết frameworks áp dụng (LangChain, LlamaIndex)"],
+      "cons": ["Reasoning tuyến tính — không backtracking", "Context window đầy nhanh với nhiều bước", "Dễ vỡ khi tool trả lỗi", "Không explore nhiều đường giải pháp song song"],
+      "use_cases": ["Knowledge-intensive QA", "Web search + synthesis", "Prototyping agent đơn giản", "Internal tooling"],
+      "key_papers": ["Yao, S. et al. (2023). ReAct: Synergizing Reasoning and Acting in Language Models. ICLR 2023."]
+    },
+    {
+      "name": "Plan-and-Execute",
+      "category": "Two-phase agent architecture",
+      "complexity": "O(1) planning call + O(n) execution calls. Replanning thêm O(k) calls nếu cần sửa kế hoạch.",
+      "pros": ["Phân rã task tốt hơn ReAct đơn thuần", "Cho phép dùng models khác nhau cho planning vs execution", "Hỗ trợ re-planning khi gặp kết quả bất ngờ", "Phù hợp tasks nhiều bước có cấu trúc rõ ràng"],
+      "cons": ["Chất lượng phụ thuộc khả năng planner", "Replanning thêm latency", "LLM có thể không tuân theo kế hoạch của chính nó", "Khó xử lý tasks cần flexible exploration"],
+      "use_cases": ["Quy trình doanh nghiệp đa bước", "Research tasks có cấu trúc", "Document processing pipelines", "Automated report generation"],
+      "key_papers": ["Wang, L. et al. (2023). Plan-and-Solve Prompting. ACL 2023."]
+    },
+    {
+      "name": "Reflexion (Self-Reflection)",
+      "category": "Self-improving agent via verbal reinforcement",
+      "complexity": "O(K) trials × O(n) bước mỗi trial. Memory tăng tuyến tính theo số trials.",
+      "pros": ["Agent tự học từ lỗi không cần cập nhật weights", "Cải thiện đáng kể qua nhiều attempts", "HumanEval 91% pass@1, ALFWorld và HotpotQA đều cải thiện", "Mô phỏng cách con người học từ sai lầm"],
+      "cons": ["Cần nhiều LLM calls (K trials)", "Chi phí tăng tuyến tính theo số lần thử", "Reflection quality phụ thuộc khả năng LLM self-evaluate", "Không đảm bảo converge"],
+      "use_cases": ["Code generation với test verification", "Complex reasoning tasks", "Tasks có evaluation function rõ ràng", "Agent training loop"],
+      "key_papers": ["Shinn, N. et al. (2023). Reflexion: Language Agents with Verbal Reinforcement Learning. NeurIPS 2023."]
+    },
+    {
+      "name": "MCTS cho LLM Reasoning (LATS / RAP)",
+      "category": "Search-guided reasoning",
+      "complexity": "O(iterations × depth × branching_factor) LLM calls. UCT: UCT(s,a) = Q̄(s,a) + c·√(ln N(s)/N(s,a)).",
+      "pros": ["Khám phá nhiều đường reasoning có hệ thống", "Backtracking khi gặp nhánh kém", "Cải thiện đáng kể so với greedy generation trên math, code, planning", "Kết hợp search với neural evaluation"],
+      "cons": ["Chi phí tính toán rất cao (nhiều LLM calls)", "Latency cao — không phù hợp real-time", "Cần reward model hoặc self-evaluation đáng tin cậy", "Phức tạp triển khai production"],
+      "use_cases": ["Mathematical reasoning", "Complex code generation", "Multi-step planning tasks", "Research problems cần exploration"],
+      "key_papers": ["Hao, S. et al. (2023). Reasoning with Language Model is Planning with World Model. EMNLP 2023.", "Zhou, S. et al. (2023). Language Agent Tree Search. ICML 2024."]
+    },
+    {
+      "name": "Tool-Augmented LLM (Toolformer / Gorilla)",
+      "category": "Foundation pattern cho tool use",
+      "complexity": "O(n·d²) LLM inference + O(1) mỗi tool call. Token overhead từ tool descriptions trong system prompt.",
+      "pros": ["LLM tự học khi nào và cách dùng tools (Toolformer)", "Gorilla: chuyên biệt cho API calling với ít hallucination hơn", "Claude/GPT-4o native tool use — không cần fine-tuning", "Mở rộng khả năng LLM ra mọi computational system"],
+      "cons": ["Tool descriptions chiếm context window", "Hallucinated tool calls khi tools nhiều hoặc phức tạp", "Cần validation chặt cho tool arguments", "Security risk khi agent có tool access mạnh"],
+      "use_cases": ["Mọi agentic application cần tương tác bên ngoài", "API orchestration", "Data retrieval và processing", "System automation"],
+      "key_papers": ["Schick, T. et al. (2023). Toolformer: Language Models Can Teach Themselves to Use Tools. NeurIPS 2023.", "Patil, S. et al. (2023). Gorilla: Large Language Model Connected with Massive APIs. arXiv."]
+    },
+    {
+      "name": "Multi-Agent Debate (MetaGPT / ChatDev)",
+      "category": "Multi-agent collaboration với role specialization",
+      "complexity": "O(R × N) LLM calls cho R rounds, N agents. Shared context tăng nhanh.",
+      "pros": ["Chuyên biệt hoá (mỗi agent tối ưu cho 1 vai trò)", "Error correction qua debate phát hiện lỗi single agent bỏ sót", "MetaGPT: structured artifacts (PRD, design docs, code, tests) cải thiện coordination", "ChatDev: mô phỏng quy trình phát triển phần mềm waterfall"],
+      "cons": ["Communication overhead lớn", "Coordination failures — agents xung đột hoặc trùng lặp", "Chi phí cao (multi-agent = multi-inference)", "80% use cases không cần multi-agent (R-γ assessment)"],
+      "use_cases": ["Software development workflows", "Content creation pipelines phức tạp", "Research và analysis đa chiều", "Tasks cần nhiều domain expertise riêng biệt"],
+      "key_papers": ["Hong, S. et al. (2023). MetaGPT: Meta Programming for A Multi-Agent Collaborative Framework. ICLR 2024.", "Qian, C. et al. (2023). ChatDev: Communicative Agents for Software Development. ACL 2024."]
+    },
+    {
+      "name": "LangGraph (Stateful Workflows)",
+      "category": "Orchestration framework, state machine-based",
+      "complexity": "Phụ thuộc graph topology. Hỗ trợ cycles (ReAct loops), branching, persistence. Checkpointing O(1) mỗi node.",
+      "pros": ["State machine cho guard rails, LLM cho flexibility — hybrid tốt nhất", "Built-in retry, timeout, error handling", "Checkpointing cho long-running tasks (Postgres, SQLite, Redis)", "First-class streaming, LangSmith integration", "Production-ready, battle-tested"],
+      "cons": ["Learning curve dốc — cần graph thinking", "LangChain ecosystem có abstraction bloat", "3+ major breaking API changes trong 18 tháng", "Vendor risk: VC-funded OSS company"],
+      "use_cases": ["Production workflow agents", "Complex multi-step business pipelines", "Customer service agents", "Research agents với quality gates"],
+      "key_papers": ["LangChain (2024). LangGraph Documentation. https://langchain-ai.github.io/langgraph/"]
+    },
+    {
+      "name": "CrewAI (Role-Based Multi-Agent)",
+      "category": "Multi-agent orchestration framework",
+      "complexity": "O(T × agents_per_task) LLM calls. Sequential, parallel hoặc hierarchical process flows.",
+      "pros": ["Đơn giản nhất để triển khai multi-agent", "Role-based: mỗi agent có role, goal, backstory và tool access", "Minimal boilerplate — nhanh nhất cho prototype", "Tốt cho content pipelines và research tasks"],
+      "cons": ["Control flow hạn chế", "Error handling yếu", "Không production-hardened", "Performance giảm với >4 agents", "Community nhỏ hơn LangChain"],
+      "use_cases": ["Rapid multi-agent prototyping", "Content creation pipelines", "Research task delegation", "Đội ngũ AI ảo cho specific workflows"],
+      "key_papers": ["CrewAI (2024). CrewAI Documentation. https://crewai.com"]
+    },
+    {
+      "name": "Claude Tool Use và Computer Use",
+      "category": "Native model capabilities, GUI interaction",
+      "complexity": "Tool use: O(1) per structured tool call. Computer use: O(K) iterations (screenshot → analyze → act → observe).",
+      "pros": ["Tool use tốt nhất trong các LLMs (reliability cao nhất)", "200K context, structured output native", "Computer use mở rộng action space từ API-only sang mọi phần mềm GUI", "MCP là open standard cho tool ecosystem"],
+      "cons": ["Computer use còn beta, latency cao", "Ecosystem nhỏ hơn OpenAI", "Chi phí cao (Sonnet $3/$15, Opus $15/$75 per 1M tokens)", "Latency cao trên complex tool chains"],
+      "use_cases": ["Complex reasoning và coding agents", "GUI automation (computer use)", "Long-document processing agents", "Safety-critical applications"],
+      "key_papers": ["Anthropic (2024). Introducing Computer Use. Anthropic Blog.", "Anthropic (2025). Model Context Protocol. Specification v1.0."]
+    },
+    {
+      "name": "SWE-Agent và Devin (Code Agents)",
+      "category": "Autonomous software engineering",
+      "complexity": "O(n) bước exploration + editing. SWE-Agent: custom Agent-Computer Interface với file viewer, linting, contextual commands.",
+      "pros": ["SWE-Agent: ACI design tối ưu, open-source", "Devin: end-to-end capability (plan, code, debug, deploy)", "Chứng minh L3-L4 autonomy trong software engineering", "Claude Code, Cursor Agent, Codex CLI: productionised versions"],
+      "cons": ["SWE-bench best ~50% — một nửa tasks thất bại", "Chi phí mỗi coding task có thể rất cao", "Generated code cần review kỹ", "Chưa thay thế được senior developers cho complex architectures"],
+      "use_cases": ["Bug fixes và issue resolution tự động", "Feature implementation từ specifications", "Large-scale refactoring", "Test generation và code review"],
+      "key_papers": ["Yang, J. et al. (2024). SWE-Agent: Agent-Computer Interfaces Enable Automated Software Engineering. NeurIPS 2024."]
+    },
+    {
+      "name": "Generative Agents (Stanford Social Simulation)",
+      "category": "Emergent agent behavior simulation",
+      "complexity": "O(agents × time_steps × (memory_retrieval + planning + action)). Memory stream lưu toàn bộ experiences.",
+      "pros": ["Emergent social behaviors (tổ chức tiệc, hình thành nhóm, truyền bá thông tin)", "Memory architecture (observation, reflection, planning) thành template cho agent memory", "Chứng minh LLM agents có thể thể hiện complex social dynamics", "Ảnh hưởng lớn đến nghiên cứu agent-based social simulation"],
+      "cons": ["Chi phí chạy rất cao (25 agents × continuous LLM calls)", "Khó kiểm soát emergent behaviors", "Chưa có ứng dụng thương mại trực tiếp", "Scale hạn chế bởi LLM costs"],
+      "use_cases": ["Social simulation research", "Game NPC behavior", "Organizational modeling", "User behavior prediction"],
+      "key_papers": ["Park, J.S. et al. (2023). Generative Agents: Interactive Simulacra of Human Behavior. UIST 2023 (Best Paper)."]
+    },
+    {
+      "name": "ADAS (Automated Design of Agentic Systems)",
+      "category": "Meta-learning, recursive agent improvement",
+      "complexity": "O(iterations × (propose + implement + evaluate)). Meta-agent dùng archive of previous designs.",
+      "pros": ["Meta-agent tự thiết kế agent architectures mới", "Agents được phát hiện vượt trội hand-designed baselines trên DROP, MGSM", "Mở ra paradigm automated architecture search cho agents", "Tiềm năng recursive self-improvement"],
+      "cons": ["Chi phí meta-learning rất cao", "Rủi ro recursive self-improvement chưa kiểm soát", "Còn ở giai đoạn research", "Implications cho AI safety rất lớn"],
+      "use_cases": ["Agent architecture research", "Benchmark optimization", "Tự động hoá thiết kế agent", "AI safety research"],
+      "key_papers": ["Hu, S. et al. (2024). Automated Design of Agentic Systems. arXiv:2408.08435."]
+    }
+  ],
+  "tech_stack": {
+    "llm_providers": {
+      "recommended": {"recommended": "Anthropic Claude 4 (Sonnet / Opus)", "rationale": "Tool use reliability tốt nhất trong các LLMs. 200K context, structured output native. Claude Agent SDK cho building custom agents. MCP là open standard. Sonnet ($3/$15 per 1M tokens) cho worker agents, Opus ($15/$75) cho orchestrator/complex reasoning."},
+      "alternatives": {"recommended": "OpenAI GPT-4o / Google Gemini 2.5 Pro / Llama 3.3 70B-405B", "rationale": "GPT-4o cho multimodal agents và legacy integrations. Gemini 2.5 Pro cho 1M context và Google Search grounding. Llama 3.3 cho self-hosted, cost-sensitive deployments và data sovereignty."}
+    },
+    "orchestration_frameworks": {
+      "recommended": {"recommended": "LangGraph", "rationale": "State machine-based agent orchestration với persistence, streaming, human-in-the-loop. Weighted score 8.45/10 — cao nhất trong comparison. Production-grade checkpointing (Postgres, SQLite, Redis). Built-in retry, timeout, error handling. Hỗ trợ cycles (essential cho agent iteration)."},
+      "alternatives": {"recommended": "CrewAI / AutoGen / Claude Agent SDK / Semantic Kernel", "rationale": "CrewAI cho rapid multi-agent prototyping (đơn giản nhất). AutoGen cho conversation-based multi-agent research. Claude Agent SDK cho Claude-native agents. Semantic Kernel cho enterprise .NET/Azure shops."}
+    },
+    "tool_execution": {
+      "recommended": {"recommended": "E2B (Sandboxed Code Execution)", "rationale": "Cloud sandboxes cho thực thi LLM-generated code an toàn. Cô lập hoàn toàn — giới hạn blast radius. Essential cho code agents, data analysis agents. Pay-per-use."},
+      "alternatives": {"recommended": "Composio / Browserbase + Playwright / MCP Servers / Docker", "rationale": "Composio cho 250+ pre-built tool integrations (GitHub, Slack, CRM). Browserbase + Playwright cho web agents. MCP servers cho standardized tool interfaces. Docker cho self-hosted sandboxing."}
+    },
+    "memory_infrastructure": {
+      "recommended": {"recommended": "Qdrant + Redis + PostgreSQL", "rationale": "3-tier memory: Qdrant (vector DB cho long-term semantic memory), Redis (in-memory cache cho working memory và session state), PostgreSQL + pgvector (structured storage cho task logs, hybrid vector+relational queries). LangGraph Checkpointer built on Postgres cho state persistence."},
+      "alternatives": {"recommended": "Pinecone / Weaviate / ChromaDB", "rationale": "Pinecone cho fully managed serverless vector DB. Weaviate cho hybrid search. ChromaDB cho prototyping nhanh. Chọn theo scale và hosting preference."}
+    },
+    "observability": {
+      "recommended": {"recommended": "LangSmith + Arize Phoenix", "rationale": "LangSmith cho LangGraph-based apps: trace, debug, evaluate agent chains. Tight integration với LangChain ecosystem. Arize Phoenix (open-source) cho self-hosted, framework-agnostic tracing. Braintrust cho systematic agent quality measurement."},
+      "alternatives": {"recommended": "Langfuse / OpenTelemetry + Grafana / Braintrust", "rationale": "Langfuse cho open-source LLM observability (self-hosted miễn phí). OpenTelemetry cho enterprise integration với existing monitoring. Braintrust cho evaluation và prompt management."}
+    },
+    "agent_ui": {
+      "recommended": {"recommended": "Custom React + Vercel AI SDK", "rationale": "Full control over streaming, tool call rendering, agent state visibility, auth. Production-grade cho customer-facing agent products. Tích hợp tốt với MAESTRO platform (Next.js-based)."},
+      "alternatives": {"recommended": "Streamlit / CopilotKit / Gradio", "rationale": "Streamlit cho internal tools và demos nhanh. CopilotKit cho embedded AI copilots trong SaaS products. Gradio cho ML demo UIs."}
+    },
+    "embedding_models": {
+      "recommended": {"recommended": "BGE-M3 (BAAI)", "rationale": "Multi-lingual (hỗ trợ tiếng Việt), dense+sparse+ColBERT trong 1 model. Self-hosted miễn phí. Tốt nhất cho Vietnamese agent memory pipeline vì không phụ thuộc cloud API."},
+      "alternatives": {"recommended": "OpenAI text-embedding-3-large / Cohere Embed v3", "rationale": "OpenAI cho highest accuracy (MTEB top). Cohere cho multilingual + compression. Chấp nhận cloud dependency."}
+    },
+    "security_sandboxing": {
+      "recommended": {"recommended": "E2B + Docker + Principle of Least Privilege", "rationale": "E2B cho sandboxed code execution. Docker containers cho tool isolation. Principle of least privilege: mỗi agent chỉ có quyền truy cập tối thiểu cần thiết. Input sanitization trên tất cả tool outputs fed back cho agent. Không bao giờ cho agent truy cập production databases không có read-only wrappers."},
+      "alternatives": {"recommended": "Modal / Firecracker VMs / gVisor", "rationale": "Modal cho serverless sandboxed compute. Firecracker cho microVM isolation (AWS Lambda backend). gVisor cho container sandboxing tầng kernel."}
+    }
+  },
+  "feasibility_score": {
+    "overall_score": 5.1,
+    "verdict": "CONDITIONAL GO",
+    "verdict_vi": "Tiến hành có điều kiện",
+    "summary": "Lĩnh vực emerging (TRL 5), nhu cầu thị trường cực cao (9/10) nhưng rủi ro triển khai cũng cao nhất trong các B-nodes (3/10). Thị trường toàn cầu dự kiến $13.2B năm 2027, tăng 42% CAGR. Tuy nhiên <5% doanh nghiệp có agents trong production ngoài pilot. Khoảng cách giữa demo và production là lớn nhất trong bất kỳ sub-field AI nào. Điều kiện: bắt đầu với single-agent internal use cases, xây evaluation infrastructure trước, set hard cost limits, agent task success rate ≥ 95%, chi phí dưới 5x nhân công tương đương.",
+    "dimensions": {
+      "technical_feasibility": {"score": 7, "rationale": "Frameworks (LangGraph, Claude Agent SDK, AutoGen) đã production-capable. LLM tool-use native trong Claude, GPT-4o, Gemini. Nhưng: agent loops vẫn hallucinate, infinite-loop failures xảy ra 5-15% complex tasks, testing deterministic cho non-deterministic systems chưa giải quyết được."},
+      "market_demand": {"score": 9, "rationale": "Mọi doanh nghiệp đều muốn 'AI agents'. Gartner dự đoán 25% enterprise software sẽ embed agentic capabilities tới 2028. Nhu cầu thực nhưng kỳ vọng lạm phát nguy hiểm — hầu hết buyers không phân biệt được chatbot tốt với true agent."},
+      "data_availability": {"score": 5, "rationale": "Dữ liệu training LLMs phong phú, nhưng agent-specific training data (task trajectories, tool-use traces, multi-step reasoning chains) khan hiếm. Không có public datasets cho Vietnamese-language agent tasks. Fine-tuning agents cần expensive human annotation cho multi-step interactions."},
+      "implementation_complexity": {"score": 4, "rationale": "Multi-agent orchestration, state management, error recovery, tool sandboxing và observability tạo compounding complexity. Single-agent prototype mất vài ngày; production multi-agent system mất hàng tháng. Khoảng cách 'works in demo' và 'works at scale' rất lớn."},
+      "implementation_risk": {"score": 3, "rationale": "CAO. Agents unpredictable by design — đó vừa là tính năng vừa là lỗi. Testing coverage bị giới hạn fundamentally vì agent behavior là path-dependent và stochastic. Cost explosions từ runaway loops, security breaches từ tool misuse, cascading hallucinations trong multi-agent đều là documented failure modes."},
+      "cost_efficiency": {"score": 4, "rationale": "Một agent task có thể tiêu 10-100 LLM calls. Với Claude Sonnet $3/$15 per 1M tokens, complex agent task tốn $0.10-$5.00+. Multi-agent nhân lên. ROI chỉ positive cho tasks hiện tốn $50+ nhân công. LLM pricing giảm 50-70%/năm — $5 hôm nay sẽ là $0.50 trong 18 tháng."},
+      "vietnam_market_fit": {"score": 4, "rationale": "Doanh nghiệp Việt Nam tò mò nhưng thận trọng. Talent AI local đang tăng nhưng mỏng về agent-specific experience. Vietnamese reasoning trong LLMs kém 15-30% so với English trên complex tasks. Chưa có local agentic AI platform đáng chú ý. Cơ hội: BPO companies ($4B+ outsourcing industry) là ứng viên hàng đầu."}
+    },
+    "conditions": [
+      "Bắt đầu với single-agent, internal use cases — code review agent, document processing agent, research assistant cho teams nội bộ. Môi trường kiểm soát, blast radius thấp",
+      "Xây evaluation infrastructure TRƯỚC khi xây agents — LangSmith hoặc Arize Phoenix. Không thể cải thiện cái không đo lường được",
+      "Set hard cost limits từ ngày 1: per-task token budgets (max 50K tokens per agent run), step limits (max 20 iterations), real-time cost monitoring với circuit breakers. Models rẻ cho planning, đắt chỉ cho execution",
+      "Chọn Claude + LangGraph làm initial stack — tool-use reliability tốt nhất (Claude) + orchestration trưởng thành nhất (LangGraph). Giữ abstraction layer mỏng để dễ migrate",
+      "Agent task success rate ≥ 95% trên defined benchmarks (hiện chỉ ~60-80% complex tasks) trước khi ship customer-facing",
+      "Chi phí per agent task dưới 5x chi phí nhân công tương đương trước khi scale",
+      "Ít nhất 1 production deployment chạy 90+ ngày không có critical failure trước khi mở rộng",
+      "Tất cả agent reasoning nên xảy ra bằng tiếng Anh internally — tiếng Việt chỉ dùng ở input/output boundary (user-facing layer) để tránh compound Vietnamese reasoning gap"
+    ]
+  },
+  "industry_applications": [
+    {
+      "industry": "Dịch vụ khách hàng (Customer Service Agents)",
+      "use_case": "Agent tự động xử lý yêu cầu khách hàng — tra cứu đơn hàng, giải quyết khiếu nại, hướng dẫn kỹ thuật",
+      "description": "Multi-agent customer service platform: orchestrator agent route yêu cầu đến specialist agents (orders, billing, technical support). Tích hợp tools: CRM lookup, order tracking, knowledge base search, ticket creation. Human escalation cho cases phức tạp. Conversation memory across sessions. VN: ngân hàng, telcos, e-commerce platforms đang chạy pilots. Nâng cấp chatbot (B08) hiện có lên agent (B10) bằng thêm tool use và planning capabilities.",
+      "priority": "P0",
+      "market_size_vn": "USD 20-40M (customer service AI + agent platforms VN)",
+      "technical_complexity": "Medium",
+      "vietnam_readiness": "Medium"
+    },
+    {
+      "industry": "Phát triển phần mềm (Code Agents)",
+      "use_case": "Autonomous coding agents — viết code, review, debug, test, deploy tự động",
+      "description": "Code agents hoạt động ở L3-L4 autonomy: Claude Code, Cursor Agent, Codex CLI, GitHub Copilot Agent. Capabilities: bug fixes từ issue descriptions, feature implementation từ specs, large-scale refactoring, test generation, code review. VN có 500K+ developers, outsourcing industry $5B+. ROI rõ ràng: agent costs $0.10-$5 per task vs developer salary $5-15/giờ tại VN. Lưu ý: SWE-bench best ~50% — generated code vẫn cần human review.",
+      "priority": "P1",
+      "market_size_vn": "USD 15-30M (developer productivity + AI coding tools VN)",
+      "technical_complexity": "Medium-High",
+      "vietnam_readiness": "High"
+    },
+    {
+      "industry": "Nghiên cứu và phân tích (Research Agents)",
+      "use_case": "Agent tự động nghiên cứu — tìm kiếm web, đọc tài liệu, tổng hợp và phân tích",
+      "description": "Research agents kết hợp web search, document reading, và synthesis: OpenAI Deep Research, Gemini Deep Research, Perplexity. Workflow: plan search queries → execute searches → read documents → synthesize → evaluate quality → iterate. Ứng dụng: market research, competitive analysis, literature review, due diligence. VN: phục vụ consulting firms, investment funds, R&D teams. LangGraph + Claude + Tavily cho production research agent.",
+      "priority": "P1",
+      "market_size_vn": "USD 5-15M (research automation + knowledge management VN)",
+      "technical_complexity": "Medium",
+      "vietnam_readiness": "Medium"
+    },
+    {
+      "industry": "Tuân thủ và pháp lý (Compliance Automation Agents)",
+      "use_case": "Agent kiểm tra tuân thủ quy định — rà soát tài liệu, đối chiếu regulation, báo cáo vi phạm",
+      "description": "Compliance agents rà soát documents đối chiếu với regulatory requirements. Tools: document parser, regulation database search, checklist generator, report writer. Use cases: KYC/AML checks cho ngân hàng, audit compliance cho kế toán, policy review cho HR. CẢNH BÁO: hallucination trong compliance CỰC KỲ nguy hiểm — bắt buộc RAG grounding + citation + human-in-the-loop cho mọi quyết định. Vietnam regulatory framework AI còn nascent — proceed thận trọng.",
+      "priority": "P1",
+      "market_size_vn": "USD 5-10M (compliance automation + RegTech VN)",
+      "technical_complexity": "High",
+      "vietnam_readiness": "Low-Medium"
+    },
+    {
+      "industry": "Thương mại điện tử (E-commerce Operations Agents)",
+      "use_case": "Agent tự động hoá vận hành e-commerce — quản lý inventory, pricing, product listing, order processing",
+      "description": "E-commerce operations agents tự động hoá workflows: product listing generation (kết hợp B09), dynamic pricing, inventory monitoring, order tracking, review response generation. Tích hợp Shopee/Lazada/Tiki APIs. Multi-agent: research agent (competitor analysis) + content agent (product descriptions) + operations agent (inventory + pricing). VN e-commerce market $20B+, 500K+ sellers. ROI cao cho sellers quản lý 100-1000s SKUs.",
+      "priority": "P2",
+      "market_size_vn": "USD 10-20M (e-commerce automation + AI operations VN)",
+      "technical_complexity": "Medium-High",
+      "vietnam_readiness": "Medium"
+    },
+    {
+      "industry": "BPO và tự động hoá quy trình (Business Process Outsourcing)",
+      "use_case": "Agent tự động hoá quy trình BPO — xử lý tài liệu, quality checking, report generation",
+      "description": "BPO companies (ngành $4B+ của VN) có repetitive, well-defined workflows — ứng viên hàng đầu cho agent automation. Use cases: data entry automation, document processing, quality assurance, report generation, email handling. Agents hoạt động trong controlled environments với human oversight. ROI tiềm năng rất cao: giảm 30-50% thời gian processing cho routine tasks. Bắt đầu với internal tooling, sau mở rộng cho client-facing.",
+      "priority": "P2",
+      "market_size_vn": "USD 15-30M (BPO automation + process AI VN)",
+      "technical_complexity": "Medium",
+      "vietnam_readiness": "High"
+    }
+  ],
+  "case_studies": [
+    {
+      "title": "Claude Code — Terminal-based autonomous coding agent",
+      "industry": "Phát triển phần mềm",
+      "problem": "Developers cần trợ lý coding có khả năng đọc codebase, viết code multi-file, chạy tests, và thực thi git operations — không chỉ inline completion.",
+      "solution": "Anthropic ra mắt Claude Code (2/2025): CLI agent với file system access, git integration, multi-tool orchestration. Hoạt động ở L2-L3 autonomy — tự đọc files, viết code, chạy commands, nhưng cần human approval cho actions quan trọng.",
+      "results": "Hàng triệu developers sử dụng. Xử lý từ bug fixes đến feature implementation đến large-scale refactoring. Chứng minh coding agents đã thương mại hoá thành công ở L3 autonomy.",
+      "tech_stack": "Claude Opus/Sonnet, custom tool framework, terminal integration, git integration",
+      "lessons": "L2-L3 autonomy (human confirms important actions) là sweet spot cho production hiện tại. Tool use reliability là yếu tố quyết định — Claude dẫn đầu. Coding là domain trưởng thành nhất cho agents vì có test suites làm evaluation tự nhiên."
+    },
+    {
+      "title": "Klarna — AI customer service agent thay thế 700 nhân viên",
+      "industry": "Fintech / Dịch vụ khách hàng",
+      "problem": "Klarna xử lý hàng triệu customer service interactions/tháng qua 45 thị trường, 35 ngôn ngữ. Cần giảm chi phí support mà vẫn giữ chất lượng.",
+      "solution": "Deploy AI agent (OpenAI-powered) xử lý customer queries: order tracking, refund requests, billing questions. Agent có tool access vào order system, payment system, knowledge base. Human escalation cho cases phức tạp.",
+      "results": "AI agent xử lý tương đương 700 full-time agents trong tháng đầu. 2/3 customer service conversations handled by AI. Resolution time giảm từ 11 phút xuống 2 phút. Estimated $40M annual savings.",
+      "tech_stack": "OpenAI GPT-4, custom orchestration, CRM integration, multi-language support",
+      "lessons": "Customer service là use case P0 cho agents — well-defined tools, measurable outcomes, human fallback dễ triển khai. Quan trọng: human escalation path phải luôn available. Chất lượng phụ thuộc tool integration hơn LLM capability."
+    },
+    {
+      "title": "Devin — AI Software Engineer đầu tiên",
+      "industry": "Phát triển phần mềm",
+      "problem": "Upwork freelance tasks (web development, bug fixes, feature additions) tốn hours-days cho human developers. Cần agent hoạt động end-to-end: đọc spec, lập kế hoạch, code, test, deploy.",
+      "solution": "Cognition Labs ra mắt Devin (3/2024): first marketed 'AI software engineer' hoạt động trong full development environment (shell, editor, browser). Agent tự lập kế hoạch, viết code, debug, và deploy trong isolated sandbox.",
+      "results": "Catalyzed toàn bộ coding agent industry. Đạt 13.86% trên SWE-bench (high bar lúc ra mắt). Chứng minh L4 autonomy khả thi trong software engineering — dù ở mức limited.",
+      "tech_stack": "Custom LLM orchestration, sandboxed dev environment, shell + editor + browser access",
+      "lessons": "Agent-Computer Interface (ACI) design quan trọng ngang model capability. Full environment access (shell, editor, browser) mở rộng action space đáng kể. Tuy nhiên, reliability chưa đủ cho mission-critical production — SWE-bench <50% nghĩa là hơn nửa tasks thất bại."
+    }
+  ],
+  "key_papers": [
+    {
+      "title": "ReAct: Synergizing Reasoning and Acting in Language Models",
+      "authors": "Shunyu Yao, Jeffrey Zhao, Dian Yu, et al.",
+      "year": 2023,
+      "venue": "ICLR 2023",
+      "contribution": "Thiết lập vòng lặp Thought-Action-Observation làm paradigm chuẩn cho agents. Chứng minh đan xen reasoning với tool use vượt trội cả hai đơn lẻ trên HotpotQA (+6%), FEVER (+5%), ALFWorld (+10%). Pattern nền tảng được mọi agent framework áp dụng.",
+      "url": "https://arxiv.org/abs/2210.03629"
+    },
+    {
+      "title": "Toolformer: Language Models Can Teach Themselves to Use Tools",
+      "authors": "Timo Schick, Jane Dwivedi-Yu, et al.",
+      "year": 2023,
+      "venue": "NeurIPS 2023",
+      "contribution": "Chứng minh LLMs có thể tự supervised tool use bằng cách chèn API calls nơi giảm perplexity. Model học khi nào và cách gọi calculators, search engines, translation APIs, calendars. Khẳng định tool use là khả năng học được, không chỉ prompting trick.",
+      "url": "https://arxiv.org/abs/2302.04761"
+    },
+    {
+      "title": "Generative Agents: Interactive Simulacra of Human Behavior",
+      "authors": "Joon Sung Park, Joseph C. O'Brien, Carrie J. Cai, et al.",
+      "year": 2023,
+      "venue": "UIST 2023 (Best Paper)",
+      "contribution": "25 LLM agents trong Smallville thể hiện emergent social behaviors: tổ chức tiệc Valentine, hình thành nhóm xã hội, truyền bá thông tin. Memory architecture (observation, reflection, planning) thành template cho agent memory systems. Retrieval scoring: recency + importance + relevance.",
+      "url": "https://arxiv.org/abs/2304.03442"
+    },
+    {
+      "title": "MetaGPT: Meta Programming for A Multi-Agent Collaborative Framework",
+      "authors": "Sirui Hong, Mingchen Zhuge, Jonathan Chen, et al.",
+      "year": 2023,
+      "venue": "ICLR 2024",
+      "contribution": "Gán SOPs và structured artifact generation cho multi-agent software development. Agents sinh PRDs, system designs, APIs, code, tests theo quy trình engineering. Chứng minh structured intermediate outputs cải thiện đáng kể chất lượng coordination multi-agent.",
+      "url": "https://arxiv.org/abs/2308.00352"
+    },
+    {
+      "title": "Reflexion: Language Agents with Verbal Reinforcement Learning",
+      "authors": "Noah Shinn, Federico Cassano, Ashwin Gopinath, et al.",
+      "year": 2023,
+      "venue": "NeurIPS 2023",
+      "contribution": "Self-reflection bằng verbal feedback — agent phản tư failure, lưu insights vào memory, dùng cho lần thử tiếp theo. Không cần weight updates. HumanEval 91% pass@1, cải thiện đáng kể ALFWorld và HotpotQA. Xác lập self-reflection là core agent capability.",
+      "url": "https://arxiv.org/abs/2303.11366"
+    },
+    {
+      "title": "SWE-Agent: Agent-Computer Interfaces Enable Automated Software Engineering",
+      "authors": "John Yang, Carlos E. Jimenez, Alexander Wettig, et al.",
+      "year": 2024,
+      "venue": "NeurIPS 2024",
+      "contribution": "Thiết kế Agent-Computer Interface (ACI) tối ưu cho software engineering. Chứng minh interface design quan trọng ngang model capability — custom commands và feedback mechanisms tăng đáng kể SWE-bench performance. Mở ra lĩnh vực ACI design.",
+      "url": "https://arxiv.org/abs/2405.15793"
+    },
+    {
+      "title": "Voyager: An Open-Ended Embodied Agent with Large Language Models",
+      "authors": "Guanzhi Wang, Yuqi Xie, Yunfan Jiang, et al.",
+      "year": 2023,
+      "venue": "NeurIPS 2023",
+      "contribution": "LLM agent trong Minecraft tự khám phá, thu thập skills (lưu dạng executable code trong skill library), liên tục cải thiện. Giới thiệu curriculum mechanism cho open-ended skill acquisition. Chứng minh lifelong learning qua code-as-skill-memory.",
+      "url": "https://arxiv.org/abs/2305.16291"
+    },
+    {
+      "title": "ADAS: Automated Design of Agentic Systems",
+      "authors": "Shengran Hu, Cong Lu, Jeff Clune",
+      "year": 2024,
+      "venue": "arXiv",
+      "contribution": "Meta-agent thiết kế agent architectures mới bằng iteratively propose, implement, evaluate. Agents phát hiện vượt trội hand-designed baselines trên DROP, MGSM. Giới thiệu paradigm automated agent architecture search — agents thiết kế agents tốt hơn.",
+      "url": "https://arxiv.org/abs/2408.08435"
+    },
+    {
+      "title": "Chain-of-Thought Prompting Elicits Reasoning in Large Language Models",
+      "authors": "Jason Wei, Xuezhi Wang, Dale Schuurmans, et al.",
+      "year": 2022,
+      "venue": "NeurIPS 2022",
+      "contribution": "Chứng minh prompting 'suy nghĩ từng bước' cải thiện dramatic reasoning performance. Nền tảng cho mọi agent reasoning — CoT là form đơn giản nhất của agent thinking. Đặc biệt hiệu quả với models >100B parameters trên arithmetic, commonsense, symbolic reasoning.",
+      "url": "https://arxiv.org/abs/2201.11903"
+    },
+    {
+      "title": "Tree of Thoughts: Deliberate Problem Solving with Large Language Models",
+      "authors": "Shunyu Yao, Dian Yu, Jeffrey Zhao, et al.",
+      "year": 2023,
+      "venue": "NeurIPS 2023",
+      "contribution": "Tổng quát hoá CoT từ chuỗi đơn thành cây reasoning. Tại mỗi bước sinh nhiều thoughts ứng viên, đánh giá, dùng BFS/DFS khám phá. Cho phép backtracking — bỏ nhánh kém, thử phương án khác. Mô phỏng chiến lược giải quyết vấn đề của con người.",
+      "url": "https://arxiv.org/abs/2305.10601"
+    }
+  ],
+  "cross_domain_connections": [
+    {
+      "target": "B09",
+      "connection_type": "cognitive_engine",
+      "description": "Generative AI (B09) cung cấp 'bộ não' cho agents. LLMs (GPT-4, Claude, Gemini) là reasoning engine thực hiện planning, tool calling, text generation. Tiến bộ B09 (longer context, better instruction following, multimodal understanding) trực tiếp tăng cường agent capabilities. Ngược lại, agentic use cases thúc đẩy yêu cầu B09 (structured output, tool use training, low-latency inference)."
+    },
+    {
+      "target": "B08",
+      "connection_type": "conversational_interface",
+      "description": "Conversational AI (B08) là kênh giao tiếp chính giữa người và agent. Kỹ thuật dialogue management (turn-taking, clarification, confirmation) từ B08 giúp agents tương tác tốt hơn. Agents mở rộng conversational AI từ reactive Q&A sang proactive task execution. Nâng cấp chatbot (B08) lên agent (B10) là entry point phổ biến nhất."
+    },
+    {
+      "target": "B04",
+      "connection_type": "linguistic_foundation",
+      "description": "NLP (B04) cung cấp nền tảng ngôn ngữ: semantic parsing (hiểu user intent), named entity recognition (trích xuất parameters cho tool calls), coreference resolution (duy trì context multi-turn), summarization (nén agent memory). Agent reasoning về cơ bản là language processing task."
+    },
+    {
+      "target": "B11",
+      "connection_type": "structured_memory",
+      "description": "Knowledge Graphs (B11) phục vụ làm structured long-term memory cho agents. Agents truy vấn KGs cho factual knowledge, cập nhật với discoveries mới, dùng graph structure cho multi-hop reasoning. Kết hợp KG-structured memory với LLM reasoning tạo agents vừa knowledgeable vừa có khả năng complex inference."
+    },
+    {
+      "target": "B12",
+      "connection_type": "knowledge_retrieval",
+      "description": "RAG (B12) là cơ chế chính grounding agent responses trong external knowledge. Agents dùng retrieval để truy cập documentation, codebases, databases, web content. RAG pipeline (embed → retrieve → generate) là core tool trong agent toolkit, cho phép knowledge-augmented reasoning không cần fine-tuning."
+    },
+    {
+      "target": "B06",
+      "connection_type": "search_and_planning",
+      "description": "Optimization (B06) nền tảng cho agent planning: task scheduling (tìm execution orders tối ưu), resource allocation (phân phối work giữa agents), search algorithms (MCTS, beam search cho reasoning), objective optimization (tối đa chất lượng trong ràng buộc cost/time)."
+    }
+  ],
+  "bestPractices": [
+    "Bắt đầu với single-agent + LangGraph state machine. Chỉ escalate lên multi-agent KHI task thực sự cần distinct expertise domains không thể capture trong 1 system prompt. 80% real-world use cases chỉ cần single agent với good tools — multi-agent overhead không tương xứng lợi ích cho hầu hết business tasks.",
+    "Xây evaluation infrastructure TRƯỚC khi xây agents — LangSmith evals, Braintrust, hoặc custom benchmark suite. Define behavioral tests (outcome-based, không path-based). Chạy statistical evaluations (100+ runs per test case). Monitor production agent traces cho regression. Chấp nhận 100% test coverage là impossible — thiết kế cho graceful failure.",
+    "Set hard cost limits từ ngày 1: per-task token budgets (ví dụ max 50K tokens per agent run), step limits (max 20 iterations), real-time cost monitoring với circuit breakers. Dùng models rẻ cho planning/routing (Haiku), models đắt chỉ cho execution (Sonnet/Opus). Target chi phí per-generation phải ROI-positive.",
+    "Tất cả agent reasoning nên xảy ra bằng tiếng Anh internally. Tiếng Việt chỉ dùng ở input/output boundary (user-facing layer). Vietnamese reasoning 85% quality per step → 0.85^10 = 20% qua 10 bước — catastrophic. Tool outputs (error messages, API responses) overwhelmingly tiếng Anh.",
+    "Xây guardrail layer trước — input validation, output verification, sandboxed execution, human-in-the-loop triggers. Đây mới là sản phẩm thực — không phải agent itself. Principle of least privilege cho mọi tool permissions. Không bao giờ cho agents truy cập production databases không có read-only wrappers.",
+    "Minimize framework coupling. Giữ core business logic độc lập với orchestration layer. Dùng thin adapters. Đầu tư hiểu patterns (ReAct, state machines) không chỉ frameworks. Budget 20% development time cho framework migration — landscape thay đổi mỗi 3-6 tháng.",
+    "Chạy reliability benchmarks trên SPECIFIC use cases của bạn. Generic benchmarks vô dụng. Đo task completion rate, cost per task, failure modes trên DATA và WORKFLOWS CỦA BẠN. SWE-bench scores không predict performance trên business workflows."
+  ],
+  "antiPatterns": [
+    "Xây 'general-purpose agent platform' cho customers. Reliability chưa đạt. Sẽ dành toàn bộ thời gian xử lý edge cases thay vì deliver value. Đây là infrastructure play, không phải product play — xây khả năng build agents, chưa phải agent products cho end users.",
+    "Dùng multi-agent systems cho tasks mà single agent xử lý được. Complexity KHÔNG phải feature. Multi-agent coordination overhead (shared memory, conflict resolution, message passing) thêm latency, cost, failure modes mà không proportional benefit. Default single-agent, escalate chỉ khi justified.",
+    "Deploy agents trong regulated domains (banking, healthcare, insurance) KHÔNG có human-in-the-loop. Regulatory và reputational risk không đáng automation savings. Vietnam AI regulatory framework còn nascent. EU AI Act classify autonomous decision-making là high-risk. Design 'agent-as-advisor' không phải 'agent-as-decider'.",
+    "Assume framework hiện tại sẽ tồn tại lâu. LangChain/LangGraph đã có 3+ major breaking API changes trong 18 tháng. Claude Agent SDK, OpenAI Agents SDK, Google ADK đều cạnh tranh làm standard. Viết code tightly coupled với framework = obsolete trong 12 tháng.",
+    "Không test Vietnamese output quality trước khi ship. Frontier LLMs perform 15-30% kém hơn trên Vietnamese complex reasoning. Error compounds: nếu mỗi bước 85% reliable, 10 bước = 0.85^10 = 20% end-to-end. Agent failures trên tiếng Việt sẽ nghiêm trọng hơn tiếng Anh.",
+    "Không set hard compute budgets. Agent enters reasoning loop, retries failing tools, spawns excessive sub-agents. Một runaway task có thể tiêu $50-500 API costs trước khi phát hiện. Per-task token budgets, step limits, cost circuit breakers là BẮT BUỘC."
+  ],
+  "pipeline": {
+    "stages": [
+      {
+        "name": "Task Intake",
+        "description": "Nhận và xử lý yêu cầu từ user. Phân loại intent. Phân rã thành sub-tasks (dùng LLM). Xác định priority và constraints (time limits, cost limits, scope). Truy xuất relevant context. Output: AgentTask structured object. Safety pre-check: PII detection, prompt injection detection.",
+        "tools": ["LLM classifier", "Pydantic validation", "Custom PII detector", "Prompt injection classifier"],
+        "inputs": "Raw user request từ Web App / API / CLI",
+        "outputs": "Structured AgentTask với: intent, sub_tasks, priority, constraints, context"
+      },
+      {
+        "name": "Planning (CoT / ToT)",
+        "description": "Sinh kế hoạch hành động dùng Chain-of-Thought hoặc Tree-of-Thought reasoning. Planner LLM nhận task + available tools → sinh ordered sequence of PlanSteps. Mỗi step chỉ định: mô tả, tool cần dùng, dependencies, timeout. Ước tính tokens và tool calls. Xác định fallback strategy. Cho phép re-planning nếu execution gặp kết quả bất ngờ.",
+        "tools": ["Planner LLM (Claude Opus / GPT-4o)", "Tool registry", "Cost estimator"],
+        "inputs": "AgentTask từ Stage 1 + Available tools list",
+        "outputs": "ActionPlan với: steps, estimated_tokens, estimated_tool_calls, fallback_strategy"
+      },
+      {
+        "name": "Execution Loop (ReAct)",
+        "description": "Core ReAct loop: Reason → Act → Observe → Repeat. Agent quyết định: execute tool, skip step, hoặc declare complete. Tool execution có timeout per step. Error handling: log errors, retry hoặc skip. Observation: LLM summarize tool result. Iteration limit (max 20) ngăn infinite loops. Token budget enforcement.",
+        "tools": ["Worker LLM (Claude Sonnet)", "Tool execution runtime", "E2B sandbox", "MCP servers"],
+        "inputs": "ActionPlan + Tool implementations + Budget constraints",
+        "outputs": "ExecutionState với: observations, tool_results, errors, steps_completed"
+      },
+      {
+        "name": "Memory Management",
+        "description": "3-tier memory: Working memory (Redis — session state, TTL), Long-term memory (Qdrant vector store — semantic search qua past experiences), Structured logs (PostgreSQL — task analytics). Agent quyết định gì cần lưu và gì cần retrieve. Save working memory cho current task state. Save long-term cho future retrieval. Log task cho analytics và billing.",
+        "tools": ["Qdrant", "Redis", "PostgreSQL", "LangGraph Checkpointer"],
+        "inputs": "ExecutionState + task metadata",
+        "outputs": "Updated memory stores + task logs"
+      },
+      {
+        "name": "Output Assembly",
+        "description": "Tổng hợp tất cả tool results và observations thành final output. LLM synthesize: direct answer + key sources/evidence + confidence level + caveats. Extract cost metrics: tokens_used, duration_ms, steps_completed. Structured output validation.",
+        "tools": ["Synthesis LLM", "Pydantic validation", "Cost calculator"],
+        "inputs": "ExecutionState + original AgentTask",
+        "outputs": "Structured result với: answer, sources, tokens_used, duration_ms, confidence"
+      },
+      {
+        "name": "Human Review Gate",
+        "description": "Kiểm tra xem action có cần human approval không. Trigger conditions: action trong require_review list (send_email, make_payment, delete_record, publish_content, modify_production_data), confidence < 0.7, hoặc high-stakes domain. Gửi review request qua webhook/Slack/UI queue. Timeout 1 giờ. Decisions: approve, reject (back to planning), modify, escalate.",
+        "tools": ["Review queue (Slack / UI)", "Webhook notifications", "Approval workflow"],
+        "inputs": "Assembled output + action type + confidence score",
+        "outputs": "ReviewDecision: approve / reject / modify / escalate"
+      }
+    ]
+  },
+  "learning_resources": [
+    {
+      "title": "Anthropic Claude Agent SDK Documentation",
+      "type": "documentation",
+      "url": "https://docs.anthropic.com/agent-sdk",
+      "level": "Intermediate",
+      "description": "SDK chính thức của Anthropic cho xây dựng agents với Claude. Tool use, guardrails, multi-agent orchestration, tracing. Nền tảng cho Claude-native agent development. KHỞI ĐẦU TỐT NHẤT cho agent building."
+    },
+    {
+      "title": "LangGraph Documentation & Tutorials",
+      "type": "documentation",
+      "url": "https://langchain-ai.github.io/langgraph/",
+      "level": "Intermediate",
+      "description": "State machine-based agent orchestration: graph topology, persistence, streaming, human-in-the-loop. Production-grade checkpointing. Framework được khuyến nghị cao nhất cho production agents (weighted score 8.45/10)."
+    },
+    {
+      "title": "AI Engineering (Chip Huyen)",
+      "type": "book",
+      "url": "https://www.oreilly.com/library/view/ai-engineering/9781098166298/",
+      "level": "Intermediate",
+      "description": "Xây dựng ứng dụng LLM production-grade: RAG, prompt engineering, fine-tuning, evaluation, deployment. Bao gồm agent patterns và production considerations. Thực tế nhất cho practitioner xây AI products."
+    },
+    {
+      "title": "Anthropic Claude Documentation (Tool Use)",
+      "type": "documentation",
+      "url": "https://docs.anthropic.com/en/docs/build-with-claude/tool-use",
+      "level": "All levels",
+      "description": "Claude tool use API: function calling, structured output, parallel tool calls, forced tool use. Tool use reliability tốt nhất trong các LLMs. Nền tảng cho mọi Claude-based agent."
+    },
+    {
+      "title": "Model Context Protocol (MCP) Specification",
+      "type": "specification",
+      "url": "https://modelcontextprotocol.io",
+      "level": "Intermediate",
+      "description": "Open standard cho kết nối LLMs với tools và data sources. Cho phép interoperable agent-tool ecosystem. Viết tool một lần, dùng với mọi LLM provider hỗ trợ MCP. Anthropic initiative, đang được adopt rộng rãi."
+    },
+    {
+      "title": "LangSmith Documentation (Agent Evaluation)",
+      "type": "documentation",
+      "url": "https://docs.smith.langchain.com/",
+      "level": "Intermediate",
+      "description": "LLM observability và evaluation: trace agent chains, debug failures, run systematic evaluations. Tight integration với LangGraph. Essential cho evaluation-driven agent development. $39/seat/month cho teams."
+    },
+    {
+      "title": "ReAct Paper (Yao et al., 2023)",
+      "type": "paper",
+      "url": "https://arxiv.org/abs/2210.03629",
+      "level": "Advanced",
+      "description": "Paper nền tảng thiết lập Thought-Action-Observation loop — pattern chuẩn cho mọi agent. Bắt buộc đọc để hiểu lý thuyết đằng sau agent reasoning. Ngắn, dễ hiểu, influential nhất trong lĩnh vực."
+    },
+    {
+      "title": "Building Effective Agents (Anthropic Blog)",
+      "type": "guide",
+      "url": "https://www.anthropic.com/research/building-effective-agents",
+      "level": "Intermediate",
+      "description": "Hướng dẫn thực hành từ Anthropic về xây dựng agents hiệu quả. Patterns, best practices, common pitfalls. Phân biệt workflows vs agents. Augmented LLM, prompt chaining, routing, orchestrator-worker, evaluator-optimizer patterns."
+    },
+    {
+      "title": "Prompt Engineering Guide",
+      "type": "guide",
+      "url": "https://www.promptingguide.ai/",
+      "level": "Beginner to Intermediate",
+      "description": "Comprehensive guide về prompt engineering: zero-shot, few-shot, chain-of-thought, tree-of-thought, system prompts. Foundation skill cho mọi agent developer — chất lượng prompt quyết định chất lượng agent reasoning."
+    },
+    {
+      "title": "Arize Phoenix Documentation",
+      "type": "documentation",
+      "url": "https://phoenix.arize.com",
+      "level": "Intermediate",
+      "description": "Open-source LLM tracing với evaluation và experiment tracking. Self-hosted miễn phí. Framework-agnostic. Tốt cho teams muốn observability không phụ thuộc LangChain ecosystem."
+    },
+    {
+      "title": "E2B Documentation (Sandboxed Execution)",
+      "type": "documentation",
+      "url": "https://e2b.dev/docs",
+      "level": "Intermediate",
+      "description": "Cloud sandboxes cho thực thi LLM-generated code an toàn. Essential cho code agents và data analysis agents. Cô lập hoàn toàn — giới hạn blast radius khi agent chạy code nguy hiểm."
+    },
+    {
+      "title": "Vercel AI SDK Documentation",
+      "type": "documentation",
+      "url": "https://sdk.vercel.ai/docs",
+      "level": "Intermediate",
+      "description": "React/Next.js SDK cho AI UI: streaming responses, tool call rendering, multi-provider support. Production web interface cho agent applications. Tích hợp tốt với MAESTRO platform (Next.js-based)."
+    }
+  ],
+  "risks": [
+    {
+      "id": "R01",
+      "name": "Hallucination Cascades — Agent ảo giác bước 3, mọi bước sau xây trên tiền đề sai",
+      "description": "Agent hallucinate ở bước sớm, tất cả bước tiếp theo xây trên false premise, kết quả cuối confidently wrong. Multi-agent systems khuếch đại khi agents validate hallucinations của nhau. Xác suất cao trên complex multi-step tasks.",
+      "severity": "Critical",
+      "probability": "High",
+      "mitigation": "Implement fact-checking gates giữa các bước. Dùng deterministic validation nơi có thể (code execution, API verification). Không bao giờ trust agent output không có structured output validation. Human-in-the-loop cho high-stakes decisions."
+    },
+    {
+      "id": "R02",
+      "name": "Cost Explosion — Agent vào reasoning loop, chi phí bùng nổ",
+      "description": "Agent enters reasoning loop, retries failing tools, hoặc spawns excessive sub-agents. Một runaway task có thể tiêu $50-500 API costs trước khi phát hiện. Multi-agent systems nhân bội rủi ro. Xác suất cao.",
+      "severity": "High",
+      "probability": "High",
+      "mitigation": "Hard token budgets per task (max 50K tokens per agent run). Step limits (max 20 iterations). Real-time cost monitoring với circuit breakers. Models rẻ cho planning, đắt chỉ cho execution."
+    },
+    {
+      "id": "R03",
+      "name": "Security — Agents với Tool Access là attack surface",
+      "description": "Agent có code execution, file system access, hoặc API keys là attack surface. Prompt injection có thể redirect agent behavior. Tool misuse (xoá files, gửi emails trái phép) là production reality. Xác suất trung bình, impact cực cao.",
+      "severity": "Critical",
+      "probability": "Medium",
+      "mitigation": "Sandboxed execution (E2B, Docker). Principle of least privilege cho tool permissions. Input sanitization trên tất cả tool outputs fed back cho agent. Không bao giờ cho agents truy cập production databases không có read-only wrappers. Red-team agent deployments."
+    },
+    {
+      "id": "R04",
+      "name": "Regulatory Risk — Autonomous AI decisions trong regulated industries",
+      "description": "Quyết định AI tự hành trong banking, healthcare, insurance đối mặt legal standing không rõ ràng. Vietnam AI regulatory framework còn nascent. EU AI Act classify autonomous decision-making là high-risk. Xác suất trung bình. Chờ 12-24 tháng trước khi có clarity.",
+      "severity": "High",
+      "probability": "Medium",
+      "mitigation": "Giữ human-in-the-loop cho mọi regulated decisions. Document agent reasoning chains cho auditability. Monitor regulatory developments. Design 'agent-as-advisor' không phải 'agent-as-decider' trong regulated contexts."
+    },
+    {
+      "id": "R05",
+      "name": "LLM Provider Dependency — Toàn bộ hệ thống phụ thuộc 1 provider",
+      "description": "Hệ thống agent phụ thuộc hoàn toàn vào LLM provider's API availability, pricing, model quality. Provider outages = total system failure. Price increases đơn phương. Model deprecation phá vỡ agent behavior. Xác suất cao.",
+      "severity": "High",
+      "probability": "High",
+      "mitigation": "Multi-provider architecture (Claude primary, GPT-4o fallback). Abstract LLM calls sau provider-agnostic interface. Test thường xuyên với open-weight models (Llama 3.3) làm escape hatch. Cache common reasoning patterns."
+    },
+    {
+      "id": "R06",
+      "name": "Testing & QA Impossibility — Agent behavior non-deterministic",
+      "description": "Agent behavior non-deterministic. Cùng input có thể cho different tool sequences, intermediate results, final outputs. Traditional test coverage metrics vô nghĩa. Xác suất cao, impact trung bình.",
+      "severity": "High",
+      "probability": "High",
+      "mitigation": "Evaluation-driven development (LangSmith evals, Braintrust). Define behavioral tests (outcome-based, không path-based). Chạy statistical evaluations (100+ runs per test case). Monitor production agent traces cho regression. Chấp nhận 100% test coverage impossible — thiết kế cho graceful failure."
+    },
+    {
+      "id": "R07",
+      "name": "Framework Churn — Landscape thay đổi mỗi 3-6 tháng",
+      "description": "Agentic AI framework landscape thay đổi mỗi 3-6 tháng. LangGraph là standard hôm nay; có thể bị thay thế ngày mai. Code viết theo APIs hôm nay có thể obsolete trong 12 tháng. Xác suất trung bình.",
+      "severity": "Medium",
+      "probability": "Medium",
+      "mitigation": "Minimize framework coupling. Giữ core business logic độc lập với orchestration layer. Dùng thin adapters. Đầu tư hiểu patterns (ReAct, state machines) không chỉ frameworks. Budget 20% development time cho migration."
+    },
+    {
+      "id": "R08",
+      "name": "Talent Scarcity — Thiếu nhân lực agent-specific, đặc biệt tại Việt Nam",
+      "description": "Xây production agents cần expertise đồng thời: LLM engineering, distributed systems, security, domain knowledge. Kết hợp này cực kỳ hiếm, đặc biệt tại Việt Nam. Xác suất cao, impact trung bình.",
+      "severity": "Medium",
+      "probability": "High",
+      "mitigation": "Đầu tư internal training. Bắt đầu với single-agent systems (skill floor thấp hơn). Tuyển dựa trên software engineering fundamentals, dạy LLM specifics. Partner với global experts cho architecture review."
+    }
+  ],
+  "metadata": {
+    "status": "reviewed",
+    "version": "1.0",
+    "createdAt": "2026-03-31",
+    "updatedAt": "2026-03-31",
+    "researchedBy": ["R-alpha", "R-beta", "R-gamma", "R-MLE", "R-DE", "R-NLP", "R-DLE", "R-BE", "R-FE", "R-DO", "R-SE", "R-QA", "R-SA", "R-D01", "R-D02", "R-sigma"],
+    "consolidatedBy": "R-sigma (Ms. Scribe)",
+    "normalizedAt": "2026-03-31",
+    "normalizedBy": "R-sigma",
+    "phase": "Phase 0",
+    "module": "B10",
+    "reviewedBy": null,
+    "approvedBy": null,
+    "notes": "Consolidated bởi R-sigma (Ms. Scribe). Overall feasibility 5.1/10 CONDITIONAL GO — rủi ro cao nhất trong các B-nodes. JSON field names English, values Vietnamese (có dấu) per language rule. Technical terms giữ English. 16 agents nghiên cứu. Chiến lược: single-agent internal use cases trước, evaluation infrastructure trước agents, hard cost limits, Claude + LangGraph initial stack. Khoảng cách demo-production là canyon — vượt bằng engineering discipline, không phải optimism."
+  }
+}

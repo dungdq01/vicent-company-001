@@ -1,0 +1,100 @@
+{
+  "id": "I05",
+  "name": "Agriculture & Agritech",
+  "slug": "agriculture-agritech",
+  "category": "industry",
+  "icon": "Sprout",
+  "color": "#F97316",
+  "depthLevel": 1,
+  "overview": {
+    "description": "Agriculture in Vietnam and Southeast Asia is undergoing rapid digital transformation, driven by precision farming, IoT sensors, drone imaging, and AI-powered advisory platforms. The sector faces challenges in yield optimization, pest and disease management, supply chain traceability, and climate adaptation.",
+    "marketSizeVietnam": "~$30B agricultural output, agritech segment growing 20%+ YoY",
+    "marketSizeSEA": "~$400B regional agricultural market with increasing tech adoption",
+    "aiMaturity": "L1",
+    "aiAppetite": "medium"
+  },
+  "domainKnowledge": {
+    "keyEntities": [
+      "Farms",
+      "Crops",
+      "Livestock",
+      "Soil sensors",
+      "Weather stations",
+      "Supply cooperatives"
+    ],
+    "keyProcesses": [
+      "Planting",
+      "Irrigation",
+      "Pest management",
+      "Harvesting",
+      "Post-harvest logistics"
+    ],
+    "dataTypes": [
+      "Satellite imagery",
+      "Drone photos",
+      "IoT sensor readings",
+      "Weather data",
+      "Soil composition"
+    ],
+    "typicalDataVolume": "Medium — sensor data can be high-frequency but farm count is moderate",
+    "dataQuality": "Low to medium — fragmented smallholder data, inconsistent collection"
+  },
+  "painPoints": [
+    {
+      "problem": "Crop disease detection is manual and delayed, leading to yield loss",
+      "severity": 8,
+      "aiSolvable": true,
+      "mapsToBaseline": [
+        "B03"
+      ]
+    },
+    {
+      "problem": "Demand forecasting for perishable produce is inaccurate, causing waste",
+      "severity": 7,
+      "aiSolvable": true,
+      "mapsToBaseline": [
+        "B01"
+      ]
+    },
+    {
+      "problem": "Fragmented supply chain with poor traceability from farm to market",
+      "severity": 7,
+      "aiSolvable": true,
+      "mapsToBaseline": [
+        "B02"
+      ]
+    }
+  ],
+  "regulations": [],
+  "priorityBaselines": {
+    "high": [
+      "B03",
+      "B01"
+    ],
+    "medium": [
+      "B07"
+    ],
+    "low": [
+      "B08"
+    ]
+  },
+  "competitiveLandscape": [],
+  "relatedNodes": [
+    {
+      "nodeId": "I06",
+      "relationship": "supply_chain",
+      "description": "Agricultural products flow into logistics and supply chain networks."
+    },
+    {
+      "nodeId": "B03",
+      "relationship": "applies_to",
+      "description": "Computer vision enables crop monitoring and disease detection."
+    }
+  ],
+  "metadata": {
+    "createdAt": "2026-03-30",
+    "updatedAt": "2026-03-30",
+    "version": "0.1",
+    "status": "skeleton"
+  }
+}

@@ -1,0 +1,661 @@
+{
+  "id": "B08",
+  "name": "Conversational AI & Chatbots",
+  "type": "baseline",
+  "slug": "conversational-ai-chatbots",
+  "tagline": "Xay dung tro ly ao va chatbot thong minh — tu FAQ bot don gian den he thong agentic da kenh, phuc vu khach hang 24/7 bang tieng Viet tu nhien tren Zalo, Messenger va Web",
+  "category": "baseline",
+  "icon": "MessageSquare",
+  "color": "#7986CB",
+  "depthLevel": 3,
+  "selectedAgents": ["R-alpha", "R-beta", "R-gamma", "R-MLE", "R-DE", "R-NLP", "R-DLE", "R-BE", "R-FE", "R-DO", "R-SE", "R-QA", "R-SA", "R-D05", "R-D02", "R-sigma"],
+  "description": "Conversational AI & Chatbots la linh vuc xay dung he thong doi thoai giua nguoi va may — tu chatbot FAQ don gian (rule-based, zero LLM cost) qua bot RAG thong minh (truy xuat knowledge base + LLM sinh cau tra loi) den tro ly agentic da buoc (goi API, truy van database, thuc hien giao dich). Ky thuat trai dai tu intent classification va slot filling co dien, qua Transformer va LLM (GPT-4o, Claude, Llama), den Retrieval-Augmented Generation (RAG) va multi-agent orchestration. Voi stack chin muoi (LangChain, LlamaIndex, Qdrant, vLLM, Rasa, Botpress), he thong co the trien khai tu prototype 2 tuan den production-grade platform phuc vu hang trieu cuoc hoi thoai/thang. Cho thi truong Viet Nam — noi Zalo co 75M+ nguoi dung, FPT.AI thong tri banking, va SMEs san sang tra $99-2,000/thang cho chatbot — lam chu B08 la co hoi kinh doanh truc tiep voi market pull ro rang.",
+  "description_paragraphs": [
+    "Conversational AI & Chatbots la linh vuc giao giua Natural Language Processing, Information Retrieval, va Human-Computer Interaction, tap trung vao viec xay dung he thong doi thoai tu dong. Linh vuc bao gom 6 sub-fields: Task-Oriented Dialogue (dat lich, ho tro khach hang), Open-Domain Chat (tro chuyen tu do), Question Answering (hoi dap tren tai lieu), Retrieval-Augmented Generation (RAG — ket hop truy xuat va sinh van ban), Voice Assistants (tro ly giong noi), va Multimodal Conversational AI (xu ly text + hinh anh + am thanh). Stack cong nghe hoan toan san sang: LangChain/LlamaIndex cho orchestration, Qdrant/ChromaDB cho vector search, vLLM/TGI cho self-hosted LLM, Rasa/Botpress cho chatbot framework — TRL 8, da duoc chung minh tai hang ngan doanh nghiep toan cau.",
+    "Tai Viet Nam, B08 co diem kha thi 7.0/10 (CONDITIONAL GO) voi Market Demand cao nhat (9/10): moi nganh tu ngan hang (Vietcombank, MB Bank), thuong mai dien tu (Tiki, Shopee VN), vien thong (Viettel, VNPT), den chinh phu (Cong DVC) deu dang trien khai hoac danh gia chatbot. Thi truong chatbot VN uoc tinh $50-100M nam 2026, tang 25-35%/nam. Tuy nhien, Data Availability (6/10) va Implementation Risk (5/10) la thach thuc: du lieu hoi thoai tieng Viet co nhan cuc ky hiem, chat luong tieng Viet cua LLM open-source con kem, va khoang cach giua demo va production lon — hallucination trong domain ngan hang/y te gay rui ro phap ly nghiem trong.",
+    "Chien luoc trien khai: xay san pham theo 3 tang — Bot Lite ($99-199/thang, rule-based FAQ + Zalo/Messenger, zero LLM cost, target SMEs), Bot Smart ($499-1,999/thang, RAG + knowledge base upload + small LLM, target mid-market), Bot Enterprise ($5,000+/thang, agentic + custom integrations + on-premise, target top 50 doanh nghiep). Dieu kien GO: tich hop Zalo OA tu ngay 1 (bat buoc), xay Vietnamese evaluation benchmark 500+ samples truoc khi build product, bat dau voi vertical banking mid-tier hoac e-commerce (tranh canh tranh truc tiep voi FPT.AI), va kiem soat chi phi LLM nghiem ngat (token budget, response caching, model routing)."
+  ],
+  "aliases": [
+    "AI hoi thoai",
+    "Chatbot thong minh",
+    "Tro ly ao",
+    "Conversational AI",
+    "Chatbots",
+    "Virtual Assistant",
+    "Dialogue Systems",
+    "He thong doi thoai"
+  ],
+  "maturity_level": "mature",
+  "trl": 8,
+  "core_concepts": [
+    {
+      "name": "Nhan dien y dinh (Intent Recognition)",
+      "definition": "Phan loai cau noi cua nguoi dung vao cac action categories da dinh nghia. Vi du: 'Toi muon huy don hang' → intent:cancel_order. Formal: c_hat = argmax P(c|x). Phuong phap: SVM/logistic regression tren TF-IDF (co dien), fine-tune BERT/PhoBERT (hien dai), hoac LLM implicit understanding (2024-2026). Thach thuc: out-of-scope detection, multi-intent, intent shift giua cac luot.",
+      "difficulty": "Beginner",
+      "prerequisites": ["Text classification co ban", "NLP fundamentals"]
+    },
+    {
+      "name": "Dien khe thong tin (Slot Filling / Entity Extraction)",
+      "definition": "Trich xuat cac tham so quan trong tu cau noi. Vi du: 'Dat ve tu Ha Noi di Tokyo ngay 15/3' → origin=Ha Noi, destination=Tokyo, date=15/3. Dung BIO tagging hoac LLM structured output (JSON schema, function calling). Joint intent-slot models (JointBERT) chia se encoder. LLM-based: trich xuat qua prompting hoac tool calling schemas.",
+      "difficulty": "Beginner",
+      "prerequisites": ["Sequence labeling", "NER co ban"]
+    },
+    {
+      "name": "Theo doi trang thai doi thoai (Dialogue State Tracking)",
+      "definition": "Duy tri belief state b_t — phan phoi xac suat tren slot-value pairs tai moi luot hoi thoai. b_t(s=v) = P(s=v|H_t). Classical: Bayesian networks, rules. Neural: TRADE, TripPy (span extraction). LLM-based: sinh JSON object tu dialogue context, dat state-of-art tren MultiWOZ (>60% joint goal accuracy). Quan trong cho task-oriented bots phuc tap.",
+      "difficulty": "Intermediate",
+      "prerequisites": ["Intent recognition", "Slot filling", "Xac suat co ban"]
+    },
+    {
+      "name": "Quan ly doi thoai (Dialogue Management)",
+      "definition": "Quyet dinh hanh dong tiep theo cua he thong. 3 paradigms: (1) Rule-based/State Machine — predictable, auditable, nhung brittle; (2) Neural/RL — hoc policy pi(a_t|s_t) tu data; (3) LLM-as-DM (2024-2026) — system prompt dinh nghia flow, LLM implicit track state. Production: Hybrid — orchestration layer (rules, routing) quan ly flow + LLM xu ly ngon ngu trong tung state.",
+      "difficulty": "Intermediate",
+      "prerequisites": ["Dialogue state tracking", "State machines", "Reinforcement learning co ban"]
+    },
+    {
+      "name": "Retrieval-Augmented Generation (RAG)",
+      "definition": "Ket hop truy xuat tu external knowledge voi LLM generation de giam hallucination. Pipeline: chunk documents → embed (text-embedding-3-large, BGE-M3) → vector DB (Qdrant, pgvector) → hybrid search (dense + BM25) → rerank (cross-encoder) → inject context vao prompt → LLM sinh cau tra loi co trich dan. Advanced: Agentic RAG (LLM quyet dinh khi nao retrieve), Graph RAG, Corrective RAG, Self-RAG.",
+      "difficulty": "Intermediate",
+      "prerequisites": ["Embeddings", "Vector search", "LLM prompting"]
+    },
+    {
+      "name": "Cua so ngu canh va Bo nho (Context Window & Memory)",
+      "definition": "Context window la gioi han tokens LLM xu ly (GPT-4o: 128K, Claude: 200K, Gemini 2.0: 2M). Khi hoi thoai vuot qua, can memory strategies: (1) Truncation, (2) Sliding window + summarization, (3) Hierarchical memory (working + episodic + semantic), (4) Retrieval-based memory (MemGPT/Letta — luu tat ca turns vao vector DB, retrieve relevant), (5) External memory tools (memory_save, memory_search). Xu huong 2026: infinite context qua retrieval-augmented memory.",
+      "difficulty": "Intermediate",
+      "prerequisites": ["Transformer architecture", "Vector databases"]
+    },
+    {
+      "name": "Prompt Engineering & In-Context Learning",
+      "definition": "Thiet ke input text de dieu khien hanh vi LLM ma khong can update parameters. System prompt la 'linh hon' cua chatbot. Ky thuat: few-shot examples (3-20 vi du trong prompt), Chain-of-Thought ('hay suy nghi tung buoc'), structured output (XML/JSON), role prompting. In-context learning scale theo model size. Spectrum: zero-shot → few-shot → LoRA fine-tune → RLHF/DPO.",
+      "difficulty": "Beginner",
+      "prerequisites": ["Hieu biet LLM co ban"]
+    },
+    {
+      "name": "Guardrails & An toan (Safety)",
+      "definition": "Co che rang buoc hanh vi LLM trong gioi han chap nhan duoc. Input guardrails: phat hien prompt injection, loc chu de, PII detection/redaction, rate limiting. Output guardrails: content safety classifiers (toxicity), factuality check, brand compliance, citation verification. System-level: Constitutional AI (tu phe binh), tool-use permissions, human-in-the-loop escalation. Frameworks: Guardrails AI, NeMo Guardrails, LlamaGuard.",
+      "difficulty": "Intermediate",
+      "prerequisites": ["LLM fundamentals", "Text classification"]
+    },
+    {
+      "name": "Phat hien va Giam Hallucination",
+      "definition": "Hallucination xay ra khi LLM sinh noi dung sai su that hoac khong co co so. 2 loai: Intrinsic (mau thuan voi source), Extrinsic (them claims khong co trong source). Detection: self-consistency checking, source attribution + verify, NLI-based verification, LLM-as-judge. Mitigation: RAG grounding, constrained decoding, explicit uncertainty expression, Chain-of-Verification (CoVe). CRITICAL cho banking/healthcare chatbot.",
+      "difficulty": "Intermediate",
+      "prerequisites": ["RAG", "NLI co ban", "Evaluation methods"]
+    },
+    {
+      "name": "Quan ly hoi thoai Da luot (Multi-Turn Conversation)",
+      "definition": "Duy tri hoi thoai mach lac qua nhieu luot: coreference resolution ('no' chi cai gi), topic tracking (phat hien chuyen de), conversational grounding (sua hieu nham qua cau hoi lam ro), turn-taking (voice systems). Persistence across sessions: nho preferences, lich su, van de chua giai quyet. Implementation: thread-based message history, session state trong DB, summarization compression.",
+      "difficulty": "Intermediate",
+      "prerequisites": ["Dialogue management", "Context window & memory"]
+    },
+    {
+      "name": "Tich hop Da kenh (Multi-Channel Integration)",
+      "definition": "Trien khai chatbot tren nhieu kenh dong thoi: Zalo OA (75M+ users, BAT BUOC cho VN), Facebook Messenger (#1 cho SME commerce), Web widget, Mobile app, Voice/telephony. Moi kenh co rich message format rieng (quick replies, carousels, buttons). Can adapter layer chuyen doi giua internal message format va channel-specific APIs. Zalo OA API: rich messages, quick replies, OA management.",
+      "difficulty": "Intermediate",
+      "prerequisites": ["API integration", "Web development co ban"]
+    },
+    {
+      "name": "Attention Mechanism & Transformer Architecture",
+      "definition": "Nen tang cua moi LLM hien dai. Scaled Dot-Product Attention: Attention(Q,K,V) = softmax(QK^T/sqrt(d_k))V. Multi-Head Attention: h subspaces song song. Causal mask cho autoregressive generation. Cai tien: Grouped Query Attention (giam KV-cache), Flash Attention (O(N) memory), Sliding Window Attention, Ring Attention (unlimited context). Decoder-only architecture (GPT, Claude, Llama) thong tri 2024-2026.",
+      "difficulty": "Advanced",
+      "prerequisites": ["Dai so tuyen tinh", "Deep learning co ban"]
+    }
+  ],
+  "algorithms": [
+    {
+      "name": "Rule-Based / Decision Tree Chatbot",
+      "category": "Deterministic, No-ML",
+      "complexity": "O(d) moi turn, d = tree depth",
+      "pros": ["Zero LLM cost — hoan toan mien phi inference", "Predictable, auditable, de debug", "Deploy trong vai gio", "Phu hop 70-80% FAQ use cases VN (<100 Q&A pairs)"],
+      "cons": ["Khong hieu ngon ngu tu nhien — chi exact/keyword match", "Bao tri kho khi >50 intents", "Khong xu ly cau hoi ngoai pham vi"],
+      "use_cases": ["FAQ bot SME (<100 cau hoi)", "IVR menus", "Simple transactional flows"],
+      "key_papers": ["Weizenbaum, J. (1966). ELIZA — A Computer Program for the Study of NLC."]
+    },
+    {
+      "name": "Intent Classifier + Slot Filler (ML-based)",
+      "category": "Supervised Learning, Classification",
+      "complexity": "Training: O(n*d*k); Inference: O(d*k) moi cau",
+      "pros": ["Chinh xac cao voi du lieu training tot (>95% intent accuracy)", "Joint models (JointBERT) hieu qua", "PhoBERT fine-tune cho tieng Viet", "Nhe, nhanh — latency <10ms"],
+      "cons": ["Can labeled training data (500-5000 samples/intent)", "Khong xu ly intents moi ma khong retrain", "Khong sinh ngon ngu tu nhien"],
+      "use_cases": ["Routing layer trong hybrid architecture", "Vietnamese intent classification voi PhoBERT", "Enterprise bots voi intents co dinh"],
+      "key_papers": ["Chen, Q. et al. (2019). BERT for Joint Intent Classification and Slot Filling. arXiv."]
+    },
+    {
+      "name": "Seq2Seq / Encoder-Decoder Generation",
+      "category": "Neural, Generative",
+      "complexity": "O(n*m*d^2) cho attention; autoregressive O(m) steps",
+      "pros": ["Sinh cau tra loi tu nhien", "Xu ly cau hoi da dang khong can templates", "Pre-trained models (T5, BART) cho transfer learning"],
+      "cons": ["Hallucination — sinh noi dung sai", "Can nhieu data training cho chat luong tot", "Cham hon rule-based"],
+      "use_cases": ["Open-domain chat", "Summarization trong conversations", "Response paraphrasing"],
+      "key_papers": ["Sutskever, I. et al. (2014). Sequence to Sequence Learning with Neural Networks. NeurIPS."]
+    },
+    {
+      "name": "Retrieval-Augmented Generation (RAG Pipeline)",
+      "category": "Hybrid Retrieval + Generation",
+      "complexity": "Retrieval: O(log(N)) ANN search; Generation: O(m*d^2) LLM inference",
+      "pros": ["Giam hallucination dang ke bang grounding", "Cap nhat knowledge khong can retrain", "Trich dan source — tang tin cay", "Chi phi hop ly ($0.01-0.10/conversation)"],
+      "cons": ["Chat luong phu thuoc retrieval quality", "Chunking strategy anh huong lon", "Can vector DB infrastructure", "Khong xu ly tot cau hoi can suy luan nhieu buoc"],
+      "use_cases": ["Customer support tren knowledge base", "Documentation Q&A", "Enterprise assistant"],
+      "key_papers": ["Lewis, P. et al. (2020). Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks. NeurIPS."]
+    },
+    {
+      "name": "Dense Retrieval (Dual Encoder)",
+      "category": "Information Retrieval, Embedding-based",
+      "complexity": "Encoding: O(n*d); ANN search: O(log(N))",
+      "pros": ["Semantic search — hieu nghia, khong chi keyword", "Nhanh voi ANN indexing (HNSW, IVF)", "Multilingual embeddings ho tro tieng Viet (BGE-M3)"],
+      "cons": ["Can fine-tune cho domain cu the de tot", "Hard negatives mining quan trong", "Embedding drift theo thoi gian"],
+      "use_cases": ["RAG retrieval stage", "Semantic FAQ matching", "Conversation history search"],
+      "key_papers": ["Karpukhin, V. et al. (2020). Dense Passage Retrieval for Open-Domain QA. EMNLP."]
+    },
+    {
+      "name": "Cross-Encoder Reranking",
+      "category": "Information Retrieval, Reranking",
+      "complexity": "O(k*n*d) cho k candidates (cham nhung chinh xac)",
+      "pros": ["Chinh xac hon dual encoder vi full attention giua query va passage", "Tang retrieval quality dang ke (top-5 accuracy +10-20%)", "BGE-reranker-v2-m3 ho tro multilingual"],
+      "cons": ["Cham — khong the dung cho full corpus", "Chi dung lam stage 2 sau dense retrieval"],
+      "use_cases": ["Reranking trong RAG pipeline", "Cai thien do chinh xac cuoi cung"],
+      "key_papers": ["Nogueira, R. & Cho, K. (2020). Passage Re-ranking with BERT. arXiv."]
+    },
+    {
+      "name": "LLM-based Dialogue (Decoder-only, Autoregressive)",
+      "category": "Large Language Model, Generative",
+      "complexity": "O(n^2*d) attention; practical: O(n*d^2) voi KV-cache",
+      "pros": ["Hieu ngon ngu tu nhien tot nhat hien tai", "Zero-shot/few-shot — khong can training data", "Tool calling, structured output, multi-turn native", "Tieng Viet chap nhan duoc (GPT-4o, Claude tot; open-source kem hon)"],
+      "cons": ["Chi phi inference cao ($2.50-10/M tokens GPT-4o)", "Hallucination la rui ro lon", "Latency cao hon rule-based (1-5 giay)", "Data privacy khi dung cloud API"],
+      "use_cases": ["Chatbot thong minh moi loai", "Agentic assistant voi tool use", "Complex multi-turn conversations"],
+      "key_papers": ["Brown, T. et al. (2020). Language Models are Few-Shot Learners. NeurIPS.", "Touvron, H. et al. (2023). Llama 2: Open Foundation and Fine-Tuned Chat Models."]
+    },
+    {
+      "name": "RLHF / DPO Alignment",
+      "category": "Alignment, Preference Optimization",
+      "complexity": "RLHF: O(PPO training); DPO: O(SFT-like, don gian hon)",
+      "pros": ["Alignment voi human preferences — giam toxic, tang helpful", "DPO don gian hon RLHF (khong can reward model)", "Cai thien tone va style dang ke"],
+      "cons": ["Can 10K-100K preference pairs", "RLHF phuc tap (reward model + PPO)", "Khong thuc te cho cong ty VN — dung commercial LLMs da aligned thay vi tu train"],
+      "use_cases": ["Training foundation models (OpenAI, Anthropic, Meta)", "Fine-tune brand voice (LoRA + DPO voi small dataset)"],
+      "key_papers": ["Ouyang, L. et al. (2022). Training language models to follow instructions with human feedback. NeurIPS.", "Rafailov, R. et al. (2023). Direct Preference Optimization. NeurIPS."]
+    },
+    {
+      "name": "Agentic Multi-Step Orchestration (LangGraph / Tool-Use)",
+      "category": "Agent Framework, Orchestration",
+      "complexity": "O(steps * LLM_call) — so buoc thay doi theo task",
+      "pros": ["Xu ly workflow phuc tap (tra cuu DB, goi API, tinh toan)", "LLM tu quyet dinh khi nao dung tool nao", "Human-in-the-loop cho quyet dinh quan trong", "MCP (Model Context Protocol) chuan hoa tool integration"],
+      "cons": ["Chi phi cao ($0.05-0.50/conversation)", "Debug kho — nhieu buoc, nhieu LLM calls", "Latency cao (5-30 giay cho complex flows)", "Chua thuc te cho da so doanh nghiep VN 2026 (API legacy khong on dinh)"],
+      "use_cases": ["Enterprise customer service platform", "Banking assistant (tra so du, chuyen khoan)", "IT helpdesk voi ticket creation"],
+      "key_papers": ["Yao, S. et al. (2023). ReAct: Synergizing Reasoning and Acting in Language Models. ICLR."]
+    }
+  ],
+  "tech_stack": {
+    "llm_providers": {
+      "recommended": {"recommended": "Claude API (Anthropic)", "rationale": "Frontier model voi 200K context, extended thinking, tool use, instruction following xuat sac. Chat luong tieng Viet tot nhat trong cac commercial LLMs. Primary choice cho high-quality responses va agentic tasks."},
+      "alternatives": {"recommended": "OpenAI GPT-4o / Llama 3.1-4 (Meta) / DeepSeek-V3/R1 / Mistral Large", "rationale": "GPT-4o cho multimodal + voice. Llama cho self-hosting/on-premise. DeepSeek cho budget-constrained. Mistral cho European data residency. Chon theo use case va budget."}
+    },
+    "embedding_models": {
+      "recommended": {"recommended": "BGE-M3 (BAAI)", "rationale": "Multi-lingual (ho tro tieng Viet), multi-granularity, dense+sparse+colbert. Self-hosted mien phi. Tot nhat cho Vietnamese RAG pipeline vi khong phu thuoc cloud API."},
+      "alternatives": {"recommended": "text-embedding-3-large (OpenAI) / Cohere Embed v3", "rationale": "OpenAI cho do chinh xac cao nhat (MTEB top). Cohere cho multilingual + int8 quantization. Dung khi chap nhan cloud dependency."}
+    },
+    "vector_databases": {
+      "recommended": {"recommended": "Qdrant", "rationale": "Rust-based, nhanh, hybrid search (dense + sparse), multi-tenancy native. Production-ready cho SaaS chatbot platform. Filtering manh cho metadata queries."},
+      "alternatives": {"recommended": "ChromaDB / pgvector / Pinecone / Weaviate", "rationale": "ChromaDB cho prototyping (zero-config). pgvector khi da co PostgreSQL. Pinecone cho zero-ops managed. Weaviate cho complex filtering."}
+    },
+    "orchestration_frameworks": {
+      "recommended": {"recommended": "LangChain + LangGraph", "rationale": "LangChain: framework pho bien nhat cho LLM — chains, agents, tools, memory. LangGraph: graph-based agent orchestration, stateful workflows, human-in-loop. Ecosystem lon nhat, nhieu tai lieu va vi du."},
+      "alternatives": {"recommended": "LlamaIndex / Haystack (deepset)", "rationale": "LlamaIndex chuyen ve data ingestion va RAG. Haystack cho enterprise RAG production-ready. Chon LlamaIndex khi RAG-heavy, Haystack khi can modular pipeline."}
+    },
+    "chatbot_frameworks": {
+      "recommended": {"recommended": "Botpress", "rationale": "Visual flow builder + LLM integration + multi-channel. Low-code cho team khong co ML engineers. Tich hop san Zalo/Messenger. Phu hop Bot Lite va Bot Smart tiers."},
+      "alternatives": {"recommended": "Rasa / Dialogflow CX (Google) / Amazon Lex", "rationale": "Rasa cho full control on-premise (Rasa Pro $50K+/nam). Dialogflow CX cho GCP + telephony. Amazon Lex cho AWS-native + Contact Center."}
+    },
+    "llm_serving": {
+      "recommended": {"recommended": "vLLM", "rationale": "PagedAttention, continuous batching, OpenAI-compatible API. Production self-hosted inference cho Llama/Mistral/DeepSeek. Throughput cao nhat trong cac open-source serving engines. Chi dung khi self-host (Phase 2+, khi API spend >$5,000-10,000/thang)."},
+      "alternatives": {"recommended": "TGI (HuggingFace) / SGLang / Ollama", "rationale": "TGI cho HuggingFace ecosystem. SGLang cho structured output nhanh. Ollama cho local development/testing (1 command)."}
+    },
+    "chat_ui": {
+      "recommended": {"recommended": "Vercel AI SDK", "rationale": "React/Next.js streaming chat components, multi-provider support. Production web chat widgets. Phu hop team Next.js. Tich hop tot voi MAESTRO platform (Next.js-based)."},
+      "alternatives": {"recommended": "Open WebUI / Chainlit / Streamlit Chat", "rationale": "Open WebUI cho internal ChatGPT clone. Chainlit cho rapid prototyping (Python-native). Streamlit cho demo nhanh."}
+    },
+    "monitoring_observability": {
+      "recommended": {"recommended": "Langfuse", "rationale": "Open-source LLM observability: tracing, cost tracking, prompt management, evals. Self-hosted mien phi. Vendor-agnostic — khong lock vao LangChain. Dashboard chi phi per-conversation — metric quan trong nhat cho VN market."},
+      "alternatives": {"recommended": "LangSmith / Phoenix (Arize)", "rationale": "LangSmith cho LangChain-based apps (tight integration). Phoenix cho notebook-friendly research/debugging."}
+    },
+    "vietnamese_nlp": {
+      "recommended": {"recommended": "underthesea + PhoBERT", "rationale": "underthesea: word segmentation, POS tagging, NER, sentiment cho tieng Viet. PhoBERT: RoBERTa-based pretrained model cho Vietnamese — fine-tune intent classification, NER. Ket hop 2 tools cho Vietnamese NLU pipeline hoan chinh."},
+      "alternatives": {"recommended": "VnCoreNLP / PhoGPT / BARTpho", "rationale": "VnCoreNLP (Java-based) cho high-accuracy pipeline. PhoGPT (4B) cho Vietnamese generation nhung qua nho cho complex conversations. BARTpho cho summarization."}
+    }
+  },
+  "feasibility_score": {
+    "overall_score": 7.0,
+    "verdict": "CONDITIONAL GO",
+    "verdict_vi": "Tien hanh co dieu kien",
+    "summary": "Linh vuc chin muoi ky thuat (TRL 8), nhu cau thi truong cuc cao (9/10) voi moi nganh tai VN dang trien khai chatbot. Thi truong $50-100M nam 2026, tang 25-35%/nam. Dieu kien: san pham phan tang (Bot Lite/Smart/Enterprise), tich hop Zalo OA tu ngay 1, xay Vietnamese evaluation benchmark truoc khi build, bat dau vertical banking mid-tier hoac e-commerce, kiem soat chi phi LLM nghiem ngat (token budget + caching + model routing).",
+    "dimensions": {
+      "technical_feasibility": {"score": 8, "rationale": "Tooling chin muoi tu rule-based den agentic. Open-weight LLMs (Llama 3.1/4, DeepSeek-R1) cho phep self-hosting. Vietnamese NLP (PhoBERT, underthesea, VnCoreNLP) du cho preprocessing. Tru 2 diem: chat luong tieng Viet cua open-source LLMs con kem English, va khoang cach demo-to-production lon."},
+      "market_demand": {"score": 9, "rationale": "Moi vertical dang deploy/evaluate chatbot: banking (Vietcombank, MB Bank), e-commerce (Tiki, Shopee VN), telco (Viettel, VNPT), government (DVC Portal). LLM revolution chuyen nhan thuc tu 'FAQ bot chan' sang 'assistant that su huu ich'. Thi truong $50-100M. Tru 1 diem vi SMEs co budget thap ($50-200/thang)."},
+      "data_availability": {"score": 6, "rationale": "Du lieu hoi thoai tieng Viet co nhan cuc ky hiem so voi English. Customer conversation logs ton tai nhung siloed, day PII, khong co cau truc. Public Vietnamese QA datasets (UIT-ViQuAD, PhoATIS) nho. Can effort lon de xay Vietnamese evaluation benchmarks va curate fine-tuning data."},
+      "implementation_risk": {"score": 5, "rationale": "Moderate-high. LLM hallucination trong regulated domains (banking, healthcare) gay rui ro phap ly. Vietnamese tokenization edge cases. Integration phuc tap voi legacy enterprise systems VN (thieu API hien dai). Chi phi LLM tai scale cho clients tra $200-2,000/thang. Khoang cach demo va production rat lon."},
+      "vietnam_market_fit": {"score": 7, "rationale": "Zalo OA 75M+ users la kenh bat buoc. FPT.AI thong tri banking nhung cham adopt LLMs — co hoi canh tranh bang technology. SMEs san sang tra $99-199/thang cho bot don gian. Mid-market $500-3,000/thang. Enterprise $5,000-50,000/thang. Tru 3 diem: FPT.AI co relationships vung chac, Zalo AI co distribution advantage, va Vietnamese businesses cuc ky nhay cam ve gia."}
+    },
+    "conditions": [
+      "Tich hop Zalo OA + Facebook Messenger tu ngay 1 — chatbot khong co Zalo la khong kha thi tai VN",
+      "Xay Vietnamese evaluation benchmark (500+ samples: FAQ accuracy, fluency scoring, hallucination rate) truoc khi build product",
+      "San pham phan 3 tang gia: Bot Lite ($99-199/thang), Bot Smart ($499-1,999/thang), Bot Enterprise ($5,000+/thang)",
+      "Bat dau voi 1 vertical (banking mid-tier hoac e-commerce customer service), khong lam horizontal 'chatbot cho tat ca'",
+      "Kiem soat chi phi LLM tu ngay 0: token budget per conversation (max 2,000 tokens), response caching (giam 40-60% LLM calls), model routing (simple → small model, complex → frontier)",
+      "KHONG self-host LLMs trong Phase 1 — dung API (Claude, GPT-4o-mini, DeepSeek API). Chi self-host khi monthly API spend > $5,000-10,000",
+      "Data privacy: on-premise/VN-hosted option, PII auto-redaction, tuan thu Nghi dinh 13/2023 ve bao ve du lieu ca nhan"
+    ]
+  },
+  "industry_applications": [
+    {
+      "industry": "Thuong mai dien tu (E-commerce Customer Service)",
+      "use_case": "Chatbot ho tro khach hang thuong mai dien tu",
+      "description": "Tra loi cau hoi ve don hang (tracking, hoan tien, doi tra), goi y san pham, ho tro sau ban. Volume play: hang trieu queries lap di lap lai/ngay. RAG tren FAQ + product catalog. Tich hop Zalo OA + Messenger. Key players: Shopee VN, Tiki, Sendo, Lazada VN. SMEs ban hang tren Facebook can bot Messenger don gian nhat.",
+      "priority": "P0",
+      "market_size_vn": "USD 15-25M (chi tieu chatbot e-commerce VN)",
+      "technical_complexity": "Low-Medium",
+      "vietnam_readiness": "High"
+    },
+    {
+      "industry": "Ngan hang & Tai chinh (Banking Assistant)",
+      "use_case": "Tro ly ngan hang ao — tra cuu tai khoan, tu van san pham, ho tro giao dich",
+      "description": "Tra loi cau hoi tai khoan (so du, lich su giao dich), tu van san pham (vay, the, tiet kiem), ho tro giao dich don gian. Compliance bar cao (NHNN) — bat buoc RAG grounding + citation + human handoff cho van de phuc tap. Target: ngan hang mid-tier (VPBank, TPBank, HDBank) bi FPT.AI bo qua vi enterprise pricing qua cao. Willingness to pay: $5,000-50,000/thang.",
+      "priority": "P0",
+      "market_size_vn": "USD 20-40M (chi tieu AI banking VN)",
+      "technical_complexity": "High",
+      "vietnam_readiness": "High"
+    },
+    {
+      "industry": "Vien thong (Telco Customer Service)",
+      "use_case": "Chatbot ho tro khach hang vien thong",
+      "description": "Tra loi cau hoi goi cuoc, thanh toan, ho tro ky thuat, doi sim. 3 nha mang lon (Viettel, VNPT, Mobifone) da deploy bot nhung chat luong kem. Co hoi thay the bang LLM-powered bot. Volume cuc lon (hang chuc trieu subscribers). Can tich hop voi billing systems legacy.",
+      "priority": "P1",
+      "market_size_vn": "USD 10-20M",
+      "technical_complexity": "Medium",
+      "vietnam_readiness": "High"
+    },
+    {
+      "industry": "Y te (Healthcare Triage & Appointment)",
+      "use_case": "Chatbot dat lich kham, phan loai trieu chung, tra ket qua xet nghiem",
+      "description": "Dat lich kham benh, phan loai trieu chung (triage — khong chan doan), tra ket qua xet nghiem, huong dan thu tuc. Private hospital chains (Vinmec, FV Hospital). CANH BAO: hallucination trong y te cuc ky nguy hiem — restrict LLM to retrieval-only, bat buoc human handoff cho moi van de lam sang.",
+      "priority": "P1",
+      "market_size_vn": "USD 5-10M",
+      "technical_complexity": "High",
+      "vietnam_readiness": "Medium"
+    },
+    {
+      "industry": "Dich vu cong (Government Services)",
+      "use_case": "Chatbot huong dan thu tuc hanh chinh cong",
+      "description": "Huong dan cong dan ve thu tuc hanh chinh, ho so can thiet, trang thai xu ly ho so. National Public Service Portal (DVC), cong mot cua cap tinh. RAG tren corpus van ban phap luat. Tieng Viet chuan, khong duoc sai. Budget thap nhung volume cao va impact xa hoi lon.",
+      "priority": "P2",
+      "market_size_vn": "USD 5-10M (ngan sach CNTT chinh phu)",
+      "technical_complexity": "Medium",
+      "vietnam_readiness": "Medium"
+    },
+    {
+      "industry": "Giao duc (Education Tutoring)",
+      "use_case": "Chatbot tro giang, ho tro hoc tap",
+      "description": "Tro ly hoc tap tra loi cau hoi theo chuong trinh, giai thich khai niem, tao bai tap. Dac biet cho hoc tieng Anh (thi truong lon tai VN). EdTech companies (Topica, ELSA, Vuihoc). Cho phep sai so cao hon banking/healthcare. LLM generation phu hop — conversation practice.",
+      "priority": "P2",
+      "market_size_vn": "USD 5-8M",
+      "technical_complexity": "Medium",
+      "vietnam_readiness": "Medium"
+    }
+  ],
+  "case_studies": [
+    {
+      "title": "FPT.AI — Chatbot banking cho ngan hang VN",
+      "industry": "Banking / Financial Services",
+      "problem": "Ngan hang VN can tu dong hoa ho tro khach hang 24/7 voi hang trieu cau hoi lap di lap lai (so du, chuyen tien, goi cuoc).",
+      "solution": "FPT.AI trien khai intent-based chatbot tich hop Zalo OA va mobile banking apps cho 15+ ngan hang. Rule-based + NLU tieng Viet. Tich hop core banking qua API adapters.",
+      "results": "Giam 30-50% cuoc goi den tong dai. Xu ly 70%+ cau hoi tu dong. Tuy nhien chat luong NLU han che — khach hang van phan nan bot 'ngu'.",
+      "tech_stack": "Custom NLU engine, rule-based dialogue, Zalo OA API, core banking integration",
+      "lessons": "Intent-based architecture co gioi han ro rang. LLM-powered bots co the canh tranh bang chat luong conversation. Relationships banking la rao can lon nhat, khong phai technology."
+    },
+    {
+      "title": "Klarna — AI assistant thay the 700 nhan vien",
+      "industry": "Fintech / E-commerce",
+      "problem": "Xu ly hang trieu cuoc hoi thoai customer service/thang voi chi phi nhan su cao.",
+      "solution": "Deploy LLM-powered chatbot (OpenAI) xu ly customer service across 23 markets, 35 languages. RAG tren knowledge base + tool integration (refunds, order changes).",
+      "results": "Tuong duong 700 full-time agents. 2/3 conversations xu ly trong 2 phut (truoc: 11 phut). 25% giam repeat inquiries. $40M estimated annual savings.",
+      "tech_stack": "OpenAI GPT-4, custom orchestration, multi-language, tool calling",
+      "lessons": "LLM-powered bots co the thay the nhan su that su tai scale. Key: integration voi backend systems, khong chi chat."
+    },
+    {
+      "title": "Intercom Fin — AI agent cho customer support",
+      "industry": "SaaS / Customer Support",
+      "problem": "Doanh nghiep SaaS can giam ticket volume va improve first response time ma khong hy sinh chat luong.",
+      "solution": "Fin AI Agent: RAG-based bot train tren knowledge base cua tung cong ty. Tich hop voi Intercom inbox. Human handoff khi khong tu tin. Citation-based responses.",
+      "results": "Giai quyet 50%+ tickets tu dong. Accuracy >95% (grounded in knowledge base). Customers report higher satisfaction vs waiting for human.",
+      "tech_stack": "Custom RAG pipeline, OpenAI, Intercom platform, knowledge base ingestion",
+      "lessons": "RAG + citation la paradigm hieu qua nhat cho enterprise chatbot. Khach hang chap nhan bot khi bot trich dan source ro rang."
+    }
+  ],
+  "key_papers": [
+    {
+      "title": "Attention Is All You Need",
+      "authors": "Ashish Vaswani, Noam Shazeer, Niki Parmar, Jakob Uszkoreit, Llion Jones, Aidan N. Gomez, Lukasz Kaiser, Illia Polosukhin",
+      "year": 2017,
+      "venue": "NeurIPS",
+      "contribution": "Kien truc Transformer — nen tang cua moi LLM hien dai. Loai bo recurrence, dung pure attention, cho phep parallelization va long-range dependency modeling. Multi-Head Attention, positional encoding. 90,000+ citations.",
+      "url": "https://arxiv.org/abs/1706.03762"
+    },
+    {
+      "title": "Language Models are Few-Shot Learners (GPT-3)",
+      "authors": "Tom Brown, Benjamin Mann, Nick Ryder, et al.",
+      "year": 2020,
+      "venue": "NeurIPS",
+      "contribution": "Chung minh in-context learning: LLM lon co the thuc hien tasks moi chi tu vai vi du trong prompt, khong can fine-tuning. Thay doi paradigm tu 'train model per task' sang 'prompt a general model'. Nen tang cho moi chatbot LLM-based.",
+      "url": "https://arxiv.org/abs/2005.14165"
+    },
+    {
+      "title": "Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks",
+      "authors": "Patrick Lewis, Ethan Perez, Aleksandra Piktus, Fabio Petroni, Vladimir Karpukhin, Naman Goyal, Heinrich Kuttler, Mike Lewis, Wen-tau Yih, Tim Rocktaschel, Sebastian Riedel, Douwe Kiela",
+      "year": 2020,
+      "venue": "NeurIPS",
+      "contribution": "RAG framework: ket hop retrieval tu external corpus voi neural generation. Giam hallucination, cho phep cap nhat knowledge ma khong retrain. Paradigm thong tri conversational AI 2024-2026.",
+      "url": "https://arxiv.org/abs/2005.11401"
+    },
+    {
+      "title": "Training language models to follow instructions with human feedback (InstructGPT)",
+      "authors": "Long Ouyang, Jeff Wu, Xu Jiang, et al.",
+      "year": 2022,
+      "venue": "NeurIPS",
+      "contribution": "RLHF pipeline: SFT → Reward Model → PPO optimization. Bien language model thanh instruction-following assistant. Nen tang cho ChatGPT va moi chatbot commercial. 1.3B InstructGPT duoc prefer hon 175B GPT-3.",
+      "url": "https://arxiv.org/abs/2203.02155"
+    },
+    {
+      "title": "Direct Preference Optimization: Your Language Model is Secretly a Reward Model",
+      "authors": "Rafael Rafailov, Archit Sharma, Eric Mitchell, Stefano Ermon, Christopher D. Manning, Chelsea Finn",
+      "year": 2023,
+      "venue": "NeurIPS",
+      "contribution": "DPO: alignment khong can reward model rieng va PPO. Reparameterize RL objective thanh classification loss don gian. Tuong duong toan hoc voi RLHF nhung stable hon, don gian hon. Dominant alignment approach 2025-2026.",
+      "url": "https://arxiv.org/abs/2305.18290"
+    },
+    {
+      "title": "ReAct: Synergizing Reasoning and Acting in Language Models",
+      "authors": "Shunyu Yao, Jeffrey Zhao, Dian Yu, Nan Du, Izhak Shafran, Karthik Narasimhan, Yuan Cao",
+      "year": 2023,
+      "venue": "ICLR",
+      "contribution": "ReAct framework: LLM xen ke reasoning traces va actions (tool calls). Nen tang cho agentic chatbots — LLM suy nghi, quyet dinh goi tool, quan sat ket qua, tiep tuc. Paradigm cho LangGraph, Claude tool use.",
+      "url": "https://arxiv.org/abs/2210.03629"
+    },
+    {
+      "title": "PhoBERT: Pre-trained language models for Vietnamese",
+      "authors": "Dat Quoc Nguyen, Anh Tuan Nguyen",
+      "year": 2020,
+      "venue": "EMNLP Findings",
+      "contribution": "RoBERTa-based pretrained model cho tieng Viet (base/large). State-of-art tren nhieu Vietnamese NLP benchmarks. Nen tang cho Vietnamese intent classification, NER, sentiment trong chatbot pipelines.",
+      "url": "https://arxiv.org/abs/2003.00744"
+    },
+    {
+      "title": "Dense Passage Retrieval for Open-Domain Question Answering",
+      "authors": "Vladimir Karpukhin, Barlas Oguz, Sewon Min, Patrick Lewis, Ledell Wu, Sergey Edunov, Danqi Chen, Wen-tau Yih",
+      "year": 2020,
+      "venue": "EMNLP",
+      "contribution": "DPR: dual-encoder dense retrieval vuot qua BM25 cho open-domain QA. Contrastive learning voi hard negatives. Nen tang cho dense retrieval trong RAG pipelines hien dai.",
+      "url": "https://arxiv.org/abs/2004.04906"
+    },
+    {
+      "title": "Constitutional AI: Harmlessness from AI Feedback",
+      "authors": "Yuntao Bai, Saurav Kadavath, Sandipan Kundu, et al.",
+      "year": 2022,
+      "venue": "arXiv",
+      "contribution": "Constitutional AI: train model tu phe binh va sua output theo tap nguyen tac (constitution). Giam can human feedback cho safety alignment. Nen tang cho guardrails va safety trong production chatbots.",
+      "url": "https://arxiv.org/abs/2212.08073"
+    },
+    {
+      "title": "The Curious Case of Neural Text Degeneration (Nucleus Sampling)",
+      "authors": "Ari Holtzman, Jan Buys, Li Du, Maxwell Forbes, Yejin Choi",
+      "year": 2020,
+      "venue": "ICLR",
+      "contribution": "Top-p (nucleus) sampling: sample tu smallest set co tong xac suat >= p. Thich ung candidate set theo confidence. Giai quyet repetition cua beam search va randomness cua top-k. Default decoding cho hau het chatbots.",
+      "url": "https://arxiv.org/abs/1904.09751"
+    }
+  ],
+  "cross_domain_connections": [
+    {
+      "target": "B04",
+      "connection_type": "nlp_foundation",
+      "description": "NLP (B04) la nen tang cua B08: intent classification, entity extraction, sentiment analysis, text generation deu la NLP tasks. PhoBERT (B04) fine-tune cho Vietnamese chatbot NLU. B04 cung cap language understanding; B08 ap dung vao doi thoai tuong tac."
+    },
+    {
+      "target": "B02",
+      "connection_type": "document_knowledge_source",
+      "description": "Document Intelligence (B02) cung cap knowledge cho RAG pipeline cua B08. B02 extract text tu PDF, scan, bang bieu → B08 chunk, embed, va retrieve de tra loi cau hoi. Dac biet quan trong cho banking (policy documents) va government (van ban phap luat)."
+    },
+    {
+      "target": "B12",
+      "connection_type": "search_and_rag",
+      "description": "Search & RAG (B12) la core technology cua B08 chatbot. Dense retrieval, hybrid search, reranking, vector databases — tat ca tu B12. B08 la use case lon nhat cua B12. Graph RAG, Agentic RAG, Corrective RAG deu phuc vu chatbot quality."
+    },
+    {
+      "target": "B09",
+      "connection_type": "generative_ai_foundation",
+      "description": "Generative AI (B09) cung cap LLM generation capabilities cho B08. Text generation, structured output, creative writing — B09 foundations. B08 la ung dung tuong tac truc tiep nhat cua generative AI voi end users."
+    },
+    {
+      "target": "B10",
+      "connection_type": "agentic_extension",
+      "description": "Agentic AI (B10) mo rong B08 tu 'tra loi cau hoi' sang 'thuc hien hanh dong'. Tool use, multi-step planning, autonomous task execution. B08 agentic tier dung B10 patterns. Luu y: B10 la 2027-2028 story cho VN, chua thuc te 2026."
+    },
+    {
+      "target": "B11",
+      "connection_type": "knowledge_grounding",
+      "description": "Knowledge Graphs (B11) cung cap structured grounding cho B08. Entity linking, relationship traversal, multi-hop reasoning. Graph RAG (Microsoft) dung B11 de cai thien chatbot accuracy tren complex queries. B11 bo sung cho vector search cua B12."
+    }
+  ],
+  "bestPractices": [
+    "Bat dau voi Bot Lite (rule-based FAQ + Zalo/Messenger) truoc khi xay RAG hay agentic. 70-80% thi truong VN la SMEs can <100 Q&A pairs — keyword match/TF-IDF du tot voi zero LLM cost. Ship trong 2 tuan, iterate theo feedback.",
+    "Tich hop Zalo OA + Facebook Messenger tu ngay 1. Bat ky chatbot product tai VN ma khong co Zalo la chet tu dau. Budget 2-3 tuan engineering cho robust Zalo OA API integration (rich messages, quick replies, OA management).",
+    "Xay Vietnamese evaluation benchmark (500+ samples) TRUOC khi build product. Bao gom: FAQ accuracy, Vietnamese fluency scoring (1-5 boi native speakers), intent classification accuracy, hallucination rate. Khong co benchmark = khong the so sanh LLM options hay do chat luong.",
+    "RAG voi citation bat buoc cho moi domain co rui ro (banking, healthcare, government). LLM chi tra loi dua tren retrieved documents, khong freeform generation. Moi claim phai co [Source N]. Confidence threshold — handoff den nguoi khi khong chac chan.",
+    "Kiem soat chi phi LLM tu ngay 0: token budget per conversation (max 2,000 tokens), response caching cho frequent queries (giam 40-60% LLM calls), model routing (cau hoi don gian → small model/rules, phuc tap → frontier model), hard spending caps per client. Vietnamese clients churn ngay khi bill vuot expectations.",
+    "Human-in-the-loop escalation khong phai la failure — la feature. Design chuyen tiep muot tu bot sang agent khi: confidence thap, sentiment tieu cuc, van de ngoai pham vi, khach yeu cau nhan vien. Track escalation rate lam KPI chinh.",
+    "Feedback loop tu ngay 1: thu thap user ratings (thumbs up/down), conversation analytics, va prompt tuning data. Khong co feedback = khong biet bot dang tra loi sai gi. Budget 20% engineering cho continuous improvement pipeline."
+  ],
+  "antiPatterns": [
+    "Deploy agentic architecture (LangGraph + multi-tool) cho SME tra $199/thang. 80% use cases VN la FAQ bot don gian. Over-engineering giet margin va keo dai deployment tu 2 tuan thanh 3 thang. Match architecture voi paying ability.",
+    "Bo qua Zalo OA integration vi 'lam web widget truoc'. Zalo la kenh #1 tai VN (75M+ users). Web widget khong ai biet. Messenger la #2. Neu khong co Zalo ngay tu dau, competitors co Zalo se thang.",
+    "Tu self-host LLM trong Phase 1. GPU infrastructure tai VN dat va hiem. vLLM + A100 server = $3,000-8,000/thang + DevOps effort. Bat dau voi API (Claude, GPT-4o-mini, DeepSeek API), validate product-market fit, chi self-host khi monthly API spend > $5,000-10,000.",
+    "Khong test chat luong tieng Viet cua LLM truoc khi chon. Llama 3.1-8B tieng Viet grammatically acceptable nhung unnatural (word order issues, incorrect classifiers, mixed-code artifacts). PhoGPT 4B qua nho cho complex conversations. PHAI co Vietnamese quality benchmark comparison.",
+    "Cho phep LLM freeform generation trong banking/healthcare ma khong co RAG grounding + citation. Hallucination trong regulated domains = rui ro phap ly nghiem trong. Restrict to retrieval-only, bat buoc source citation, human handoff cho moi van de phuc tap.",
+    "Xay 'chatbot cho tat ca' (horizontal platform) canh tranh truc tiep voi FPT.AI va Zalo AI. Ho co relationships (15+ banks) va distribution (75M users) ma khong the thang overnight. Chon 1 vertical, build deep domain expertise, roi expand.",
+    "Ignore data privacy va Nghi dinh 13/2023. Gui PII khach hang den offshore LLM APIs (US/EU servers) ma khong co redaction = vi pham phap luat VN. Can PII detection + redaction truoc khi goi LLM API, on-premise option cho enterprise, audit logs."
+  ],
+  "pipeline": {
+    "stages": [
+      {
+        "name": "User Input Processing",
+        "description": "Nhan va xu ly tin nhan nguoi dung. Language detection (vi/en). Vietnamese preprocessing: word segmentation (underthesea). Intent classification nhanh (keyword rules hoac small PhoBERT model) cho routing. Entity extraction (order ID, email, phone, dates). PII detection va redaction. Prompt injection detection.",
+        "tools": ["underthesea", "PhoBERT", "langdetect", "Custom regex patterns"],
+        "inputs": "Raw user message tu Zalo OA / Messenger / Web widget",
+        "outputs": "Processed message voi: language, segmented text, intent, entities, PII flags"
+      },
+      {
+        "name": "Context Retrieval (RAG)",
+        "description": "Truy xuat thong tin lien quan tu knowledge base. Query formulation → embed voi BGE-M3 → hybrid search (dense + BM25) tren Qdrant → rerank voi cross-encoder (bge-reranker-v2-m3) → context assembly. Top-5 passages voi metadata va relevance scores. Bo qua stage nay cho rule-based Bot Lite tier.",
+        "tools": ["BGE-M3", "Qdrant", "BM25", "bge-reranker-v2-m3", "LangChain/LlamaIndex"],
+        "inputs": "Processed user query tu Stage 1",
+        "outputs": "Top-k relevant passages voi scores va metadata"
+      },
+      {
+        "name": "Response Generation",
+        "description": "Sinh cau tra loi tu LLM. Prompt assembly: system prompt (persona, constraints, output format) + retrieved context + chat history + user message. Streaming response. Tool calls neu can (tra cuu DB, goi API). Safety: chi tra loi dua tren context (RAG-grounded), trich dan [Source N]. Model selection: frontier (Claude/GPT-4o) cho complex, small (Llama-8B/DeepSeek) cho routine.",
+        "tools": ["Claude API / OpenAI API / vLLM", "LangGraph (agentic)", "Tool calling APIs"],
+        "inputs": "System prompt + context + chat history + user message",
+        "outputs": "Generated response (streaming) + optional tool call results"
+      },
+      {
+        "name": "Safety & Guardrails",
+        "description": "Kiem tra an toan input va output. Input: prompt injection detection, PII redaction, topic filtering. Output: toxicity check, factuality verification (NLI voi retrieved sources), citation check, brand compliance. Confidence scoring — trigger human handoff khi confidence thap. Frameworks: Guardrails AI, NeMo Guardrails, custom classifiers.",
+        "tools": ["Guardrails AI / NeMo Guardrails", "LlamaGuard", "Custom PII/injection detectors"],
+        "inputs": "User input (pre-LLM) + LLM output (pre-delivery)",
+        "outputs": "Safety-cleared response hoac escalation trigger"
+      },
+      {
+        "name": "Response Delivery (Multi-Channel)",
+        "description": "Format va gui response toi kenh tuong ung. Moi kenh co format rieng: Zalo OA (rich messages, quick replies, carousels), Facebook Messenger (templates, buttons), Web (streaming text, markdown). Adapter layer chuyen doi internal format → channel-specific API calls. Logging moi conversation turn vao database.",
+        "tools": ["Zalo OA API", "Facebook Messenger API", "Vercel AI SDK / Chainlit", "FastAPI"],
+        "inputs": "Safety-cleared response + channel metadata",
+        "outputs": "Formatted response delivered to user qua correct channel"
+      },
+      {
+        "name": "Feedback & Continuous Learning",
+        "description": "Thu thap feedback va cai thien lien tuc. User ratings (thumbs up/down). Conversation analytics (resolution rate, escalation rate, avg turns, cost per conversation). Prompt tuning dua tren failure patterns. Fine-tuning data collection tu best conversations. A/B testing prompt variants. Track KPIs: CSAT, resolution rate, escalation rate, cost per conversation.",
+        "tools": ["Langfuse", "Custom analytics dashboard", "A/B testing framework"],
+        "inputs": "User feedback, conversation logs, performance metrics",
+        "outputs": "Updated prompts, improved knowledge base, fine-tuning datasets, KPI reports"
+      }
+    ]
+  },
+  "learning_resources": [
+    {
+      "title": "LangChain Documentation & Tutorials",
+      "type": "documentation",
+      "url": "https://python.langchain.com/docs/",
+      "level": "All levels",
+      "description": "Tai lieu chinh thuc LangChain: chains, agents, RAG, memory, tools. Framework pho bien nhat cho LLM applications. Quick start, use case guides, integrations. KHOI DAU TOT NHAT cho xay chatbot LLM-powered."
+    },
+    {
+      "title": "LlamaIndex Documentation",
+      "type": "documentation",
+      "url": "https://docs.llamaindex.ai/",
+      "level": "Intermediate",
+      "description": "Data framework chuyen ve RAG: data ingestion, indexing, querying. Tot hon LangChain cho document Q&A use cases. Nhieu loai index: vector, keyword, knowledge graph."
+    },
+    {
+      "title": "Anthropic Claude Documentation",
+      "type": "documentation",
+      "url": "https://docs.anthropic.com/",
+      "level": "All levels",
+      "description": "Claude API docs: messages, streaming, tool use, vision, extended thinking. Best practices cho system prompts, structured output. Tham khao chinh cho primary LLM provider."
+    },
+    {
+      "title": "Qdrant Documentation",
+      "type": "documentation",
+      "url": "https://qdrant.tech/documentation/",
+      "level": "Intermediate",
+      "description": "Vector database cho RAG: indexing, filtering, hybrid search, multi-tenancy. Rust-based, nhanh. Production deployment guides. Core infrastructure cho chatbot knowledge base."
+    },
+    {
+      "title": "Rasa Documentation",
+      "type": "documentation",
+      "url": "https://rasa.com/docs/",
+      "level": "Intermediate",
+      "description": "Open-source chatbot framework: NLU training, dialogue management, custom actions, deployment. On-premise option. Phu hop enterprise voi strict data control."
+    },
+    {
+      "title": "AI Engineering (Chip Huyen)",
+      "type": "book",
+      "url": "https://www.oreilly.com/library/view/ai-engineering/9781098166298/",
+      "level": "Intermediate",
+      "description": "AI Engineering — xay dung ung dung LLM production-grade. RAG, prompt engineering, fine-tuning, evaluation, deployment. Thuc te nhat cho practitioner xay chatbot."
+    },
+    {
+      "title": "Vercel AI SDK Documentation",
+      "type": "documentation",
+      "url": "https://sdk.vercel.ai/docs",
+      "level": "Intermediate",
+      "description": "React/Next.js SDK cho chat UI: streaming responses, multi-provider support, useChat hook. Production chat widget cho web applications."
+    },
+    {
+      "title": "PhoBERT & Vietnamese NLP (VinAI Research)",
+      "type": "library",
+      "url": "https://github.com/VinAIResearch/PhoBERT",
+      "level": "Intermediate",
+      "description": "Pre-trained language models cho tieng Viet: PhoBERT (encoder), PhoGPT (decoder), BARTpho (encoder-decoder). Fine-tune cho Vietnamese intent classification, NER, sentiment."
+    },
+    {
+      "title": "Langfuse Documentation",
+      "type": "documentation",
+      "url": "https://langfuse.com/docs",
+      "level": "Intermediate",
+      "description": "Open-source LLM observability: tracing, cost tracking, prompt management, evaluations. Self-hosted mien phi. Quan trong cho monitoring chi phi va chat luong chatbot production."
+    },
+    {
+      "title": "Zalo OA API Documentation",
+      "type": "documentation",
+      "url": "https://developers.zalo.me/docs/official-account",
+      "level": "Beginner to Intermediate",
+      "description": "API chinh thuc Zalo Official Account: gui/nhan tin nhan, rich messages, quick replies, OA management. BAT BUOC doc cho bat ky chatbot product nao tai Viet Nam."
+    },
+    {
+      "title": "UIT-ViQuAD: Vietnamese QA Dataset",
+      "type": "dataset",
+      "url": "https://github.com/phoaitoai/uit-viquad",
+      "level": "Intermediate",
+      "description": "Vietnamese question answering dataset dua tren Wikipedia. Dung cho evaluate va fine-tune Vietnamese QA models. Mot trong it Vietnamese QA benchmarks co san."
+    },
+    {
+      "title": "vLLM Documentation",
+      "type": "documentation",
+      "url": "https://docs.vllm.ai/",
+      "level": "Advanced",
+      "description": "Self-hosted LLM serving: PagedAttention, continuous batching, OpenAI-compatible API. Chi doc khi Phase 2+ va can self-host models. Production inference cho Llama/Mistral/DeepSeek."
+    }
+  ],
+  "risks": [
+    {
+      "id": "R01",
+      "name": "LLM hallucination trong regulated domains",
+      "description": "Chatbot cung cap thong tin sai ve ngan hang, bao hiem, y te — gay ton that tai chinh hoac trach nhiem phap ly. Xac suat cao (70%) cho LLM-based bots khong co RAG grounding.",
+      "severity": "Critical",
+      "probability": "High",
+      "mitigation": "Bat buoc RAG grounding voi source citation. Confidence thresholds voi human handoff. Domain-specific evaluation suites. Liability disclaimers. Restrict LLM to retrieval-only (khong freeform generation) trong regulated contexts."
+    },
+    {
+      "id": "R02",
+      "name": "Chat luong tieng Viet cua open-source LLMs kem",
+      "description": "LLM open-source (Llama-8B, Mistral) sinh tieng Viet khong tu nhien: sai thu tu tu, sai loai tu, mixed-code artifacts. PhoGPT (4B) qua nho cho complex conversations. Anh huong truc tiep trai nghiem nguoi dung VN.",
+      "severity": "High",
+      "probability": "Medium",
+      "mitigation": "Dung commercial LLMs (Claude, GPT-4o) cho generation khi chat luong quan trong. Fine-tune open models tren curated Vietnamese data. Vietnamese-specific quality evaluation (fluency, accuracy, tone). User feedback loops."
+    },
+    {
+      "id": "R03",
+      "name": "Chi phi LLM vuot qua kha nang chi tra cua SME VN",
+      "description": "Chi phi per-conversation ($0.01-0.50) khien san pham khong co loi voi SME budget $50-200/thang. 10,000 conversations/thang x $0.05 = $500 — da vuot budget SME.",
+      "severity": "High",
+      "probability": "High",
+      "mitigation": "Kien truc phan tang: rule-based cho simple intents (zero LLM cost), cache frequent queries (giam 40-60% LLM calls), small models cho routine (Llama-8B, DeepSeek), frontier chi cho complex. Token budgets per conversation. Hard spending caps per client."
+    },
+    {
+      "id": "R04",
+      "name": "Tich hop phuc tap voi he thong legacy VN",
+      "description": "He thong legacy tai doanh nghiep VN (core banking T24/Flexcube, ERP SAP VN, CRM) thieu API hien dai, gay cham tien do project 2-3x. 55% xac suat.",
+      "severity": "Medium",
+      "probability": "Medium",
+      "mitigation": "Budget 40-60% timeline cho integration. Xay adapter layer voi common Vietnamese enterprise systems. Offer standalone mode (khong can deep integration) lam entry point. Agentic tier chi khi client co stable APIs."
+    },
+    {
+      "id": "R05",
+      "name": "Canh tranh tu FPT.AI va Zalo AI ecosystem lock-in",
+      "description": "FPT.AI lock banking clients voi multi-year contracts (15+ banks). Zalo AI lock SMEs vao Zalo-only channel. Doi thu co relationships va distribution ma khong the thang overnight.",
+      "severity": "Medium",
+      "probability": "Medium",
+      "mitigation": "Differentiate: multi-channel (Zalo + Messenger + Web + App), data portability guarantees. Target segments FPT.AI bo qua: mid-market $200-2,000/thang. Canh tranh bang LLM technology quality (FPT.AI cham adopt LLMs)."
+    },
+    {
+      "id": "R06",
+      "name": "Data privacy va Nghi dinh 13/2023",
+      "description": "Nghi dinh 13/2023 ve bao ve du lieu ca nhan tao nghia vu compliance cho luu tru va xu ly conversation data. Gui PII den offshore LLM APIs co the vi pham.",
+      "severity": "High",
+      "probability": "Medium",
+      "mitigation": "On-premise/Vietnam-hosted deployment option. PII detection va redaction pipeline truoc khi goi LLM API. Data anonymization. Audit logs exportable. Tu van phap ly ve data processing agreements."
+    }
+  ],
+  "metadata": {
+    "status": "reviewed",
+    "version": "1.0",
+    "createdAt": "2026-03-31",
+    "updatedAt": "2026-03-31",
+    "researchedBy": ["R-alpha", "R-beta", "R-gamma", "R-MLE", "R-DE", "R-NLP", "R-DLE", "R-BE", "R-FE", "R-DO", "R-SE", "R-QA", "R-SA", "R-D05", "R-D02", "R-sigma"],
+    "consolidatedBy": "R-sigma (Ms. Scribe)",
+    "normalizedAt": "2026-03-31",
+    "normalizedBy": "R-sigma",
+    "phase": "Phase 0",
+    "module": "B08",
+    "reviewedBy": null,
+    "approvedBy": null,
+    "notes": "Consolidated by R-sigma (Ms. Scribe). Overall feasibility 7.0/10 CONDITIONAL GO. JSON field names English, values Vietnamese (non-diacritical) per language rule. Technical terms remain English. 16 agents researched. San pham phan tang (Bot Lite/Smart/Enterprise) la chien luoc cot loi."
+  }
+}

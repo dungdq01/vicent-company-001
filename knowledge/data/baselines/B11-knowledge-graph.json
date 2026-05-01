@@ -1,0 +1,687 @@
+{
+  "id": "B11",
+  "name": "Knowledge Graph",
+  "type": "baseline",
+  "slug": "knowledge-graph",
+  "tagline": "Xây dựng đồ thị tri thức — mô hình hoá thực thể, quan hệ và suy luận có cấu trúc — sử dụng graph databases, KG embeddings, ontology engineering và GraphRAG, phục vụ truy vấn tri thức đa bước, grounding LLMs và hệ thống trí tuệ doanh nghiệp",
+  "category": "baseline",
+  "icon": "GitFork",
+  "color": "#26A69A",
+  "depthLevel": 3,
+  "selectedAgents": ["R-alpha", "R-beta", "R-gamma", "R-MLE", "R-DE", "R-NLP", "R-DBE", "R-BE", "R-FE", "R-DO", "R-SE", "R-QA", "R-SA", "R-D03", "R-D02", "R-sigma"],
+  "description": "Knowledge Graph (Đồ thị tri thức) là lĩnh vực mô hình hoá tri thức dưới dạng đồ thị có hướng gồm thực thể (entities), quan hệ (relations) và thuộc tính (attributes), cho phép biểu diễn, lưu trữ và suy luận tri thức có cấu trúc. KG là nền tảng kết nối B04 (NLP — trích xuất tri thức từ văn bản), B12 (Search & RAG — GraphRAG truy vấn đa bước), B10 (Agentic AI — bộ nhớ có cấu trúc cho agents). Thị trường toàn cầu ước tính $2.1B năm 2025, dự kiến $8.1B năm 2030 (CAGR ~31%), tăng trưởng nhờ LLM grounding, enterprise search và tuân thủ quy định. Với tooling trưởng thành (Neo4j, PyKEEN, GraphRAG), hệ thống có thể triển khai từ curated KG đơn giản đến enterprise KG platform. TRL 7, mature — công nghệ sẵn sàng production nhưng xây dựng KG tiếng Việt gần như chưa có tiền lệ.",
+  "description_paragraphs": [
+    "Knowledge Graph là giao điểm giữa Knowledge Representation & Reasoning, NLP và Graph Databases, tập trung mô hình hoá tri thức thế giới thực dưới dạng bộ ba (triples): (chủ thể, quan hệ, đối tượng). Lĩnh vực bao gồm 8 sub-fields: Ontology Engineering (thiết kế lược đồ khái niệm OWL/RDFS), Graph Databases (Neo4j, ArangoDB, TigerGraph), KG Embedding (TransE, RotatE, ComplEx — biểu diễn vector cho thực thể và quan hệ), KG Construction (NER + relation extraction + entity linking), KG Completion (link prediction), Temporal KG (tri thức phụ thuộc thời gian), Multimodal KG (tích hợp ảnh, văn bản, bảng biểu), và Neuro-Symbolic AI (kết hợp neural learning với symbolic reasoning). Nền tảng toán học bao gồm graph theory, description logic (OWL 2 DL / SROIQ(D)), translational embeddings, GNN message passing và probabilistic graphical models.",
+    "Tại Việt Nam, B11 có điểm khả thi 5.5/10 (CONDITIONAL GO) với Technical Feasibility cao nhất (7/10): tooling trưởng thành, graph databases production-ready. Tuy nhiên, Data Availability (4/10) là nút thắt nghiêm trọng nhất — không có Vietnamese DBpedia tương đương, Wikidata coverage tiếng Việt rất mỏng (~800K items có nhãn tiếng Việt so với 100M+ tổng), dữ liệu mở chính phủ (data.gov.vn) chất lượng không đồng đều. Vietnamese NER khả dụng (VnCoreNLP, PhoNER) nhưng relation extraction tiếng Việt vẫn là bài toán nghiên cứu mở, chưa giải quyết ở mức production. Khoảng cách giữa khả năng xây KG tiếng Anh và tiếng Việt ít nhất 3-4 năm.",
+    "Chiến lược triển khai: bắt đầu với 'Knowledge Graph Lite' — Neo4j Community Edition với triples được curate thủ công cho 1 ngành dọc (corporate entity KG từ dữ liệu đăng ký kinh doanh — rủi ro thấp nhất). Validate Vietnamese NER/RE pipeline trên 500 tài liệu thực trước khi cam kết xây dựng tự động. Budget bảo trì từ ngày 1 (tối thiểu 1 FTE mỗi ngành dọc). Điều kiện full GO: triple count đạt minimum viable KG threshold, precision trích xuất tự động >0.85, query latency p95 <200ms, cải thiện đo lường được cho downstream task (GraphRAG answer accuracy có KG vs không KG)."
+  ],
+  "aliases": [
+    "Đồ thị tri thức",
+    "Knowledge Graph",
+    "KG",
+    "Biểu đồ tri thức",
+    "Đồ thị kiến thức",
+    "Knowledge Base",
+    "Cơ sở tri thức có cấu trúc",
+    "Semantic Knowledge Graph"
+  ],
+  "maturity_level": "mature",
+  "trl": 7,
+  "core_concepts": [
+    {
+      "name": "Triple (Subject-Predicate-Object)",
+      "definition": "Đơn vị nguyên tử của tri thức trong KG. Mỗi sự kiện được mã hoá dưới dạng cạnh có hướng và nhãn: (Barack_Obama, bornIn, Honolulu). Triples kết hợp thành đồ thị nơi thực thể là nút và quan hệ là cạnh. KG hình thức: G = (E, R, T) với E = tập thực thể, R = tập kiểu quan hệ, T ⊆ E × R × E = tập triples. Cấu trúc kề biểu diễn bằng tensor bậc 3: X ∈ {0,1}^{|E| × |R| × |E|}. Đơn giản nhưng mạnh mẽ — hạn chế chính là khó biểu diễn quan hệ n-ary, ngữ cảnh, provenance mà không dùng reification.",
+      "difficulty": "Beginner",
+      "prerequisites": ["Kiến thức cơ bản về đồ thị"]
+    },
+    {
+      "name": "Ontology Engineering (Thiết kế Ontology)",
+      "definition": "Ontology định nghĩa lớp schema của KG: lớp (classes/concepts), thuộc tính (properties/relations), ràng buộc domain/range, cardinality, và tiên đề (axioms). Phân theo tầng: Upper ontologies (SUMO, DOLCE, BFO) cung cấp danh mục cấp cao (Object, Process, Quality). Domain ontologies (Gene Ontology, SNOMED CT, FIBO) mã hoá kiến thức chuyên gia. OWL 2 DL tương ứng description logic SROIQ(D), decidable với 2-NExpTime complexity. Quyết định thiết kế quan trọng: open-world vs closed-world assumption, unique name assumption, đặc tính property (transitivity, symmetry, functionality). Kỹ năng ontology engineering cực kỳ hiếm, đặc biệt tại Việt Nam.",
+      "difficulty": "Advanced",
+      "prerequisites": ["Logic hình thức cơ bản", "Mô hình dữ liệu"]
+    },
+    {
+      "name": "Entity Resolution (Giải quyết thực thể)",
+      "definition": "Quá trình xác định hai tham chiếu trỏ đến cùng một thực thể thế giới thực. Thiết yếu cho tích hợp KG (gộp DBpedia, Wikidata, YAGO). Phương pháp: String similarity (Jaro-Winkler, Levenshtein distance), Structural matching (so sánh mẫu đồ thị lân cận), Embedding-based (MTransE, GCN-Align chiếu thực thể từ KG khác nhau vào không gian embedding chung), LLM-based (2024-2026, prompting LLMs đạt state-of-the-art trên OpenEA). Đặc biệt quan trọng cho KG tiếng Việt vì cùng thực thể có thể xuất hiện với nhiều biến thể tên gọi.",
+      "difficulty": "Intermediate",
+      "prerequisites": ["Xử lý chuỗi cơ bản", "Embeddings cơ bản"]
+    },
+    {
+      "name": "Relation Extraction (Trích xuất quan hệ)",
+      "definition": "Nhiệm vụ xác định quan hệ ngữ nghĩa giữa các mentions thực thể trong văn bản phi cấu trúc — nút thắt chính của KG construction tự động. Pipeline: NER → Entity Linking → Relation Classification. State-of-the-art: supervised fine-tuned BERT/RoBERTa đạt F1 >90% trên TACRED (tiếng Anh), distant supervision sử dụng multi-instance learning, LLM-based extraction (2024-2026) cho phép trích xuất triples một lượt với chi phí engineering thấp hơn dramatic. CẢNH BÁO: tiếng Việt relation extraction vẫn là bài toán nghiên cứu mở — khoảng cách với tiếng Anh ít nhất 3-4 năm.",
+      "difficulty": "Advanced",
+      "prerequisites": ["NLP cơ bản (B04)", "NER", "Machine Learning"]
+    },
+    {
+      "name": "KG Embedding (Biểu diễn nhúng đồ thị tri thức)",
+      "definition": "Biểu diễn thực thể và quan hệ dưới dạng vectors (hoặc ma trận, tensors) trong không gian liên tục chiều thấp, cho phép suy luận đại số trên cấu trúc đồ thị. Các họ mô hình: Translational (TransE, TransR, RotatE — distance-based scoring), Bilinear (DistMult, ComplEx, TuckER — tensor product), Neural (ConvE, InteractE — CNN/MLP), GNN-based (R-GCN, CompGCN — message passing). KG Embeddings là nền tảng cho link prediction, triple classification, entity typing. State-of-the-art trên FB15k-237: MRR ~0.37 (embedding), ~0.42 (LLM-augmented, 2025).",
+      "difficulty": "Advanced",
+      "prerequisites": ["Linear algebra", "Machine Learning cơ bản", "Embeddings cơ bản"]
+    },
+    {
+      "name": "Link Prediction (Dự đoán liên kết)",
+      "definition": "Cho KG với cạnh bị thiếu, dự đoán triples có khả năng nhất. Hình thức: cho (h, r, ?) hoặc (?, r, t), xếp hạng tất cả thực thể ứng viên. Metrics đánh giá: Mean Reciprocal Rank (MRR) = (1/|Q|) Σ 1/rank_i, Hits@K = tỷ lệ truy vấn có đáp án đúng trong top-K, filtered setting (loại triples hợp lệ khác khỏi ranking). State-of-the-art FB15k-237: MRR ~0.37 (embedding), ~0.42 (LLM-augmented). WN18RR: MRR ~0.50. Ứng dụng: hoàn thiện KG, phát hiện drug interactions, dự đoán quan hệ thương mại.",
+      "difficulty": "Advanced",
+      "prerequisites": ["KG Embedding", "Evaluation metrics"]
+    },
+    {
+      "name": "GNN-based KG Reasoning (Suy luận KG dựa trên GNN)",
+      "definition": "Graph Neural Networks tổng hợp thông tin từ vùng lân cận đa bước, cho phép suy luận quy nạp (inductive) — tổng quát hoá tới thực thể chưa thấy lúc huấn luyện. Khác embedding transductive (TransE, ComplEx) cần retrain cho thực thể mới. Kiến trúc chính: R-GCN (weight matrices riêng theo quan hệ, basis decomposition giảm parameters), CompGCN (jointly embed entities và relations qua composition operators), NBFNet (2021, tổng quát Bellman-Ford với learned message functions). R-GCN dùng cho cả entity classification và link prediction.",
+      "difficulty": "Advanced",
+      "prerequisites": ["Graph Neural Networks", "Deep Learning", "KG Embedding"]
+    },
+    {
+      "name": "GraphRAG (KG + LLM)",
+      "definition": "GraphRAG (Microsoft, 2024) thay đổi paradigm RAG bằng cách thay document chunks phẳng bằng KG có cấu trúc. Quy trình: (1) Indexing — LLM trích xuất entities/relations, xây KG, áp dụng community detection (Leiden algorithm), sinh summaries đa tầng. (2) Query — local (duyệt KG lân cận thực thể) hoặc global (tổng hợp community summaries qua map-reduce). Ưu điểm: suy luận đa bước ('Chủ đề chính xuyên suốt tài liệu?'), giải thích được (entity-relation paths), giảm hallucination. Biến thể 2025-2026: LightRAG, nano-GraphRAG, HippoRAG, agentic GraphRAG.",
+      "difficulty": "Intermediate",
+      "prerequisites": ["RAG cơ bản (B12)", "LLM fundamentals"]
+    },
+    {
+      "name": "Neuro-Symbolic Reasoning (Suy luận Thần kinh-Ký hiệu)",
+      "definition": "Kết hợp khả năng nhận dạng mẫu của neural networks với tính chặt chẽ logic của hệ thống ký hiệu trên KG. Neural Theorem Provers (NTP): unification khả vi trên triples, học soft rules end-to-end. Logic Tensor Networks (LTN): ground first-order logic trong tensor computations. DRUM/NeuralLP: học luật logic khả vi qua attention trên chuỗi quan hệ. LLM + Symbolic (2024-2026): LLMs sinh luật logic ứng viên, symbolic engines verify trên KG — hybrid vượt trội từng phương pháp đơn lẻ. CẢNH BÁO R-γ: Phase 2+ — không triển khai Phase 0.",
+      "difficulty": "Advanced",
+      "prerequisites": ["Logic hình thức", "Deep Learning", "KG Embedding"]
+    },
+    {
+      "name": "Temporal Knowledge Graphs (Đồ thị tri thức thời gian)",
+      "definition": "KG chuẩn xử lý sự kiện như vĩnh viễn. Temporal KG gắn thời gian hiệu lực: quadruple (h, r, t, [t_start, t_end]). Ví dụ: (Obama, presidentOf, USA, [2009, 2017]). Phương pháp: TTransE, HyTE (mở rộng translational models với hyperplanes/translations phụ thuộc thời gian), TNTComplEx (2020, tensor decomposition bậc 4), RE-GCN (2021, recurrent GNN cho graph snapshots tiến hoá). Ứng dụng: dự đoán sự kiện, hỏi đáp thời gian, đánh giá rủi ro động. CẢNH BÁO R-γ: giai đoạn nghiên cứu, defer Phase 2+.",
+      "difficulty": "Advanced",
+      "prerequisites": ["KG Embedding", "Time series cơ bản"]
+    },
+    {
+      "name": "Federated Knowledge Graphs (Đồ thị tri thức liên bang)",
+      "definition": "KG phân tán được duy trì bởi nhiều tổ chức, truy vấn được mà không tập trung hoá. Hiện thực hoá tầm nhìn Linked Data của Semantic Web: SPARQL Federation (SERVICE keyword route sub-queries tới remote endpoints), Triple Pattern Fragments (API chi phí thấp cho distributed query), privacy-preserving KG reasoning (federated learning trên KG embeddings không chia sẻ raw triples). Enterprise KG mesh (2025-2026): mỗi tổ chức duy trì domain-specific KG với ontologies chuẩn hoá, kết nối qua federated query layers.",
+      "difficulty": "Advanced",
+      "prerequisites": ["Distributed systems", "SPARQL", "Privacy-preserving ML"]
+    },
+    {
+      "name": "SPARQL và Cypher (Ngôn ngữ truy vấn đồ thị)",
+      "definition": "Hai ngôn ngữ truy vấn chính cho KG. SPARQL (W3C standard cho RDF): dựa trên relational algebra — Basic Graph Pattern (BGP) đánh giá bằng natural join, hỗ trợ OPTIONAL, UNION, FILTER, property paths, aggregation, federation. Cypher (Neo4j, property graph): declarative, trực quan với ASCII-art pattern matching — (node)-[:RELATION]->(node). GraphQL + neo4j-graphql cho auto-generated API từ schema. Gremlin (Apache TinkerPop) cho traversal language. Lựa chọn tuỳ thuộc data model: RDF → SPARQL, property graph → Cypher.",
+      "difficulty": "Intermediate",
+      "prerequisites": ["SQL cơ bản", "Mô hình đồ thị cơ bản"]
+    }
+  ],
+  "algorithms": [
+    {
+      "name": "TransE / TransR / RotatE",
+      "category": "Translational KG embedding models",
+      "complexity": "TransE: O(d) mỗi triple scoring, scaling tới hàng tỷ triples. TransR: O(dk) với projection matrix M_r ∈ R^{k×d}. RotatE: O(d) trong không gian phức, t = h ∘ r với |r_i| = 1.",
+      "pros": ["TransE đơn giản, scalable — nền tảng toàn bộ lĩnh vực KG embedding", "RotatE nắm bắt symmetry, antisymmetry, inversion, composition trong framework thống nhất", "Self-adversarial negative sampling cải thiện training hiệu quả", "Benchmarks chuẩn — mọi paper so sánh với TransE/RotatE"],
+      "cons": ["TransE không mô hình được quan hệ 1-N, N-1, N-N", "TransR tốn bộ nhớ do projection matrices", "Transductive — cần retrain cho thực thể mới", "Không tận dụng textual descriptions của thực thể"],
+      "use_cases": ["Link prediction quy mô lớn", "Entity similarity search", "KG completion", "Pre-compute entity embeddings cho downstream tasks"],
+      "key_papers": ["Bordes, A. et al. (2013). Translating Embeddings for Modeling Multi-relational Data. NeurIPS 2013.", "Sun, Z. et al. (2019). RotatE: Knowledge Graph Embedding by Relational Rotation in Complex Space. ICLR 2019."]
+    },
+    {
+      "name": "ComplEx / DistMult / TuckER",
+      "category": "Bilinear KG embedding models",
+      "complexity": "DistMult: O(d) scoring, đối xứng. ComplEx: O(d) trong không gian phức, phá đối xứng. TuckER: Tucker decomposition — O(d²) nhưng tổng quát hoá mọi bilinear models.",
+      "pros": ["ComplEx xử lý quan hệ bất đối xứng với chi phí tối thiểu", "DistMult nhanh nhất trong các bilinear models", "TuckER cung cấp framework thống nhất — fully expressive", "ComplEx FB15k-237 MRR ~0.34, cạnh tranh với models phức tạp hơn nhiều"],
+      "cons": ["DistMult chỉ mô hình quan hệ đối xứng — hạn chế expressiveness", "Transductive — không inductive", "Cần negative sampling cẩn thận", "Không tận dụng cấu trúc đồ thị (chỉ xét individual triples)"],
+      "use_cases": ["Link prediction khi cần cân bằng tốc độ và accuracy", "Triple classification", "Relation prediction", "KG quality assessment"],
+      "key_papers": ["Trouillon, T. et al. (2016). Complex Embeddings for Simple Link Prediction. ICML 2016.", "Balazevic, I. et al. (2019). TuckER: Tensor Factorization for Knowledge Graph Completion. EMNLP 2019."]
+    },
+    {
+      "name": "R-GCN (Relational Graph Convolutional Network)",
+      "category": "GNN cho đồ thị đa quan hệ",
+      "complexity": "Basis decomposition: parameters giảm từ O(|R| × d²) xuống O(B × d² + |R| × B). Message passing: h_v^(l+1) = σ(Σ_r Σ_{u∈N_r(v)} (1/c_{v,r}) W_r^(l) h_u^(l) + W_0^(l) h_v^(l)).",
+      "pros": ["Tận dụng cấu trúc đồ thị đa bước (multi-hop neighborhoods)", "Basis decomposition quản lý parameter explosion hiệu quả", "Dùng cho cả entity classification và link prediction", "Nền tảng cho toàn bộ nghiên cứu GNN trên KG"],
+      "cons": ["Scalability hạn chế với KG rất lớn (hàng tỷ triples)", "Over-smoothing ở nhiều layers", "Training memory tăng nhanh theo số quan hệ", "Transductive cho link prediction (cần DistMult decoder)"],
+      "use_cases": ["Entity classification trong KG", "Link prediction (kết hợp DistMult decoder)", "Node feature learning cho downstream tasks", "Semi-supervised learning trên KG"],
+      "key_papers": ["Schlichtkrull, M. et al. (2018). Modeling Relational Data with Graph Convolutional Networks. ESWC 2018."]
+    },
+    {
+      "name": "CompGCN (Composition-based Multi-Relational GCN)",
+      "category": "GNN jointly embedding entities và relations",
+      "complexity": "Composition operators: subtraction φ(e_u, e_r) = e_u - e_r, multiplication e_u * e_r, circular correlation e_u ⋆ e_r. Relation embeddings cập nhật qua layers.",
+      "pros": ["Jointly learns entity và relation embeddings (R-GCN chỉ entities)", "Circular correlation đạt state-of-the-art trên link prediction và relation prediction", "Tổng quát hoá nhiều GNN variants", "Hiệu quả parameter tốt hơn R-GCN"],
+      "cons": ["Phức tạp triển khai hơn R-GCN", "Circular correlation tốn chi phí tính toán", "Chưa phổ biến trong production", "Documentation và tutorials ít hơn R-GCN"],
+      "use_cases": ["Link prediction yêu cầu accuracy cao", "Relation prediction và typing", "KG completion đa nhiệm", "Research benchmark experiments"],
+      "key_papers": ["Vashishth, S. et al. (2020). Composition-based Multi-Relational Graph Convolutional Networks. ICLR 2020."]
+    },
+    {
+      "name": "GraphSAGE (Adapted for KGs)",
+      "category": "Inductive graph learning qua sampling và aggregation",
+      "complexity": "Mini-batch training với neighborhood sampling — scale tới hàng tỷ nodes. Aggregation: mean, LSTM, hoặc attention pooling trên fixed-size neighborhood.",
+      "pros": ["Inductive — tổng quát hoá tới thực thể mới không cần retrain", "Scale tới billion-node graphs qua mini-batch", "Đã production tại LinkedIn, Pinterest, Uber", "Linh hoạt trong lựa chọn aggregation function"],
+      "cons": ["Cần adapt cho multi-relational graphs (KG-specific)", "Sampling có thể bỏ sót quan hệ quan trọng", "Accuracy thường thấp hơn full-graph methods trên small KGs", "Stratified sampling theo relation type phức tạp"],
+      "use_cases": ["KG quy mô lớn (>100M nodes)", "Real-time entity embedding cho thực thể mới", "Production recommendation systems dựa trên KG", "Social network analysis"],
+      "key_papers": ["Hamilton, W. et al. (2017). Inductive Representation Learning on Large Graphs. NeurIPS 2017."]
+    },
+    {
+      "name": "AMIE+ (Rule Mining trên KG)",
+      "category": "Mining luật Horn bậc nhất từ KG",
+      "complexity": "Iteratively mở rộng luật bằng thêm atoms, pruning qua confidence thresholds. Support = số cặp (X,Z) thoả luật. PCA Confidence = support / #(X,Z) thoả body.",
+      "pros": ["Luật có thể giải thích được (interpretable)", "Không cần dữ liệu âm (negative examples)", "Luật AMIE+ làm constraints cho embedding training", "Phát hiện patterns ẩn trong KG tự động"],
+      "cons": ["Scale hạn chế với KG rất lớn", "Chỉ mining luật dạng Horn chain", "Không xử lý uncertainty (luật hard)", "Thời gian chạy tăng exponential theo rule length"],
+      "use_cases": ["Giải thích link prediction", "Phát hiện luật domain mới", "Validation KG consistency", "Ontology learning tự động"],
+      "key_papers": ["Galarraga, L. et al. (2015). Fast Rule Mining in Ontological Knowledge Bases with AMIE+. VLDB Journal."]
+    },
+    {
+      "name": "NER + RE Pipeline cho KG Construction",
+      "category": "End-to-end knowledge extraction từ văn bản",
+      "complexity": "Pipeline: Text → NER → Entity Linking → Coreference Resolution → Relation Extraction → Confidence Filtering → KG Triples. Modern LLM-based: single pass structured output.",
+      "pros": ["LLM-based extraction (2024-2026) giảm engineering cost dramatic", "Pipeline modular — thay thế từng component độc lập", "Supervised models đạt F1 >90% trên TACRED (tiếng Anh)", "Scalable với batch processing"],
+      "cons": ["Tiếng Việt RE chưa production-ready — spaCy Vietnamese yếu", "LLM extraction đắt ở quy mô lớn ($0.01-0.05/tài liệu)", "Non-deterministic — LLM hallucinate triples", "Entity linking cần canonical KB (thiếu cho tiếng Việt)"],
+      "use_cases": ["KG construction tự động từ document corpus", "Trích xuất tri thức từ báo cáo, tài liệu", "Cập nhật KG gia tăng từ news streams", "Domain-specific KG building"],
+      "key_papers": ["Mintz, M. et al. (2009). Distant supervision for relation extraction without labeled data. ACL 2009."]
+    },
+    {
+      "name": "GraphRAG Pipeline (Microsoft)",
+      "category": "KG-augmented retrieval-augmented generation",
+      "complexity": "Indexing: LLM extraction + Leiden community detection + hierarchical summarization. Query: local (k-hop traversal) hoặc global (map-reduce community summaries). Chi phí indexing cao.",
+      "pros": ["Suy luận đa bước vượt trội naive RAG", "Giải thích được — entity-relation paths", "Giảm hallucination qua KG structure constraints", "Open-source MIT, well-documented, backed by Microsoft Research"],
+      "cons": ["Graph construction từ LLMs nhiễu", "Global search chậm và tốn kém", "Lợi thế quality so với vanilla RAG khiêm tốn cho nhiều use cases", "Chi phí indexing cao (LLM calls cho mỗi chunk)"],
+      "use_cases": ["Enterprise knowledge management", "Document corpus analysis đa chủ đề", "Hỏi đáp đa bước trên tài liệu nội bộ", "Compliance document review"],
+      "key_papers": ["Edge, D. et al. (2024). From Local to Global: A Graph RAG Approach to Query-Focused Summarization. Microsoft Research."]
+    },
+    {
+      "name": "OWL Reasoning (Tableau Algorithm)",
+      "category": "Suy luận logic hình thức trên ontology",
+      "complexity": "OWL 2 DL consistency checking: 2-NExpTime. Tableau: expansion rules phân rã concepts phức tạp, clash detection, blocking ngăn expansion vô hạn.",
+      "pros": ["Đảm bảo tính đúng đắn logic (sound and complete)", "Phát hiện contradictions trong ontology tự động", "Classification và entailment checking", "Production reasoners: HermiT, Pellet, Konclude"],
+      "cons": ["Worst-case complexity rất cao (2-NExpTime)", "Không scale tốt với KG lớn (>10M triples)", "Đòi hỏi ontology được thiết kế đúng", "Learning curve dốc cho non-logicians"],
+      "use_cases": ["Ontology consistency validation", "Automated classification và taxonomy maintenance", "Constraint checking cho KG quality", "Healthcare và biomedical ontologies"],
+      "key_papers": ["Glimm, B. et al. (2014). HermiT: An OWL 2 Reasoner. Journal of Automated Reasoning."]
+    },
+    {
+      "name": "KG-BERT và LLM-based KG Completion",
+      "category": "Language model-based triple scoring và completion",
+      "complexity": "KG-BERT: encode triple dạng text '[CLS] head [SEP] relation [SEP] tail [SEP]', classification head cho P(valid). LLM-based: few-shot prompting hoặc LoRA fine-tuning.",
+      "pros": ["Tận dụng semantic understanding từ pre-trained LMs", "KG-BERT cầu nối NLP và KG communities", "LLM fine-tuned cải thiện MRR 5-15% trên sparse KGs", "Hybrid (embedding retrieval top-100 + LLM reranker) kết hợp scalability và semantic understanding"],
+      "cons": ["Inference chậm hơn embedding models nhiều lần", "Chi phí LLM inference cho ranking quy mô lớn", "Cần fine-tuning cho domain-specific KGs", "Không tận dụng cấu trúc đồ thị (chỉ xét textual information)"],
+      "use_cases": ["KG completion trên sparse KGs", "Triple classification (valid vs invalid)", "Reranking candidates từ embedding models", "Zero-shot KG reasoning trên domains mới"],
+      "key_papers": ["Yao, L. et al. (2019). KG-BERT: BERT for Knowledge Graph Completion. arXiv."]
+    },
+    {
+      "name": "Entity Linking (BLINK / REFinED)",
+      "category": "Ánh xạ entity mentions tới canonical KG identifiers",
+      "complexity": "3 bước: Mention detection → Candidate generation (alias tables, dense retrieval) → Entity disambiguation (bi-encoder retrieval + cross-encoder reranking). REFinED: real-time.",
+      "pros": ["BLINK (Facebook, 2020): bi-encoder + cross-encoder đạt high accuracy", "REFinED (Amazon, 2022): real-time entity linking", "LLM-based (2025-2026) với in-context examples cạnh tranh dedicated systems", "Essential cho KG integration và deduplication"],
+      "cons": ["Phụ thuộc canonical KB chất lượng (thiếu cho tiếng Việt)", "Ambiguity cao cho tên phổ biến", "Cross-encoder chậm cho real-time applications", "Vietnamese entity linking gần như chưa có tooling production"],
+      "use_cases": ["KG construction từ text", "Deduplication thực thể trong KG", "Liên kết KG nội bộ với Wikidata", "Named entity disambiguation trong search"],
+      "key_papers": ["Wu, L. et al. (2020). Scalable Zero-shot Entity Linking with Dense Entity Retrieval (BLINK). EMNLP 2020."]
+    },
+    {
+      "name": "Leiden Algorithm (Community Detection)",
+      "category": "Phát hiện cộng đồng trong đồ thị",
+      "complexity": "O(n log n) trên sparse graphs. Cải thiện Louvain: đảm bảo connected communities. Multi-resolution cho hierarchical community structure.",
+      "pros": ["Nhanh hơn và chính xác hơn Louvain", "Đảm bảo communities connected (Louvain không đảm bảo)", "Multi-resolution hierarchical decomposition", "Core component của GraphRAG pipeline"],
+      "cons": ["Resolution parameter cần tuning", "Kết quả non-deterministic (khởi tạo random)", "Không tối ưu cho highly overlapping communities", "Cần scale cho very large graphs"],
+      "use_cases": ["GraphRAG community summarization", "KG structural analysis", "Entity clustering trong KG", "Topic discovery từ entity co-occurrence"],
+      "key_papers": ["Traag, V.A. et al. (2019). From Louvain to Leiden: guaranteeing well-connected communities. Scientific Reports."]
+    }
+  ],
+  "tech_stack": {
+    "graph_databases": {
+      "recommended": {"recommended": "Neo4j (Community / Enterprise)", "rationale": "Property graph store phổ biến nhất, Cypher query language trực quan. Community Edition (GPL-3) cho Phase 0-1. Enterprise cho Causal Clustering horizontal scaling. Vector index built-in cho KG + embedding hybrid queries. Learning curve thấp nhất trong graph DBs. Hệ sinh thái phong phú: Neo4j Browser, Bloom, APOC procedures."},
+      "alternatives": {"recommended": "ArangoDB / Amazon Neptune / TigerGraph / Blazegraph", "rationale": "ArangoDB (Apache 2.0) cho multi-model (graph + doc + key-value) — fallback nếu Neo4j licensing costs cao. Neptune cho AWS-native. TigerGraph cho distributed graph analytics quy mô lớn. Blazegraph cho RDF triplestore + SPARQL."}
+    },
+    "kg_construction": {
+      "recommended": {"recommended": "LLM Extraction (Claude) + VnCoreNLP + REBEL", "rationale": "Claude cho high-quality triple extraction qua structured output — tốt nhất cho accuracy. VnCoreNLP cho Vietnamese NER (PhoNER). REBEL (Hugging Face) cho end-to-end relation extraction tiếng Anh. LlamaIndex PropertyGraphIndex cho LLM-based KG extraction pipeline. Kết hợp: LLM extraction cho quality, rule-based cho cost efficiency."},
+      "alternatives": {"recommended": "spaCy + spacy-llm / DeepKE / Custom fine-tuned models", "rationale": "spaCy cho English NER + dependency parsing. DeepKE (MIT) cho neural RE toolkit. Custom fine-tuned BERT/PhoBERT cho Vietnamese-specific extraction khi có annotated data."}
+    },
+    "kg_embeddings": {
+      "recommended": {"recommended": "PyKEEN", "rationale": "Thư viện KG embedding toàn diện nhất — hỗ trợ 40+ models (TransE, RotatE, ComplEx, DistMult, ConvE, TuckER...). MIT license. Tích hợp PyTorch. Built-in evaluation pipeline (MRR, Hits@K). Hyperparameter optimization. Export embeddings cho downstream tasks."},
+      "alternatives": {"recommended": "DGL-KE / LibKGE / GraphVite", "rationale": "DGL-KE (Apache 2.0) cho distributed KG embeddings quy mô lớn. LibKGE cho research-focused experiments. GraphVite cho GPU-accelerated training."}
+    },
+    "visualization": {
+      "recommended": {"recommended": "react-force-graph + Neo4j Browser", "rationale": "react-force-graph (MIT) cho embedded graph visualization trong MAESTRO platform (React-based). Neo4j Browser cho development exploration miễn phí. Force-directed layout trực quan cho entity relationship exploration."},
+      "alternatives": {"recommended": "D3.js (force layout) / Neo4j Bloom / Gephi / yFiles", "rationale": "D3.js cho low-level customization. Neo4j Bloom (commercial) cho interactive enterprise exploration. Gephi cho desktop analytics. yFiles cho enterprise visualization SDK."}
+    },
+    "query_languages": {
+      "recommended": {"recommended": "Cypher + GraphQL (neo4j-graphql)", "rationale": "Cypher cho truy vấn đồ thị trực tiếp — pattern matching trực quan. neo4j-graphql auto-generate GraphQL API từ Neo4j schema — client-friendly. LangChain GraphCypherQAChain cho natural language → Cypher qua LLM."},
+      "alternatives": {"recommended": "SPARQL / Gremlin (Apache TinkerPop)", "rationale": "SPARQL cho RDF stores (Blazegraph, Virtuoso) và federated query. Gremlin cho TinkerPop-compatible graph DBs."}
+    },
+    "orchestration": {
+      "recommended": {"recommended": "Apache Airflow", "rationale": "DAG-based ETL scheduling chuẩn công nghiệp. Quản lý KG construction pipeline: ingestion → extraction → validation → enrichment. Scheduling batch re-extraction và incremental updates. Large community, extensive documentation."},
+      "alternatives": {"recommended": "Prefect / Dagster", "rationale": "Prefect cho Python-native workflow với DX tốt hơn Airflow. Dagster cho data-aware orchestration với typing — phù hợp data pipelines phức tạp."}
+    },
+    "llm_integration": {
+      "recommended": {"recommended": "LangChain GraphCypherQAChain + Microsoft GraphRAG", "rationale": "GraphCypherQAChain chuyển natural language thành Cypher queries qua LLM — truy vấn KG bằng ngôn ngữ tự nhiên. Microsoft GraphRAG (MIT) cho global/local search trên LLM-built KGs. LlamaIndex KnowledgeGraphRAGRetriever cho GraphRAG retrieval tích hợp."},
+      "alternatives": {"recommended": "LlamaIndex PropertyGraphIndex / Custom NL-to-Cypher", "rationale": "LlamaIndex cho LLM-based KG extraction và retrieval pipeline. Custom NL-to-Cypher cho fine-grained control."}
+    },
+    "embedding_models": {
+      "recommended": {"recommended": "BGE-M3 (BAAI)", "rationale": "Multi-lingual (hỗ trợ tiếng Việt), dense+sparse+ColBERT trong 1 model. Self-hosted miễn phí. Dùng cho entity description embedding, semantic similarity, và hybrid search trong KG context."},
+      "alternatives": {"recommended": "OpenAI text-embedding-3-large / Cohere Embed v3 / PhoBERT embeddings", "rationale": "OpenAI cho highest accuracy. Cohere cho multilingual + compression. PhoBERT cho Vietnamese-specific embeddings."}
+    }
+  },
+  "feasibility_score": {
+    "overall_score": 5.5,
+    "verdict": "CONDITIONAL GO",
+    "verdict_vi": "Tiến hành có điều kiện",
+    "summary": "Lĩnh vực mature (TRL 7), tooling sẵn sàng production (Neo4j, PyKEEN, GraphRAG). Thị trường toàn cầu $2.1B (2025), dự kiến $8.1B (2030), CAGR ~31%. Tuy nhiên, chi phí xây dựng và bảo trì KG thường bị đánh giá thấp 3-5x. Hệ sinh thái KG tiếng Việt gần như không tồn tại — không có Vietnamese DBpedia, Wikidata coverage mỏng, NER/RE tiếng Việt chưa production-ready. Điều kiện: scope 1-2 ngành dọc Phase 1, budget bảo trì tối thiểu 1 FTE/vertical, downstream consumer xác định trước khi xây KG, Vietnamese NER/RE pipeline validated trên real corpus.",
+    "dimensions": {
+      "technical_feasibility": {"score": 7, "rationale": "Tooling trưởng thành (Neo4j, PyKEEN, LangChain GraphRAG). Graph databases production-ready. Tuy nhiên, automated KG construction từ tiếng Việt chưa được chứng minh — spaCy Vietnamese yếu, LLM extraction đắt ở quy mô lớn."},
+      "market_demand": {"score": 6, "rationale": "Tăng trưởng nhờ LLM+KG (GraphRAG) hype cycle. Enterprise KG adoption tập trung pharma, finance, big tech. Thị trường Việt Nam nascent — đa số doanh nghiệp vẫn đang giải quyết search và data integration cơ bản."},
+      "data_availability": {"score": 4, "rationale": "Nút thắt nghiêm trọng nhất. English KGs (Wikidata, DBpedia) phong phú. Vietnamese structured knowledge sources sparse: không có Vietnamese DBpedia, Wikidata coverage ~800K items có nhãn Việt vs 100M+ tổng, data.gov.vn ~20K datasets chất lượng không đồng đều."},
+      "implementation_risk": {"score": 5, "rationale": "Cold start problem nghiêm trọng — KG trống/thưa không deliver giá trị. Ontology design đòi hỏi expertise hiếm (domain + KG). LLM extraction tạo non-determinism và hallucinated triples. Architecture enterprise (Neo4j Cluster + Kafka + Airflow) cần team 4-6 engineers."},
+      "roi_clarity": {"score": 5, "rationale": "ROI KG notoriously khó lượng hoá. Lợi ích gián tiếp (better search, explainability, agent grounding). Đa số KG projects mất 12-18 tháng mới thấy giá trị đo lường được. Bán 'knowledge infrastructure' cho SME Việt Nam là pitch khó."},
+      "talent_availability": {"score": 4, "rationale": "KG engineering nằm ở giao điểm ontology design, NLP, graph databases, domain expertise. Kết hợp này hiếm toàn cầu, hiếm hơn ở Việt Nam. Neo4j/Cypher skills tìm được; ontology engineering skills thì không."},
+      "vietnam_market_fit": {"score": 6, "rationale": "Ngân hàng, telcos, conglomerates cần entity resolution và knowledge federation. Government agencies cần interoperability. AI companies cần factual grounding. Tuy nhiên 99% SME không cần KG — họ cần better search. Timing: cửa sổ 12-18 tháng nhờ LLM+KG convergence."}
+    },
+    "conditions": [
+      "Scope giới hạn 1-2 ngành dọc cho Phase 1 — không phải tất cả 12 industries. Corporate entity KG là starting point rủi ro thấp nhất (dữ liệu đăng ký kinh doanh tương đối clean và structured)",
+      "Budget bao gồm bảo trì liên tục — tối thiểu 1 FTE mỗi ngành dọc cho curation, conflict resolution, ontology evolution. Nếu budget này không available, KHÔNG bắt đầu dự án KG",
+      "Downstream consumer cụ thể tồn tại TRƯỚC KHI xây KG — GraphRAG chat, entity-linked search, explainable recommendations. Không xây KG đầu cơ",
+      "Vietnamese NER/RE pipeline validated trên real corpus trước khi cam kết full build — benchmark 500 tài liệu Việt, manually annotate, đo F1. Nếu F1 <0.70, fallback semi-manual curation",
+      "Bắt đầu với 'Knowledge Graph Lite' — Neo4j Community Edition + manually curated triples. Chứng minh graph-structured knowledge cải thiện concrete user-facing feature trước khi đầu tư automated construction",
+      "Định nghĩa success metrics trước khi viết code: (a) triple count và growth rate, (b) precision trích xuất tự động (sampled), (c) query latency p50/p95, (d) downstream task improvement",
+      "Defer Temporal KG, Multimodal KG, và Neuro-Symbolic AI sang Phase 2+ — fascinating research nhưng không có giá trị Phase 0-1",
+      "Theo dõi Microsoft GraphRAG sát sao — nếu Microsoft ship production-grade multilingual GraphRAG, chiến lược chuyển từ 'xây KG infrastructure' sang 'xây domain-specific KG content'"
+    ]
+  },
+  "industry_applications": [
+    {
+      "industry": "Đồ thị tri thức doanh nghiệp (Corporate Entity KG)",
+      "use_case": "KG thực thể doanh nghiệp — company names, ownership structures, industry codes, directors, relationships",
+      "description": "Xây dựng KG từ dữ liệu Cổng Đăng ký Kinh doanh Quốc gia Việt Nam — dữ liệu tương đối clean và structured, rủi ro thấp nhất cho starting point. Mô hình hoá: công ty, cổ đông, giám đốc, ngành nghề, địa chỉ, quan hệ sở hữu. Phục vụ: entity resolution (gộp tên công ty biến thể), due diligence, competitive intelligence, supply chain mapping. Tích hợp Wikidata subset cho Vietnamese entities (~800K) làm seed. KG cho phép truy vấn kiểu 'Tất cả công ty do X sở hữu gián tiếp qua 3 tầng' — không thể với relational DB thông thường.",
+      "priority": "P0",
+      "market_size_vn": "USD 10-25M (business intelligence + entity resolution VN)",
+      "technical_complexity": "Medium",
+      "vietnam_readiness": "Medium-High"
+    },
+    {
+      "industry": "Y tế (Healthcare KG)",
+      "use_case": "KG y tế — drug interactions, clinical ontologies, patient pathways, medical terminology tiếng Việt",
+      "description": "KG y tế mô hình hoá thuốc, tương tác thuốc, bệnh, triệu chứng, phác đồ điều trị. Nguồn: SNOMED CT, ICD-10, DrugBank (tiếng Anh) + mapping sang thuật ngữ y tế tiếng Việt. Use cases: kiểm tra tương tác thuốc, hỗ trợ quyết định lâm sàng, chuẩn hoá thuật ngữ y tế. CẢNH BÁO R-γ: rào cản quy định nghiêm ngặt (data privacy, phê duyệt Bộ Y tế) — regulatory barriers steep. Hệ thống bệnh viện Việt Nam sinh massive clinical notes phi cấu trúc bằng tiếng Việt — cơ hội lớn nhưng compliance phức tạp.",
+      "priority": "P1",
+      "market_size_vn": "USD 5-15M (healthcare AI + clinical decision support VN)",
+      "technical_complexity": "High",
+      "vietnam_readiness": "Low-Medium"
+    },
+    {
+      "industry": "Tuân thủ tài chính (Financial Compliance KG)",
+      "use_case": "KG tuân thủ — KYC/AML entity networks, transaction graphs, regulatory mapping, beneficial ownership",
+      "description": "KG cho ngân hàng và tổ chức tài chính: mô hình hoá entity networks cho KYC (Know Your Customer), phát hiện AML (Anti-Money Laundering) qua transaction graph analysis, mapping beneficial ownership chains, regulatory requirement tracking. Graph traversal phát hiện hidden connections giữa entities mà relational queries bỏ sót. Tích hợp corporate entity KG (P0) làm foundation. VN banking sector đang tăng cường compliance — demand thực tế. Lưu ý: hallucination trong compliance CỰC KỲ nguy hiểm — bắt buộc provenance tracking trên mọi triple.",
+      "priority": "P1",
+      "market_size_vn": "USD 8-20M (RegTech + compliance automation VN banking)",
+      "technical_complexity": "High",
+      "vietnam_readiness": "Medium"
+    },
+    {
+      "industry": "Thương mại điện tử (E-commerce Product KG)",
+      "use_case": "KG sản phẩm — product taxonomy, attributes, relationships, compatibility, brand hierarchy",
+      "description": "Product KG cho e-commerce: mô hình hoá sản phẩm, danh mục, thuộc tính, thương hiệu, compatibility, phụ kiện, alternatives. Phục vụ: product search cải thiện (entity-centric), gợi ý sản phẩm có giải thích (KG-path explanations), product comparison tự động, content enrichment. Tiki, Shopee, Lazada đều có internal product KGs — domain ontology cho Vietnamese e-commerce có giá trị nếu cung cấp dạng infrastructure. VN e-commerce market $20B+.",
+      "priority": "P1",
+      "market_size_vn": "USD 10-25M (e-commerce search + recommendation AI VN)",
+      "technical_complexity": "Medium",
+      "vietnam_readiness": "Medium-High"
+    },
+    {
+      "industry": "Dữ liệu chính phủ (Government Data KG)",
+      "use_case": "KG dữ liệu chính phủ — interoperability, open data integration, citizen services",
+      "description": "KG cho chuyển đổi số chính phủ: chuẩn hoá và liên kết dữ liệu từ nhiều cơ quan (đăng ký kinh doanh, thuế, bảo hiểm xã hội, đất đai). Ontologies cung cấp interoperability giữa hệ thống. data.gov.vn có ~20K datasets nhưng formats không đồng nhất (PDF-heavy), update frequency không đều. CẢNH BÁO R-γ: chất lượng dữ liệu không đáng tin cậy — cần significant cleaning trước khi dùng làm KG seed. Tiềm năng lớn nếu chính phủ cam kết data standardization.",
+      "priority": "P2",
+      "market_size_vn": "USD 5-15M (government digital transformation + data integration VN)",
+      "technical_complexity": "Medium-High",
+      "vietnam_readiness": "Low"
+    },
+    {
+      "industry": "Giáo dục và Nghiên cứu (Academic KG)",
+      "use_case": "KG học thuật — papers, authors, institutions, topics, citations, research collaboration networks",
+      "description": "KG cho hệ sinh thái nghiên cứu Việt Nam: mô hình hoá bài báo, tác giả, tổ chức, chủ đề, trích dẫn, mạng lưới hợp tác. Liên kết với OpenAlex, Semantic Scholar. Phục vụ: literature discovery, expertise mapping, research trend analysis, collaboration recommendation. Cơ sở dữ liệu nghiên cứu Việt Nam phân tán — KG cung cấp unified view. Ít rủi ro quy định, dữ liệu có cấu trúc sẵn (metadata papers).",
+      "priority": "P2",
+      "market_size_vn": "USD 2-5M (academic search + research management VN)",
+      "technical_complexity": "Medium",
+      "vietnam_readiness": "Medium"
+    }
+  ],
+  "case_studies": [
+    {
+      "title": "Google Knowledge Graph — 'Things, not strings'",
+      "industry": "Tìm kiếm web",
+      "problem": "Google Search trả kết quả dựa trên keyword matching — không hiểu thực thể và quan hệ đằng sau từ khoá. Cùng từ 'Apple' có thể là công ty hoặc trái cây.",
+      "solution": "Google xây Knowledge Graph (2012) bằng cách mua Freebase (hàng triệu contributors) và layering automated extraction. KG chứa 500B+ facts, powers Knowledge Panels trong search results. Entity disambiguation, structured answers, entity-centric search.",
+      "results": "Thay đổi fundamental cách search hoạt động. Knowledge Panels xuất hiện trong hàng tỷ queries/ngày. Đặt chuẩn kỳ vọng người dùng cho structured knowledge answers. Mainstreamed KG commercially.",
+      "tech_stack": "Proprietary graph infrastructure, Freebase heritage, automated extraction, web-scale processing",
+      "lessons": "KG quy mô web cần investment massive (mua Freebase + hàng nghìn contributors + hàng nghìn engineers). MAESTRO không cạnh tranh ở web-scale — differentiation phải ở domain-specific KG content, không phải general knowledge."
+    },
+    {
+      "title": "Microsoft GraphRAG — LLM + KG cho enterprise knowledge management",
+      "industry": "Enterprise Search & Knowledge Management",
+      "problem": "Naive RAG (chunk-based retrieval) không trả lời được câu hỏi global ('Các chủ đề chính xuyên suốt tất cả tài liệu?') vì chỉ retrieve individual chunks, không synthesis toàn bộ corpus.",
+      "solution": "Microsoft Research phát triển GraphRAG (2024): LLM extract entities/relations → build KG → Leiden community detection → hierarchical summaries. Local queries duyệt KG neighborhood; global queries map-reduce community summaries.",
+      "results": "Open-source MIT, nhanh chóng được adopt. Spawned LightRAG, nano-GraphRAG, HippoRAG. Trở thành paradigm chủ đạo cho enterprise knowledge management. Chứng minh structured knowledge > flat chunks cho synthesis tasks.",
+      "tech_stack": "Python, OpenAI GPT-4, Leiden algorithm, LangChain integration, Neo4j compatible",
+      "lessons": "GraphRAG hype vs reality: graph construction từ LLMs nhiễu, global search chậm và đắt, quality advantage so với vanilla RAG khiêm tốn cho nhiều use cases. Đối thủ trực tiếp của MAESTRO — khó cạnh tranh về resources. Differentiate qua domain-specific KG content."
+    },
+    {
+      "title": "Wikidata — Free collaborative knowledge base",
+      "industry": "Open Knowledge / Bách khoa tri thức",
+      "problem": "Wikipedia infoboxes chứa structured data nhưng khó truy vấn bằng máy. Cần knowledge base có cấu trúc, miễn phí, multilingual, community-driven.",
+      "solution": "Wikidata (2012) — items (entities) với statements (claims + qualifiers + references). Hỗ trợ conflicting information, community editing model. SPARQL endpoint cho machine queries. 23,000+ active human editors liên tục cập nhật.",
+      "results": "100M+ items (2026). Backbone cho Wikipedia infoboxes, Google Knowledge Panel, và vô số research projects. De facto open KG toàn cầu. Tuy nhiên Vietnamese coverage mỏng (~800K items có nhãn tiếng Việt vs 100M+ tổng).",
+      "tech_stack": "MediaWiki, Wikibase, Blazegraph (SPARQL), custom community tools",
+      "lessons": "KG bền vững cần community of editors — không chỉ automated extraction. Vietnamese Wikidata coverage mỏng = cơ hội contribute nhưng cũng = không thể dùng làm foundation cho Vietnamese-specific KG. Bootstrap từ Wikidata subset, build domain ontology riêng."
+    }
+  ],
+  "key_papers": [
+    {
+      "title": "Translating Embeddings for Modeling Multi-relational Data (TransE)",
+      "authors": "Antoine Bordes, Nicolas Usunier, Alberto Garcia-Duran, Jason Weston, Oksana Yakhnenko",
+      "year": 2013,
+      "venue": "NeurIPS 2013",
+      "contribution": "Giới thiệu nguyên lý translational h + r ≈ t cho KG embedding. Mặc dù đơn giản, TransE thiết lập toàn bộ lĩnh vực KG embedding research. O(d) scoring complexity cho phép scale tới hàng triệu thực thể. 15,000+ citations. Mọi paper KG embedding benchmark so sánh với TransE.",
+      "url": "https://proceedings.neurips.cc/paper/2013/hash/1cecc7a77928ca8133fa24680a88d2f9-Abstract.html"
+    },
+    {
+      "title": "Knowledge Vault: A Web-Scale Approach to Probabilistic Knowledge Fusion",
+      "authors": "Xin Dong, Evgeniy Gabrilovich, Geremy Heitz, Wilko Horn, Ni Lao, Kevin Murphy, Thomas Strohmann, Shaohua Sun, Wei Zhang",
+      "year": 2014,
+      "venue": "KDD 2014",
+      "contribution": "Kết hợp KG embedding, text extraction, tabular extraction, và web-page structure extraction trong framework xác suất thống nhất cho KG construction quy mô web. Chứng minh automated KG construction khả thi ở web scale. Ảnh hưởng trực tiếp chiến lược mở rộng Google Knowledge Graph.",
+      "url": "https://dl.acm.org/doi/10.1145/2623330.2623623"
+    },
+    {
+      "title": "Wikidata: A Free Collaborative Knowledge Base",
+      "authors": "Denny Vrandecic, Markus Krotzsch",
+      "year": 2014,
+      "venue": "Communications of the ACM",
+      "contribution": "Mô tả thiết kế và ra mắt Wikidata — items với statements (claims + qualifiers + references), hỗ trợ thông tin mâu thuẫn, community-driven editing. Trở thành de facto open KG với 100M+ items (2026), backbone cho Wikipedia infoboxes và Google Knowledge Panel.",
+      "url": "https://cacm.acm.org/magazines/2014/10/178785-wikidata/fulltext"
+    },
+    {
+      "title": "Complex Embeddings for Simple Link Prediction (ComplEx)",
+      "authors": "Theo Trouillon, Johannes Welbl, Sebastian Riedel, Eric Gaussier, Guillaume Bouchard",
+      "year": 2016,
+      "venue": "ICML 2016",
+      "contribution": "Chứng minh mở rộng embeddings sang complex-valued vectors với Hermitian dot product xử lý quan hệ bất đối xứng tự nhiên mà giữ linear time complexity. Phân tích lý thuyết chứng minh ComplEx fully expressive. Thiết lập complex-valued embeddings là hướng nghiên cứu, ảnh hưởng RotatE, QuatE.",
+      "url": "https://proceedings.mlr.press/v48/trouillon16.html"
+    },
+    {
+      "title": "Modeling Relational Data with Graph Convolutional Networks (R-GCN)",
+      "authors": "Michael Schlichtkrull, Thomas N. Kipf, Peter Bloem, Rianne van den Berg, Ivan Titov, Max Welling",
+      "year": 2018,
+      "venue": "ESWC 2018",
+      "contribution": "Adapt GCN cho dữ liệu đa quan hệ qua relation-specific weight matrices với basis decomposition. Hiệu quả trên cả entity classification và link prediction. Paper nền tảng cho GNNs trên KG — spawned CompGCN, SACN, VR-GCN và toàn bộ nghiên cứu GNN-based KG reasoning.",
+      "url": "https://link.springer.com/chapter/10.1007/978-3-319-93417-4_38"
+    },
+    {
+      "title": "RotatE: Knowledge Graph Embedding by Relational Rotation in Complex Space",
+      "authors": "Zhiqing Sun, Zhi-Hong Deng, Jian-Yun Nie, Jian Tang",
+      "year": 2019,
+      "venue": "ICLR 2019",
+      "contribution": "Mô hình quan hệ dưới dạng rotations trong không gian phức, cung cấp framework thống nhất nắm bắt symmetry, antisymmetry, inversion, composition. Giới thiệu self-adversarial negative sampling. Trở thành standard baseline cho KG embedding research.",
+      "url": "https://openreview.net/forum?id=HkgEQnRqYQ"
+    },
+    {
+      "title": "KG-BERT: BERT for Knowledge Graph Completion",
+      "authors": "Liang Yao, Chengsheng Mao, Yuan Luo",
+      "year": 2019,
+      "venue": "arXiv (widely cited)",
+      "contribution": "Đầu tiên áp dụng pre-trained language models (BERT) cho KG completion bằng cách xử lý triples dưới dạng text sequences. Chứng minh textual descriptions chứa semantic information bổ sung graph structure. Cầu nối NLP và KG communities, mở đường cho LLM+KG convergence hiện tại.",
+      "url": "https://arxiv.org/abs/1909.03193"
+    },
+    {
+      "title": "From Local to Global: A Graph RAG Approach to Query-Focused Summarization (GraphRAG)",
+      "authors": "Darren Edge, Ha Trinh, Newman Cheng, Joshua Bradley, Alex Chao, Apurva Mody, Steven Truitt, Jonathan Larson",
+      "year": 2024,
+      "venue": "Microsoft Research / NeurIPS 2024 Workshop",
+      "contribution": "Giới thiệu GraphRAG xây hierarchical KG từ document corpus sử dụng LLM extraction và community detection, cho phép cả local entity-specific và global thematic queries mà naive RAG không xử lý được. Nhanh chóng được adopt, spawned LightRAG, nano-GraphRAG, HippoRAG. Paradigm chủ đạo cho enterprise knowledge management.",
+      "url": "https://arxiv.org/abs/2404.16130"
+    },
+    {
+      "title": "Unifying Large Language Models and Knowledge Graphs: A Roadmap",
+      "authors": "Shirui Pan, Linhao Luo, Yufei Wang, Chen Chen, Jiapu Wang, Xindong Wu",
+      "year": 2024,
+      "venue": "IEEE TKDE 2024",
+      "contribution": "Survey toàn diện phân loại LLM+KG integration thành 3 paradigm: (1) KG-enhanced LLMs (grounding, giảm hallucination), (2) LLM-enhanced KGs (construction, completion, QA), (3) Synergized LLMs+KGs (bidirectional enhancement). Cover 400+ papers. Tham chiếu definitive cho LLM+KG convergence.",
+      "url": "https://arxiv.org/abs/2306.08302"
+    }
+  ],
+  "cross_domain_connections": [
+    {
+      "target": "B04",
+      "connection_type": "extraction_backbone",
+      "description": "NLP (B04) cung cấp backbone trích xuất cho KG construction: NER, relation extraction, entity linking, coreference resolution. Pre-trained LMs (BERT, GPT, PhoBERT) cải thiện dramatic chất lượng extraction. Ngược lại, KG ground LLMs với factual knowledge, giảm hallucination. Knowledge-aware pre-training (ERNIE, KEPLER) inject KG structure vào language models. KG-augmented LMs retrieve relevant subgraphs khi inference."
+    },
+    {
+      "target": "B12",
+      "connection_type": "graphrag_convergence",
+      "description": "Search & RAG (B12) là điểm hội tụ chính qua GraphRAG. Traditional RAG retrieve document chunks phẳng; GraphRAG retrieve structured knowledge paths qua KG. Multi-hop reasoning ('Gì kết nối entity A với entity B?') cần graph traversal, không vector similarity. Enterprise search kết hợp vector search (recall) + KG traversal (precision + explainability). KG cho phép entity-centric indexing thay vì chunk-level retrieval."
+    },
+    {
+      "target": "B10",
+      "connection_type": "agent_world_model",
+      "description": "Agentic AI (B10) sử dụng KG làm persistent world model và structured long-term memory. Facts học trong 1 task transfer sang tasks tương lai. Planning: KG encode action preconditions/effects. Tool selection: Agent KGs map capabilities tới tools. Multi-agent coordination: shared KG làm common ground cho inter-agent communication. MAESTRO 12×12 knowledge graph structure tự nó phục vụ làm navigational map cho agents."
+    },
+    {
+      "target": "B08",
+      "connection_type": "factual_grounding",
+      "description": "Generative AI (B08) được grounding bởi KG để sinh nội dung consistent với sự thật. KG-conditioned text generation tạo outputs factually consistent. KG-to-text: verbalise KG subgraphs cho natural language explanations. Structured hallucination detection: so sánh LLM outputs với KG facts cho automated fact-checking."
+    },
+    {
+      "target": "B05",
+      "connection_type": "explainable_recommendations",
+      "description": "Recommendation Systems (B05) được nâng cấp bởi KG: KG paths giải thích recommendations ('Gợi ý vì bạn thích Movie A, có cùng đạo diễn D với Movie B'). Propagation-based methods (RippleNet, KGAT) truyền user preferences dọc KG edges. Side information enrichment: KG cung cấp attributes bổ sung sparse interaction matrices. Cold-start mitigation: items mới với KG connections được recommend dựa trên structural similarity."
+    },
+    {
+      "target": "B02",
+      "connection_type": "visual_knowledge",
+      "description": "Computer Vision (B02) kết nối qua scene graphs — biểu diễn dạng KG của nội dung ảnh (objects, attributes, spatial relations). Visual QA: KGs cung cấp world knowledge mà ảnh không chứa. Multimodal KGs liên kết visual features với entity nodes cho cross-modal reasoning. Image-text KG construction: trích xuất entities và relations từ ảnh và captions đồng thời."
+    }
+  ],
+  "bestPractices": [
+    "Bắt đầu với demand-driven construction: chỉ thêm entity types mà downstream consumer đã yêu cầu. KHÔNG mở rộng ontology đầu cơ. KG mà không ai query là graph database đắt tiền có data trong đó. Xác định concrete use case (GraphRAG chat, entity-linked search, explainable recommendations) TRƯỚC KHI xây KG.",
+    "Schema-first approach: thiết kế ontology trước khi populate. Định nghĩa classes, properties, domain/range constraints, cardinality. Version ontologies. Dùng SHACL constraints cho validation. Assign ontology ownership cho domain leads, KHÔNG phải engineers — engineers thiết kế theo hướng normalise, domain experts thiết kế theo hướng usefulness.",
+    "Budget 60% lifecycle cost cho maintenance, KHÔNG phải construction. KG maintenance costs thường vượt construction costs. Automate conflict detection. Chấp nhận rằng một số domains rot nhanh hơn domains khác. Tối thiểu 1 FTE mỗi ngành dọc cho ongoing curation.",
+    "Provenance tracking trên MỌI triple: source, extraction method, confidence score, timestamp, last verified. Mandatory confidence thresholds (>0.85) cho auto-ingested triples. Human-in-the-loop cho low-confidence extractions. Không có provenance = không thể debug KG quality issues.",
+    "Pre-seed từ Wikidata subgraphs + structured databases. Định nghĩa minimum viable KG (MVK) threshold trước khi expose tới users. KG trống/thưa deliver zero value — cold start problem là rủi ro #1.",
+    "Validate Vietnamese NER/RE pipeline trên real corpus TRƯỚC KHI cam kết full build. Benchmark 500 tài liệu, manually annotate entities và relations, đo F1. Nếu F1 <0.70, automated pipeline chưa sẵn sàng — fall back semi-manual curation. Cân nhắc bilingual approach: extract từ English sources, map entities sang Vietnamese labels.",
+    "Định nghĩa success metrics trước khi viết code. Minimum: (a) triple count và growth rate, (b) precision trích xuất tự động (sampled), (c) query latency p50/p95, (d) downstream task improvement. Không có metrics = không phân biệt được working KG với expensive graph database."
+  ],
+  "antiPatterns": [
+    "Xây 'general-purpose knowledge base' thay vì domain-specific KG. Google Knowledge Graph có 500B+ facts, 23,000+ active editors, hàng nghìn engineers. MAESTRO không cạnh tranh ở general knowledge. Differentiation phải ở domain-specific KG content cho market cụ thể.",
+    "Xây KG mà không ai query. Đây là rủi ro phổ biến nhất trong KG projects. Team xây infrastructure, populate ontology, nhưng không có downstream consumer. 12-18 tháng sau: expensive graph database mà không ai dùng. PHẢI có concrete consumption use case trước khi construction.",
+    "Tin tưởng LLM extraction không validation. LLM hallucinate triples — confidence scores từ LLMs không calibrated. Không có provenance tracking, không confidence thresholds, không human review = KG nhiễm hallucinated facts mà không biết. Chi phí fix poisoned KG >> chi phí validate upfront.",
+    "Underestimate maintenance costs. KG construction cost thường được estimate đúng. Maintenance costs (curation, conflict resolution, ontology evolution, stale fact detection) thường bị underestimate 3-5x. Dự án KG mà budget chỉ có construction = KG chết sau 6 tháng.",
+    "Triển khai Temporal KG, Multimodal KG, hoặc Neuro-Symbolic AI trong Phase 0-1. Đây là fascinating research nhưng firmly trong academic territory. Không thêm giá trị khi core KG (entities, relations, attributes, basic reasoning) chưa ổn định. Scope risk nghiêm trọng.",
+    "Assume Vietnamese NLP pipeline hoạt động tương đương English. Khoảng cách ít nhất 3-4 năm. spaCy Vietnamese models yếu, relation extraction tiếng Việt là bài toán nghiên cứu mở. Không benchmark trên Vietnamese data = surprises đau đớn trong production."
+  ],
+  "pipeline": {
+    "stages": [
+      {
+        "name": "Data Ingestion (Thu thập dữ liệu)",
+        "description": "Thu thập dữ liệu đa nguồn cho KG construction: structured data (CSV, SQL databases, JSON-LD), unstructured documents (PDF, HTML, text), API feeds (REST/GraphQL), streaming data (Kafka). Multi-source loader normalize formats. Metadata tracking: source, timestamp, format, quality indicators. Ưu tiên structured sources trước (chi phí trích xuất thấp hơn), unstructured sau.",
+        "tools": ["KGIngestionPipeline (custom)", "Apache Airflow", "Kafka (streaming)", "PDF/HTML parsers"],
+        "inputs": "Raw data từ CSV, databases, documents, APIs, event streams",
+        "outputs": "Normalized Document objects với text, source, metadata"
+      },
+      {
+        "name": "Entity & Relation Extraction (Trích xuất thực thể và quan hệ)",
+        "description": "Trích xuất entities và relations từ text: NER xác định entity spans, Entity Linking ánh xạ tới canonical IDs (Wikidata), Relation Extraction phân loại quan hệ giữa cặp entities. Hai approaches: SpacyExtractor cho rule-based + NER (chi phí thấp, quality vừa), LLMExtractor (Claude) cho high-quality structured output (chi phí cao, quality cao). Kết hợp: LLM cho validation, rule-based cho volume. Vietnamese: VnCoreNLP cho NER, LLM cho RE.",
+        "tools": ["VnCoreNLP / spaCy", "Claude LLM Extractor", "REBEL", "Entity Linker (Wikidata)"],
+        "inputs": "Normalized Documents từ Stage 1",
+        "outputs": "Triple objects: (head, head_type, relation, tail, tail_type, confidence, source)"
+      },
+      {
+        "name": "KG Construction & Validation (Xây dựng và xác thực KG)",
+        "description": "Xây KG trong Neo4j: upsert triples với confidence tracking, deduplication qua entity uniqueness constraints. Ontology conformance validation: kiểm tra domain/range constraints, required properties, cardinality rules. Bulk upsert (batch 500) cho performance. Violations logged cho human review. SHACL constraints cho automated schema validation.",
+        "tools": ["Neo4j (Cypher)", "KGBuilder (custom)", "SHACL validator", "Ontology rules engine"],
+        "inputs": "Extracted Triples + Ontology rules",
+        "outputs": "Validated KG trong Neo4j + violation reports"
+      },
+      {
+        "name": "KG Enrichment (Làm giàu KG)",
+        "description": "Enrichment qua KG embeddings và link prediction. Train embeddings (PyKEEN: RotatE, ComplEx, TransE) trên triples exported từ Neo4j. Link prediction phát hiện missing connections. Entity similarity search cho deduplication bổ sung. Embedding vectors stored cho downstream similarity queries. Evaluation: MRR, Hits@K trên test split.",
+        "tools": ["PyKEEN", "DGL-KE", "Neo4j Vector Index", "Custom evaluation pipeline"],
+        "inputs": "Validated KG từ Stage 3",
+        "outputs": "Enriched KG + entity/relation embeddings + predicted links"
+      },
+      {
+        "name": "Query & Serving (Truy vấn và phục vụ)",
+        "description": "Phục vụ KG qua nhiều kênh: Cypher API cho structured queries, GraphQL (neo4j-graphql) cho application integration, LangChain GraphCypherQAChain cho natural language queries, GraphRAG cho LLM-augmented retrieval. Visualization: react-force-graph cho embedded exploration, Neo4j Browser cho development. Performance targets: <50ms cho 2-hop queries trên <1M nodes.",
+        "tools": ["FastAPI + Cypher", "GraphQL (neo4j-graphql)", "LangChain GraphCypherQAChain", "react-force-graph"],
+        "inputs": "User queries (Cypher, GraphQL, natural language)",
+        "outputs": "Structured query results + graph visualizations + natural language answers"
+      },
+      {
+        "name": "Maintenance & Evolution (Bảo trì và tiến hoá)",
+        "description": "KG maintenance liên tục: incremental updates (thêm triples mới từ streaming/batch), conflict detection và resolution (triples mâu thuẫn), stale fact detection (facts đã hết hạn), ontology evolution (thêm/sửa classes, properties). Monitoring: triple count growth, query latency, extraction precision (sampled). Quality gates: human review cho low-confidence triples. Budget: 60% lifecycle cost.",
+        "tools": ["Airflow (scheduled jobs)", "Custom conflict detector", "Quality monitoring dashboard", "Human review queue"],
+        "inputs": "New data sources + monitoring metrics + user feedback",
+        "outputs": "Updated KG + quality reports + ontology change logs"
+      }
+    ]
+  },
+  "learning_resources": [
+    {
+      "title": "Neo4j GraphAcademy",
+      "type": "course",
+      "url": "https://graphacademy.neo4j.com/",
+      "level": "Beginner to Intermediate",
+      "description": "Khoá học miễn phí về Neo4j và Cypher: từ cơ bản đến production deployment. Hands-on labs. Certificates. KHỞI ĐẦU TỐT NHẤT cho graph database skills. Bao gồm data modeling, Cypher querying, Neo4j administration."
+    },
+    {
+      "title": "W3C RDF Primer",
+      "type": "specification",
+      "url": "https://www.w3.org/TR/rdf11-primer/",
+      "level": "Beginner",
+      "description": "Giới thiệu chính thức RDF — data model nền tảng của Semantic Web và KG. Subject-predicate-object triples, URIs, literals, blank nodes. Bắt buộc đọc để hiểu nguồn gốc lý thuyết của KG."
+    },
+    {
+      "title": "Knowledge Graph Embedding: A Survey (Wang et al.)",
+      "type": "paper",
+      "url": "https://arxiv.org/abs/1611.03659",
+      "level": "Intermediate to Advanced",
+      "description": "Survey toàn diện về KG embedding models: translational, bilinear, neural, GNN-based. Phân loại, so sánh, benchmarks. Tham chiếu chuẩn cho hiểu lý thuyết embedding models từ TransE tới ComplEx."
+    },
+    {
+      "title": "Graph Representation Learning (William Hamilton)",
+      "type": "book",
+      "url": "https://www.cs.mcgill.ca/~wlh/grl_book/",
+      "level": "Advanced",
+      "description": "Sách giáo khoa về graph representation learning: node embeddings, GNNs, knowledge graphs, generative models. Nền tảng toán học chặt chẽ. Miễn phí online. Bao gồm R-GCN, message passing framework — essential cho hiểu GNN-based KG reasoning."
+    },
+    {
+      "title": "TransE Paper (Bordes et al., 2013)",
+      "type": "paper",
+      "url": "https://proceedings.neurips.cc/paper/2013/hash/1cecc7a77928ca8133fa24680a88d2f9-Abstract.html",
+      "level": "Intermediate",
+      "description": "Paper nền tảng thiết lập translational principle h + r ≈ t cho KG embedding. Ngắn, elegant, 15,000+ citations. Bắt buộc đọc để hiểu nền tảng toàn bộ lĩnh vực KG embedding."
+    },
+    {
+      "title": "Microsoft GraphRAG Documentation & Source Code",
+      "type": "documentation",
+      "url": "https://github.com/microsoft/graphrag",
+      "level": "Intermediate",
+      "description": "Open-source GraphRAG implementation từ Microsoft Research. MIT license. Well-documented. Bao gồm LLM extraction, community detection, hierarchical summarization, local/global search. Tham chiếu production cho KG + LLM integration."
+    },
+    {
+      "title": "Unifying LLMs and KGs: A Roadmap (Pan et al., 2024)",
+      "type": "paper",
+      "url": "https://arxiv.org/abs/2306.08302",
+      "level": "Intermediate to Advanced",
+      "description": "Survey definitive cho LLM+KG convergence. 3 paradigms: KG-enhanced LLMs, LLM-enhanced KGs, Synergized. 400+ papers covered. Highly cited. Clarifies research landscape và identifies open challenges. PHẢI ĐỌC cho bất kỳ ai làm việc ở giao điểm LLM và KG."
+    },
+    {
+      "title": "PyKEEN Documentation & Tutorials",
+      "type": "documentation",
+      "url": "https://pykeen.readthedocs.io/",
+      "level": "Intermediate",
+      "description": "Thư viện KG embedding toàn diện nhất: 40+ models, built-in evaluation pipeline, hyperparameter optimization. MIT license. Tutorials từ basic TransE tới advanced model comparison. Nền tảng cho KG embedding experiments."
+    },
+    {
+      "title": "LangChain Neo4j Integration Guide",
+      "type": "documentation",
+      "url": "https://python.langchain.com/docs/integrations/providers/neo4j",
+      "level": "Intermediate",
+      "description": "Hướng dẫn tích hợp LangChain với Neo4j: GraphCypherQAChain (natural language → Cypher), KG-augmented RAG, LLM-based graph construction. Practical cho xây GraphRAG applications trên Neo4j."
+    },
+    {
+      "title": "SPARQL Tutorial (Apache Jena)",
+      "type": "tutorial",
+      "url": "https://jena.apache.org/tutorials/sparql.html",
+      "level": "Beginner to Intermediate",
+      "description": "Tutorial SPARQL từ Apache Jena: query patterns, OPTIONAL, UNION, FILTER, aggregation, property paths. Essential nếu làm việc với RDF stores. Bổ sung cho Cypher skills khi cần query federated/RDF data."
+    },
+    {
+      "title": "AI Engineering (Chip Huyen)",
+      "type": "book",
+      "url": "https://www.oreilly.com/library/view/ai-engineering/9781098166298/",
+      "level": "Intermediate",
+      "description": "Xây dựng ứng dụng LLM production-grade: RAG, evaluation, deployment. Bao gồm KG-augmented RAG patterns. Thực tế nhất cho practitioner xây AI products tích hợp knowledge graphs."
+    }
+  ],
+  "risks": [
+    {
+      "id": "R01",
+      "name": "Cold Start — KG trống/thưa trong nhiều tháng, deliver zero value",
+      "description": "KG trống hoặc thưa không deliver giá trị nào. Users thử một lần, thấy thiếu data, bỏ đi và không quay lại. Đây là rủi ro #1 cho mọi dự án KG. Likelihood HIGH vì xây KG chất lượng mất thời gian. Impact CRITICAL vì first impression quyết định adoption.",
+      "severity": "Critical",
+      "probability": "High",
+      "mitigation": "Pre-seed từ Wikidata subgraphs + structured databases. Định nghĩa minimum viable KG (MVK) threshold — KHÔNG expose tới users cho đến khi đạt MVK. Bắt đầu với domain có dữ liệu structured sẵn (business registry) để rút ngắn time-to-value."
+    },
+    {
+      "id": "R02",
+      "name": "Maintenance costs vượt construction costs — KG chết sau 6 tháng",
+      "description": "Chi phí bảo trì KG (curation, conflict resolution, ontology evolution, stale fact detection) thường vượt chi phí xây dựng ban đầu. Dự án budget chỉ cho construction = KG rot sau 6 tháng. Một số domains (tin tức, giá cả) rot nhanh hơn domains khác (taxonomy, quan hệ sở hữu).",
+      "severity": "High",
+      "probability": "High",
+      "mitigation": "Budget 60% lifecycle cost cho maintenance. Tối thiểu 1 FTE mỗi ngành dọc cho ongoing curation. Automate conflict detection. Chọn domain với low rot rate cho Phase 1 (corporate entities > news events)."
+    },
+    {
+      "id": "R03",
+      "name": "Ontology drift / schema instability — breaking changes trong production",
+      "description": "Ontology thay đổi liên tục khi hiểu biết domain tiến hoá. Schema changes có thể break downstream consumers (queries, applications, integrations). Nếu ontology ownership không rõ ràng, mỗi engineer sửa theo cách riêng → drift.",
+      "severity": "High",
+      "probability": "Medium",
+      "mitigation": "Version ontologies. Dùng SHACL constraints cho validation. Assign ontology ownership cho domain leads, KHÔNG phải engineers. Backward-compatible changes only — deprecate thay vì xoá. Migration scripts cho breaking changes."
+    },
+    {
+      "id": "R04",
+      "name": "LLM extraction hallucinations nhiễm KG — poisoned knowledge base",
+      "description": "LLM hallucinate triples khi extraction. Confidence scores từ LLMs không calibrated. Hallucinated triples propagate qua KG, ảnh hưởng downstream reasoning. Chi phí fix poisoned KG >> chi phí validate upfront. Đặc biệt nguy hiểm trong compliance và healthcare domains.",
+      "severity": "High",
+      "probability": "High",
+      "mitigation": "Mandatory confidence thresholds (>0.85) cho auto-ingested triples. Human-in-the-loop cho low-confidence extractions. Provenance tracking trên MỌI triple. Sampling-based quality audits định kỳ. Rollback capability cho extraction batches."
+    },
+    {
+      "id": "R05",
+      "name": "Vietnamese NLP pipeline underperforms — automated extraction thất bại",
+      "description": "spaCy Vietnamese models yếu. Relation extraction tiếng Việt là bài toán nghiên cứu mở. Khoảng cách khả năng KG construction tiếng Anh vs tiếng Việt ít nhất 3-4 năm. Team commit full build rồi phát hiện extraction quality quá thấp — wasted effort.",
+      "severity": "High",
+      "probability": "High",
+      "mitigation": "Benchmark Vietnamese NER/RE trên real corpus TRƯỚC KHI commit. 500 tài liệu, manually annotate, đo F1. Nếu F1 <0.70, fallback semi-manual curation. Cân nhắc bilingual approach: extract từ English sources, map sang Vietnamese labels."
+    },
+    {
+      "id": "R06",
+      "name": "Thiếu nhân lực KG engineering tại Việt Nam",
+      "description": "KG engineering cần kết hợp ontology design + NLP + graph databases + domain expertise. Kết hợp này hiếm toàn cầu, hiếm hơn ở Việt Nam. Neo4j/Cypher skills tìm được; ontology engineering skills thì không. Recruitment bottleneck có thể block toàn bộ dự án.",
+      "severity": "Medium",
+      "probability": "High",
+      "mitigation": "Train existing NLP engineers về graph modeling. Dùng Neo4j (learning curve thấp). Outsource ontology design cho consultants Phase 1. Build internal expertise incrementally. Partner với universities (HUST, VNU) cho research talent."
+    },
+    {
+      "id": "R07",
+      "name": "ROI không demonstrate được trong 12 tháng",
+      "description": "KG ROI notoriously khó lượng hoá. Lợi ích gián tiếp (better search, explainability, agent grounding). Đa số KG projects mất 12-18 tháng mới thấy giá trị đo lường được. Stakeholders mất kiên nhẫn trước khi KG mature đủ để deliver.",
+      "severity": "High",
+      "probability": "Medium",
+      "mitigation": "Attach KG tới concrete product feature (GraphRAG chat, entity-linked search) mà users experience được trong 3 tháng. KHÔNG xây KG trong isolation. Define measurable success metrics từ ngày 1."
+    },
+    {
+      "id": "R08",
+      "name": "Microsoft GraphRAG commoditize approach — mất differentiation",
+      "description": "Nếu Microsoft ship production-grade multilingual GraphRAG product, retrieval layer trở thành commodity. MAESTRO's KG play mất giá trị nếu differentiation nằm ở RAG mechanism thay vì KG content.",
+      "severity": "Medium",
+      "probability": "Medium",
+      "mitigation": "Chấp nhận commoditization của retrieval layer. Differentiate qua domain-specific KG CONTENT, không phải RAG mechanism. Chuẩn bị cả hai scenarios: (1) build KG infrastructure, (2) build domain-specific KG content trên commodity infrastructure."
+    }
+  ],
+  "metadata": {
+    "status": "reviewed",
+    "version": "1.0",
+    "createdAt": "2026-03-31",
+    "updatedAt": "2026-03-31",
+    "researchedBy": ["R-alpha", "R-beta", "R-gamma", "R-MLE", "R-DE", "R-NLP", "R-DBE", "R-BE", "R-FE", "R-DO", "R-SE", "R-QA", "R-SA", "R-D03", "R-D02", "R-sigma"],
+    "consolidatedBy": "R-sigma (Ms. Scribe)",
+    "normalizedAt": "2026-03-31",
+    "normalizedBy": "R-sigma",
+    "phase": "Phase 0",
+    "module": "B11",
+    "reviewedBy": null,
+    "approvedBy": null,
+    "notes": "Consolidated bởi R-sigma (Ms. Scribe). Overall feasibility 5.5/10 CONDITIONAL GO — Data Availability (4/10) là nút thắt nghiêm trọng nhất. JSON field names English, values Vietnamese (có dấu) per language rule. Technical terms giữ English. 16 agents nghiên cứu. Chiến lược: Knowledge Graph Lite cho 1 ngành dọc (corporate entity KG), validate Vietnamese NER/RE trước khi commit automated pipeline, budget maintenance 60% lifecycle cost. Khoảng cách Vietnamese KG ecosystem vs English ít nhất 3-4 năm — bridge bằng bilingual approach và domain focus, không phải optimism."
+  }
+}

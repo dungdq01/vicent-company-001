@@ -1,0 +1,39 @@
+{
+  "_comment": "Resource lock ledger per R-LCY-07 + R-ORC-05. Engine acquires/releases atomically. Deadlock detection.",
+  "_schema_version": "1.0",
+  "_last_updated": "2026-04-27T00:00:00Z",
+  "locks": {},
+  "daily_quota": {
+    "anthropic_api_usd": {
+      "cap_per_phase": {
+        "phase_1": 50,
+        "phase_2": 100,
+        "phase_3": 250
+      },
+      "consumed_today": 0.0,
+      "by_project": {},
+      "reset_at": "00:00 UTC daily"
+    }
+  },
+  "capacity_caps": {
+    "_source": "_shared/rules/90-lifecycle-rules.md §R-LCY-07 + W10 §6",
+    "phase_1": {
+      "max_concurrent_path_a": 2,
+      "max_concurrent_path_b": 1,
+      "max_concurrent_path_d": 1,
+      "weekly_human_review_hours": 20
+    },
+    "phase_2": {
+      "max_concurrent_path_a": 4,
+      "max_concurrent_path_b": 2,
+      "max_concurrent_path_d": 2,
+      "weekly_human_review_hours": 40
+    },
+    "phase_3": {
+      "max_concurrent_path_a": 10,
+      "max_concurrent_path_b": 4,
+      "max_concurrent_path_d": 3,
+      "weekly_human_review_hours": 80
+    }
+  }
+}

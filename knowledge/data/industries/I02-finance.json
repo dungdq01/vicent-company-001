@@ -1,0 +1,112 @@
+{
+  "id": "I02",
+  "name": "Finance & Banking",
+  "slug": "finance-banking",
+  "category": "industry",
+  "icon": "Landmark",
+  "color": "#FFD54F",
+  "depthLevel": 1,
+  "overview": {
+    "description": "Finance and banking in Vietnam is highly digitalized with strong AI adoption. Key applications include fraud detection, credit scoring, KYC automation, and customer churn prediction. Vietnam has 40+ commercial banks and a rapidly growing fintech ecosystem.",
+    "marketSizeVietnam": "~$600B total banking assets; digital banking users exceeded 30M in 2025",
+    "marketSizeSEA": "~$4.5T regional banking sector; Singapore, Indonesia, Vietnam as key AI hubs",
+    "aiMaturity": "L2",
+    "aiAppetite": "high"
+  },
+  "domainKnowledge": {
+    "keyEntities": [
+      "Transactions",
+      "Accounts",
+      "Customers",
+      "Loans",
+      "Credit scores",
+      "KYC documents"
+    ],
+    "keyProcesses": [
+      "Loan origination",
+      "Credit underwriting",
+      "Fraud investigation",
+      "KYC onboarding",
+      "Risk monitoring"
+    ],
+    "dataTypes": [
+      "Transaction logs",
+      "Credit history",
+      "Identity documents",
+      "Customer profiles",
+      "Market data"
+    ],
+    "typicalDataVolume": "Very high — billions of transactions per month across major banks",
+    "dataQuality": "Medium to high — core banking well-structured but siloed across products"
+  },
+  "painPoints": [
+    {
+      "problem": "Fraud and anomalous transactions are hard to detect in real-time at scale",
+      "severity": 10,
+      "aiSolvable": true,
+      "mapsToBaseline": [
+        "B07",
+        "B13"
+      ]
+    },
+    {
+      "problem": "Manual KYC document verification is slow, error-prone, and expensive",
+      "severity": 9,
+      "aiSolvable": true,
+      "mapsToBaseline": [
+        "B02"
+      ]
+    },
+    {
+      "problem": "Credit scoring models fail on thin-file customers (young, rural)",
+      "severity": 8,
+      "aiSolvable": true,
+      "mapsToBaseline": [
+        "B13"
+      ]
+    },
+    {
+      "problem": "Customer churn prediction is reactive rather than proactive",
+      "severity": 7,
+      "aiSolvable": true,
+      "mapsToBaseline": [
+        "B13",
+        "B05"
+      ]
+    }
+  ],
+  "regulations": [],
+  "priorityBaselines": {
+    "high": [
+      "B07",
+      "B13"
+    ],
+    "medium": [
+      "B02",
+      "B04"
+    ],
+    "low": [
+      "B08",
+      "B12"
+    ]
+  },
+  "competitiveLandscape": [],
+  "relatedNodes": [
+    {
+      "nodeId": "I15",
+      "relationship": "adjacent",
+      "description": "Insurance and banking share risk modeling and fraud detection."
+    },
+    {
+      "nodeId": "I01",
+      "relationship": "adjacent",
+      "description": "Retail banking and e-commerce payment systems are tightly integrated."
+    }
+  ],
+  "metadata": {
+    "createdAt": "2026-04-03",
+    "updatedAt": "2026-04-03",
+    "version": "0.1",
+    "status": "skeleton"
+  }
+}

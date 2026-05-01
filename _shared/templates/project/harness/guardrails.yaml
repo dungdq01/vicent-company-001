@@ -1,0 +1,84 @@
+# Harness Guardrails — Project {PROJECT_ID}
+# Spec: _shared/rules/80-harness-rules.md (R-HRN-11 approval gate matrix)
+# Owner: R-AE + COO sign at P5 Planning (locked before P6 Dev)
+
+version: 1.0
+project_id: "{PROJECT_ID}"
+profile: L1                          # MUST match manifest.yaml
+last_updated: "{YYYY-MM-DD}"
+
+# --- Approval gate matrix (R-HRN-11) ---------------------------------------
+# Action class → required approver per profile
+# Override: tighten only (e.g., L1 → require human for read-only). Cannot loosen.
+
+approval_matrix:
+  read_only:
+    description: "file read, query DB, web search"
+    L0: auto
+    L1: auto
+    L2: auto
+
+  write_workspace:
+    description: "write to projects/{id}/ workspace"
+    L0: auto
+    L1: auto
+    L2: auto
+
+  write_shared:
+    description: "write to _shared/ or knowledge/"
+    L0: auto
+    L1: human
+    L2: human + adr
+
+  external_call_read:
+    description: "API read (e.g., Stripe customer lookup)"
+    L0: auto
+    L1: auto
+    L2: human_first_run
+
+  external_call_write:
+    description: "API write (e.g., send email, create resource)"
+    L0: mock
+    L1: human
+    L2: human + 2nd_approver
+
+  destructive:
+    description: "delete data, refund, deploy prod, force-push"
+    L0: blocked
+    L1: human + 2nd_approver
+    L2: cto + ceo
+
+  external_communication:
+    description: "send to client/external (email, Slack, Discord)"
+    L0: blocked
+    L1: blocked                      # R-MAS-11 globally forbidden
+    L2: blocked
+
+# --- Network egress whitelist (when sandbox.enabled=true) ------------------
+network_egress_whitelist:
+  - api.anthropic.com
+  - helicone.ai
+  # add project-specific approved endpoints here
+
+# --- Denied actions (hard NO regardless of approval) -----------------------
+hard_deny:
+  - "git push --force on main/master"
+  - "DROP TABLE / TRUNCATE in production DB"
+  - "rm -rf on shared volumes"
+  - "credential rotation without ADR"
+  - "model upgrade without R-LLMOps + CTO sign (R-QAL-07)"
+
+# --- Human-in-loop trigger thresholds --------------------------------------
+human_in_loop_triggers:
+  cost_per_turn_usd_above: 0.50      # alert + pause
+  consecutive_failures: 3             # escalate per R-EXE-07
+  drift_detected: true                # R-HRN-07 → halt + escalate
+  eval_score_below: 7.0               # R-QAL-02 lower bound
+  approval_timeout_minutes: 60        # if human doesn't respond, default DENY
+
+# --- Approver registry -----------------------------------------------------
+approvers:
+  primary_human: "P3"                 # COO role
+  secondary_human: "P1"               # CEO/CTO role
+  cto_sign_required_for: ["destructive", "model_upgrade", "production_deploy"]
+  ceo_sign_required_for: ["pricing_change_above_20pct", "refund_above_1k"]

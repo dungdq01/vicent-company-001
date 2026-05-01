@@ -1,0 +1,687 @@
+{
+  "id": "B12",
+  "name": "Search & RAG",
+  "type": "baseline",
+  "slug": "search-rag",
+  "tagline": "Xây dựng hệ thống tìm kiếm ngữ nghĩa và Retrieval-Augmented Generation — kết hợp BM25, dense retrieval, hybrid search với sinh văn bản có cơ sở — sử dụng vector databases, embedding models, rerankers và LLMs, phục vụ truy xuất tri thức chính xác, giảm ảo giác và xây dựng AI doanh nghiệp đáng tin cậy",
+  "category": "baseline",
+  "icon": "Search",
+  "color": "#42A5F5",
+  "depthLevel": 3,
+  "selectedAgents": ["R-alpha", "R-beta", "R-gamma", "R-MLE", "R-DE", "R-NLP", "R-DBE", "R-BE", "R-FE", "R-DO", "R-SE", "R-QA", "R-SA", "R-D11", "R-D09", "R-sigma"],
+  "description": "Search & RAG (Tìm kiếm & Sinh văn bản tăng cường truy xuất) là lĩnh vực kết hợp truy xuất thông tin (information retrieval) với sinh văn bản có cơ sở từ LLMs. RAG giải quyết vấn đề cốt lõi mà mọi tổ chức đều có: tìm đúng thông tin và sinh câu trả lời từ đó. B12 là nền tảng kết nối B04 (NLP — hiểu ngôn ngữ cho embedding và tokenization), B11 (Knowledge Graph — GraphRAG truy xuất có cấu trúc), B09 (Generative AI — thành phần sinh văn bản), B02 (Document Intelligence — phân tích tài liệu trước khi đưa vào pipeline), B08 (Conversational AI — giao diện tìm kiếm đối thoại), B10 (Agentic AI — điều phối truy xuất tự chủ). Thị trường toàn cầu search + AI-augmented vượt $10B, vector database market dự kiến $3.5B năm 2028 (CAGR 25%+). Với tooling trưởng thành (Elasticsearch, Qdrant, LangChain, LlamaIndex), hệ thống triển khai từ BM25 keyword search đơn giản đến enterprise RAG platform đa nguồn. TRL 8, mature — công nghệ sẵn sàng production, 80%+ dự án GenAI doanh nghiệp sử dụng RAG làm pattern chính.",
+  "description_paragraphs": [
+    "Search & RAG là giao điểm giữa Information Retrieval, NLP và Generative AI, tập trung truy xuất tài liệu liên quan và sinh câu trả lời có cơ sở (grounded). Lĩnh vực bao gồm 10 sub-fields: Traditional IR (BM25, TF-IDF — matching từ khoá trên inverted indexes), Dense Retrieval (bi-encoder, cross-encoder — tìm kiếm dựa trên embedding ngữ nghĩa), Hybrid Search (kết hợp sparse + dense qua RRF), RAG (truy xuất + sinh văn bản có cơ sở từ LLM), Vector Databases (lưu trữ embedding quy mô lớn — HNSW, IVF-PQ), Semantic Search (truy xuất dựa trên ý nghĩa), Multi-modal Search (truy xuất đa phương tiện), Conversational Search (truy vấn đa lượt), Enterprise Search (tìm kiếm xuyên hệ thống doanh nghiệp), và Agentic RAG (agent LLM tự lập kế hoạch truy xuất). Nền tảng toán học bao gồm BM25 scoring (TF saturation + length normalization), cosine similarity / dot product trong embedding space, InfoNCE contrastive loss, cross-encoder scoring, ANN algorithms (HNSW, IVF-PQ), RRF fusion, và NDCG evaluation.",
+    "Tại Việt Nam, B12 có điểm khả thi 8.0/10 (CONDITIONAL GO) với Technical Feasibility và Market Feasibility cao nhất (9/10): Elasticsearch, vector databases, LangChain đều battle-tested; 80%+ dự án GenAI doanh nghiệp dùng RAG. Thị trường Việt Nam $50-100M cho enterprise search và RAG, tăng trưởng nhanh nhờ GenAI adoption. Data Feasibility (7/10) khả quan — tài liệu phong phú, thách thức nằm ở chunking strategy và Vietnamese tokenization. Risk Level (6/10) do RAG hallucination, Vietnamese embedding quality thấp hơn 10-15% so với English, và chi phí scaling tuyến tính. Khoảng cách Vietnamese embedding quality vs English là vấn đề kỹ thuật — không phải rào cản nghiên cứu.",
+    "Chiến lược triển khai: bắt đầu với Tier 1 — Elasticsearch + ICU/VnCoreNLP analyzer + RAG cơ bản với GPT-4o, nhắm tìm kiếm pháp luật hoặc enterprise search nội bộ. Ship Tier 1 trước khi thử Tier 3 (agentic RAG). Xây Vietnamese RAG evaluation dataset (500+ question-answer-context triples) để benchmark. Benchmark Vietnamese embeddings: BGE-M3 vs multilingual-e5-large vs fine-tuned PhoBERT. Phát triển Vietnamese enterprise connectors (MISA, Fast, SAP Vietnam) — đây là hào phòng thủ, không phải model. Điều kiện full GO: Vietnamese embedding MRR@10 đạt trong 5% so với English benchmarks, Tier 1 product triển khai cho 1 khách hàng trả phí với retrieval quality đo lường được, tỷ lệ hallucination dưới 5% với citation enforcement."
+  ],
+  "aliases": [
+    "Tìm kiếm ngữ nghĩa",
+    "Search & RAG",
+    "Retrieval-Augmented Generation",
+    "RAG",
+    "Tìm kiếm tăng cường truy xuất",
+    "Neural Search",
+    "Tìm kiếm thần kinh",
+    "Semantic Search",
+    "Enterprise Search",
+    "Tìm kiếm doanh nghiệp"
+  ],
+  "maturity_level": "mature",
+  "trl": 8,
+  "core_concepts": [
+    {
+      "name": "Inverted Index (Chỉ mục nghịch đảo)",
+      "definition": "Cấu trúc dữ liệu nền tảng của truy xuất thông tin. Ánh xạ mỗi từ duy nhất tới danh sách bài đăng (posting list) gồm (document_id, term_frequency, positions). Cho phép tra cứu O(1) tất cả tài liệu chứa một từ và truy xuất Boolean/scored hiệu quả. Triển khai hiện đại (Lucene, Tantivy) bổ sung skip lists, nén (variable-byte, PFOR), và block-max scoring (BMW) cho truy vấn sub-linear. Dù neural retrieval phát triển mạnh, inverted indexes vẫn thiết yếu cho exact-match queries, filtering, và thành phần sparse trong hybrid search.",
+      "difficulty": "Beginner",
+      "prerequisites": ["Cấu trúc dữ liệu cơ bản"]
+    },
+    {
+      "name": "BM25 Scoring (Chấm điểm BM25 Okapi)",
+      "definition": "Hàm xếp hạng xác suất cho truy xuất từ vựng. BM25(D, Q) = SUM IDF(q_i) * f(q_i, D) * (k1 + 1) / (f(q_i, D) + k1 * (1 - b + b * |D|/avgdl)). Giới thiệu TF saturation (lợi suất giảm dần cho từ lặp lại) và document-length normalization — cả hai không có trong TF-IDF thô. k1 (thường 1.2-2.0) kiểm soát saturation, b (thường 0.75) kiểm soát normalization. BM25 vẫn là baseline không giám sát mạnh nhất sau 30 năm, tích hợp sẵn trong mọi search engine (Lucene, Elasticsearch, Solr). 'Tin đồn về cái chết của BM25 là phóng đại quá mức.'",
+      "difficulty": "Beginner",
+      "prerequisites": ["Xác suất cơ bản", "Đại số tuyến tính cơ bản"]
+    },
+    {
+      "name": "Dense Embeddings và Bi-Encoders (Nhúng dày và bộ mã hoá kép)",
+      "definition": "Dense retrieval mã hoá queries và documents độc lập vào không gian embedding chung (thường 384-1024 chiều). Bi-encoder sử dụng transformer encoder chia sẻ hoặc kép: embed_q = Encoder_Q(query), embed_d = Encoder_D(document), score = sim(embed_q, embed_d) bằng cosine hoặc dot product. Document embeddings được tính trước và index cho truy xuất nhanh. Khi embeddings được L2-normalized, cosine similarity tương đương dot product. Models chính: DPR (2020), Sentence-BERT (2019), E5 (2023), BGE (2023), GTE (2024), Nomic-Embed (2024). Models hiện đại hỗ trợ 8192+ tokens đầu vào và zero-shot transfer mạnh.",
+      "difficulty": "Intermediate",
+      "prerequisites": ["Đại số tuyến tính", "Transformer architecture cơ bản"]
+    },
+    {
+      "name": "Cross-Encoder Reranking (Xếp hạng lại bằng Cross-Encoder)",
+      "definition": "Cross-encoder mã hoá đồng thời cặp (query, document), cho phép full bidirectional attention giữa tokens query và document. score(q, d) = sigmoid(W * BERT_CLS([q; SEP; d]) + b). Accuracy cao hơn bi-encoders (thường cải thiện 3-8% MRR) nhưng không thể tính trước document representations, nên không phù hợp first-stage retrieval (O(N) per pair). Thực tế: bi-encoder truy xuất top-100 ứng viên, cross-encoder xếp hạng lại thành top-10. Models: ms-marco-MiniLM, BGE-Reranker, Cohere Rerank, Jina Reranker. FlashRank cung cấp reranking hiệu quả với latency thấp.",
+      "difficulty": "Intermediate",
+      "prerequisites": ["Dense Embeddings", "Transformer architecture"]
+    },
+    {
+      "name": "Hybrid Search (Tìm kiếm kết hợp BM25 + Vector)",
+      "definition": "Kết hợp truy xuất từ vựng (BM25) và ngữ nghĩa (dense) để bắt cả exact keyword matches và meaning-based similarity. Chiến lược fusion: (1) RRF — rank-based, parameter-free: RRF_score(d) = SUM 1/(k + rank_r(d)) với k=60; (2) Linear combination: score = alpha * BM25_norm + (1-alpha) * dense_score; (3) Learned fusion. Hybrid consistently vượt trội từng phương pháp đơn lẻ. BM25 giỏi rare terms, proper nouns, exact phrases; dense retrieval bắt paraphrases, synonyms, semantic intent. Elasticsearch 8.x, Weaviate, Qdrant, Pinecone đều hỗ trợ hybrid search native.",
+      "difficulty": "Intermediate",
+      "prerequisites": ["BM25 Scoring", "Dense Embeddings"]
+    },
+    {
+      "name": "Chunking Strategies (Chiến lược chia nhỏ tài liệu)",
+      "definition": "Tài liệu phải được chia thành đơn vị truy xuất. Xếp theo độ tinh vi: Fixed-size (chia mỗi N tokens với M overlap), Sentence-based (tại ranh giới câu), Paragraph/section (tại ranh giới cấu trúc), Semantic chunking (nơi embedding similarity giảm), Recursive character (LangChain default), Document-aware (dùng headings, tables, page breaks), Proposition-based (phân rã thành phát biểu sự kiện nguyên tử), Late chunking (2024 — mã hoá toàn bộ tài liệu, rồi pool chunks từ token embeddings). Chunk size là hyperparameter quan trọng: quá nhỏ mất ngữ cảnh, quá lớn pha loãng relevance. Sweet spot: 256-512 tokens với 10-20% overlap. Parent-child chunking (chunks nhỏ cho retrieval, trả parent context cho generation) là pattern đã chứng minh.",
+      "difficulty": "Intermediate",
+      "prerequisites": ["Tokenization cơ bản", "NLP cơ bản"]
+    },
+    {
+      "name": "RAG Pipeline (Truy xuất, Tăng cường, Sinh văn bản)",
+      "definition": "Pipeline RAG canonical: Query → Query Processing (rewriting, expansion, HyDE) → Retriever (bi-encoder + BM25 hybrid) → Reranker (cross-encoder hoặc LLM-based) → Context Assembly (chọn top chunks, sắp xếp, thêm metadata, token budget) → LLM Generator (sinh câu trả lời có cơ sở) → Post-processing (citation extraction, hallucination detection). Công thức xác suất: p(y|x) = SUM_{z in top-K} p(z|x) * p(y|x,z). RAG-Sequence marginalize theo toàn bộ output; RAG-Token marginalize tại mỗi token position. Failure modes: retrieval misses, context poisoning, lost-in-the-middle, over-reliance on parametric knowledge.",
+      "difficulty": "Intermediate",
+      "prerequisites": ["Dense Embeddings", "LLM fundamentals (B09)"]
+    },
+    {
+      "name": "Vector Databases và ANN Indexes (Cơ sở dữ liệu vector)",
+      "definition": "Hệ thống chuyên dụng lưu trữ, index và truy vấn embedding vectors quy mô lớn. HNSW (Hierarchical Navigable Small World): đồ thị phân tầng, search O(log N), 95%+ recall@10 với <5ms latency trên tập triệu. IVF-PQ (Inverted File + Product Quantization): nén vector 768-dim float32 (3072 bytes) xuống ~96 bytes, cho phép billion-scale search trong memory. Hệ sinh thái: Pinecone (managed), Weaviate (hybrid, open-source), Qdrant (Rust, filtering), Milvus (GPU), Chroma (developer-friendly), pgvector (PostgreSQL extension), FAISS (library). Xu hướng 2024-2026: integrated databases (PostgreSQL + pgvector, Elasticsearch 8.x) thay vì standalone vector DBs.",
+      "difficulty": "Intermediate",
+      "prerequisites": ["Đại số tuyến tính", "Cấu trúc dữ liệu"]
+    },
+    {
+      "name": "Query Expansion và Rewriting (Mở rộng và viết lại truy vấn)",
+      "definition": "Kỹ thuật thu hẹp khoảng cách từ vựng giữa query và tài liệu: Query expansion (thêm từ đồng nghĩa, Pseudo-Relevance Feedback), Query rewriting (LLM diễn đạt lại query cho retrieval tốt hơn), HyDE (sinh hypothetical answer, embed làm query — Gao et al., 2022), Multi-query (sinh nhiều biến thể query, truy xuất từng cái, hợp kết quả), Step-back prompting (hỏi câu tổng quát hơn trước), Query decomposition (tách query phức tạp thành sub-queries). HyDE thêm latency LLM call (~500ms-2s) nhưng cải thiện đáng kể retrieval quality cho queries mơ hồ.",
+      "difficulty": "Intermediate",
+      "prerequisites": ["RAG Pipeline", "LLM fundamentals"]
+    },
+    {
+      "name": "RAG Evaluation Metrics (Đánh giá hệ thống RAG)",
+      "definition": "Hai nhóm metrics: (1) Retrieval: MRR (Mean Reciprocal Rank — trung bình 1/rank of first relevant), NDCG@K (DCG@K / IDCG@K — ranking có graded relevance), Recall@K, Precision@K, Hit Rate@K; (2) Generation: Faithfulness (LLM-judged grounding — phát hiện hallucination), Answer Relevancy (LLM-judged query match), Context Relevancy (relevant chunks / total chunks). Frameworks: RAGAS, TruLens, DeepEval, LangSmith. CẢNH BÁO R-γ: RAGAS faithfulness scoring dùng LLM-as-judge, tạo circular dependency — cần chiến lược đánh giá bổ sung cho Vietnamese RAG.",
+      "difficulty": "Intermediate",
+      "prerequisites": ["Xác suất thống kê cơ bản", "RAG Pipeline"]
+    },
+    {
+      "name": "Self-RAG và Corrective RAG (RAG tự điều chỉnh)",
+      "definition": "Self-RAG (Asai et al., 2023): LLM học khi nào cần truy xuất, đánh giá relevance của passages truy xuất, và tự kiểm tra generation có được hỗ trợ bởi evidence. Special tokens: [Retrieve], [IsRel], [IsSup], [IsUse]. Vượt trội RAG chuẩn 5-10% trên knowledge-intensive QA. Corrective RAG (CRAG, Yan et al., 2024): thêm retrieval evaluator đánh giá relevance. Nếu irrelevant → discard, trigger web search; nếu ambiguous → kết hợp internal và web results + knowledge refinement. Robust trước retrieval failure — failure mode chính của RAG chuẩn.",
+      "difficulty": "Advanced",
+      "prerequisites": ["RAG Pipeline", "LLM fine-tuning cơ bản"]
+    },
+    {
+      "name": "Agentic RAG (RAG có Agent điều phối)",
+      "definition": "Hệ thống truy xuất trở thành agent tự chủ (2024-2026): lập kế hoạch retrieval đa bước, quyết định tools/sources nào để query, tinh chỉnh queries dựa trên kết quả trung gian, định tuyến queries tới retrievers chuyên biệt, tự sửa lỗi khi retrieval ban đầu thất bại. Frameworks: LangGraph, LlamaIndex Workflows, CrewAI, AutoGen. Agent pattern cho phép nghiên cứu phức tạp đòi hỏi suy luận qua nhiều bước truy xuất. CẢNH BÁO R-γ: chỉ dành cho doanh nghiệp có >1M documents và team ML chuyên dụng. KHÔNG phải default — đa số cần Elasticsearch + RAG cơ bản.",
+      "difficulty": "Advanced",
+      "prerequisites": ["RAG Pipeline", "AI Agents cơ bản (B10)", "LLM function calling"]
+    }
+  ],
+  "algorithms": [
+    {
+      "name": "BM25 / TF-IDF",
+      "category": "Hàm chấm điểm truy xuất từ vựng",
+      "complexity": "O(|Q| * avg_posting_list_length) mỗi truy vấn với inverted index. Block-max WAND cho sub-linear query evaluation.",
+      "pros": ["Không cần training, hoạt động ngay", "Xuất sắc cho exact matches, rare terms, proper nouns", "Cực nhanh với optimized indexes", "Vẫn là baseline không giám sát mạnh nhất sau 30 năm"],
+      "cons": ["Không hiểu ngữ nghĩa", "Vocabulary mismatch problem", "Không xử lý synonyms/paraphrases", "Language-specific, cần analyzer riêng cho tiếng Việt"],
+      "use_cases": ["Internal document search", "E-commerce product search", "Log analytics", "Sparse component trong hybrid search"],
+      "key_papers": ["Robertson, S. et al. (1994). Some Simple Effective Approximations to the 2-Poisson Model for Probabilistic Weighted Retrieval. SIGIR 1994."]
+    },
+    {
+      "name": "DPR (Dense Passage Retriever)",
+      "category": "Neural dense retrieval bằng contrastive learning",
+      "complexity": "Inference: O(1) mỗi query-document pair (precomputed doc embeddings). Index: MIPS trên FAISS. Training: dual BERT-base encoders, 768-dim, InfoNCE loss.",
+      "pros": ["Vượt BM25 trên open-domain QA (top-20 accuracy: 78.4% vs 59.1% trên Natural Questions)", "BM25 hard negatives tạo dense retrievers mạnh", "Bắt paraphrases, synonyms mà BM25 bỏ sót", "Khởi đầu cuộc cách mạng dense retrieval"],
+      "cons": ["Cần domain-specific training data", "Zero-shot transfer kém", "Không có late interaction", "Yêu cầu GPU cho encoding"],
+      "use_cases": ["Open-domain question answering", "Knowledge-intensive NLP tasks", "Semantic document retrieval", "FAQ matching"],
+      "key_papers": ["Karpukhin, V. et al. (2020). Dense Passage Retrieval for Open-Domain Question Answering. EMNLP 2020."]
+    },
+    {
+      "name": "ColBERT / ColBERTv2 (Late Interaction)",
+      "category": "Multi-vector retrieval với late interaction",
+      "complexity": "score(q, d) = SUM_{i=1}^{|q|} MAX_{j=1}^{|d|} q_i . d_j^T. ColBERTv2: residual compression giảm storage 6-10x. Gần cross-encoder accuracy với gần bi-encoder efficiency.",
+      "pros": ["Gần accuracy cross-encoder (fine-grained token-level interactions)", "170x speedup so với cross-encoder", "ColBERTv2 residual compression cho practical large-scale deployment", "Denoised supervision qua cross-encoder distillation"],
+      "cons": ["Storage cao hơn single-vector (nhiều vectors mỗi document)", "Phức tạp hơn bi-encoder trong triển khai", "Chưa phổ biến bằng bi-encoder + reranker pipeline", "Cần specialized index (PLAID engine)"],
+      "use_cases": ["High-accuracy retrieval cần latency thấp", "Thay thế cross-encoder reranking", "Research benchmark experiments", "Multi-granularity retrieval"],
+      "key_papers": ["Khattab, O. & Zaharia, M. (2020). ColBERT: Efficient and Effective Passage Search via Contextualized Late Interaction over BERT. SIGIR 2020.", "Santhanam, K. et al. (2022). ColBERTv2: Effective and Efficient Retrieval via Lightweight Late Interaction. NAACL 2022."]
+    },
+    {
+      "name": "E5 / BGE / GTE Embedding Models",
+      "category": "Modern embedding models cho dense retrieval",
+      "complexity": "E5: contrastive pre-training trên 270M text pairs + fine-tuning. BGE-M3: dense + sparse + ColBERT trong 1 model, 1024-dim. Matryoshka representation learning cho flexible dimensions.",
+      "pros": ["Open-source, matching hoặc vượt proprietary (OpenAI, Cohere) trên MTEB", "BGE-M3 hỗ trợ multilingual bao gồm tiếng Việt", "8192+ token inputs, zero-shot transfer mạnh", "Democratized high-quality embeddings"],
+      "cons": ["Vietnamese retrieval accuracy thấp hơn 10-15% so với English", "Cần fine-tuning cho domain-specific tối ưu", "Model size lớn (BGE-M3: 567MB)", "Benchmark MTEB không đại diện đầy đủ cho tiếng Việt"],
+      "use_cases": ["Semantic search đa ngôn ngữ", "RAG embedding layer", "Document similarity", "Zero-shot cross-lingual retrieval"],
+      "key_papers": ["Wang, L. et al. (2023). Text Embeddings by Weakly-Supervised Contrastive Pre-training (E5). ACL 2023.", "Xiao, S. et al. (2023). C-Pack: Packaged Resources To Advance General Chinese Embedding (BGE). 2023."]
+    },
+    {
+      "name": "HNSW (Hierarchical Navigable Small World)",
+      "category": "Approximate Nearest Neighbor index",
+      "complexity": "Build: O(N * log(N)). Search: O(log(N)) average. Space: O(N * M) với M = max connections per node. Parameters: M (connectivity, 16-64), efConstruction (build quality, 100-400), efSearch (query quality, 50-200).",
+      "pros": ["95%+ recall@10 với <5ms latency trên tập triệu", "Dominant ANN algorithm trong production vector databases", "Query latency xuất sắc", "Tunable recall-speed tradeoff qua efSearch"],
+      "cons": ["Memory cao (stores full vectors + graph)", "Build time chậm hơn IVF", "Không tối ưu cho billion-scale với memory giới hạn", "Parameters cần tuning cho từng dataset"],
+      "use_cases": ["Vector databases (Qdrant, Weaviate, Milvus)", "Real-time similarity search", "RAG retrieval layer", "Recommendation systems"],
+      "key_papers": ["Malkov, Y.A. & Yashunin, D.A. (2018). Efficient and Robust Approximate Nearest Neighbor using Hierarchical Navigable Small World Graphs. IEEE TPAMI."]
+    },
+    {
+      "name": "IVF-PQ (Inverted File + Product Quantization)",
+      "category": "Compressed ANN index cho billion-scale",
+      "complexity": "IVF: k-means clustering vào C centroids, query chỉ probe nprobe clusters gần nhất. PQ: nén vector d-dim thành m sub-vectors, mỗi cái quantize về 256 centroids (1 byte). Nén vector 768-dim float32 (3072 bytes) xuống ~96 bytes.",
+      "pros": ["Dramatically lower memory so với HNSW", "GPU-accelerated variants (FAISS-GPU) đạt >10M QPS", "Billion-scale search khả thi trong memory", "Chi phí lưu trữ thấp"],
+      "cons": ["Recall thấp hơn HNSW", "Cần training phase (k-means)", "Approximate distances từ lookup tables", "Tuning nprobe, m, nbits ảnh hưởng lớn tới quality"],
+      "use_cases": ["Billion-scale datasets", "Cost-sensitive deployments", "Mobile/edge retrieval", "Large-scale recommendation"],
+      "key_papers": ["Jegou, H. et al. (2011). Product Quantization for Nearest Neighbor Search. IEEE TPAMI."]
+    },
+    {
+      "name": "RAG (Lewis et al., 2020)",
+      "category": "Retrieval-augmented generation framework",
+      "complexity": "p(y|x) = SUM_{z in top-K} p(z|x) * p(y|x,z). RAG-Sequence marginalize per sequence; RAG-Token marginalize per token. Architecture gốc: DPR retriever + BART generator.",
+      "pros": ["Thiết lập paradigm RAG — ảnh hưởng nhất NLP 2020", "Grounding giảm hallucination", "Cho phép knowledge updates không cần retrain", "Vượt trội pure parametric models trên knowledge-intensive tasks"],
+      "cons": ["Retrieval failure propagate tới generation", "Sensitive tới chunk quality", "Inference chậm hơn pure LLM", "Cần maintenance pipeline phức tạp"],
+      "use_cases": ["Open-domain QA", "Enterprise knowledge search", "Customer support automation", "Document-grounded chat"],
+      "key_papers": ["Lewis, P. et al. (2020). Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks. NeurIPS 2020."]
+    },
+    {
+      "name": "Self-RAG (Asai et al., 2023)",
+      "category": "Adaptive retrieval với self-reflection",
+      "complexity": "LLM fine-tuned sinh reflection tokens: [Retrieve], [IsRel], [IsSup], [IsUse]. Critic model label training data. Generator học produce tokens alongside normal text.",
+      "pros": ["Adaptive retrieval — skip khi không cần", "Self-correction giảm hallucination", "Vượt trội standard RAG 5-10% trên knowledge-intensive QA", "Giảm unnecessary retrievals"],
+      "cons": ["Cần fine-tuning LLM (không phải zero-shot)", "Training data cần critic model labels", "Phức tạp hơn standard RAG đáng kể", "Chưa phổ biến trong production"],
+      "use_cases": ["Knowledge-intensive QA yêu cầu accuracy cao", "Domains cần kiểm soát hallucination nghiêm ngặt", "Research và benchmarking", "Adaptive information retrieval"],
+      "key_papers": ["Asai, A. et al. (2023). Self-RAG: Learning to Retrieve, Generate, and Critique through Self-Reflection. ICLR 2024."]
+    },
+    {
+      "name": "GraphRAG (Microsoft, 2024)",
+      "category": "KG-augmented retrieval-augmented generation",
+      "complexity": "Indexing: LLM extraction entities/relations + Leiden community detection + hierarchical summarization. Query: local (k-hop traversal) hoặc global (map-reduce community summaries). Chi phí indexing cao (nhiều LLM calls).",
+      "pros": ["Suy luận đa bước vượt trội naive RAG", "Giải thích được — entity-relation paths", "Giảm hallucination qua KG structure constraints", "Open-source MIT, backed by Microsoft Research"],
+      "cons": ["Graph construction từ LLMs nhiễu", "Global search chậm và tốn kém", "Quality advantage so với vanilla RAG khiêm tốn cho nhiều use cases", "Chi phí indexing cao"],
+      "use_cases": ["Enterprise knowledge management", "Document corpus analysis đa chủ đề", "Hỏi đáp đa bước trên tài liệu nội bộ", "Compliance document review"],
+      "key_papers": ["Edge, D. et al. (2024). From Local to Global: A Graph RAG Approach to Query-Focused Summarization. Microsoft Research."]
+    },
+    {
+      "name": "RAPTOR (Sarthi et al., 2024)",
+      "category": "Hierarchical tree-organized retrieval",
+      "complexity": "Build: chunk → cluster (GMM/k-means trên embeddings) → LLM summarize clusters → recursive repeat tới root. Query: retrieve từ bất kỳ level nào trong tree.",
+      "pros": ["Xử lý câu hỏi cần multi-document synthesis", "Retrieval đa granularity (chi tiết → tổng quan)", "High-level understanding mà flat chunking thất bại", "Cấu trúc cây intuitive"],
+      "cons": ["Indexing cost cao (nhiều LLM summarization calls)", "Complexity triển khai cao", "Summary quality phụ thuộc LLM", "Chưa có adoption rộng rãi trong production"],
+      "use_cases": ["Research synthesis", "Multi-document summarization", "Thematic analysis", "Complex QA cần reasoning across documents"],
+      "key_papers": ["Sarthi, P. et al. (2024). RAPTOR: Recursive Abstractive Processing for Tree-Organized Retrieval. ICLR 2024."]
+    },
+    {
+      "name": "HyDE (Hypothetical Document Embeddings)",
+      "category": "Query expansion qua LLM-generated hypothetical answers",
+      "complexity": "Query → LLM sinh hypothetical answer → Embed answer → Search vector DB. Thêm 1 LLM call latency (~500ms-2s).",
+      "pros": ["Cải thiện đáng kể retrieval quality cho queries mơ hồ", "Hypothetical document gần tài liệu thực hơn query ngắn", "Không cần training riêng", "Hoạt động tốt khi LLM có parametric knowledge về domain"],
+      "cons": ["Thêm latency LLM call", "Phụ thuộc LLM parametric knowledge", "Chi phí LLM per query", "Không cải thiện cho exact-match queries"],
+      "use_cases": ["Ambiguous query handling", "Conversational search", "Exploratory information seeking", "Cross-domain retrieval"],
+      "key_papers": ["Gao, L. et al. (2022). Precise Zero-Shot Dense Retrieval without Relevance Labels (HyDE). arXiv."]
+    },
+    {
+      "name": "Cross-Encoder Reranking Pipeline",
+      "category": "Multi-stage retrieval với cascading accuracy",
+      "complexity": "Stage 1: candidate retrieval (bi-encoder + BM25) → top-100-1000, ~10-50ms. Stage 2: reranking (cross-encoder/LLM) → top-5-20, ~50-200ms. Stage 3: generation (LLM) → answer, ~500-3000ms.",
+      "pros": ["Trade compute for accuracy tại mỗi stage", "Flexible — thay thế từng component độc lập", "Production-proven pattern", "LLM-based reranking xử lý longer contexts"],
+      "cons": ["Latency tăng theo stages", "Cross-encoder inference cho nhiều candidates tốn kém", "Cần calibrate cutoff thresholds giữa stages", "Overall pipeline complexity cao"],
+      "use_cases": ["Production RAG systems", "Enterprise search", "Legal document retrieval", "High-accuracy QA"],
+      "key_papers": ["Nogueira, R. & Cho, K. (2019). Passage Re-ranking with BERT. arXiv."]
+    }
+  ],
+  "tech_stack": {
+    "search_engines": {
+      "recommended": {"recommended": "Elasticsearch 8.x", "rationale": "BM25 gold standard + kNN hybrid search built-in. Elastic License 2.0. ICU analyzer cho Vietnamese (workaround — cần tích hợp VnCoreNLP cho word segmentation thực sự). Massive adoption, documentation phong phú. ESRE (Elasticsearch Relevance Engine) cho vector search. Battle-tested ở mọi scale."},
+      "alternatives": {"recommended": "OpenSearch 2.x / Vespa / Typesense / Meilisearch", "rationale": "OpenSearch (Apache 2.0) cho full open-source. Vespa cho full hybrid engine (HNSW + BM25 native). Typesense cho developer experience tốt. Meilisearch cho instant search UX."}
+    },
+    "vector_databases": {
+      "recommended": {"recommended": "Qdrant", "rationale": "High-performance vector search, Rust-based, HNSW + scalar/binary quantization. Apache 2.0. Metadata filtering mạnh. Multi-tenancy support. API clean. Phù hợp cho production RAG systems."},
+      "alternatives": {"recommended": "Weaviate / Pinecone / Milvus / Chroma / pgvector", "rationale": "Weaviate (BSD-3) cho GraphQL API và hybrid search native. Pinecone cho fully managed serverless. Milvus cho GPU support. Chroma cho lightweight development. pgvector cho PostgreSQL-familiar teams."}
+    },
+    "embedding_models": {
+      "recommended": {"recommended": "BAAI/bge-m3", "rationale": "Multilingual (hỗ trợ tiếng Việt), 1024-dim, dense + sparse + ColBERT trong 1 model. MIT license. Self-hosted miễn phí. Best balance accuracy vs multilingual support. Cần benchmark trên Vietnamese-specific test sets trước production."},
+      "alternatives": {"recommended": "intfloat/multilingual-e5-large / sentence-transformers/all-MiniLM-L6-v2 / OpenAI text-embedding-3-large / PhoBERT embeddings", "rationale": "multilingual-e5 cho alternative multilingual. MiniLM cho fast/lightweight (384-dim, 80MB). OpenAI cho highest accuracy (commercial). PhoBERT cho Vietnamese-specific fine-tuning."}
+    },
+    "rerankers": {
+      "recommended": {"recommended": "BAAI/bge-reranker-v2-m3", "rationale": "Open-source cross-encoder, multilingual, MIT license. Self-hosted cho data privacy. Competitive với Cohere Rerank trên multilingual benchmarks."},
+      "alternatives": {"recommended": "Cohere Rerank 3.5 / flashrank / Jina Reranker v2", "rationale": "Cohere Rerank cho best-in-class API-based multilingual reranking ($1/1K searches). flashrank cho ultra-fast CPU-friendly. Jina cho versatile reranking."}
+    },
+    "orchestration": {
+      "recommended": {"recommended": "LangChain 0.3+ / LlamaIndex 0.11+", "rationale": "LangChain cho chains, agents, retriever abstractions — ecosystem lớn nhất. LlamaIndex cho data connectors, index abstractions — tối ưu cho RAG. MIT license. Active development. Cả hai hỗ trợ Elasticsearch, Qdrant, và mọi major vector DB."},
+      "alternatives": {"recommended": "Haystack / RAGFlow / Custom pipeline", "rationale": "Haystack cho production-oriented RAG pipelines. RAGFlow cho turnkey RAG. Custom pipeline khi cần full control — recommend cho mature teams."}
+    },
+    "llm_generation": {
+      "recommended": {"recommended": "Claude 3.5/4 (Anthropic) + GPT-4o (OpenAI)", "rationale": "Claude cho 200K context, strong instruction following, structured output. GPT-4o cho multimodal, function calling. Cả hai hỗ trợ RAG patterns tốt. API pricing scalable."},
+      "alternatives": {"recommended": "Llama 3.1 70B (self-hosted) / Gemini 2.0 (Google)", "rationale": "Llama cho self-hosted, no data egress — critical cho banking/government Việt Nam. Gemini cho Google ecosystem integration."}
+    },
+    "evaluation": {
+      "recommended": {"recommended": "RAGAS + Arize Phoenix", "rationale": "RAGAS (Apache 2.0) cho faithfulness, answer relevancy, context precision metrics. Arize Phoenix (Apache 2.0) cho LLM traces, spans, evaluation dashboards. Kết hợp RAG metrics và observability."},
+      "alternatives": {"recommended": "DeepEval / TruLens / LangSmith", "rationale": "DeepEval cho comprehensive evaluation suite. TruLens cho feedback functions. LangSmith cho LangChain-native tracing và evaluation."}
+    },
+    "vietnamese_nlp": {
+      "recommended": {"recommended": "VnCoreNLP + underthesea", "rationale": "VnCoreNLP (MIT) cho word segmentation, NER, POS tagging — critical cho Vietnamese tokenization trước embedding. underthesea (GPL-3.0) cho bổ sung NER, sentiment. ICU tokenizer trong Elasticsearch xử lý Unicode nhưng KHÔNG thực hiện Vietnamese word segmentation ('học sinh' nên là 1 token, không phải 2). Tích hợp VnCoreNLP làm custom Elasticsearch analyzer là non-trivial nhưng bắt buộc."},
+      "alternatives": {"recommended": "PhoBERT / Coc Coc tokenizer", "rationale": "PhoBERT cho Vietnamese-specific embeddings. Coc Coc tokenizer cho alternative word segmentation."}
+    }
+  },
+  "feasibility_score": {
+    "overall_score": 8.0,
+    "verdict": "CONDITIONAL GO",
+    "verdict_vi": "Tiến hành có điều kiện",
+    "summary": "Baseline có khả năng triển khai thương mại cao nhất trong 2026. Tooling battle-tested (Elasticsearch, Qdrant, LangChain, LlamaIndex), pattern đã chứng minh, nhu cầu doanh nghiệp rõ ràng. 80%+ dự án GenAI doanh nghiệp sử dụng RAG. Thị trường Việt Nam $50-100M cho enterprise search + RAG, tăng trưởng nhanh. 'Conditional' vì Vietnamese embedding quality và hallucination mitigation vẫn là bài toán kỹ thuật mở — không phải blockers, mà là items cần đầu tư có chủ đích. Rủi ro là engineering problems, không phải research problems.",
+    "dimensions": {
+      "technical_feasibility": {"score": 9, "rationale": "Elasticsearch, Pinecone, Qdrant, Weaviate, LangChain, LlamaIndex — stack battle-tested. BM25 decades old; dense retrieval và hybrid search production-grade. RAG patterns (naive, corrective, agentic, GraphRAG) có architectures well-documented."},
+      "market_demand": {"score": 9, "rationale": "80%+ dự án GenAI doanh nghiệp dùng RAG. Mọi công ty có tài liệu cần search. Vietnam: legal search (Thư Viện Pháp Luật), e-commerce product discovery, enterprise knowledge bases. Đây không phải speculative demand — đây là existing, paying demand."},
+      "data_availability": {"score": 7, "rationale": "Tài liệu phong phú. Thách thức không phải data availability mà data preparation: chunking strategy sensitivity (fixed vs semantic vs recursive), metadata extraction, xử lý Vietnamese compound words trong tokenization. ICU tokenizer là workaround, không phải native Vietnamese NLP solution."},
+      "implementation_risk": {"score": 6, "rationale": "RAG hallucination thực tế và well-documented. Embedding quality giảm cho low-resource languages. Chi phí scales linearly với corpus size (embedding compute + vector storage). Relevance drift qua thời gian cần re-indexing discipline. Manageable nhưng non-trivial."},
+      "vietnam_market_fit": {"score": 8, "rationale": "Timing hoàn hảo. RAG đã vượt qua 'trough of disillusionment', đang trong 'slope of productivity'. Verticals rõ ràng: legal search, banking compliance QA, e-commerce discovery, government info retrieval, manufacturing tech docs. Differentiation tại Việt Nam: Vietnamese-optimized embedding/chunking, connectors tới hệ thống nội địa (MISA, Fast, SAP Vietnam), on-premise deployment cho sectors nhạy cảm dữ liệu."}
+    },
+    "conditions": [
+      "Xây Vietnamese RAG evaluation dataset: 500+ question-answer-context triples xuyên legal, e-commerce, và general domains. Không có dataset này, mọi tuyên bố chất lượng đều là anecdotal",
+      "Benchmark Vietnamese embeddings hệ thống: BGE-M3 vs multilingual-e5-large vs fine-tuned PhoBERT-based embeddings trên evaluation dataset. Publish kết quả nội bộ",
+      "Ship Tier 1 product trước: Elasticsearch + ICU/VnCoreNLP analyzer + RAG cơ bản với GPT-4o. Target: legal search hoặc internal enterprise search. KHÔNG attempt Tier 3 (agentic RAG) trước khi Tier 1 tạo revenue",
+      "Vietnamese embedding MRR@10 đạt trong 5% so với English benchmarks trên domain-specific test sets",
+      "Tier 1 product triển khai cho 1 khách hàng trả phí với retrieval quality đo lường được",
+      "Tỷ lệ hallucination dưới 5% trên Vietnamese RAG evaluation dataset với citation enforcement enabled",
+      "Tích hợp VnCoreNLP word segmentation làm custom Elasticsearch analyzer — ICU tokenizer không đủ cho Vietnamese (không phân tách từ ghép)",
+      "Phát triển Vietnamese enterprise connectors (MISA, Fast, SAP Vietnam, Google Workspace, Zalo) — đây là hào phòng thủ, không phải model"
+    ]
+  },
+  "industry_applications": [
+    {
+      "industry": "Tìm kiếm pháp luật (Legal Search)",
+      "use_case": "Tìm kiếm và truy xuất văn bản pháp luật, nghị định, thông tư, bản án với RAG sinh câu trả lời có trích dẫn nguồn",
+      "description": "Hệ thống tìm kiếm pháp luật Việt Nam: hybrid search (BM25 + dense) trên corpus văn bản quy phạm pháp luật, RAG sinh câu trả lời pháp lý có trích dẫn điều khoản cụ thể. Thư Viện Pháp Luật là proof-of-concept existing demand. Use cases: tra cứu luật theo tình huống, so sánh văn bản qua các phiên bản sửa đổi, trả lời câu hỏi pháp lý cho doanh nghiệp. Citation enforcement bắt buộc — hallucination trong pháp lý CỰC KỲ nguy hiểm. BM25 quan trọng cho tìm kiếm số hiệu văn bản chính xác, dense retrieval cho tìm kiếm theo ý định.",
+      "priority": "P0",
+      "market_size_vn": "USD 15-30M (legal tech + compliance search VN)",
+      "technical_complexity": "Medium",
+      "vietnam_readiness": "High"
+    },
+    {
+      "industry": "Tìm kiếm doanh nghiệp (Enterprise Search)",
+      "use_case": "Tìm kiếm thống nhất xuyên data silos doanh nghiệp — tài liệu, email, wiki, databases — với RAG trả lời câu hỏi nội bộ",
+      "description": "Enterprise search platform: kết nối nhiều nguồn dữ liệu (SharePoint, Google Workspace, Confluence, MISA, Fast ERP), ingest + chunk + embed, hybrid search + RAG. Target: ngân hàng, telcos, manufacturing lớn (Samsung Vietnam, Foxconn). 50% effort triển khai nằm ở connector layer — Vietnamese enterprises dùng MISA accounting, Fast ERP, và custom systems không có standard APIs. Đây là nơi differentiation thực sự so với global platforms. On-premise deployment critical cho banking/government.",
+      "priority": "P0",
+      "market_size_vn": "USD 20-50M (enterprise AI search + knowledge management VN)",
+      "technical_complexity": "Medium-High",
+      "vietnam_readiness": "Medium-High"
+    },
+    {
+      "industry": "Tìm kiếm sản phẩm thương mại điện tử (E-commerce Product Search)",
+      "use_case": "Tìm kiếm sản phẩm ngữ nghĩa — hiểu intent mua hàng, synonyms, và trả kết quả relevant hơn keyword matching",
+      "description": "Product discovery cho e-commerce Việt Nam: hybrid search kết hợp BM25 (tên sản phẩm, SKU) với dense retrieval (intent mua hàng, descriptions). Vietnamese compound word handling critical ('áo khoác gió' vs 'áo' + 'khoác' + 'gió'). Shopee, Tiki, Lazada đều invest heavily. Sub-10ms latency yêu cầu. Personalization qua user embedding + product embedding similarity. Không cần LLM generation cho search, nhưng RAG hữu ích cho product Q&A ('Sản phẩm này có tương thích với...?').",
+      "priority": "P1",
+      "market_size_vn": "USD 15-30M (e-commerce search + discovery AI VN)",
+      "technical_complexity": "Medium",
+      "vietnam_readiness": "High"
+    },
+    {
+      "industry": "Hỏi đáp giáo dục (Education Q&A)",
+      "use_case": "RAG trên tài liệu giáo dục — sách giáo khoa, bài giảng, đề thi — sinh câu trả lời có trích dẫn cho học sinh và giáo viên",
+      "description": "Hệ thống Q&A giáo dục: RAG trên corpus sách giáo khoa, bài giảng, ngân hàng đề thi. Sinh câu trả lời có trích dẫn trang/chương cụ thể. Chunking cần document-aware (theo chương, bài, section). Use cases: hỗ trợ học tập cá nhân hoá, giải đáp thắc mắc theo chương trình học, tìm kiếm đề thi theo chủ đề. Thị trường giáo dục Việt Nam lớn (~25 triệu học sinh/sinh viên). Rủi ro thấp — sai sót không gây hậu quả nghiêm trọng như pháp lý/y tế.",
+      "priority": "P1",
+      "market_size_vn": "USD 10-20M (edtech + AI tutoring VN)",
+      "technical_complexity": "Medium",
+      "vietnam_readiness": "Medium-High"
+    },
+    {
+      "industry": "Tìm kiếm thông tin y tế (Healthcare Information Search)",
+      "use_case": "Tìm kiếm và truy xuất thông tin y tế — phác đồ điều trị, tương tác thuốc, hướng dẫn lâm sàng — cho bác sĩ và nhân viên y tế",
+      "description": "Healthcare information retrieval: RAG trên clinical guidelines, drug databases, phác đồ điều trị Bộ Y tế. Hỗ trợ bác sĩ tra cứu nhanh thông tin lâm sàng. CẢNH BÁO R-γ: rào cản quy định nghiêm ngặt (data privacy, phê duyệt Bộ Y tế). Hallucination trong y tế CỰC KỲ nguy hiểm — citation enforcement + human review bắt buộc. Không triển khai autonomous — chỉ hỗ trợ (decision support). Cần mapping thuật ngữ y tế quốc tế (ICD-10, SNOMED CT) sang tiếng Việt.",
+      "priority": "P2",
+      "market_size_vn": "USD 5-15M (healthcare AI + clinical decision support VN)",
+      "technical_complexity": "High",
+      "vietnam_readiness": "Low-Medium"
+    },
+    {
+      "industry": "Tìm kiếm tài liệu chính phủ (Government Document Search)",
+      "use_case": "Tìm kiếm và truy xuất tài liệu hành chính công — thủ tục hành chính, chính sách, quy định — phục vụ cán bộ và công dân",
+      "description": "Government document search: RAG trên corpus tài liệu hành chính (thủ tục, biểu mẫu, quy định). Phục vụ cải cách hành chính — công dân hỏi 'Thủ tục đăng ký kinh doanh cần giấy tờ gì?' và nhận câu trả lời có trích dẫn văn bản cụ thể. data.gov.vn có ~20K datasets nhưng formats không đồng nhất (PDF-heavy). Cần document parsing pipeline mạnh (B02 dependency). On-premise deployment bắt buộc cho dữ liệu chính phủ. Tiềm năng lớn nếu chính phủ cam kết data standardization.",
+      "priority": "P2",
+      "market_size_vn": "USD 5-15M (government digital transformation + public service AI VN)",
+      "technical_complexity": "Medium-High",
+      "vietnam_readiness": "Low-Medium"
+    }
+  ],
+  "case_studies": [
+    {
+      "title": "ChatGPT Retrieval Plugin — RAG mainstream hoá",
+      "industry": "AI Platform",
+      "problem": "LLMs sinh câu trả lời từ parametric knowledge có thể outdated hoặc không chính xác. Cần cơ chế grounding LLMs với tài liệu cụ thể của người dùng.",
+      "solution": "OpenAI ra mắt ChatGPT Retrieval Plugin (2023): cho phép kết nối external data sources vào ChatGPT qua vector search. Document upload → chunking → embedding → vector DB → retrieval tại query time. Mainstream hoá RAG pattern tới hàng triệu developers.",
+      "results": "RAG trở thành pattern mặc định cho enterprise GenAI. Mọi major cloud provider (Azure, GCP, AWS) ship RAG solutions. Vector database funding boom: Pinecone $100M, Weaviate $50M (2023). Ecosystem open-source nở rộ: LangChain, LlamaIndex trở thành frameworks chuẩn.",
+      "tech_stack": "OpenAI API, vector databases (Pinecone, Weaviate, Qdrant), embedding models, LangChain/LlamaIndex",
+      "lessons": "RAG là bridge pattern giữa LLMs và enterprise data. Simple RAG (embed + retrieve + generate) đủ cho 80% use cases. Phức tạp hoá sớm (agentic RAG, GraphRAG) không cần thiết cho đa số doanh nghiệp."
+    },
+    {
+      "title": "Thư Viện Pháp Luật — Legal search tại Việt Nam",
+      "industry": "Pháp luật / Legal",
+      "problem": "Hệ thống văn bản pháp luật Việt Nam đồ sộ (hàng trăm nghìn văn bản), cập nhật liên tục. Luật sư và doanh nghiệp cần tìm kiếm nhanh văn bản liên quan theo tình huống cụ thể.",
+      "solution": "Thư Viện Pháp Luật (thuvienphapluat.vn) cung cấp search engine pháp luật với keyword search, phân loại theo loại văn bản, cơ quan ban hành, lĩnh vực. Nền tảng tìm kiếm pháp luật lớn nhất Việt Nam. Hiện tại chủ yếu keyword-based.",
+      "results": "Chứng minh existing, paying demand cho legal search tại Việt Nam. Hàng triệu users. Revenue model subscription-based. Cơ hội: nâng cấp từ keyword search lên hybrid search + RAG sinh câu trả lời pháp lý có trích dẫn điều khoản.",
+      "tech_stack": "Traditional search engine, keyword matching, classification filters",
+      "lessons": "Demand đã tồn tại — không cần tạo market mới. Cơ hội differentiation: hybrid search (BM25 + dense) + RAG generation với citation. Vietnamese legal terminology chunking cần domain expertise."
+    },
+    {
+      "title": "Microsoft GraphRAG — Từ local tới global retrieval",
+      "industry": "Enterprise Knowledge Management",
+      "problem": "Naive RAG (chunk-based retrieval) không trả lời được câu hỏi global ('Các chủ đề chính xuyên suốt tất cả tài liệu?') vì chỉ retrieve individual chunks, không synthesis toàn bộ corpus.",
+      "solution": "Microsoft Research phát triển GraphRAG (2024): LLM extract entities/relations → build KG → Leiden community detection → hierarchical summaries. Local queries duyệt KG neighborhood; global queries map-reduce community summaries.",
+      "results": "Open-source MIT, nhanh chóng được adopt. Spawned LightRAG, nano-GraphRAG, HippoRAG. Paradigm cho enterprise knowledge management cần global sensemaking.",
+      "tech_stack": "Python, OpenAI GPT-4, Leiden algorithm, LangChain, Neo4j compatible",
+      "lessons": "GraphRAG hype vs reality: graph construction từ LLMs nhiễu, global search chậm và đắt, quality advantage so với vanilla RAG khiêm tốn cho nhiều use cases. Chỉ justify khi cần global/thematic queries. Đa số doanh nghiệp Việt Nam cần hybrid search + basic RAG trước."
+    }
+  ],
+  "key_papers": [
+    {
+      "title": "Some Simple Effective Approximations to the 2-Poisson Model for Probabilistic Weighted Retrieval (BM25)",
+      "authors": "Stephen Robertson, Steve Walker, Susan Jones, Micheline Hancock-Beaulieu, Mike Gatford",
+      "year": 1994,
+      "venue": "SIGIR 1994",
+      "contribution": "Giới thiệu hàm xếp hạng BM25 với term-frequency saturation và document-length normalization. Trở thành hàm retrieval mặc định suốt 25+ năm. Vẫn là baseline không giám sát mạnh nhất. Tích hợp sẵn trong mọi search engine. 6,000+ citations.",
+      "url": "https://dl.acm.org/doi/10.1145/188490.188561"
+    },
+    {
+      "title": "Sentence-BERT: Sentence Embeddings using Siamese BERT-Networks",
+      "authors": "Nils Reimers, Iryna Gurevych",
+      "year": 2019,
+      "venue": "EMNLP 2019",
+      "contribution": "Làm BERT thực tế cho semantic similarity bằng siamese/triplet networks. Giảm thời gian so sánh từ 65 giờ (cross-encoder, 10K sentences) xuống 5 giây (bi-encoder + cosine). Khởi động hệ sinh thái embedding model hiện đại. sentence-transformers library có 10M+ monthly downloads.",
+      "url": "https://arxiv.org/abs/1908.10084"
+    },
+    {
+      "title": "Dense Passage Retrieval for Open-Domain Question Answering (DPR)",
+      "authors": "Vladimir Karpukhin, Barlas Oguz, Sewon Min, Patrick Lewis, Ledell Wu, Sergey Edunov, Danqi Chen, Wen-tau Yih",
+      "year": 2020,
+      "venue": "EMNLP 2020",
+      "contribution": "Chứng minh dual-encoder đơn giản trained với contrastive learning vượt BM25 trên open-domain QA retrieval (top-20 accuracy: 78.4% vs 59.1% trên Natural Questions). Key insight: BM25 hard negatives crucial cho training strong dense retrievers. Khởi đầu cuộc cách mạng dense retrieval.",
+      "url": "https://arxiv.org/abs/2004.04906"
+    },
+    {
+      "title": "Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks (RAG)",
+      "authors": "Patrick Lewis, Ethan Perez, Aleksandra Piktus, Fabio Petroni, Vladimir Karpukhin, Naman Goyal, Heinrich Kuttler, Mike Lewis, Wen-tau Yih, Tim Rocktaschel, Sebastian Riedel, Douwe Kiela",
+      "year": 2020,
+      "venue": "NeurIPS 2020",
+      "contribution": "Thống nhất retrieval và generation trong framework differentiable đơn lẻ. Chứng minh grounding generation trong retrieved documents giảm hallucination và cho phép knowledge updates không cần retrain. 'RAG' trở thành thuật ngữ chuẩn cho mọi retrieval-grounded generation system. Arguably paper NLP có ảnh hưởng nhất của 2020.",
+      "url": "https://arxiv.org/abs/2005.11401"
+    },
+    {
+      "title": "ColBERT: Efficient and Effective Passage Search via Contextualized Late Interaction over BERT",
+      "authors": "Omar Khattab, Matei Zaharia",
+      "year": 2020,
+      "venue": "SIGIR 2020",
+      "contribution": "Giới thiệu late interaction: giữ per-token embeddings, tính MaxSim cho scoring. Đạt gần cross-encoder quality với 170x speedup. ColBERTv2 (2022) thêm residual compression giảm storage 6-10x. Làm late interaction thực tế cho large-scale deployment.",
+      "url": "https://arxiv.org/abs/2004.12832"
+    },
+    {
+      "title": "Text Embeddings by Weakly-Supervised Contrastive Pre-training (E5)",
+      "authors": "Liang Wang, Nan Yang, Xiaolong Huang, Binxing Jiao, Linjun Yang, Daxin Jiang, Rangan Majumder, Furu Wei",
+      "year": 2023,
+      "venue": "ACL 2023",
+      "contribution": "Pre-trained trên 270M text pairs mined từ web với consistency filtering. Task-specific prefixes ('query:', 'passage:'). Cùng với BGE (Xiao et al., 2023), democratized high-quality embeddings — open-source matching hoặc vượt proprietary (OpenAI, Cohere) trên MTEB. BGE-M3 (2024) unifies dense, sparse, ColBERT trong 1 model.",
+      "url": "https://arxiv.org/abs/2212.03533"
+    },
+    {
+      "title": "Self-RAG: Learning to Retrieve, Generate, and Critique through Self-Reflection",
+      "authors": "Akari Asai, Zeqiu Wu, Yizhong Wang, Avirup Sil, Hannaneh Hajishirzi",
+      "year": 2023,
+      "venue": "ICLR 2024",
+      "contribution": "LLM học khi nào cần retrieve (adaptive), passages có relevant không, và generation có được support bởi evidence. Reflection tokens điều khiển flow. Vượt trội standard RAG 5-10% trên knowledge-intensive QA đồng thời giảm unnecessary retrievals.",
+      "url": "https://arxiv.org/abs/2310.11511"
+    },
+    {
+      "title": "From Local to Global: A Graph RAG Approach to Query-Focused Summarization (GraphRAG)",
+      "authors": "Darren Edge, Ha Trinh, Newman Cheng, Joshua Bradley, Alex Chao, Apurva Mody, Steven Truitt, Jonathan Larson",
+      "year": 2024,
+      "venue": "Microsoft Research",
+      "contribution": "KG construction + community detection + hierarchical summarization cho corpus-level question answering. Xử lý global sensemaking queries mà standard RAG thất bại. Open-source MIT, widely adopted trong enterprise settings. Spawned LightRAG, nano-GraphRAG, HippoRAG.",
+      "url": "https://arxiv.org/abs/2404.16130"
+    },
+    {
+      "title": "RAPTOR: Recursive Abstractive Processing for Tree-Organized Retrieval",
+      "authors": "Parth Sarthi, Salman Abdullah, Aditi Tuli, Shubh Khanna, Anna Goldie, Christopher D. Manning",
+      "year": 2024,
+      "venue": "ICLR 2024",
+      "contribution": "Hierarchical summarization tree cho multi-granularity retrieval. Leaf nodes là text chunks; parent nodes là LLM-generated summaries. Retrieval truy cập bất kỳ tree level nào, cho phép cả fine-grained và high-level reasoning. Giải quyết questions cần multi-document synthesis.",
+      "url": "https://arxiv.org/abs/2401.18059"
+    },
+    {
+      "title": "Corrective Retrieval Augmented Generation (CRAG)",
+      "authors": "Shi-Qi Yan, Jia-Chen Gu, Yun Zhu, Zhen-Hua Ling",
+      "year": 2024,
+      "venue": "arXiv 2024",
+      "contribution": "Thêm retrieval evaluator đánh giá relevance: Correct → dùng context; Incorrect → discard, trigger web search; Ambiguous → kết hợp internal và web results + knowledge refinement. Robust trước retrieval failure — failure mode chính của standard RAG.",
+      "url": "https://arxiv.org/abs/2401.15884"
+    }
+  ],
+  "cross_domain_connections": [
+    {
+      "target": "B04",
+      "connection_type": "foundational_dependency",
+      "description": "NLP (B04) là nền tảng cho mọi retrieval: tất cả embedding models là NLP models (BERT-family, encoder-only transformers). Query understanding, intent classification, NER cải thiện retrieval. Tokenization và text preprocessing ảnh hưởng trực tiếp BM25 và chunking quality. Multilingual NLP cho phép cross-lingual retrieval. Vietnamese word segmentation (VnCoreNLP) critical cho BM25 accuracy tiếng Việt."
+    },
+    {
+      "target": "B11",
+      "connection_type": "structural_augmentation",
+      "description": "Knowledge Graph (B11) tăng cường retrieval qua GraphRAG. Traditional RAG retrieve document chunks phẳng; GraphRAG retrieve structured knowledge paths. Multi-hop reasoning cần graph traversal, không vector similarity. Entity linking kết nối passages tới KG nodes cho disambiguation. Ontology-guided chunking dùng domain ontologies cho document segmentation. CẢNH BÁO R-γ: GraphRAG over-represented — de-prioritize cho đến khi basic RAG stack đã chứng minh in-market."
+    },
+    {
+      "target": "B09",
+      "connection_type": "generation_component",
+      "description": "Generative AI (B09) là thành phần 'G' trong RAG. LLMs sinh câu trả lời từ retrieved context. LLMs cũng phục vụ query rewriters, hypothetical document generators (HyDE), và rerankers. RAG grounds generative models, giảm hallucination. GritLM unifies generation và embedding. RAG vs long-context debate: 128K-1M context windows giảm (nhưng không loại bỏ) nhu cầu retrieval."
+    },
+    {
+      "target": "B02",
+      "connection_type": "input_processing",
+      "description": "Document Intelligence (B02) là bước đầu tiên trong mọi RAG pipeline. PDF/DOCX/HTML parsing quyết định chunk quality. Table extraction, OCR, layout analysis ảnh hưởng trực tiếp retrieval accuracy. Multi-modal document understanding cho phép retrieval trên charts, figures, scanned documents. Structured metadata (headings, sections, page numbers) cải thiện chunking và citation."
+    },
+    {
+      "target": "B08",
+      "connection_type": "interface_and_context",
+      "description": "Conversational AI (B08) cung cấp giao diện và quản lý ngữ cảnh. Conversational search cần multi-turn query resolution (coreference, context carryover). Chat-based RAG interfaces là deployment pattern chính. Dialogue history thông tin query rewriting và retrieval context. Conversational memory bổ sung retrieval memory."
+    },
+    {
+      "target": "B10",
+      "connection_type": "orchestration_layer",
+      "description": "Agentic AI (B10) cung cấp orchestration layer. Agentic RAG: agents quyết định khi nào, cái gì, và cách truy xuất. Multi-tool agents kết hợp retrieval với SQL queries, API calls, web search, code execution. Planning và reasoning trên retrieval results. Self-correcting agents phát hiện retrieval failures và retry. Frameworks: LangGraph, LlamaIndex Workflows."
+    }
+  ],
+  "bestPractices": [
+    "Ship Tier 1 trước khi phức tạp hoá. Đa số doanh nghiệp Việt Nam hỏi 'AI search' cần Elasticsearch + RAG cơ bản với GPT-4o, KHÔNG phải multi-agent agentic RAG system. Tier 1 (BM25 + basic RAG) cho 80% use cases. Chỉ nâng cấp lên Tier 2 (hybrid search + reranking) và Tier 3 (agentic) khi đo lường được nhu cầu cụ thể từ users.",
+    "Hybrid search là default, không phải option. BM25 alone bỏ sót synonyms/paraphrases. Dense alone bỏ sót rare terms/proper nouns. Hybrid (BM25 + dense + RRF fusion) consistently vượt trội từng phương pháp đơn lẻ. Elasticsearch 8.x, Weaviate, Qdrant đều hỗ trợ native — không có lý do không dùng.",
+    "Chunking strategy không phải 'set and forget'. Chạy experiments hệ thống: fixed-size vs recursive vs semantic chunking. Chunk size 512-1024 tokens với 20% overlap là starting point hợp lý, nhưng domain-specific tuning là bắt buộc. Parent-child chunking (small chunks cho retrieval, parent context cho generation) là proven pattern.",
+    "Citation enforcement bắt buộc cho mọi production RAG. KHÔNG BAO GIỜ deploy RAG mà không có source attribution. Implement faithfulness scoring (RAGAS), self-consistency checks, Corrective RAG patterns. Đặc biệt quan trọng cho legal, healthcare, compliance domains tại Việt Nam.",
+    "Monitor retrieval metrics liên tục trong production. Track retrieval precision, faithfulness scores, user satisfaction, cost-per-query. Set alert thresholds. Relevance degradation qua thời gian là inevitable khi corpus grows — periodic re-indexing và embedding model version management là cần thiết.",
+    "Vietnamese tokenization cần giải quyết đúng đắn. ICU tokenizer xử lý Unicode nhưng KHÔNG thực hiện Vietnamese word segmentation. 'Học sinh' nên là 1 token, không phải 2. Tích hợp VnCoreNLP hoặc underthesea làm custom Elasticsearch analyzer. Đây là non-trivial engineering task nhưng critical cho BM25 accuracy tiếng Việt.",
+    "Abstract vector DB behind retrieval interface. Migration giữa vector databases đau đớn. LlamaIndex và LangChain cung cấp abstraction layers, nhưng test migration paths sớm. Tránh vendor lock-in bằng open formats và standard interfaces."
+  ],
+  "antiPatterns": [
+    "Nhảy thẳng vào Agentic RAG / GraphRAG mà chưa có basic RAG hoạt động. Đa số failures trong RAG deployment không phải vì architecture quá đơn giản, mà vì chunking kém, embedding model không phù hợp, hoặc Vietnamese tokenization sai. Fix fundamentals trước khi thêm complexity.",
+    "Dùng ICU tokenizer cho Elasticsearch Vietnamese và nghĩ đã xong. ICU handles Unicode folding nhưng KHÔNG thực hiện Vietnamese word segmentation. 'Hoc sinh' bị tách thành 'hoc' và 'sinh' thay vì 1 từ. Kết quả: BM25 accuracy tiếng Việt thấp hơn đáng kể. Phải tích hợp VnCoreNLP/underthesea.",
+    "Deploy RAG production mà không có evaluation dataset. Không có Vietnamese RAG evaluation dataset (question-answer-context triples), mọi tuyên bố chất lượng đều anecdotal. Xây 500+ triples trước khi benchmark bất kỳ model/pipeline nào.",
+    "Bỏ qua BM25, chỉ dùng dense retrieval. BM25 xuất sắc cho exact matches, rare terms, document numbers, proper nouns. Dense retrieval alone bỏ sót những trường hợp này. Legal search cần BM25 cho tìm kiếm số hiệu văn bản ('Nghị định 43/2023/NĐ-CP'). Hybrid là standard, không phải optional.",
+    "Assume embedding models hoạt động tương đương cho Vietnamese và English. BGE-M3 và multilingual-e5 hoạt động tốt trên English benchmarks nhưng Vietnamese retrieval accuracy thấp hơn 10-15%. Phải benchmark trên Vietnamese-specific test sets trước khi kết luận model nào phù hợp.",
+    "Over-engineer cho ngày đầu. Enterprise RAG platform (multi-agent, GraphRAG, multi-source) justify complexity khi accuracy và auditability critical VÀ có >1M documents VÀ team ML chuyên dụng. Cho phần còn lại: Elasticsearch + Qdrant + basic RAG pipeline là đủ."
+  ],
+  "pipeline": {
+    "stages": [
+      {
+        "name": "Document Ingestion & Parsing (Thu thập và phân tích tài liệu)",
+        "description": "Thu thập tài liệu đa định dạng (PDF, DOCX, HTML, databases, APIs) và parse thành plain text có cấu trúc. Sử dụng Unstructured hoặc Docling cho document parsing. Metadata extraction: source, date, author, section headings, page numbers. Vietnamese document handling: OCR cho scanned documents, VnCoreNLP cho text preprocessing. Quality gates: reject documents không parse được, flag low-quality OCR.",
+        "tools": ["Unstructured / Docling", "VnCoreNLP", "Apache Tika", "Custom PDF parsers"],
+        "inputs": "Raw documents từ PDF, DOCX, HTML, databases, APIs, web crawl",
+        "outputs": "Parsed Document objects với text, metadata, structure"
+      },
+      {
+        "name": "Chunking & Embedding (Chia nhỏ và nhúng)",
+        "description": "Chia documents thành chunks và tạo embeddings. Chunking strategy: recursive character splitting (512 tokens, 64 overlap) làm baseline, domain-aware chunking cho structured documents. Embedding: BGE-M3 cho multilingual support, batch processing (64 chunks/batch). Dual indexing: chunks vào cả Elasticsearch (BM25) và Qdrant (dense vectors). Parent-child chunking cho contexts cần broader window.",
+        "tools": ["LangChain/LlamaIndex chunkers", "sentence-transformers (BGE-M3)", "Elasticsearch", "Qdrant"],
+        "inputs": "Parsed Documents từ Stage 1",
+        "outputs": "Indexed chunks trong Elasticsearch (BM25) + Qdrant (dense vectors) + metadata trong PostgreSQL"
+      },
+      {
+        "name": "Query Processing (Xử lý truy vấn)",
+        "description": "Xử lý query trước khi retrieval: intent classification (search vs Q&A vs comparison), query rewriting (giải quyết coreference từ chat history, mở rộng viết tắt), HyDE cho queries mơ hồ, query decomposition cho câu hỏi phức tạp. Vietnamese-specific: VnCoreNLP word segmentation cho BM25 query, NER cho entity extraction. Output: processed query + retrieval strategy (BM25, dense, hybrid, hoặc multi-step).",
+        "tools": ["LLM (Claude/GPT-4o) cho rewriting", "VnCoreNLP", "Custom intent classifier"],
+        "inputs": "Raw user query + chat history (nếu có)",
+        "outputs": "Processed query + retrieval strategy + metadata filters"
+      },
+      {
+        "name": "Retrieval & Reranking (Truy xuất và xếp hạng lại)",
+        "description": "Hybrid retrieval: BM25 search (Elasticsearch) + dense search (Qdrant) song song, RRF fusion kết hợp kết quả. Metadata filtering (date, source, category) tại Stage 0 trước retrieval. Reranking: BGE-Reranker-v2-m3 hoặc Cohere Rerank xếp hạng lại top-100 thành top-10. Context assembly: chọn top chunks, dedup, sắp xếp, thêm metadata, enforce token budget.",
+        "tools": ["Elasticsearch (BM25)", "Qdrant (dense)", "BGE-Reranker / Cohere Rerank", "RRF fusion logic"],
+        "inputs": "Processed query từ Stage 3",
+        "outputs": "Top-K reranked chunks với relevance scores + metadata"
+      },
+      {
+        "name": "Generation & Post-processing (Sinh văn bản và hậu xử lý)",
+        "description": "LLM sinh câu trả lời có cơ sở từ retrieved context. Prompt engineering: system prompt yêu cầu cite sources, instruction để chỉ trả lời từ context. Citation extraction: map generated references về source documents. Hallucination detection: faithfulness scoring (RAGAS), self-consistency checks. Post-processing: format citations, validate answer completeness, flag low-confidence answers cho human review.",
+        "tools": ["Claude 3.5/4 / GPT-4o", "RAGAS evaluation", "Custom citation extractor", "Guardrails framework"],
+        "inputs": "Top-K chunks + original query + chat history",
+        "outputs": "Generated answer với citations + confidence scores + faithfulness metrics"
+      },
+      {
+        "name": "Evaluation & Monitoring (Đánh giá và giám sát)",
+        "description": "Đánh giá liên tục RAG pipeline trong production. Retrieval metrics: MRR@10, NDCG@10, Recall@K. Generation metrics: faithfulness, answer relevancy (RAGAS). User metrics: satisfaction scores, click-through rates, query abandonment. Cost metrics: cost-per-query, embedding compute, LLM tokens. Tracing: Arize Phoenix cho full pipeline traces. Alert thresholds cho regression detection. Periodic re-indexing khi corpus grows.",
+        "tools": ["RAGAS", "Arize Phoenix", "Custom monitoring dashboard", "Alerting system"],
+        "inputs": "Production queries + user feedback + system metrics",
+        "outputs": "Quality reports + regression alerts + optimization recommendations"
+      }
+    ]
+  },
+  "learning_resources": [
+    {
+      "title": "RAG from Scratch (LangChain)",
+      "type": "video_series",
+      "url": "https://www.youtube.com/playlist?list=PLfaIDFEXuae2LXbO1_PKyVJiQ23ZztA0x",
+      "level": "Beginner",
+      "description": "Series video từ LangChain team: xây RAG pipeline từ scratch. Bao gồm indexing, retrieval, generation, evaluation. Hands-on code. KHỞI ĐẦU TỐT NHẤT cho RAG beginners."
+    },
+    {
+      "title": "Sentence Transformers Documentation",
+      "type": "documentation",
+      "url": "https://www.sbert.net/",
+      "level": "Beginner to Intermediate",
+      "description": "Documentation chính thức cho sentence-transformers library: embedding models, training, evaluation. 10M+ monthly downloads. Bao gồm model selection guide, fine-tuning tutorials, và semantic search examples."
+    },
+    {
+      "title": "Elasticsearch: The Definitive Guide",
+      "type": "documentation",
+      "url": "https://www.elastic.co/guide/en/elasticsearch/reference/current/index.html",
+      "level": "Beginner to Advanced",
+      "description": "Reference guide chính thức Elasticsearch: indexing, querying, analyzers, kNN vector search. Essential cho BM25 setup, Vietnamese analyzer configuration, và hybrid search implementation."
+    },
+    {
+      "title": "LlamaIndex Documentation",
+      "type": "documentation",
+      "url": "https://docs.llamaindex.ai/",
+      "level": "Intermediate",
+      "description": "Framework chính cho RAG: data connectors, index abstractions, query engines, evaluation. Tutorials từ basic RAG đến advanced patterns (SubQuestionQueryEngine, RouterQueryEngine). Tối ưu cho RAG-specific workflows."
+    },
+    {
+      "title": "LangChain Documentation",
+      "type": "documentation",
+      "url": "https://python.langchain.com/docs/",
+      "level": "Intermediate",
+      "description": "Framework ecosystem lớn nhất cho LLM applications: chains, agents, retrievers, tools. RAG tutorials, integration guides cho Elasticsearch, Qdrant, và mọi major vector DB. LangGraph cho agentic RAG."
+    },
+    {
+      "title": "AI Engineering (Chip Huyen, 2025)",
+      "type": "book",
+      "url": "https://www.oreilly.com/library/view/ai-engineering/9781098166298/",
+      "level": "Intermediate",
+      "description": "Xây dựng ứng dụng LLM production-grade: RAG, evaluation, deployment. Chương RAG comprehensive: chunking strategies, embedding selection, reranking, evaluation frameworks. Thực tế nhất cho practitioners."
+    },
+    {
+      "title": "RAGAS Documentation",
+      "type": "documentation",
+      "url": "https://docs.ragas.io/",
+      "level": "Intermediate",
+      "description": "Framework đánh giá RAG: faithfulness (hallucination detection), answer relevancy, context precision/recall. Apache 2.0. Metrics đã trở thành standard cho RAG evaluation. CẢNH BÁO: faithfulness scoring dùng LLM-as-judge — cần awareness về limitations."
+    },
+    {
+      "title": "Qdrant Documentation & Tutorials",
+      "type": "documentation",
+      "url": "https://qdrant.tech/documentation/",
+      "level": "Intermediate",
+      "description": "Vector database Rust-based: HNSW indexing, filtering, quantization, multi-tenancy. Tutorials từ quickstart đến production deployment. API clean, well-documented. Recommended cho production RAG deployments."
+    },
+    {
+      "title": "Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks (RAG Paper)",
+      "type": "paper",
+      "url": "https://arxiv.org/abs/2005.11401",
+      "level": "Intermediate",
+      "description": "Paper nền tảng thiết lập paradigm RAG. DPR retriever + BART generator. RAG-Sequence và RAG-Token variants. Bắt buộc đọc để hiểu lý thuyết và motivation đằng sau RAG. Arguably paper NLP có ảnh hưởng nhất của 2020."
+    },
+    {
+      "title": "MTEB Leaderboard (Massive Text Embedding Benchmark)",
+      "type": "benchmark",
+      "url": "https://huggingface.co/spaces/mteb/leaderboard",
+      "level": "Intermediate",
+      "description": "Benchmark chuẩn cho embedding models: 56+ tasks xuyên retrieval, classification, clustering, STS. Tham chiếu cho chọn embedding model. LƯU Ý: MTEB chủ yếu English — cần Vietnamese-specific benchmarks bổ sung."
+    },
+    {
+      "title": "Microsoft GraphRAG Documentation & Source Code",
+      "type": "documentation",
+      "url": "https://github.com/microsoft/graphrag",
+      "level": "Advanced",
+      "description": "Open-source GraphRAG implementation từ Microsoft Research. MIT license. LLM extraction, community detection, hierarchical summarization, local/global search. Tham chiếu cho advanced RAG patterns. Chỉ relevant khi basic RAG đã production-ready."
+    }
+  ],
+  "risks": [
+    {
+      "id": "R01",
+      "name": "RAG hallucination — LLM sinh câu trả lời plausible nhưng không được hỗ trợ bởi context",
+      "description": "LLM sinh câu trả lời nghe hợp lý nhưng không có trong retrieved context, hoặc kết hợp sai thông tin từ nhiều chunks. Đây là rủi ro phổ biến nhất và nguy hiểm nhất của RAG, đặc biệt trong domains nhạy cảm (pháp luật, y tế, tài chính). Users tin tưởng câu trả lời có 'nguồn' mà thực tế nguồn không nói điều đó.",
+      "severity": "High",
+      "probability": "High",
+      "mitigation": "Citation enforcement bắt buộc — KHÔNG BAO GIỜ deploy không có source attribution. Faithfulness scoring (RAGAS). Self-consistency checks. Corrective RAG patterns. Human review cho high-stakes domains."
+    },
+    {
+      "id": "R02",
+      "name": "Vietnamese embedding quality — retrieval accuracy thấp hơn 10-15% so với English",
+      "description": "BGE-M3 và multilingual-e5 hoạt động tốt trên English benchmarks nhưng Vietnamese retrieval accuracy thấp hơn đáng kể. Nguyên nhân: training data imbalance (ít Vietnamese data), Vietnamese compound word handling, dấu tiếng Việt ảnh hưởng tokenization. Không có Vietnamese retrieval benchmarks chuẩn để đo lường chính xác khoảng cách.",
+      "severity": "Medium",
+      "probability": "High",
+      "mitigation": "Benchmark BGE-M3 vs fine-tuned Vietnamese embeddings trên domain-specific test sets. Cân nhắc VnCoreNLP preprocessing trước embedding. Xây Vietnamese retrieval evaluation dataset. Fine-tune embedding models trên Vietnamese corpora khi có đủ data."
+    },
+    {
+      "id": "R03",
+      "name": "Chi phí scaling tuyến tính — embedding compute + vector storage + LLM inference",
+      "description": "Chi phí RAG tăng tuyến tính với corpus size: embedding compute cho mỗi document mới, vector storage per chunk, LLM inference per query. Tại scale lớn (>1M documents, >10K queries/day), chi phí trở nên đáng kể. Cache frequent queries giảm LLM costs nhưng storage costs vẫn tăng.",
+      "severity": "Medium",
+      "probability": "Medium",
+      "mitigation": "Tiered architecture: BM25 cho broad recall (miễn phí), dense retrieval cho precision (moderate cost), LLM generation chỉ cho final answers. Cache frequent queries. Quantization (scalar/binary) giảm vector storage. Monitor cost-per-query."
+    },
+    {
+      "id": "R04",
+      "name": "Chunking strategy sensitivity — RAG quality phụ thuộc cao vào cách chia tài liệu",
+      "description": "RAG quality cực kỳ nhạy cảm với chunking strategy. Chunk quá nhỏ mất context, quá lớn pha loãng relevance. Cùng pipeline, thay đổi chunking có thể swing quality 10-20%. Không có one-size-fits-all — mỗi domain cần tuning riêng. Nhiều teams set-and-forget chunking rồi ngạc nhiên khi quality thấp.",
+      "severity": "Medium",
+      "probability": "High",
+      "mitigation": "Chạy systematic experiments: fixed-size vs recursive vs semantic chunking. Chunk size 512-1024 tokens với 20% overlap là starting point. Domain-specific tuning bắt buộc. Evaluate trên representative queries, KHÔNG chỉ vibe check."
+    },
+    {
+      "id": "R05",
+      "name": "Relevance degradation — retrieval precision giảm khi corpus grows và content ages",
+      "description": "Khi corpus mở rộng và nội dung cũ đi, retrieval precision giảm dần. Documents cũ có thể rank cao hơn documents mới nhưng relevant hơn. Embedding drift khi update model version. Nếu không monitor, quality giảm dần mà không ai nhận ra cho đến khi users phàn nàn.",
+      "severity": "Medium",
+      "probability": "Medium",
+      "mitigation": "Document freshness scoring. Periodic re-indexing. Embedding model version management. Monitor retrieval metrics (MRR, NDCG) liên tục. Set alert thresholds cho regression detection."
+    },
+    {
+      "id": "R06",
+      "name": "Vendor lock-in vector database — migration giữa vector DBs đau đớn",
+      "description": "Mỗi vector database có API, index format, và capabilities riêng. Migration data + code giữa chúng tốn effort đáng kể. Chọn sai vector DB ban đầu có thể lock vào vendor không phù hợp long-term.",
+      "severity": "Low",
+      "probability": "Medium",
+      "mitigation": "Abstract vector DB behind retrieval interface. LlamaIndex và LangChain cung cấp abstraction layers. Test migration paths sớm. Dùng open formats và open-source DBs (Qdrant, Weaviate) khi có thể."
+    },
+    {
+      "id": "R07",
+      "name": "Enterprise connector gap — 50% effort triển khai cho Vietnamese systems",
+      "description": "Vietnamese enterprises dùng MISA accounting, Fast ERP, và custom systems không có standard APIs. Document ingestion giả định input đã clean — thực tế 50% effort nằm ở connector layer. Architecture tiers đẹp trên giấy nhưng connector engineering quyết định success/failure thực tế.",
+      "severity": "Medium",
+      "probability": "High",
+      "mitigation": "Budget 50% effort cho connector development. Prototype connectors cho MISA, Fast trước khi commit full platform. Dùng Unstructured / Apache Tika cho generic document parsing. Custom connectors cho Vietnamese-specific systems."
+    }
+  ],
+  "metadata": {
+    "status": "reviewed",
+    "version": "1.0",
+    "createdAt": "2026-03-31",
+    "updatedAt": "2026-03-31",
+    "researchedBy": ["R-alpha", "R-beta", "R-gamma", "R-MLE", "R-DE", "R-NLP", "R-DBE", "R-BE", "R-FE", "R-DO", "R-SE", "R-QA", "R-SA", "R-D11", "R-D09", "R-sigma"],
+    "consolidatedBy": "R-sigma (Ms. Scribe)",
+    "normalizedAt": "2026-03-31",
+    "normalizedBy": "R-sigma",
+    "phase": "Phase 0",
+    "module": "B12",
+    "reviewedBy": null,
+    "approvedBy": null,
+    "notes": "Consolidated bởi R-sigma (Ms. Scribe). Overall feasibility 8.0/10 CONDITIONAL GO — baseline có khả năng triển khai thương mại cao nhất. JSON field names English, values Vietnamese (có dấu) per language rule. Technical terms giữ English. 16 agents nghiên cứu. Chiến lược: Ship Tier 1 (Elasticsearch + basic RAG) trước, benchmark Vietnamese embeddings, xây evaluation dataset 500+ triples. Khoảng cách Vietnamese embedding quality vs English là engineering problem, không phải research problem. Timing hoàn hảo — RAG đã vượt 'trough of disillusionment'. Differentiation tại Việt Nam: Vietnamese-optimized tokenization, enterprise connectors (MISA, Fast), on-premise cho banking/government."
+  }
+}

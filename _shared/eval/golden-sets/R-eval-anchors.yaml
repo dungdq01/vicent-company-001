@@ -1,0 +1,104 @@
+agent: R-eval (anchor set for weekly meta-eval)
+version: v1.0
+last_updated: 2026-04-28
+status: production
+signed_by: CTO + CEO (anchor cases are stable ground-truth references)
+notes: |
+  Anchor cases for R-eval weekly consistency check (Tier A #9 fix).
+  These cases NEVER ROTATE — they are stable reference points.
+  Each case has KNOWN-CORRECT score signed by 2 humans.
+  R-eval scores 5 anchors weekly → if drift > 0.6 vs anchor truth → R-eval pause.
+
+anchor_cases:
+
+  - id: anchor-001-obvious-pass
+    description: "High-quality discovery report — should score 8.5+"
+    input_brief: "[full brief excerpt]"
+    output_to_evaluate: |
+      [Sample R-α discovery report with: clear SOTA review, 8 citations,
+       rationale per recommendation, evidence-led, voice consistent,
+       handoff structured]
+    known_correct_score: 8.7
+    score_breakdown:
+      correctness: 9.0
+      completeness: 8.5
+      citation_quality: 9.0
+      clarity: 8.5
+      actionability: 8.5
+    tolerance: ±0.3 (R-eval scoring 8.4-9.0 acceptable)
+
+  - id: anchor-002-obvious-fail
+    description: "Broken output (truncated, no sections, no citations) — should score < 5"
+    output_to_evaluate: |
+      "Hi here is some research. Use NBEATS probably. Cost is reasonable."
+      [50 bytes garbage]
+    known_correct_score: 3.5
+    score_breakdown:
+      correctness: 4.0  # vague but not wrong
+      completeness: 2.0  # massive gap
+      citation_quality: 1.0  # zero citations
+      clarity: 5.0  # readable
+      actionability: 2.0  # no real action
+    tolerance: ±0.5 (acceptable 3.0-4.0; if R-eval gives 6+ = drift signal)
+
+  - id: anchor-003-edge-pass
+    description: "Correct but unusual style — should score 7-8 (stylistic deduction OK)"
+    output_to_evaluate: |
+      [Discovery report in unconventional format — bullet-heavy,
+       short prose, but ALL facts correct, citations present,
+       handoff complete]
+    known_correct_score: 7.5
+    score_breakdown:
+      correctness: 8.5
+      completeness: 7.5
+      citation_quality: 8.0
+      clarity: 6.5  # style deduction
+      actionability: 7.0
+    tolerance: ±0.4
+
+  - id: anchor-004-false-positive-trap
+    description: "Looks polished but factually wrong (cited paper says opposite) — should score < 6"
+    output_to_evaluate: |
+      [Beautifully formatted report. Recommends Algorithm X with citation
+       to Paper Y. BUT: Paper Y actually warns AGAINST X for this use case.
+       Citation hallucination — cite exists but content misrepresented]
+    known_correct_score: 5.0
+    score_breakdown:
+      correctness: 3.0  # WRONG per source
+      completeness: 8.0  # looks complete
+      citation_quality: 2.0  # cite exists but misrepresents
+      clarity: 8.0
+      actionability: 4.0  # action wrong
+    tolerance: ±0.5 (R-eval should catch citation misuse — if scores 7+ = miss)
+    notes: "Tests R-eval's anti-hallucination depth — does it actually verify citations or just count them?"
+
+  - id: anchor-005-hallucination-trap
+    description: "Confidently wrong with fabricated stats — should score < 5"
+    output_to_evaluate: |
+      "Studies show 87% of 3PL companies achieve 95% forecast accuracy with
+       Algorithm Z [citation: McKinsey 2024]. Recommend immediate adoption."
+      [McKinsey 2024 doesn't exist. Algorithm Z doesn't exist.]
+    known_correct_score: 3.0
+    score_breakdown:
+      correctness: 2.0  # entirely fabricated
+      completeness: 5.0  # surface looks ok
+      citation_quality: 1.0  # fake citation
+      clarity: 7.0  # well-written
+      actionability: 3.0  # action based on lies
+    tolerance: ±0.4
+
+# Weekly run protocol
+weekly_check_protocol:
+  - shuffle anchor case order (avoid R-eval memorizing position)
+  - paste each case + ask R-eval to score
+  - compare R-eval score vs known_correct_score
+  - aggregate Δ across 5 anchors
+  - apply thresholds per R-eval skill card §weekly-anchor-check
+
+# Anchor stability
+anchors_never_rotate: true
+update_only_via:
+  - ADR mandatory
+  - CTO + CEO sign
+  - reason: known-correct stops being true (e.g., new evidence emerges)
+  - update preserves audit trail (old version archived, NOT deleted)

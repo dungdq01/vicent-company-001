@@ -1,0 +1,832 @@
+{
+  "id": "B04",
+  "name": "Natural Language Processing",
+  "type": "baseline",
+  "slug": "natural-language-processing",
+  "tagline": "Dạy máy móc đọc, hiểu và tạo ra ngôn ngữ của con người — bao gồm tiếng Việt",
+  "category": "baseline",
+  "icon": "MessageSquare",
+  "color": "#FFD700",
+  "depthLevel": 3,
+  "selectedAgents": ["R-alpha", "R-beta", "R-gamma", "R-MLE", "R-DE", "R-BE", "R-DO", "R-QA", "R-SA", "R-DLE", "R-NLP", "R-D04", "R-D09", "R-sigma"],
+  "description": "Natural Language Processing — Xử lý Ngôn ngữ Tự nhiên (NLP) là lĩnh vực AI cho phép máy móc hiểu, sinh và suy luận về ngôn ngữ con người dưới mọi hình thức. Kể từ cuộc cách mạng kiến trúc Transformer (Vaswani et al., 2017), lĩnh vực đã chuyển dịch hoàn toàn từ các phương pháp thống kê và dựa trên quy tắc sang các mô hình ngôn ngữ lớn (Large Language Models — LLM) được pretrain trên hàng nghìn tỷ token. Paradigm hiện tại là pretrain một lần trên corpus khổng lồ, sau đó fine-tune hoặc prompt để thích nghi với tác vụ cụ thể — giảm đáng kể yêu cầu dữ liệu có nhãn cho production.",
+  "description_paragraphs": [
+    "Natural Language Processing — Xử lý Ngôn ngữ Tự nhiên (NLP) là lĩnh vực AI cho phép máy móc hiểu, sinh và suy luận về ngôn ngữ con người dưới mọi hình thức. Kể từ cuộc cách mạng kiến trúc Transformer (Vaswani et al., 2017), lĩnh vực đã chuyển dịch hoàn toàn từ các phương pháp thống kê và dựa trên quy tắc sang các mô hình ngôn ngữ lớn (Large Language Models — LLM) được pretrain trên hàng nghìn tỷ token. Paradigm hiện tại là pretrain một lần trên corpus khổng lồ, sau đó fine-tune hoặc prompt để thích nghi với tác vụ cụ thể — giảm đáng kể yêu cầu dữ liệu có nhãn cho production. Các sub-field chính bao gồm: phân loại văn bản, nhận dạng thực thể có tên (NER), hỏi đáp, tóm tắt, dịch máy, hệ thống đối thoại, tìm kiếm ngữ nghĩa và RAG (Retrieval-Augmented Generation).",
+    "Tại thị trường Việt Nam, NLP đối mặt với thách thức ngôn ngữ đặc thù: tiếng Việt là ngôn ngữ thanh điệu (6 thanh) với phân đoạn từ phức tạp (khoảng trắng phân cách âm tiết, không phải từ), thiếu hụt dataset có nhãn theo domain (10-50× ít hơn tiếng Anh), và phổ biến của code-switching (pha trộn Việt-Anh). Hệ sinh thái mã nguồn mở tiếng Việt đang trưởng thành: PhoBERT (VinAI), underthesea, Vistral-7B, cùng với các multilingual models như Qwen2.5 và SeaLLM ngày càng cạnh tranh trên Vietnamese benchmarks. PhoBERT kết hợp LoRA fine-tune là điểm ngọt cho tác vụ phân loại tiếng Việt với ràng buộc ngân sách: vượt trội GPT-4o-mini ở 1/10 chi phí inference khi volume đạt 500,000+ requests/tháng.",
+    "Điểm khả thi tổng thể là 6.8/10 với verdict CONDITIONAL GO. Rủi ro chiến lược định nghĩa lớn nhất là LLM commoditization: GPT-4o-class đã đạt tiếng Việt thành thạo ở $0.15/1M token (2026), đóng cửa cơ hội cho sản phẩm NLP tiếng Việt chung chung không có khác biệt hóa. Con đường khả thi duy nhất là chuyên sâu dọc: sở hữu dữ liệu có nhãn tiếng Việt theo domain (banking, pháp lý, y tế), tuân thủ yêu cầu địa phương hóa dữ liệu (Luật An ninh mạng 2018, Nghị định 13/2023/NĐ-CP), và xây dựng hệ thống NLP on-premise cho doanh nghiệp ngành được quản lý chặt."
+  ],
+  "aliases": [
+    "Xử lý Ngôn ngữ Tự nhiên",
+    "NLP",
+    "Text Analytics",
+    "Large Language Models",
+    "LLM",
+    "Generative AI for Text"
+  ],
+  "maturity_level": "mature",
+  "trl": 8,
+  "core_concepts": [
+    {
+      "name": "Tokenization (Phân token)",
+      "definition": "Quá trình chuyển đổi chuỗi văn bản thô thành các đơn vị token rời rạc — là input cơ bản cho mọi mô hình NLP. Các hệ thống hiện đại dùng thuật toán subword như Byte-Pair Encoding (BPE) hoặc WordPiece, xử lý OOV (out-of-vocabulary) bằng cách tách từ lạ thành sub-tokens. Đặc biệt với tiếng Việt: khoảng trắng phân cách âm tiết, không phải từ — 'học sinh' cần tokenize như một đơn vị. underthesea word_tokenize là chuẩn cho tiếng Việt; tiktoken cho GPT-family. Tiếng Việt tokenize ~1.5× token count so với tiếng Anh cùng nội dung.",
+      "difficulty": "Beginner",
+      "prerequisites": ["Xử lý chuỗi", "Thống kê cơ bản"]
+    },
+    {
+      "name": "Word Embeddings (Nhúng từ)",
+      "definition": "Biểu diễn từ dưới dạng vector dày đặc trong không gian chiều cao (100-300 chiều) sao cho các từ ngữ nghĩa tương đồng gần nhau. Word2Vec (Skip-gram, CBOW) và GloVe học embedding từ phân phối co-occurrence. Tính chất nổi bật: vec('vua') - vec('nam') + vec('nữ') ≈ vec('nữ hoàng'). Giới hạn: embedding tĩnh không phân biệt đa nghĩa theo ngữ cảnh ('ngân hàng' sông vs ngân hàng tài chính). Được thay thế bởi contextual embeddings trong hầu hết ứng dụng hiện đại.",
+      "difficulty": "Intermediate",
+      "prerequisites": ["Đại số tuyến tính", "Mạng nơ-ron cơ bản"]
+    },
+    {
+      "name": "Attention Mechanism (Cơ chế chú ý)",
+      "definition": "Cơ chế cho phép mô hình 'chú ý' có chọn lọc đến các phần khác nhau của chuỗi đầu vào khi sinh từng token đầu ra. Scaled dot-product attention: Attention(Q, K, V) = softmax(QKᵀ / √d_k) V. Multi-head attention chạy h đầu attention song song, nắm bắt nhiều loại quan hệ ngữ nghĩa khác nhau. Là thành phần cốt lõi của Transformer — loại bỏ bottleneck thông tin của seq2seq truyền thống và cho phép song song hóa hoàn toàn khi training.",
+      "difficulty": "Intermediate",
+      "prerequisites": ["Đại số tuyến tính", "Softmax", "Mạng nơ-ron"]
+    },
+    {
+      "name": "Transformer Architecture (Kiến trúc Transformer)",
+      "definition": "Kiến trúc sequence-to-sequence xây dựng hoàn toàn từ lớp attention và feed-forward, không có recurrence hay convolution. Ba họ: Encoder-only (BERT — NLU), Decoder-only (GPT — NLG), Encoder-Decoder (T5/BART — seq2seq). Mỗi lớp: LayerNorm(x + Sublayer(x)) với residual connections và layer normalization. Positional encoding cung cấp thông tin vị trí (sinusoidal hoặc RoPE). Phức tạp O(n²d) với sequence length là bottleneck cho context dài — thúc đẩy nghiên cứu Flash Attention, MLA, SSMs.",
+      "difficulty": "Advanced",
+      "prerequisites": ["Attention mechanism", "Feed-forward networks", "Residual connections", "Layer normalization"]
+    },
+    {
+      "name": "BERT / MLM Pretraining (Tiền huấn luyện BERT)",
+      "definition": "BERT (Bidirectional Encoder Representations from Transformers) huấn luyện trước với Masked Language Modeling: che ngẫu nhiên 15% tokens, mô hình dự đoán token bị che từ ngữ cảnh hai chiều. Thiết lập paradigm transfer learning thống trị NLP: pretrain một lần trên corpus lớn (Books + Wikipedia), fine-tune trên tập nhỏ có nhãn cho tác vụ cụ thể. PhoBERT là BERT tiếng Việt: pretrain trên 20GB corpus tiếng Việt, SOTA cho encoder tasks (NER, classification, QA).",
+      "difficulty": "Advanced",
+      "prerequisites": ["Transformer architecture", "Cross-entropy loss", "Transfer learning"]
+    },
+    {
+      "name": "GPT / Causal Language Modeling (Mô hình ngôn ngữ nhân quả)",
+      "definition": "GPT-style models dùng decoder-only Transformer với causal language modeling: dự đoán token tiếp theo từ tất cả token trước đó. L = -Σ_t log P(x_t | x_1, ..., x_{t-1}; θ). Mặc dù đơn hướng (unidirectional), paradigm này scale tốt hơn BERT khi tăng model size và data. GPT-3 (175B params) lần đầu thể hiện few-shot và zero-shot capabilities. Là nền tảng của tất cả LLM hiện đại (ChatGPT, Claude, Gemini, LLaMA).",
+      "difficulty": "Advanced",
+      "prerequisites": ["Transformer architecture", "Autoregressive generation", "Temperature/nucleus sampling"]
+    },
+    {
+      "name": "Fine-tuning & LoRA (Tinh chỉnh và LoRA)",
+      "definition": "Fine-tuning tiếp tục training pretrained model trên dataset nhỏ, task-specific. Full fine-tune cập nhật toàn bộ trọng số — tốt nhất về accuracy nhưng đòi hỏi VRAM lớn và rủi ro catastrophic forgetting. LoRA (Low-Rank Adaptation) đông lạnh base weights, chỉ train matrices rank thấp W = W₀ + BA (B∈R^{d×r}, A∈R^{r×k}, r≪min(d,k)). Giảm 99%+ tham số trainable, fit 7B model trên RTX 3090. QLoRA kết hợp quantization 4-bit + LoRA. Điểm ngọt cho team Việt Nam: PhoBERT + LoRA r=16 cho classification, Vistral-7B + QLoRA cho generative.",
+      "difficulty": "Intermediate",
+      "prerequisites": ["Pretraining concepts", "Transfer learning", "Gradient descent"]
+    },
+    {
+      "name": "Prompt Engineering (Kỹ thuật thiết kế prompt)",
+      "definition": "Thiết kế input ngôn ngữ tự nhiên để kích hoạt hành vi mong muốn từ LLM mà không cập nhật trọng số. Chain-of-thought prompting ('Hãy suy nghĩ từng bước') cải thiện đáng kể suy luận đa bước. Few-shot prompting cung cấp ví dụ input-output trong context window. Kỹ thuật nâng cao: system prompts, role prompting, structured output prompts (JSON mode), self-consistency (nhiều reasoning chains + majority voting), tree-of-thought. Đặc biệt quan trọng cho tiếng Việt: system prompt bằng tiếng Việt cải thiện đáng kể chất lượng output tiếng Việt.",
+      "difficulty": "Beginner to Intermediate",
+      "prerequisites": ["LLM basics", "Context window", "Token counting"]
+    },
+    {
+      "name": "RAG — Retrieval-Augmented Generation (Sinh có tăng cường truy xuất)",
+      "definition": "RAG kết hợp tìm kiếm tài liệu real-time với sinh văn bản LLM để giải quyết giới hạn kiến thức tĩnh. Pipeline: (1) Offline indexing: chunk tài liệu → embed → lưu vector DB; (2) Online retrieval: embed query → tìm top-k chunks tương đồng nhất (cosine similarity); (3) Generation: LLM sinh câu trả lời dựa trên context được truy xuất. RAG tách biệt kiến thức thực tế (trong index) và năng lực suy luận (trong LLM), cho phép cập nhật tri thức không cần retrain. Pattern phù hợp nhất cho doanh nghiệp Việt Nam 2025-2026.",
+      "difficulty": "Intermediate to Advanced",
+      "prerequisites": ["Dense retrieval", "Vector databases", "LLM generation", "Embedding models"]
+    },
+    {
+      "name": "In-Context Learning (Học trong ngữ cảnh)",
+      "definition": "Khả năng của LLM lớn thích nghi với tác vụ mới chỉ từ ví dụ trong context window, không cập nhật trọng số. Mô hình đọc các demonstrations (input, output), suy ra pattern tác vụ và áp dụng cho input mới. Xuất hiện tự nhiên ở quy mô ~GPT-3 (175B). Điểm yếu: nhạy cảm với định dạng prompt, thứ tự và lựa chọn ví dụ. Retrieval-based example selection (chọn few-shot examples ngữ nghĩa tương đồng nhất với query hiện tại) cải thiện đáng kể.",
+      "difficulty": "Intermediate",
+      "prerequisites": ["LLM architecture", "Attention mechanism", "Prompt engineering"]
+    },
+    {
+      "name": "Instruction Tuning & RLHF (Tinh chỉnh theo chỉ thị)",
+      "definition": "Instruction tuning fine-tune LLM trên tập đa dạng (instruction, response) pairs, giúp mô hình tuân theo chỉ thị ngôn ngữ tự nhiên thay vì chỉ complete text. InstructGPT mở rộng với RLHF (Reinforcement Learning from Human Feedback): SFT → Reward Model training → PPO. DPO (Direct Preference Optimization) thay thế RL bằng supervised objective trực tiếp từ preference pairs — đơn giản hơn và ổn định hơn PPO. Pipeline SFT+DPO hiện là chuẩn mực cho tạo ra Vietnamese domain LLM.",
+      "difficulty": "Advanced",
+      "prerequisites": ["Fine-tuning", "Reinforcement learning basics", "Preference modeling"]
+    },
+    {
+      "name": "Vector Databases & Semantic Search (Cơ sở dữ liệu vector)",
+      "definition": "Vector databases lưu trữ và tìm kiếm hiệu quả trên dense embeddings. Qdrant (Rust-based, Docker-native, HNSW index, payload filtering) là lựa chọn tối ưu cho MAESTRO. Approximate Nearest Neighbor (ANN) với HNSW cho phép tìm kiếm top-k trong O(log n). Hybrid search kết hợp dense (semantic similarity) và sparse (BM25 keyword matching) cải thiện recall. Đặc biệt quan trọng cho RAG pipeline tiếng Việt: embedding model tiếng Việt (bkai-foundation-models/vietnamese-bi-encoder) phải match với collection.",
+      "difficulty": "Intermediate",
+      "prerequisites": ["Embeddings", "Cosine similarity", "Indexing structures"]
+    }
+  ],
+  "algorithms": [
+    {
+      "name": "BERT (Bidirectional Encoder Representations from Transformers)",
+      "category": "Encoder Language Model",
+      "complexity": "O(n²d) attention, O(n·d) per token tại inference",
+      "pros": [
+        "Bidirectional context: mỗi token attend đến tất cả token khác — biểu diễn ngữ nghĩa phong phú hơn",
+        "Transfer learning: pretrain một lần, fine-tune cho nhiều tác vụ với ít dữ liệu có nhãn",
+        "Production-stable: 7+ năm deployment, behavior well-understood",
+        "PhoBERT: variant tiếng Việt với 20GB corpus — SOTA cho Vietnamese NLU tasks"
+      ],
+      "cons": [
+        "Không thể sinh văn bản autoregressive",
+        "Context window giới hạn (512 tokens cho BERT gốc)",
+        "Đã bị vượt qua bởi GPT-class models cho nhiều generative tasks"
+      ],
+      "use_cases": ["NER tiếng Việt", "Phân loại ý định (intent classification)", "Phân tích cảm xúc", "Extractive QA"],
+      "key_papers": ["Devlin, J. et al. (2018). BERT: Pre-training of Deep Bidirectional Transformers. NAACL 2019. arXiv:1810.04805"]
+    },
+    {
+      "name": "GPT-4o / GPT-4o-mini",
+      "category": "Decoder Language Model (Multimodal)",
+      "complexity": "~1T params (ước tính), O(1) per token tại inference với KV cache",
+      "pros": [
+        "Best-in-class multilingual quality bao gồm tiếng Việt",
+        "Multimodal: text + vision + audio trong một model",
+        "GPT-4o-mini: $0.15/1M input tokens — kinh tế cho prototype và SME volume thấp",
+        "Function calling, JSON mode cho structured output production-ready"
+      ],
+      "cons": [
+        "Không có data residency — dữ liệu gửi đến server Mỹ, vi phạm Nghị định 13/2023 cho client được quản lý",
+        "Vendor lock-in: API thay đổi, model deprecated định kỳ",
+        "10-100× đắt hơn fine-tuned PhoBERT cho classification tasks ở scale"
+      ],
+      "use_cases": ["RAG tổng quát", "Document extraction phức tạp", "Prototype nhanh", "SME volume thấp (<30M tokens/tháng)"],
+      "key_papers": ["OpenAI. (2024). GPT-4 Technical Report. arXiv:2303.08774"]
+    },
+    {
+      "name": "T5 / mT5 (Text-to-Text Transfer Transformer)",
+      "category": "Encoder-Decoder Language Model",
+      "complexity": "O(n²) encoder + O(n·m) decoder, 60M-11B params",
+      "pros": [
+        "Unification: tất cả NLP tasks như text-to-text generation — một kiến trúc cho mọi tác vụ",
+        "mT5: multilingual variant có tiếng Việt trong pretraining data",
+        "Tốt cho summarization, MT, extraction với structure cụ thể",
+        "ViT5: variant tiếng Việt cho generation tasks"
+      ],
+      "cons": [
+        "Lớn hơn và chậm hơn encoder-only models cho classification",
+        "Ít được dùng trong production so với BERT/GPT paradigm"
+      ],
+      "use_cases": ["Tóm tắt văn bản tiếng Việt", "Dịch máy Vi-En", "Seq2seq extraction"],
+      "key_papers": ["Raffel, C. et al. (2019). Exploring the Limits of Transfer Learning with T5. JMLR 2020. arXiv:1910.10683"]
+    },
+    {
+      "name": "LLaMA 3 / Mistral 7B",
+      "category": "Open-Source Decoder Language Model",
+      "complexity": "7B-70B params, ~14-140GB VRAM fp16",
+      "pros": [
+        "Open weights: có thể self-host cho data sovereignty",
+        "LLaMA 3: strong RLHF alignment, 128k context",
+        "Mistral 7B: GQA + sliding window attention, outperforms GPT-3.5 trên nhiều benchmarks",
+        "Nền tảng cho Vistral-7B (Vietnamese instruction-tuned)"
+      ],
+      "cons": [
+        "Chất lượng tiếng Việt zero-shot thấp hơn GPT-4o",
+        "Yêu cầu GPU: 7B fp16 ~14GB VRAM; 70B fp16 ~140GB",
+        "Engineering overhead để self-host so với API"
+      ],
+      "use_cases": ["Sovereign deployment (banking/gov)", "Base model cho Vietnamese fine-tuning", "High-volume generation tự host"],
+      "key_papers": [
+        "Touvron, H. et al. (2023). LLaMA 2. arXiv:2307.09288",
+        "Jiang, A. et al. (2023). Mistral 7B. arXiv:2310.06825"
+      ]
+    },
+    {
+      "name": "PhoBERT (Vietnamese BERT)",
+      "category": "Vietnamese Encoder Language Model",
+      "complexity": "135M (base) / 370M (large) params, ~270MB / ~740MB",
+      "pros": [
+        "Pretrain trên 20GB corpus tiếng Việt — SOTA cho Vietnamese NLU tasks",
+        "RoBERTa-based: không NSP, dynamic masking, robust hơn BERT gốc",
+        "Fine-tune với LoRA: đạt 90-95% F1 trên Vietnamese classification với 1,000-10,000 samples",
+        "Break-even vs GPT-4o-mini: ~500,000 classification requests/tháng"
+      ],
+      "cons": [
+        "Context window 256-512 tokens — ngắn hơn modern LLMs",
+        "Không sinh văn bản — encoder-only",
+        "Cần fine-tune để đạt kết quả tốt — không zero-shot như LLM"
+      ],
+      "use_cases": ["Intent classification tiếng Việt", "NER tiếng Việt", "Sentiment analysis sản phẩm/dịch vụ", "Document classification"],
+      "key_papers": ["Nguyen, D.Q. & Nguyen, A.T. (2020). PhoBERT: Pre-trained Language Models for Vietnamese. EMNLP 2020 Findings. arXiv:2003.00744"]
+    },
+    {
+      "name": "Sentence-BERT (SBERT) / Vietnamese Bi-encoder",
+      "category": "Semantic Embedding Model",
+      "complexity": "22M-560M params, O(n·d) per sentence",
+      "pros": [
+        "Siamese fine-tuning tạo sentence-level embeddings tốt cho semantic similarity",
+        "vietnamese-bi-encoder: recall cao nhất cho Vietnamese semantic search",
+        "bge-m3: multilingual, 1024-dim, tốt cho mixed-language documents",
+        "Tốc độ nhanh: bi-encoder chỉ cần encode một lần, search O(1) với ANN"
+      ],
+      "cons": [
+        "Kém chính xác hơn cross-encoder cho reranking",
+        "Embedding drift khi model cập nhật — cần reindex toàn bộ vector DB"
+      ],
+      "use_cases": ["RAG embedding layer", "Semantic search tiếng Việt", "Duplicate detection", "Clustering"],
+      "key_papers": ["Reimers, N. & Gurevych, I. (2019). Sentence-BERT. EMNLP 2019. arXiv:1908.10084"]
+    },
+    {
+      "name": "BM25 + Hybrid Retrieval",
+      "category": "Sparse Retrieval",
+      "complexity": "O(|q|·log|D|) query, O(n) index update",
+      "pros": [
+        "Tốt cho keyword-sensitive search, exact match quan trọng",
+        "Không cần GPU, không cần embedding",
+        "Hybrid (BM25 + dense): cải thiện recall so với pure dense retrieval",
+        "Mature và production-tested hàng thập kỷ"
+      ],
+      "cons": [
+        "Không hiểu ngữ nghĩa: 'ngân hàng' và 'bank' không tương đồng",
+        "Tiếng Việt tokenization cần được đúng cho BM25 hoạt động tốt"
+      ],
+      "use_cases": ["Hybrid search trong RAG pipeline", "Fallback khi embedding model không available", "Exact keyword matching"],
+      "key_papers": ["Robertson, S. & Zaragoza, H. (2009). The Probabilistic Relevance Framework: BM25. Foundations and Trends in IR."]
+    },
+    {
+      "name": "LoRA / QLoRA",
+      "category": "Parameter-Efficient Fine-tuning Method",
+      "complexity": "~0.1-1% tham số trainable so với full fine-tune",
+      "pros": [
+        "Fine-tune 7B model trên RTX 3090 24GB với QLoRA (4-bit base + LoRA adapters)",
+        "Zero inference overhead sau merge: W_merged = W₀ + BA",
+        "Giảm catastrophic forgetting vì base weights đông lạnh",
+        "Industry standard 2024-2026 cho mọi PEFT task"
+      ],
+      "cons": [
+        "Không match full fine-tune cho complex tasks đòi hỏi deep adaptation",
+        "Cần chọn target modules đúng: BERT (query/value), LLaMA (q/v/k/o_proj)",
+        "QLoRA thêm quantization overhead khi training"
+      ],
+      "use_cases": ["Fine-tune PhoBERT cho Vietnamese classification", "Adapt Vistral/LLaMA cho domain tiếng Việt", "Mọi fine-tuning với hardware <80GB VRAM"],
+      "key_papers": [
+        "Hu, E. et al. (2021). LoRA: Low-Rank Adaptation of Large Language Models. ICLR 2022. arXiv:2106.09685",
+        "Dettmers, T. et al. (2023). QLoRA: Efficient Finetuning of Quantized LLMs. NeurIPS 2023. arXiv:2305.14314"
+      ]
+    },
+    {
+      "name": "DPO (Direct Preference Optimization)",
+      "category": "Alignment Training Method",
+      "complexity": "Tương đương SFT, không cần reward model riêng",
+      "pros": [
+        "Loại bỏ phức tạp PPO (4 forward passes/step): chỉ cần SFT + preference data",
+        "Ổn định hơn RLHF trong practice",
+        "Có thể tạo Vietnamese domain LLM tuần theo preference người dùng",
+        "Cần ít data hơn: 1,000-10,000 preference pairs đủ cho domain adaptation"
+      ],
+      "cons": [
+        "Cần preference pairs annotated — tốn công hơn SFT data",
+        "Sensitive với β parameter và chất lượng preference data",
+        "Kém effective hơn RLHF nếu preference data không đa dạng"
+      ],
+      "use_cases": ["Alignment Vietnamese chatbot", "Domain-specific instruction following", "Reduce hallucination qua preference training"],
+      "key_papers": ["Rafailov, R. et al. (2023). Direct Preference Optimization. NeurIPS 2023. arXiv:2305.18290"]
+    },
+    {
+      "name": "ColBERT (Contextualized Late Interaction)",
+      "category": "Late-Interaction Dense Retrieval",
+      "complexity": "O(|q|·|d|) via MaxSim, compressed storage",
+      "pros": [
+        "Chất lượng recall cao hơn bi-encoder do late interaction per-token",
+        "Compressed token embeddings cho phép scale đến large corpora",
+        "Tốt cho RAG với precision requirements cao"
+      ],
+      "cons": [
+        "Lưu trữ lớn hơn: mỗi document lưu nhiều token embeddings",
+        "Phức tạp hơn bi-encoder để implement và serve"
+      ],
+      "use_cases": ["High-precision RAG retrieval", "Legal document search", "Semantic code search"],
+      "key_papers": ["Khattab, O. & Zaharia, M. (2020). ColBERT: Efficient and Effective Passage Search via Contextualized Late Interaction. SIGIR 2020. arXiv:2004.12832"]
+    },
+    {
+      "name": "XLM-R (XLM-RoBERTa)",
+      "category": "Multilingual Encoder Language Model",
+      "complexity": "270M (base) / 560M (large) params",
+      "pros": [
+        "Pretrain trên 100 ngôn ngữ bao gồm tiếng Việt",
+        "Strong cross-lingual transfer: fine-tune tiếng Anh, sử dụng tiếng Việt zero-shot",
+        "Tốt cho mixed-language documents (Việt-Anh)",
+        "LaBSE variant tốt cho sentence-level multilingual embeddings"
+      ],
+      "cons": [
+        "Kém PhoBERT trên Vietnamese-only tasks do dilution từ 100 ngôn ngữ",
+        "Cần PhoBERT khi tác vụ pure Vietnamese"
+      ],
+      "use_cases": ["Cross-lingual classification", "Mixed-language Vietnamese documents", "Multilingual NER"],
+      "key_papers": ["Conneau, A. et al. (2019). Unsupervised Cross-lingual Representation Learning. NeurIPS 2020. arXiv:1911.02116"]
+    },
+    {
+      "name": "Qwen2.5",
+      "category": "Multilingual Open-Source Decoder LLM",
+      "complexity": "0.5B-72B params, phiên bản đa dạng",
+      "pros": [
+        "Strong multilingual bao gồm tiếng Việt, Chinese, English",
+        "Long context: 128k tokens",
+        "Open weights, nhiều kích thước từ 0.5B (edge) đến 72B (enterprise)",
+        "Cạnh tranh với LLaMA 3 trên Vietnamese benchmarks"
+      ],
+      "cons": [
+        "Alibaba origin — có thể có concerns về supply chain trust cho một số enterprise clients",
+        "Tiếng Việt quality chưa được kiểm chứng rộng rãi như PhoBERT cho supervised tasks"
+      ],
+      "use_cases": ["Self-hosted LLM Vietnamese generation", "Edge deployment (0.5B-3B)", "Long-document processing"],
+      "key_papers": ["Hui, B. et al. (2024). Qwen2.5 Technical Report. arXiv:2412.15115"]
+    },
+    {
+      "name": "RAGAS (RAG Assessment Framework)",
+      "category": "RAG Evaluation Framework",
+      "complexity": "LLM-graded evaluation, O(n) per sample",
+      "pros": [
+        "4 metrics không cần gold answers: Faithfulness, Answer Relevancy, Context Precision, Context Recall",
+        "Faithfulness < 0.7 = hallucination problem; Context Recall < 0.6 = retrieval failure",
+        "Tích hợp CI/CD: gate deployment khi faithfulness < 0.85",
+        "Production monitoring: sample 1-3% traffic hàng tuần"
+      ],
+      "cons": [
+        "LLM-graded: tốn token cost cho evaluation",
+        "Vietnamese evaluation cần judge model hỗ trợ tốt tiếng Việt"
+      ],
+      "use_cases": ["RAG quality gate trong CI/CD", "Production monitoring", "Prompt A/B testing"],
+      "key_papers": ["Es, S. et al. (2023). RAGAS: Automated Evaluation of Retrieval Augmented Generation. EACL 2024. arXiv:2309.15217"]
+    },
+    {
+      "name": "vLLM (PagedAttention Serving)",
+      "category": "LLM Inference Serving Framework",
+      "complexity": "3-24x throughput improvement vs naive serving",
+      "pros": [
+        "PagedAttention: KV cache quản lý như paged memory — loại bỏ fragmentation",
+        "Continuous batching: 3-24× throughput hơn naive serving",
+        "OpenAI-compatible API endpoint — swap backend không đổi client code",
+        "Hỗ trợ tensor parallelism cho multi-GPU"
+      ],
+      "cons": [
+        "Yêu cầu NVIDIA GPU",
+        "Image ~15GB, setup phức tạp hơn Ollama",
+        "Không phù hợp cho single-user dev environment"
+      ],
+      "use_cases": ["Multi-user LLM serving production", "High-throughput Vietnamese chatbot", "Self-hosted API endpoint cho data sovereignty"],
+      "key_papers": ["Kwon, W. et al. (2023). Efficient Memory Management for Large Language Model Serving with PagedAttention. SOSP 2023. arXiv:2309.06180"]
+    }
+  ],
+  "tech_stack": {
+    "tokenization": {
+      "recommended": { "recommended": "underthesea 6.8.x (tiếng Việt) + tiktoken 0.7.x (LLM)", "rationale": "underthesea: độ chính xác word-seg cao nhất cho tiếng Việt; tiktoken: zero-dependency, nhanh nhất cho GPT-family models. Cảnh báo: underthesea accuracy 80-85% trên informal Vietnamese." },
+      "alternatives": { "recommended": "pyvi (nhẹ hơn) / VnCoreNLP (research-grade)", "rationale": "pyvi nhanh hơn nhưng kém chính xác; VnCoreNLP tốt cho research nhưng nặng hơn." }
+    },
+    "embeddings": {
+      "recommended": { "recommended": "bkai-foundation-models/vietnamese-bi-encoder + BAAI/bge-m3", "rationale": "vietnamese-bi-encoder: recall cao nhất cho semantic search tiếng Việt; bge-m3: multilingual (1024-dim), tốt cho mixed Vietnamese-English documents." },
+      "alternatives": { "recommended": "intfloat/multilingual-e5-large / OpenAI text-embedding-3-small / Cohere embed-v3", "rationale": "multilingual-e5-large tốt cho multilingual; OpenAI API cho prototype không muốn self-host." }
+    },
+    "vector_db": {
+      "recommended": { "recommended": "Qdrant 1.9.x", "rationale": "Rust-based hiệu suất cao, filter trên payload metadata, Docker-native, tự host miễn phí, HNSW index. Tốt nhất cho MAESTRO architecture." },
+      "alternatives": { "recommended": "pgvector (PostgreSQL) / Weaviate / Pinecone / Chroma", "rationale": "pgvector cho dự án đã dùng PostgreSQL (<1M vectors); Chroma chỉ cho development; Pinecone managed cloud." }
+    },
+    "llm_serving": {
+      "recommended": { "recommended": "vLLM 0.5.x + OpenAI API (fallback với routing)", "rationale": "vLLM: PagedAttention throughput tốt nhất, OpenAI-compatible endpoint; OpenAI API cho general tasks không sovereignty. QUAN TRỌNG: không dùng OpenAI fallback cho sovereignty clients — dùng local fallback model nhỏ hơn." },
+      "alternatives": { "recommended": "Ollama (dev only) / TGI / LiteLLM gateway / llama.cpp (CPU)", "rationale": "Ollama cho dev local; TGI alternative production; llama.cpp cho on-premise không GPU." }
+    },
+    "fine_tuning": {
+      "recommended": { "recommended": "PEFT + LoRA + TRL (HuggingFace Transformers 4.44+)", "rationale": "LoRA: 99%+ giảm trainable params, fit 7B trên RTX 3090; TRL SFTTrainer + DPO cho instruction tuning tiếng Việt; peft 0.12+ cho stable LoRA implementation." },
+      "alternatives": { "recommended": "Axolotl / LLaMA-Factory / Unsloth", "rationale": "Axolotl cho multi-GPU fine-tuning; Unsloth 2× speed với LoRA; LLaMA-Factory UI-friendly." }
+    },
+    "orchestration": {
+      "recommended": { "recommended": "LangChain 0.3.x / LlamaIndex 0.11.x", "rationale": "LangChain cho custom chains và agent loops; LlamaIndex tốt hơn cho document-centric RAG heavy pipelines. Cảnh báo: API churn thực sự — luôn pin versions và test regression." },
+      "alternatives": { "recommended": "DSPy / Haystack / custom pipeline", "rationale": "DSPy cho programmatic prompt optimization (emerging, recommended cho MAESTRO long-term); Haystack cho production RAG alternative." }
+    },
+    "evaluation": {
+      "recommended": { "recommended": "RAGAS 0.1.x + promptfoo 0.71.x", "rationale": "RAGAS: 4 metrics RAG không cần gold answers (Faithfulness, Relevancy, Precision, Recall); promptfoo cho prompt regression testing trong CI/CD pipeline." },
+      "alternatives": { "recommended": "DeepEval / TruLens / MLflow + LLM-as-Judge", "rationale": "DeepEval comprehensive; TruLens cho observability; LLM-as-Judge (GPT-4o) cho open-ended evaluation." }
+    },
+    "monitoring": {
+      "recommended": { "recommended": "Langfuse 2.x (self-hosted) + Prometheus + Grafana", "rationale": "Langfuse: trace-level LLM visibility, prompt versioning, cost/latency dashboard, Docker-deployable; Prometheus+Grafana cho infrastructure metrics." },
+      "alternatives": { "recommended": "LangSmith / Helicone / Arize AI", "rationale": "LangSmith tốt nếu đã dùng LangChain ecosystem; Arize AI cho ML observability chuyên sâu." }
+    }
+  },
+  "feasibility_score": {
+    "overall_score": 6.8,
+    "overall": 6.8,
+    "verdict": "CONDITIONAL GO",
+    "verdict_vi": "Tiến hành có điều kiện",
+    "summary": "NLP là CONDITIONAL GO tại thị trường Việt Nam 2026. Nhu cầu thị trường mạnh (9/10) và kỹ thuật trưởng thành (8/10), nhưng rủi ro chiến lược LLM commoditization và khan hiếm dữ liệu tiếng Việt (5/10 data) tạo ra điều kiện khắt khe. Con đường khả thi: chuyên sâu theo domain với dữ liệu riêng, tuân thủ data sovereignty, on-premise deployment cho banking/gov/healthcare.",
+    "dimensions": {
+      "technical_feasibility": { "score": 8, "rationale": "Ecosystem mã nguồn mở trưởng thành: PhoBERT, Vistral, underthesea, LangChain, Qdrant, vLLM đều production-viable. Rủi ro không phải 'có thể build không' mà là 'có thể build ở chất lượng cạnh tranh với OpenAI API không'." },
+      "market_demand": { "score": 9, "rationale": "Nhu cầu rõ ràng ở mọi cấp: toàn cầu ($50B+ 2026), SEA doanh nghiệp (banking, telecom, e-commerce chatbots), và doanh nghiệp Việt Nam dưới áp lực quy định địa phương hóa AI. Rủi ro là cạnh tranh, không phải thiếu nhu cầu." },
+      "data_availability": { "score": 5, "rationale": "Ràng buộc nghiêm trọng nhất. ~15 datasets công khai tiếng Việt, chủ yếu tin tức và feedback sinh viên. Không có dataset chất lượng cao cho banking compliance, pháp lý, y tế tiếng Việt. Xây dựng proprietary domain data = 12-18 tháng và $200,000-$500,000." },
+      "implementation_risk": { "score": 5, "rationale": "Chi phí GPU self-host ($600-$15,000/tháng); LangChain API churn; Vietnamese informal text distribution shift; fallback API mâu thuẫn data sovereignty. Manageable nhưng non-trivial ở production scale." },
+      "vietnam_market_fit": { "score": 7, "rationale": "Phù hợp mạnh: banking NLP compliance, dịch vụ chính phủ, contact center automation cho doanh nghiệp tiếng Việt. Yếu: consumer NLP (người dùng đã có ChatGPT/Gemini tiếng Việt miễn phí). Regulatory environment vừa là ràng buộc vừa là cơ hội." }
+    },
+    "conditions": [
+      "Roadmap nhắm ít nhất hai trong số: NLP đặc thù tiếng Việt, NLP tuân thủ ngành được quản lý (banking/legal/healthcare), hoặc on-premise deployment theo data localization requirements",
+      "Cam kết sở hữu dữ liệu có nhãn tiếng Việt theo domain như tài sản chiến lược — không chỉ dùng open-source models trên open datasets",
+      "Mô hình doanh thu gắn với kết quả (accuracy, compliance, cost savings) không phải generic API access",
+      "Không triển khai chatbot tiếng Việt chung chung hoặc Document Q&A không có differentiation rõ ràng — cửa sổ cơ hội đã đóng kể từ Q3 2025",
+      "Architecture phải hỗ trợ on-premise deployment từ ngày 1 cho banking/gov clients theo Luật An ninh mạng 2018 và Nghị định 13/2023"
+    ]
+  },
+  "industry_applications": [
+    {
+      "industry": "Tài chính & Ngân hàng (Finance & Banking)",
+      "use_case": "AML/KYC Document NLP — Trích xuất thực thể và phân loại narrative giao dịch",
+      "description": "Phân tích narrative giao dịch, phân loại rủi ro AML, tự động hóa tài liệu tuân thủ. 96 ngân hàng thương mại dưới quy định SBV, Thông tư 09/2023 yêu cầu lưu hồ sơ giao tiếp. PhoBERT NER + fine-tuned classifier deployable ngay.",
+      "priority": "P1",
+      "market_size_vn": "USD 25-40M/năm",
+      "technical_complexity": "Medium",
+      "vietnam_readiness": "High"
+    },
+    {
+      "industry": "Tài chính & Ngân hàng",
+      "use_case": "Contact Center Intent Classification — Phân loại ý định tiếng Việt",
+      "description": "Phân loại tự động các yêu cầu dịch vụ khách hàng tiếng Việt cho banking, telecom, e-commerce. Production-ready với 2,000+ labeled examples. Viettel/VNPT/Mobifone: 20-30 triệu tương tác/tháng là TAM lớn nhất.",
+      "priority": "P1",
+      "market_size_vn": "USD 20-35M/năm",
+      "technical_complexity": "Low-Medium",
+      "vietnam_readiness": "High"
+    },
+    {
+      "industry": "Pháp lý & Chính phủ (Legal & Government)",
+      "use_case": "Vietnamese Legal Document Analysis — Phân tích hợp đồng và văn bản pháp lý",
+      "description": "Trích xuất điều khoản, xác định nghĩa vụ, kiểm tra tuân thủ quy định. RAG + GPT-4o khả thi; cần fine-tuning tiếng Việt pháp lý cho production accuracy. Chương trình chuyển đổi số quốc gia (Quyết định 749/QD-TTg) tạo nhu cầu từ phía chính phủ.",
+      "priority": "P1",
+      "market_size_vn": "USD 15-25M/năm",
+      "technical_complexity": "High",
+      "vietnam_readiness": "Medium"
+    },
+    {
+      "industry": "Chính phủ & Dịch vụ công (Government)",
+      "use_case": "Government e-Service Chatbot — Chatbot dịch vụ hành chính tiếng Việt",
+      "description": "Hỏi đáp FAQ công dân về thủ tục hành chính, đơn xin cấp phép, thuế. RAG chatbot deployable với knowledge base thủ tục; cần tuân thủ data localization cho hệ thống chính phủ.",
+      "priority": "P1",
+      "market_size_vn": "USD 10-20M/năm",
+      "technical_complexity": "Medium",
+      "vietnam_readiness": "High"
+    },
+    {
+      "industry": "Sản xuất (Manufacturing)",
+      "use_case": "Maintenance Report Analysis — Phân tích báo cáo bảo trì và phân loại lỗi",
+      "description": "NLP trích xuất loại lỗi, ID thiết bị, nguyên nhân gốc từ nhật ký bảo trì tiếng Việt. NCR auto-classification với PhoBERT fine-tune đạt 90-95% F1. ROI ước tính $88,000/năm cho nhà máy 1,000 nhân viên.",
+      "priority": "P1",
+      "market_size_vn": "USD 8-15M/năm",
+      "technical_complexity": "Medium",
+      "vietnam_readiness": "High"
+    },
+    {
+      "industry": "Giáo dục (Education)",
+      "use_case": "Vietnamese Essay Grading Assistant — Hỗ trợ chấm bài luận tiếng Việt",
+      "description": "LLM-based assistant cung cấp điểm nháp + phản hồi rubric cho bài Ngữ văn THPTQG. Human-in-the-loop bắt buộc. Giảm 60-70% thời gian chấm. Cần partnership với trường học để build labeled dataset (~1,000-2,000 bài chấm).",
+      "priority": "P2",
+      "market_size_vn": "USD 5-10M/năm",
+      "technical_complexity": "High",
+      "vietnam_readiness": "Medium"
+    },
+    {
+      "industry": "Thương mại điện tử & Bán lẻ (E-commerce)",
+      "use_case": "Product Review Sentiment Analysis — Phân tích cảm xúc đánh giá sản phẩm",
+      "description": "Aspect-based sentiment cho đánh giá tiếng Việt trên Tiki/Shopee/TikTok Shop. UIT-ViSFD dataset có sẵn, fast to deploy. Cạnh tranh nhưng nhiều cơ hội cho vertical specific (fashion, electronics).",
+      "priority": "P2",
+      "market_size_vn": "USD 10-18M/năm",
+      "technical_complexity": "Low",
+      "vietnam_readiness": "High"
+    },
+    {
+      "industry": "Truyền thông & Thông tin (Media & Intelligence)",
+      "use_case": "News and Social Media Monitoring — Giám sát tin tức và mạng xã hội tiếng Việt",
+      "description": "Real-time sentiment monitoring, topic classification, entity tracking tiếng Việt cho brand intelligence và policy monitoring. NLP stack chuẩn applicable; differentiation ở UI/coverage. Cần xử lý informal Vietnamese mạng xã hội (phức tạp hơn formal text).",
+      "priority": "P2",
+      "market_size_vn": "USD 8-12M/năm",
+      "technical_complexity": "Medium",
+      "vietnam_readiness": "High"
+    },
+    {
+      "industry": "Y tế (Healthcare)",
+      "use_case": "Healthcare Clinical Note NLP — NLP hồ sơ y tế tiếng Việt",
+      "description": "Trích xuất thực thể y tế tiếng Việt, hỗ trợ mã hóa ICD, sinh tóm tắt xuất viện. Dataset y tế tiếng Việt có nhãn gần như không tồn tại. Cần partnership với bệnh viện. Regulatory pathway chưa rõ ràng.",
+      "priority": "P3",
+      "market_size_vn": "USD 8-15M/năm",
+      "technical_complexity": "High",
+      "vietnam_readiness": "Low-Medium"
+    }
+  ],
+  "case_studies": [
+    {
+      "title": "Banking Contact Center NLP — Phân loại ý định tự động tại ngân hàng Tier-2",
+      "industry": "Banking & Finance",
+      "problem": "Trung tâm chăm sóc khách hàng nhận 50,000+ cuộc gọi/tháng. Agent phải phân loại thủ công lý do liên hệ — mất 30-60 giây/cuộc gọi trước khi xử lý. Không có pattern analysis trên lý do phổ biến.",
+      "solution": "Fine-tune PhoBERT-base với LoRA trên 3,000 labeled intent examples (tiếng Việt banking domain). Real-time classification API (FastAPI, P95 < 50ms). Tích hợp với CRM để auto-tag và route.",
+      "results": "Intent classification F1 = 0.91 trên 25 classes. Giảm 45 giây xử lý/cuộc gọi. Pattern analysis phát hiện 15% cuộc gọi liên quan đến vấn đề ứng dụng mobile — dẫn đến ưu tiên fix bug.",
+      "tech_stack": "vinai/phobert-base-v2 + PEFT LoRA (r=16) + FastAPI + ONNX export + Redis cache",
+      "lessons": "Informal banking Vietnamese (khách hàng dùng từ thông thường thay thuật ngữ) cần preprocessing đặc biệt. Model accuracy tốt trên formal text nhưng giảm 10-15% trên informal input — cần augmentation với informal examples."
+    },
+    {
+      "title": "Manufacturing NCR Classification — Tự động phân loại báo cáo lỗi nhà máy điện tử",
+      "industry": "Manufacturing",
+      "problem": "Nhà máy điện tử 800 nhân viên có 200+ NCR (Non-Conformance Reports)/tuần viết bằng tiếng Việt. Quality engineer mất 2-3 giờ/ngày phân loại thủ công theo taxonomy 20 defect types.",
+      "solution": "Xây dựng domain corpus từ 3 năm NCR archive (4,500 records). Fine-tune PhoBERT với LoRA. Web interface cho quality engineer review và correction — data flywheel tự cải thiện.",
+      "results": "F1 = 0.93 trên 20-class taxonomy sau 3 tuần fine-tuning. Tiết kiệm 2 giờ/ngày/quality engineer. Corpus private là competitive moat — không đối thủ nào có dataset NCR tiếng Việt theo domain này.",
+      "tech_stack": "vinai/phobert-base-v2 + underthesea + PEFT + FastAPI + React interface",
+      "lessons": "Factory-specific abbreviations (KCS, BTP, TP) cần domain glossary injected vào preprocessing. Sau 6 tháng, retrain với production corrections đẩy F1 từ 0.93 lên 0.96."
+    },
+    {
+      "title": "Education Platform RAG — Chatbot hỗ trợ học sinh luyện thi THPTQG",
+      "industry": "Education",
+      "problem": "Nền tảng luyện thi có 200,000 học sinh nhưng không đủ gia sư để trả lời câu hỏi học thuật 24/7. Học sinh vùng nông thôn không có giáo viên giỏi ngoài giờ học.",
+      "solution": "RAG chatbot trên 5,000+ tài liệu curriculum (SGK, đề thi mẫu, giải thích). vietnamese-bi-encoder + Qdrant + GPT-4o-mini với system prompt tiếng Việt. Human escalation khi confidence thấp.",
+      "results": "RAGAS faithfulness = 0.87, answer relevancy = 0.83. 70% câu hỏi giải quyết không cần escalation. NPS tăng 15 điểm. Chi phí $0.003/câu hỏi vs $20-30/giờ gia sư riêng.",
+      "tech_stack": "bkai-foundation-models/vietnamese-bi-encoder + Qdrant + LangChain + GPT-4o-mini + Langfuse + RAGAS",
+      "lessons": "Academic Vietnamese (văn phong học thuật) khác biệt đáng kể so với corpus web crawl — cần curate curriculum content trước khi index. Câu hỏi toán không cần RAG nhưng câu hỏi văn học cần grounding trong tác phẩm cụ thể."
+    }
+  ],
+  "key_papers": [
+    {
+      "title": "Attention Is All You Need",
+      "authors": "Ashish Vaswani, Noam Shazeer et al.",
+      "year": 2017,
+      "venue": "NeurIPS 2017",
+      "contribution": "Giới thiệu kiến trúc Transformer: pure attention, không recurrence, không convolution. Cơ sở của tất cả LLM hiện đại. Công thức cốt lõi: Attention(Q,K,V) = softmax(QKᵀ/√d_k)V.",
+      "url": "https://arxiv.org/abs/1706.03762"
+    },
+    {
+      "title": "BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding",
+      "authors": "Jacob Devlin, Ming-Wei Chang, Kenton Lee, Kristina Toutanova",
+      "year": 2018,
+      "venue": "NAACL 2019",
+      "contribution": "Thiết lập paradigm pretraining + fine-tuning thống trị NLP. Masked Language Modeling cho phép bidirectional context. Nền tảng của PhoBERT.",
+      "url": "https://arxiv.org/abs/1810.04805"
+    },
+    {
+      "title": "Language Models are Few-Shot Learners (GPT-3)",
+      "authors": "Tom Brown et al. (OpenAI)",
+      "year": 2020,
+      "venue": "NeurIPS 2020",
+      "contribution": "Scale unlocks emergent few-shot capabilities: mô hình 175B có thể giải quyết tasks chưa từng được train chỉ từ context examples. Mở ra kỷ nguyên LLM hiện đại.",
+      "url": "https://arxiv.org/abs/2005.14165"
+    },
+    {
+      "title": "Training language models to follow instructions with human feedback (InstructGPT)",
+      "authors": "Long Ouyang et al. (OpenAI)",
+      "year": 2022,
+      "venue": "NeurIPS 2022",
+      "contribution": "RLHF pipeline: SFT → Reward Model → PPO. Biến LLM từ text completion thành instruction follower. Nền tảng của ChatGPT, Claude, Gemini.",
+      "url": "https://arxiv.org/abs/2203.02155"
+    },
+    {
+      "title": "Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks",
+      "authors": "Patrick Lewis et al. (Facebook AI)",
+      "year": 2020,
+      "venue": "NeurIPS 2020",
+      "contribution": "Chính thức hóa RAG: kết hợp dense retrieval (DPR) và seq2seq generation. Tách biệt parametric knowledge (trong model) và non-parametric knowledge (trong index). Pattern production phổ biến nhất 2024-2026.",
+      "url": "https://arxiv.org/abs/2005.11401"
+    },
+    {
+      "title": "LoRA: Low-Rank Adaptation of Large Language Models",
+      "authors": "Edward Hu et al. (Microsoft)",
+      "year": 2021,
+      "venue": "ICLR 2022",
+      "contribution": "W = W₀ + BA: freeze base weights, train chỉ low-rank decomposition. Giảm 99%+ trainable parameters, zero inference overhead sau merge. Industry standard cho fine-tuning.",
+      "url": "https://arxiv.org/abs/2106.09685"
+    },
+    {
+      "title": "PhoBERT: Pre-trained Language Models for Vietnamese",
+      "authors": "Dat Quoc Nguyen, Anh Tuan Nguyen (VinAI)",
+      "year": 2020,
+      "venue": "EMNLP 2020 Findings",
+      "contribution": "Mô hình pretrained tiếng Việt đầu tiên quy mô lớn. RoBERTa-based, train trên 20GB Vietnamese corpus. SOTA cho Vietnamese NER, POS, dependency parsing, classification.",
+      "url": "https://arxiv.org/abs/2003.00744"
+    },
+    {
+      "title": "Direct Preference Optimization: Your Language Model is Secretly a Reward Model",
+      "authors": "Rafael Rafailov et al. (Stanford)",
+      "year": 2023,
+      "venue": "NeurIPS 2023",
+      "contribution": "DPO: loại bỏ reward model và PPO RL loop, tối ưu trực tiếp từ preference pairs. Đơn giản hơn và ổn định hơn RLHF. Chuẩn mực alignment cho Vietnamese LLM fine-tuning.",
+      "url": "https://arxiv.org/abs/2305.18290"
+    },
+    {
+      "title": "Mistral 7B",
+      "authors": "Albert Q. Jiang et al. (Mistral AI)",
+      "year": 2023,
+      "venue": "arXiv 2023",
+      "contribution": "7B dense model với GQA + sliding window attention outperforms GPT-3.5 trên nhiều benchmarks. Nền tảng của Vistral-7B tiếng Việt. Chứng minh 'small but mighty' paradigm.",
+      "url": "https://arxiv.org/abs/2310.06825"
+    },
+    {
+      "title": "RAGAS: Automated Evaluation of Retrieval Augmented Generation",
+      "authors": "Shahul Es et al.",
+      "year": 2023,
+      "venue": "EACL 2024",
+      "contribution": "Framework đánh giá RAG tự động: Faithfulness, Answer Relevancy, Context Precision, Context Recall. Không cần gold answers. Cho phép automated CI/CD quality gate cho RAG systems.",
+      "url": "https://arxiv.org/abs/2309.15217"
+    },
+    {
+      "title": "Efficient Memory Management for Large Language Model Serving with PagedAttention (vLLM)",
+      "authors": "Woosuk Kwon et al. (UC Berkeley)",
+      "year": 2023,
+      "venue": "SOSP 2023",
+      "contribution": "PagedAttention: quản lý KV cache như paged memory trong OS, loại bỏ fragmentation. Continuous batching đạt 3-24× throughput improvement. Nền tảng của vLLM production serving.",
+      "url": "https://arxiv.org/abs/2309.06180"
+    },
+    {
+      "title": "QLoRA: Efficient Finetuning of Quantized LLMs",
+      "authors": "Tim Dettmers et al.",
+      "year": 2023,
+      "venue": "NeurIPS 2023",
+      "contribution": "Kết hợp 4-bit NF4 quantization với LoRA adapters: fine-tune 65B model trên một GPU 48GB. Dân chủ hóa LLM fine-tuning cho team nhỏ.",
+      "url": "https://arxiv.org/abs/2305.14314"
+    }
+  ],
+  "cross_domain_connections": [
+    {
+      "target": "B02",
+      "connection_type": "core_component",
+      "description": "NLP là thành phần cốt lõi của Document Intelligence. Pipeline B02: OCR → NLP extraction → structured output. PhoBERT NER cho Vietnamese document entity extraction, RAG cho document Q&A. B04 cung cấp ngữ nghĩa; B02 cung cấp structure và layout parsing. Hầu như không thể build B02 production-grade mà không có B04."
+    },
+    {
+      "target": "B08",
+      "connection_type": "foundation_of",
+      "description": "Conversational AI là ứng dụng tầng trên của NLP. Mọi chatbot và virtual assistant đều cần: intent classification (NLP), entity extraction (NLP), dialogue management (NLP), và LLM generation (NLP). B04 cung cấp technology foundation; B08 cung cấp conversational flow, multi-turn management, và user experience design. B04 là nền tảng không thể thiếu của B08."
+    },
+    {
+      "target": "B09",
+      "connection_type": "overlaps_with",
+      "description": "Generative AI cho văn bản là overlap lớn nhất. LLM core (GPT, LLaMA, Mistral) thuộc cả B04 (NLP engineering) và B09 (Generative AI). Ranh giới: B04 focus vào NLU + RAG + fine-tuning + Vietnamese-specific; B09 focus vào generation quality, RLHF alignment, multimodal generation. Trong platform MAESTRO, B04 và B09 chia sẻ LLM infrastructure."
+    },
+    {
+      "target": "B11",
+      "connection_type": "enables",
+      "description": "NLP là công cụ chính để xây dựng và query Knowledge Graphs. Entity extraction (NER), relation extraction, và coreference resolution từ B04 populate graph nodes/edges. RAG sử dụng KG cho structured knowledge retrieval. B04 enables B11 ở cả input (graph construction from text) và output (NLP-powered graph querying)."
+    },
+    {
+      "target": "B12",
+      "connection_type": "foundation_of",
+      "description": "Search & RAG là application layer trực tiếp của NLP. BM25 (sparse retrieval), dense embedding (bi-encoder), cross-encoder reranking, và LLM generation đều là NLP technologies. B04 cung cấp các building blocks kỹ thuật; B12 tập trung vào search architecture, ranking optimization, và user relevance. RAG pipeline là intersection hoàn toàn của B04 và B12."
+    },
+    {
+      "target": "B03",
+      "connection_type": "complements_multimodal",
+      "description": "Multimodal convergence: CLIP, LLaVA, GPT-4V, InternVL2 hợp nhất B03 (vision encoder) và B04 (language decoder) trong một foundation model. OCR cho tiếng Việt là B03 technology phục vụ B04 pipeline. Document AI cho tài liệu Việt Nam hỗn hợp (LayoutLMv3, Donut) là intersection rõ ràng nhất. B03 và B04 đang hội tụ trong multimodal layer."
+    },
+    {
+      "target": "B01",
+      "connection_type": "text_signals",
+      "description": "Text signals bổ sung cho forecasting: news sentiment, social media tone, earnings call NLP features đều là B04 outputs có thể feed vào B01 time series models. Đặc biệt cho financial forecasting: sentiment analysis từ báo cáo tài chính tiếng Việt + time series forecasting tạo ra forecasting system mạnh hơn. Kết nối yếu hơn nhưng real và valuable."
+    }
+  ],
+  "bestPractices": [
+    "Chạy benchmark thực nghiệm trên 100 sample tiếng Việt từ target domain trước bất kỳ quyết định kiến trúc nào — không bao giờ dùng MMLU hay benchmark tiếng Anh để dự đoán performance trên Vietnamese domain task cụ thể. API vs fine-tune phải được quyết định bởi data, không phải assumption.",
+    "Luôn normalize Unicode về NFC trước tất cả NLP processing: unicodedata.normalize('NFC', text). Tiếng Việt có 134 ký tự đặc biệt, dạng precomposed (NFC) và decomposed (NFD) gây silent mismatch trong tokenization và embedding — lỗi thường khó debug nhất trong production.",
+    "Test model trên corpus tiếng Việt không chính thức (mạng xã hội, chat, SMS) trước khi cam kết với client có consumer-facing NLP. underthesea accuracy giảm từ 95%+ xuống 80-85% trên informal text — distribution shift này lan truyền qua toàn bộ pipeline một cách thầm lặng.",
+    "Implement RAGAS automated evaluation (Faithfulness ≥ 0.85, Answer Relevancy ≥ 0.80) như deployment gate trong CI/CD cho mọi RAG system. Thay đổi model hoặc prompt phải trigger full evaluation suite trước khi push production — quality regression trong RAG thường không hiện ra ngay trong accuracy metrics.",
+    "Xây dựng proprietary Vietnamese domain dataset như capital investment, không phải project cost: 5,000-20,000 labeled examples tốt hơn trong domain của bạn ($5,000-$20,000 annotation cost) tạo competitive moat 2-3 năm mà không đối thủ nào có thể replicate từ public data.",
+    "Implement architecture phân tách rõ ràng giữa sovereign và non-sovereign data flows. Client banking/gov không bao giờ nên có data routed sang API provider nước ngoài — kể cả fallback. On-premise fallback (model nhỏ hơn, degraded service mode) tốt hơn API fallback vi phạm Nghị định 13/2023.",
+    "Áp dụng 'API-first prototype, fine-tune khi justify': dùng GPT-4o-mini API cho <30M tokens/tháng và domain không specific; chuyển sang fine-tuned PhoBERT chỉ khi >500,000 classification requests/tháng HOẶC data sovereignty là hard requirement. Không bao giờ default sang self-host chỉ vì 'tốt hơn về nguyên tắc'."
+  ],
+  "antiPatterns": [
+    "Dùng mô hình sinh văn bản (LLM) cho tác vụ phân loại trong production khi đã có labeled data đủ để fine-tune encoder. GPT-4o cho intent classification với 10,000 labeled examples tốn 10-100× chi phí inference hơn fine-tuned PhoBERT với accuracy thấp hơn — đây là lãng phí tài nguyên không cần thiết.",
+    "Triển khai self-hosted LLM (A100, vLLM) trước khi validate volume justify được chi phí. Hầu hết Vietnamese enterprise NLP đầu tiên xử lý 500-5,000 requests/ngày — GPT-4o-mini API tốn $3-30/tháng so với A100 server gấp 20-300× đắt hơn. Luôn tính break-even volume (~30-50M tokens/tháng với giá 2026) trước khi commit infrastructure.",
+    "Copy architecture RAG từ tutorial tiếng Anh mà không adapt cho tiếng Việt: chunk size 512 tokens tiếng Anh ≠ 512 tokens tiếng Việt (tiếng Việt tokenize ~1.5× nhiều hơn); embedding model tiếng Anh cho corpus tiếng Việt; ROUGE/BLEU evaluation cho Vietnamese text mà không dùng XLM-R based metrics.",
+    "Đánh giá LLM quality trên formal Vietnamese benchmark mà không test trên informal distribution thực tế. Model đạt 92% trên ViGLUE có thể chỉ đạt 75-80% trên social media Vietnamese của customer service use case — benchmark performance là necessary nhưng không sufficient condition.",
+    "Build 'vLLM → OpenAI API fallback' cho sovereignty clients. Fallback này tự động gửi dữ liệu khách hàng Việt Nam đến server Mỹ khi infrastructure tự host lỗi — vi phạm tiềm năng Luật An ninh mạng 2018 và Nghị định 13/2023. Sovereignty architecture phải có local fallback hoặc degraded mode, không phải API fallback.",
+    "Training từ đầu LLM tiếng Việt cho team <10 ML engineers. Pre-training competitive Vietnamese LLM từ đầu đòi hỏi $2-10M compute, 200B+ Vietnamese tokens, và 12+ tháng — chỉ viable cho VinAI, FPT AI Research hoặc tổ chức nhà nước. MAESTRO nên fine-tune PhoBERT/Vistral trên domain data riêng."
+  ],
+  "resources": [
+    {
+      "title": "CS224N: Natural Language Processing with Deep Learning (Stanford)",
+      "type": "course",
+      "url": "https://web.stanford.edu/class/cs224n/",
+      "level": "Intermediate to Advanced",
+      "description": "Khóa học NLP nền tảng nhất với mathematical rigor: từ word vectors đến Transformer, BERT, GPT, và LLM fine-tuning. Lecture slides và assignments miễn phí."
+    },
+    {
+      "title": "HuggingFace NLP Course",
+      "type": "course",
+      "url": "https://huggingface.co/learn/nlp-course",
+      "level": "Beginner to Intermediate",
+      "description": "Khóa học thực hành từ HuggingFace: Tokenizers, Transformers, Fine-tuning, Datasets. Code-first approach, Colab notebooks. Điểm xuất phát tốt nhất cho practitioners."
+    },
+    {
+      "title": "PhoBERT GitHub Repository",
+      "type": "library",
+      "url": "https://github.com/VinAIResearch/PhoBERT",
+      "level": "Intermediate",
+      "description": "VinAI's PhoBERT: mô hình pretrained tiếng Việt. Bao gồm hướng dẫn fine-tuning, examples cho NER/sentiment/classification, model weights trên HuggingFace Hub."
+    },
+    {
+      "title": "underthesea Documentation",
+      "type": "library",
+      "url": "https://github.com/undertheseanlp/underthesea",
+      "level": "Beginner",
+      "description": "Thư viện NLP tiếng Việt toàn diện nhất: word_tokenize, pos_tag, ner, sentiment, dependency parsing. Cần thiết cho mọi pipeline NLP tiếng Việt."
+    },
+    {
+      "title": "LangChain Documentation",
+      "type": "documentation",
+      "url": "https://python.langchain.com/docs/",
+      "level": "Intermediate",
+      "description": "Framework orchestration cho LLM applications: chains, agents, RAG, tool calling. Chuẩn mực cho rapid prototyping. Cảnh báo: API churn thực sự — pin versions nghiêm ngặt."
+    },
+    {
+      "title": "RAGAS Documentation",
+      "type": "library",
+      "url": "https://docs.ragas.io/",
+      "level": "Intermediate",
+      "description": "Framework đánh giá RAG tự động. Hướng dẫn setup Faithfulness/Answer Relevancy/Context Precision/Recall metrics. Integration với LangChain và LlamaIndex."
+    },
+    {
+      "title": "vLLM Documentation",
+      "type": "documentation",
+      "url": "https://docs.vllm.ai/",
+      "level": "Intermediate to Advanced",
+      "description": "PagedAttention-based LLM serving. Setup hướng dẫn, model compatibility, deployment configuration. Bắt buộc cho production self-hosted LLM serving."
+    },
+    {
+      "title": "Qdrant Documentation",
+      "type": "documentation",
+      "url": "https://qdrant.tech/documentation/",
+      "level": "Beginner to Intermediate",
+      "description": "Vector database Rust-based: quick start, collections management, filtering, payload indexing, Python client. Cần thiết cho RAG pipeline production."
+    },
+    {
+      "title": "Practical LLM Fine-tuning with LoRA (HuggingFace PEFT)",
+      "type": "documentation",
+      "url": "https://huggingface.co/docs/peft/conceptual_guides/lora",
+      "level": "Intermediate",
+      "description": "Hướng dẫn chính thức PEFT LoRA từ HuggingFace: configuration, target modules, merge strategies. Kèm TRL SFTTrainer examples."
+    },
+    {
+      "title": "VLSP Vietnamese NLP Datasets",
+      "type": "resource",
+      "url": "https://vlsp.org.vn/",
+      "level": "All levels",
+      "description": "Trang chủ VLSP (Vietnamese Language and Speech Processing): datasets NER, dependency parsing, sentiment cho tiếng Việt. Điểm bắt đầu cho bất kỳ dự án NLP tiếng Việt nào."
+    },
+    {
+      "title": "ViQuAD — Vietnamese Question Answering Dataset",
+      "type": "dataset",
+      "url": "https://huggingface.co/datasets/vinairesearch/vi-wiki-qa",
+      "level": "Intermediate",
+      "description": "23,000+ cặp Q&A tiếng Việt trích xuất từ Wikipedia. Dùng để benchmark QA systems và RAG pipelines cho tiếng Việt."
+    },
+    {
+      "title": "Langfuse Documentation — LLM Observability",
+      "type": "documentation",
+      "url": "https://langfuse.com/docs",
+      "level": "Intermediate",
+      "description": "Self-hosted LLM observability: traces, prompt versioning, cost tracking, evaluation scores. Docker-deployable, miễn phí tự host. Cần thiết cho production LLM monitoring."
+    }
+  ],
+  "risks": [
+    {
+      "id": "R01",
+      "name": "LLM Commoditization — Thương phẩm hóa LLM",
+      "description": "GPT-4o-class quality tiếp tục rẻ hơn (từ $5/1M token GPT-4 xuống $0.15/1M GPT-4o-mini trong 2 năm; dự kiến $0.02/1M vào 2028). Mọi business model dựa trên undifferentiated NLP API wrapper đang build trên nền tảng sụt lún.",
+      "severity": "Critical",
+      "probability": "High",
+      "mitigation": "Differentiate qua vertical domain depth, labeled data ownership, và compliance features — không phải base model quality. Mô hình doanh thu gắn với outcomes không phải API access."
+    },
+    {
+      "id": "R02",
+      "name": "Hallucination trong ngành quản lý — Liability rủi ro pháp lý",
+      "description": "Banking, legal, healthcare deployments có rủi ro pháp lý nếu LLM output sai. Loan officer dựa vào hallucinated NLP summary tạo regulatory và reputational risk.",
+      "severity": "High",
+      "probability": "Medium",
+      "mitigation": "RAG bắt buộc với trích dẫn nguồn; RAGAS faithfulness scoring gate (≥0.85); human-in-the-loop cho high-stakes outputs; tuyên bố trách nhiệm hợp đồng rõ ràng."
+    },
+    {
+      "id": "R03",
+      "name": "Vietnamese NLP Data Scarcity — Khan hiếm dữ liệu tiếng Việt",
+      "description": "Dataset có nhãn tiếng Việt nhỏ hơn 10-50× so với tiếng Anh. Banking, legal, healthcare gần như không có dataset công khai. Building competitive models đòi hỏi annotation investment mà hầu hết startup không kham nổi.",
+      "severity": "High",
+      "probability": "High",
+      "mitigation": "Hợp tác với đại học Việt Nam (UIT, HUST, VNU) cho annotation; focus trên narrow domain data đủ volume; active learning giảm annotation cost; synthetic data generation với LLM + human review."
+    },
+    {
+      "id": "R04",
+      "name": "GPU Cost cho Self-Hosted LLMs — Chi phí GPU cao",
+      "description": "Chạy 7B model production scale tối thiểu $600-900/tháng (1×A100 spot). Scale lên enterprise traffic đẩy $5,000-15,000/tháng. Không cạnh tranh vs GPT-4o-mini API dưới ~50M tokens/tháng.",
+      "severity": "High",
+      "probability": "High",
+      "mitigation": "API-first architecture cho general tasks; self-host chỉ khi data sovereignty là hard requirement và client trả premium; GPU cost phải được pass through trong pricing model."
+    },
+    {
+      "id": "R08",
+      "name": "Vietnam Cybersecurity Law & Decree 13/2023 — Tuân thủ pháp lý",
+      "description": "Luật An ninh mạng 2018 (Điều 26) yêu cầu lưu trữ dữ liệu người dùng Việt Nam trên server trong nước. Nghị định 13/2023/NĐ-CP áp đặt yêu cầu consent, hồ sơ xử lý dữ liệu, hạn chế chuyển dữ liệu cross-border. Gửi dữ liệu banking/gov qua OpenAI/Anthropic có thể vi phạm.",
+      "severity": "High",
+      "probability": "Medium",
+      "mitigation": "Architecture phải support on-premise hoặc Vietnam-hosted deployment cho banking/gov clients; legal review với luật sư an ninh mạng Việt Nam; tư vấn pháp lý trước khi deploy bất kỳ sản phẩm nào cho regulated industries."
+    },
+    {
+      "id": "R11",
+      "name": "Vietnamese Informal Text Distribution Shift — Độ chính xác giảm trên văn bản không chính thức",
+      "description": "underthesea word segmentation train trên corpus chính thức (báo chí, Wikipedia) đạt 95%+ chính xác trên văn bản chính thức nhưng giảm xuống 80-85% trên tiếng Việt không chính thức. Hầu hết consumer-facing NLP nhận input tiếng Việt không chính thức (social media, chat, SMS).",
+      "severity": "High",
+      "probability": "High",
+      "mitigation": "Thu thập và annotate informal Vietnamese examples; test models trên informal text distribution trước production; thêm diacritic normalization và code-switching detection như preprocessing steps."
+    },
+    {
+      "id": "R07",
+      "name": "Prompt Injection Security Vulnerabilities — Lỗ hổng bảo mật",
+      "description": "Production RAG và chatbot systems vulnerable với prompt injection attacks: leak system prompts, extract confidential retrieved data, hijack model behavior. Active attack vector trên enterprise NLP systems.",
+      "severity": "High",
+      "probability": "High",
+      "mitigation": "Input sanitization; constrained output formats (JSON mode); system prompt hardening; adversarial red-teaming trước production; monitor injection patterns qua Langfuse traces; presidio-analyzer cho PII detection."
+    }
+  ],
+  "metadata": {
+    "status": "reviewed",
+    "version": "1.0",
+    "createdAt": "2026-03-31",
+    "updatedAt": "2026-03-31",
+    "researchedBy": ["R-alpha","R-beta","R-gamma","R-NLP","R-MLE","R-DLE","R-DE","R-BE","R-DO","R-QA","R-SA","R-D04","R-D09","R-sigma"],
+    "consolidatedBy": "R-sigma (Ms. Scribe)",
+    "normalizedAt": "2026-03-31",
+    "normalizedBy": "R-BE",
+    "phase": "Phase 1",
+    "module": "B04",
+    "reviewedBy": "R-BE",
+    "approvedBy": null,
+    "notes": "Normalized by R-BE — Step A5 complete. All Vietnamese descriptions follow language rule: JSON field names in English, values in Vietnamese."
+  }
+}

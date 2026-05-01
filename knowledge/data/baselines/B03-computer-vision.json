@@ -1,0 +1,811 @@
+{
+  "id": "B03",
+  "name": "Computer Vision",
+  "type": "baseline",
+  "slug": "computer-vision",
+  "tagline": "Dạy máy móc nhìn, hiểu và diễn giải thế giới hình ảnh",
+  "category": "baseline",
+  "icon": "Eye",
+  "color": "#00E5FF",
+  "depthLevel": 3,
+  "selectedAgents": ["R-alpha", "R-beta", "R-gamma", "R-MLE", "R-DE", "R-BE", "R-DO", "R-QA", "R-SA", "R-CVE", "R-DLE", "R-D01", "R-D03", "R-sigma"],
+  "description": "Computer Vision (Thị giác máy tính) là lĩnh vực AI cho phép máy móc diễn giải và suy luận về thông tin hình ảnh — ảnh tĩnh, video và cảnh 3D — bằng cách kết hợp xử lý tín hiệu, deep learning và lý luận hình học. Kể từ cuộc cách mạng deep learning năm 2012, các mạng CNN và gần đây là kiến trúc dựa trên Transformer đã nâng tầm CV từ nhận dạng mẫu đơn giản lên hiểu thị giác tổng thể, sánh ngang con người trên nhiều benchmark. Các sub-field chính bao gồm: phân loại ảnh, phát hiện vật thể, phân đoạn ngữ nghĩa và thực thể, ước lượng độ sâu, luồng quang học, phân tích khuôn mặt, phân tích ảnh y tế và hiểu tài liệu trực quan.",
+  "description_paragraphs": [
+    "Computer Vision (Thị giác máy tính) là lĩnh vực AI cho phép máy móc diễn giải và suy luận về thông tin hình ảnh — ảnh tĩnh, video và cảnh 3D — bằng cách kết hợp xử lý tín hiệu, deep learning và lý luận hình học. Kể từ cuộc cách mạng deep learning năm 2012, các mạng CNN và gần đây là kiến trúc Transformer đã nâng tầm CV từ nhận dạng mẫu hẹp lên hiểu thị giác tổng thể, sánh ngang con người trên nhiều benchmark. Lĩnh vực hiện đang hội tụ với AI ngôn ngữ thành các foundation models đa phương thức (GPT-4V, Gemini, CLIP, LLaVA), tạo ra paradigm mới nơi lý luận thị giác và ngôn ngữ được thống nhất trong một hệ thống.",
+    "Các sub-field chính bao gồm: phân loại ảnh (image classification), phát hiện vật thể (object detection), phân đoạn ngữ nghĩa và thực thể (semantic/instance segmentation), ước lượng độ sâu monocular (monocular depth estimation), luồng quang học (optical flow) và hiểu video, tái tạo cảnh 3D (NeRF, 3D Gaussian Splatting), phân tích khuôn mặt, phân tích ảnh y tế, và các tác vụ vision-language (VQA, image captioning, visual grounding). Stack công nghệ khuyến nghị cho năm 2026 là PyTorch 2.x + Ultralytics YOLOv8/v11 + HuggingFace Transformers, phục vụ qua FastAPI + ONNX Runtime, với MLflow cho experiment tracking.",
+    "Tại thị trường Việt Nam, Computer Vision có điểm khả thi tổng thể 6.8/10 với verdict CONDITIONAL GO. Ba cơ hội ưu tiên cao nhất là kiểm tra chất lượng sản xuất (manufacturing QC), phân tích kệ hàng bán lẻ (shelf analytics) và nhận dạng biển số xe (license plate recognition). Rào cản chính không phải thuật toán mà là dữ liệu: thiếu dataset có nhãn theo domain Việt Nam yêu cầu annotation riêng với chi phí $5,000–$50,000 mỗi dự án. Rủi ro pháp lý quan trọng: Nghị định 13/2023/NĐ-CP phân loại dữ liệu khuôn mặt là sensitive personal data, đòi hỏi consent rõ ràng và kiểm soát lưu trữ nghiêm ngặt."
+  ],
+  "aliases": [
+    "Thị giác máy tính",
+    "CV",
+    "Image Recognition",
+    "Machine Vision",
+    "Visual AI",
+    "Visual Perception AI",
+    "Deep Learning for Images",
+    "Video Analytics"
+  ],
+  "maturity_level": "mature",
+  "trl": 8,
+  "core_concepts": [
+    {
+      "name": "Convolutional Neural Networks (CNN)",
+      "definition": "Kiến trúc deep learning sử dụng phép tích chập (convolution) — các bộ lọc có thể học, trượt qua không gian ảnh để phát hiện các mẫu cục bộ. CNN khai thác hai thuộc tính cơ bản của dữ liệu hình ảnh: tính cục bộ (locality) và bất biến tịnh tiến (translation equivariance). Kiến trúc tạo ra biểu diễn phân cấp: lớp đầu phát hiện cạnh/texture, lớp giữa phát hiện các bộ phận, lớp sâu phát hiện thực thể ngữ nghĩa. ResNet giải quyết vanishing gradient bằng residual skip connections; EfficientNet tối ưu compound scaling.",
+      "formula_latex": "(X * K)[i,j] = \\sum_m \\sum_n X[i+m, j+n] \\cdot K[m,n]; \\quad y = F(x, \\{W_i\\}) + x \\text{ (ResNet block)}",
+      "difficulty": "Intermediate",
+      "prerequisites": ["Linear algebra", "Calculus (backpropagation)", "Basic neural networks"]
+    },
+    {
+      "name": "Object Detection (Phát hiện vật thể)",
+      "definition": "Bài toán xác định đồng thời 'vật thể nào' và 'ở đâu' — output là bounding boxes [x, y, w, h] cộng class labels và confidence scores. Two-stage detectors (Faster R-CNN) đề xuất vùng ứng viên rồi phân loại — độ chính xác cao, chậm. One-stage detectors (YOLO family) dự đoán trực tiếp trong single forward pass — real-time. DETR/RT-DETR cải tiến detection thành set prediction qua cross-attention, loại bỏ hoàn toàn NMS (Non-Maximum Suppression).",
+      "formula_latex": "L = \\lambda_{coord} \\cdot L_{box} + L_{obj} + \\lambda_{noobj} \\cdot L_{noobj} + L_{cls}",
+      "difficulty": "Intermediate",
+      "prerequisites": ["CNN", "Classification", "Bounding box regression", "NMS"]
+    },
+    {
+      "name": "Image Segmentation (Phân đoạn ảnh)",
+      "definition": "Gán nhãn ở mức pixel. Semantic segmentation gán cùng nhãn cho tất cả pixel cùng class; instance segmentation phân biệt từng thực thể riêng lẻ; panoptic segmentation kết hợp cả hai. Kiến trúc encoder-decoder U-Net với skip connections là thiết kế kinh điển. SAM (Segment Anything Model) nhận prompt (điểm/hộp/văn bản) để phân đoạn bất kỳ vật thể zero-shot, được train trên SA-1B (1 tỷ masks).",
+      "formula_latex": "L = -\\frac{1}{H \\cdot W} \\sum_{i,j} \\sum_c y_{i,j,c} \\log(p_{i,j,c}); \\quad IoU_c = |P_c \\cap G_c| / |P_c \\cup G_c|",
+      "difficulty": "Advanced",
+      "prerequisites": ["CNN", "Dense prediction architectures", "Image classification"]
+    },
+    {
+      "name": "Vision Transformers (ViT)",
+      "definition": "Áp dụng kiến trúc Transformer từ NLP vào hình ảnh bằng cách chia ảnh thành N patches kích thước P×P, project tuyến tính thành D-dimensional embeddings, rồi đưa qua Transformer encoder với multi-head self-attention. Self-attention toàn cục cho phép mỗi patch attend đến mọi patch khác từ lớp đầu tiên — nắm bắt long-range dependencies tốt hơn CNN. Swin Transformer cải tiến với hierarchical window attention giảm complexity từ O(N²) xuống linear. DINOv2 là ViT self-supervised đạt universal visual features không cần fine-tuning.",
+      "formula_latex": "Attention(Q,K,V) = softmax(QK^T / \\sqrt{d_k}) \\cdot V; \\quad z_0 = [x_{cls}; x^1_p E; ...; x^N_p E] + E_{pos}",
+      "difficulty": "Advanced",
+      "prerequisites": ["Transformer (NLP)", "Self-attention", "Positional encoding", "CNN"]
+    },
+    {
+      "name": "Feature Pyramid Networks (FPN)",
+      "definition": "Giải quyết thách thức phát hiện vật thể ở nhiều tỷ lệ khác nhau trong cùng một ảnh. FPN tạo pyramid đặc trưng đa mức: bottom-up path qua backbone tạo feature maps phân giải giảm dần; top-down pathway upsample từ lớp ngữ nghĩa sâu nhất; lateral connections pha trộn thông tin không gian từ bottom-up với thông tin ngữ nghĩa từ top-down. Output là tập feature maps {P2, P3, P4, P5} vừa giàu ngữ nghĩa vừa chính xác không gian.",
+      "formula_latex": "P_l = Conv_{1\\times1}(C_l) + Upsample(P_{l+1})",
+      "difficulty": "Intermediate",
+      "prerequisites": ["CNN backbones", "Multi-scale learning", "Object detection"]
+    },
+    {
+      "name": "Contrastive Learning & CLIP",
+      "definition": "CLIP (Contrastive Language-Image Pretraining) huấn luyện đồng thời encoder ảnh và encoder văn bản trên 400 triệu cặp ảnh-text từ internet bằng contrastive loss: kéo gần embedding của cặp matching và đẩy xa cặp non-matching. Kết quả: không gian nhúng chung nơi ảnh và văn bản tương ứng map đến vector lân cận nhau. Cho phép zero-shot classification và visual search không cần fine-tuning. SigLIP (2023) cải tiến bằng sigmoid loss.",
+      "formula_latex": "L_i = -\\log\\left[\\frac{\\exp(sim(v_i, t_i)/\\tau)}{\\sum_{j=1}^{N} \\exp(sim(v_i, t_j)/\\tau)}\\right]",
+      "difficulty": "Advanced",
+      "prerequisites": ["Representation learning", "Self-supervised learning", "Transformer"]
+    },
+    {
+      "name": "Optical Flow (Luồng quang học)",
+      "definition": "Trường chuyển động 2D (u, v) mỗi pixel giữa hai frame liên tiếp, phản ánh chuyển động tương đối của camera hoặc vật thể. Fundamental cho hiểu video, nhận dạng hành động và điều hướng tự động. RAFT (2020) xây dựng correlation volume 4D bằng dot products giữa tất cả cặp features của hai frames, rồi iteratively cập nhật flow bằng GRU, đạt SOTA trên Sintel và KITTI.",
+      "formula_latex": "I_x \\cdot u + I_y \\cdot v + I_t = 0",
+      "difficulty": "Advanced",
+      "prerequisites": ["Image derivatives", "CNN", "Recurrent networks (GRU/LSTM)"]
+    },
+    {
+      "name": "Neural Radiance Fields (NeRF) & 3D Scene Understanding",
+      "definition": "NeRF biểu diễn cảnh 3D như hàm ngầm liên tục (MLP), ánh xạ vị trí 3D (x,y,z) và hướng nhìn sang màu sắc và mật độ thể tích. Novel views được render bằng differentiable ray-marching từ ảnh 2D có pose. 3D Gaussian Splatting (2023) biểu diễn cảnh bằng hàng triệu 3D Gaussians có thể học, render real-time nhanh hơn NeRF 100×. Depth Anything v2 (2024) cung cấp monocular metric depth estimation từ single image.",
+      "formula_latex": "C(r) = \\int_{t_n}^{t_f} T(t) \\cdot \\sigma(r(t)) \\cdot c(r(t),d)\\,dt",
+      "difficulty": "Advanced",
+      "prerequisites": ["Ray casting", "Implicit functions", "MLP", "Differentiable rendering"]
+    },
+    {
+      "name": "Loss Functions for Computer Vision",
+      "definition": "Cross-entropy cho classification. Focal Loss giải quyết class imbalance trong one-stage detection: FL(p_t) = -(1-p_t)^γ log(p_t) down-weight easy negatives. IoU-based losses (GIoU, DIoU, CIoU) tối ưu trực tiếp geometric overlap. Dice Loss ưu tiên trong medical segmentation vì nhạy cảm với cấu trúc nhỏ. Contrastive và triplet losses dùng trong metric learning cho face recognition và re-identification.",
+      "formula_latex": "L_{Dice} = 1 - \\frac{2|P \\cap G| + \\epsilon}{|P| + |G| + \\epsilon}; \\quad FL(p_t) = -(1-p_t)^\\gamma \\log(p_t)",
+      "difficulty": "Intermediate",
+      "prerequisites": ["Probability", "Cross-entropy", "Bounding box geometry"]
+    },
+    {
+      "name": "Transfer Learning & Fine-tuning trong CV",
+      "definition": "Khởi tạo mô hình từ trọng số pretrained (ImageNet, CLIP, DINOv2) và thích nghi cho downstream task với dữ liệu hạn chế — paradigm thống trị production CV. Foundation models (DINOv2, CLIP, SAM) pretrained trên web-scale data, thích nghi cho hầu hết tác vụ với supervision tối thiểu. LoRA (Low-Rank Adaptation) fine-tune mô hình tỷ tham số chỉ bằng 0.1–5% tham số mới — quan trọng cho đội Việt Nam deploy trên edge hardware.",
+      "formula_latex": "W = W_0 + \\Delta W = W_0 + BA, \\quad B \\in \\mathbb{R}^{d \\times r}, A \\in \\mathbb{R}^{r \\times k}, r \\ll \\min(d,k)",
+      "difficulty": "Beginner to Intermediate",
+      "prerequisites": ["CNN/ViT", "Supervised training", "Backpropagation"]
+    }
+  ],
+  "algorithms": [
+    {
+      "name": "ResNet-50/101",
+      "category": "CNN Backbone",
+      "complexity": "O(N·K²·C_in·C_out) per layer",
+      "pros": [
+        "Residual skip connections giải quyết vanishing gradient, training mạng 100+ lớp",
+        "Production-tested rộng rãi, behavior well-understood",
+        "Hardware-friendly: không có attention cost O(N²)",
+        "Pretrained weights chất lượng cao trên HuggingFace timm"
+      ],
+      "cons": [
+        "Local receptive fields: cần nhiều lớp để đạt long-range dependencies",
+        "Thua ViT trên large-scale pretraining với đủ data",
+        "EfficientNet và ConvNeXt đã vượt qua về accuracy/efficiency tradeoff"
+      ],
+      "use_cases": ["Classification baseline", "Universal feature extractor", "Backbone cho FPN detection"],
+      "key_papers": ["He, K. et al. (2016). Deep Residual Learning for Image Recognition. CVPR 2016. arXiv:1512.03385"]
+    },
+    {
+      "name": "EfficientNet-B0/V2",
+      "category": "CNN Backbone",
+      "complexity": "Compound scaling: α·β²·γ² ≈ 2",
+      "pros": [
+        "Tốt nhất accuracy/efficiency tradeoff cho classification trên edge",
+        "NAS-derived baseline được tối ưu hóa",
+        "EfficientNetV2 cải tiến training speed 4× so V1",
+        "Ideal cho mobile và edge deployment"
+      ],
+      "cons": [
+        "Phức tạp hơn ResNet để implement từ đầu",
+        "B7 rất lớn — chỉ dùng B0-B4 cho production edge"
+      ],
+      "use_cases": ["Edge classification", "Mobile deployment", "Manufacturing defect detection"],
+      "key_papers": ["Tan, M. & Le, Q. (2019). EfficientNet: Rethinking Model Scaling for CNNs. ICML 2019. arXiv:1905.11946"]
+    },
+    {
+      "name": "YOLOv8 / YOLOv10 / YOLOv11",
+      "category": "Object Detection",
+      "complexity": "O(1) single-pass, ~1–10ms trên GPU T4",
+      "pros": [
+        "Anchor-free head + CSP backbone — train-once deploy-everywhere",
+        "Ultralytics API: 3 dòng code từ training đến export ONNX",
+        "Real-time tốt nhất; từ Jetson Nano đến A100",
+        "YOLOv11 thêm segmentation head"
+      ],
+      "cons": [
+        "COCO mAP thấp hơn RT-DETR ở tốc độ cao",
+        "Vẫn cần NMS (YOLOv10 giảm NMS dependency)",
+        "Không phải end-to-end như DETR"
+      ],
+      "use_cases": ["Real-time detection", "Edge deployment", "Manufacturing QC", "LPR", "Retail shelf analytics"],
+      "key_papers": [
+        "Redmon, J. et al. (2016). You Only Look Once. CVPR 2016.",
+        "Jocher, G. et al. (2023). Ultralytics YOLOv8. GitHub."
+      ]
+    },
+    {
+      "name": "RT-DETR / DETR",
+      "category": "Object Detection (Transformer)",
+      "complexity": "O(N²) attention for N patches",
+      "pros": [
+        "End-to-end: không cần NMS post-processing",
+        "Set prediction: mỗi object query dự đoán độc lập một vật thể",
+        "RT-DETR đạt real-time (72 FPS trên T4) với accuracy cao hơn YOLOv9",
+        "Dominant paradigm 2024–2025"
+      ],
+      "cons": [
+        "Cần nhiều training data hơn YOLO để converge",
+        "O(N²) attention cost lớn hơn tại batch size nhỏ",
+        "Ít tài liệu deployment hơn Ultralytics ecosystem"
+      ],
+      "use_cases": ["High-accuracy detection với latency budget 50-100ms", "End-to-end pipeline không NMS"],
+      "key_papers": [
+        "Carion, N. et al. (2020). End-to-End Object Detection with Transformers. ECCV 2020. arXiv:2005.12872",
+        "Zhao, Y. et al. (2023). DETRs Beat YOLOs on Real-time Object Detection. arXiv:2304.08069"
+      ]
+    },
+    {
+      "name": "Swin Transformer / ViT / DeiT",
+      "category": "Vision Backbone (Transformer)",
+      "complexity": "O(N²·D) cho ViT; O(M²N) cho Swin",
+      "pros": [
+        "Self-attention toàn cục từ lớp đầu nắm bắt long-range dependencies",
+        "Swin: hierarchical windows giảm complexity xuống linear trong image size",
+        "DINOv2: self-supervised pretraining cho universal features",
+        "SOTA trên ImageNet, detection, segmentation"
+      ],
+      "cons": [
+        "Cần large-scale pretraining để vượt CNN",
+        "Deployment phức tạp hơn CNN",
+        "O(N²) ViT không scale tốt cho high-resolution images"
+      ],
+      "use_cases": ["High-accuracy classification", "Large-scale pretraining backbone", "Foundation model backbone"],
+      "key_papers": [
+        "Dosovitskiy, A. et al. (2020). An Image is Worth 16x16 Words. ICLR 2021. arXiv:2010.11929",
+        "Liu, Z. et al. (2021). Swin Transformer. ICCV 2021. arXiv:2103.14030"
+      ]
+    },
+    {
+      "name": "SAM / SAM2 (Segment Anything Model)",
+      "category": "Universal Segmentation",
+      "complexity": "Near real-time với ViT-H encoder; SAM2: 44 FPS trên video",
+      "pros": [
+        "Zero-shot segmentation bất kỳ vật thể qua prompt (điểm/hộp/văn bản)",
+        "Train trên SA-1B (1 tỷ masks) — generalizes tốt",
+        "SAM2 mở rộng sang video với streaming memory",
+        "Annotation tool giảm 60-70% human effort"
+      ],
+      "cons": [
+        "ViT-H encoder nặng (~600MB); cần GPU cho real-time",
+        "Không phải classification model — cần post-processing để assign class labels",
+        "Prompt engineering cần thiết cho optimal results"
+      ],
+      "use_cases": ["Interactive annotation", "Zero-shot segmentation", "Medical image segmentation"],
+      "key_papers": [
+        "Kirillov, A. et al. (2023). Segment Anything. ICCV 2023. arXiv:2304.02643",
+        "Ravi, N. et al. (2024). SAM 2: Segment Anything in Images and Videos. arXiv:2408.00714"
+      ]
+    },
+    {
+      "name": "CLIP / SigLIP",
+      "category": "Multimodal Representation",
+      "complexity": "O(N·D) cho embedding lookup",
+      "pros": [
+        "Zero-shot classification với class names không cần fine-tuning",
+        "Shared embedding space giữa image và text",
+        "Foundation cho visual search và image generation conditioning",
+        "SigLIP: sigmoid loss, không bị ràng buộc batch size"
+      ],
+      "cons": [
+        "Accuracy thấp hơn supervised fine-tuned models trên specific domains",
+        "ViT-L/14 nặng (~900MB) — cần quantization cho edge",
+        "Embedding space có biases từ web training data"
+      ],
+      "use_cases": ["Zero-shot classification", "Visual search (Shopee/Lazada)", "Vietnamese retail catalog retrieval"],
+      "key_papers": [
+        "Radford, A. et al. (2021). Learning Transferable Visual Models from Natural Language Supervision. ICML 2021.",
+        "Zhai, X. et al. (2023). SigLIP: Sigmoid Loss for Language Image Pre-Training. ICCV 2023."
+      ]
+    },
+    {
+      "name": "Mask R-CNN",
+      "category": "Instance Segmentation",
+      "complexity": "O(proposals × RoI) two-stage",
+      "pros": [
+        "Mở rộng Faster R-CNN với pixel-level mask branch qua RoIAlign",
+        "Mature và production-tested rộng rãi",
+        "Baseline mạnh cho panoptic segmentation"
+      ],
+      "cons": [
+        "Chậm hơn one-stage detectors, không real-time trên CPU",
+        "SAM và YOLOv8-seg đã thay thế cho hầu hết use cases mới"
+      ],
+      "use_cases": ["Instance segmentation", "Medical image analysis", "Agricultural crop segmentation"],
+      "key_papers": ["He, K. et al. (2017). Mask R-CNN. ICCV 2017. arXiv:1703.06870"]
+    },
+    {
+      "name": "RAFT (Recurrent All-Pairs Field Transforms)",
+      "category": "Optical Flow",
+      "complexity": "Iterative refinement, O(H·W·H·W) correlation volume",
+      "pros": [
+        "SOTA trên Sintel và KITTI benchmarks",
+        "All-pairs correlation volume + GRU iterative update",
+        "Robust với large displacements"
+      ],
+      "cons": [
+        "Correlation volume 4D rất tốn memory với high-resolution video",
+        "Chậm hơn SpyNet cho real-time applications"
+      ],
+      "use_cases": ["Dense optical flow estimation", "Video stabilization", "Action recognition"],
+      "key_papers": ["Teed, Z. & Deng, J. (2020). RAFT: Recurrent All-Pairs Field Transforms for Optical Flow. ECCV 2020. arXiv:2003.12039"]
+    },
+    {
+      "name": "PointNet / PointNet++",
+      "category": "3D Computer Vision",
+      "complexity": "O(N·D) per point",
+      "pros": [
+        "Xử lý trực tiếp raw point coordinates không cần voxelization",
+        "Order-invariant: shared MLP + global max-pooling",
+        "Foundation cho 3D object detection trong autonomous driving (LiDAR)"
+      ],
+      "cons": [
+        "Kém hiệu quả hơn voxel-based methods cho dense point clouds",
+        "Transformer-based variants (PointTransformer) đã vượt trội"
+      ],
+      "use_cases": ["LiDAR point cloud classification", "3D object detection", "Robot manipulation"],
+      "key_papers": ["Qi, C.R. et al. (2017). PointNet: Deep Learning on Point Sets for 3D Classification. CVPR 2017. arXiv:1612.00593"]
+    },
+    {
+      "name": "PaddleOCR / TrOCR",
+      "category": "OCR & Document Vision",
+      "complexity": "Encoder-decoder transformer",
+      "pros": [
+        "PaddleOCR: hỗ trợ 80+ ngôn ngữ bao gồm tiếng Việt; production-proven",
+        "TrOCR: ViT encoder + language decoder, SOTA trên STR benchmarks",
+        "PaddleOCR có Vietnamese-specific model weights"
+      ],
+      "cons": [
+        "PaddleOCR: PaddlePaddle framework dependency",
+        "TrOCR: chậm hơn CTC-based methods cho long documents"
+      ],
+      "use_cases": ["CCCD/CMND OCR cho KYC banking", "Nhận dạng biển số Việt Nam", "Product label OCR"],
+      "key_papers": [
+        "Du, Y. et al. (2021). PaddleOCR. arXiv:2109.03144",
+        "Li, M. et al. (2021). TrOCR: Transformer-based OCR. arXiv:2109.10282"
+      ]
+    },
+    {
+      "name": "DINOv2",
+      "category": "Self-Supervised Vision Foundation Model",
+      "complexity": "O(N²·D) inference, tương tự ViT",
+      "pros": [
+        "Universal visual features không cần fine-tuning: depth, segmentation, retrieval, classification",
+        "Train trên 142M curated images với self-distillation, không cần labels",
+        "ViT-L đạt 86.3% ImageNet linear probing",
+        "Tốt nhất frozen feature extractor cho few-shot tasks"
+      ],
+      "cons": [
+        "Không có explicit text alignment (khác CLIP)",
+        "ViT-G/14 rất nặng (~2GB) — cần ViT-S/B cho edge"
+      ],
+      "use_cases": ["Universal feature extraction", "Few-shot classification", "Dense prediction", "Retrieval"],
+      "key_papers": ["Oquab, M. et al. (2023). DINOv2: Learning Robust Visual Features without Supervision. TMLR 2024. arXiv:2304.07193"]
+    }
+  ],
+  "tech_stack": {
+    "data_collection": {
+      "recommended": { "recommended": "Label Studio (self-hosted)", "rationale": "Label Studio là lựa chọn default cho đội nhỏ Việt Nam: miễn phí, REST API, hỗ trợ bbox/polygon/classification." },
+      "alternatives": { "recommended": "Roboflow / CVAT / Scale AI / Labelbox", "rationale": "Roboflow tốt cho quick datasets; Scale AI cho enterprise annotation ở scale lớn." }
+    },
+    "data_preprocessing": {
+      "recommended": { "recommended": "Albumentations 1.4.x", "rationale": "Albumentations nhanh nhất cho CPU augmentation; 70+ transforms; tích hợp PyTorch DataLoader đầu tay." },
+      "alternatives": { "recommended": "torchvision transforms / Kornia / imgaug", "rationale": "torchvision phù hợp cho pipelines đơn giản; Kornia cho GPU augmentation." }
+    },
+    "training_framework": {
+      "recommended": { "recommended": "PyTorch 2.x (torch.compile)", "rationale": "PyTorch là chuẩn ngành 2026. torch.compile() cho 30-50% speedup. Hệ sinh thái models và tutorials đồ sộ nhất." },
+      "alternatives": { "recommended": "TensorFlow 2.x / JAX/Flax", "rationale": "TensorFlow cho TPU workloads; JAX cho research và custom gradient computation." }
+    },
+    "model_zoo": {
+      "recommended": { "recommended": "HuggingFace timm + Ultralytics YOLOv8/v11", "rationale": "timm: 700+ classification backbones. Ultralytics: detection/segmentation/pose với one-line API và ONNX export built-in." },
+      "alternatives": { "recommended": "TorchVision models / MMDetection / MMSegmentation", "rationale": "MMDetection/MMSegmentation tốt cho research; TorchVision cho simple baselines." }
+    },
+    "experiment_tracking": {
+      "recommended": { "recommended": "MLflow 2.x (self-hosted)", "rationale": "MLflow miễn phí, tự host, không tính phí per-seat, model registry tích hợp." },
+      "alternatives": { "recommended": "Weights & Biases / Neptune / ClearML", "rationale": "W&B tốt hơn cho collaboration và sweeps; ClearML cho enterprise on-premise." }
+    },
+    "inference_serving_mvp": {
+      "recommended": { "recommended": "FastAPI 0.111+ + ONNX Runtime 1.18", "rationale": "Stack đủ cho đội nhỏ và MVP. FastAPI async-native; ONNX Runtime universal, không cần NVIDIA GPU." },
+      "alternatives": { "recommended": "Flask + TorchServe / BentoML", "rationale": "BentoML tốt cho multi-framework serving; TorchServe cho PyTorch-only stacks." }
+    },
+    "inference_serving_production": {
+      "recommended": { "recommended": "NVIDIA Triton Inference Server 24.x", "rationale": "Dùng khi quản lý >3 models đồng thời. Dynamic batching, multi-framework support, GPU utilization dashboard." },
+      "alternatives": { "recommended": "TorchServe / Ray Serve / vLLM (multimodal)", "rationale": "Ray Serve tốt cho heterogeneous model serving với auto-scaling." }
+    },
+    "edge_deployment": {
+      "recommended": { "recommended": "ONNX Runtime / TensorRT 10.x", "rationale": "ONNX là universal export format. TensorRT cho NVIDIA edge (Jetson Orin NX). OpenVINO cho Intel CPU industrial environments." },
+      "alternatives": { "recommended": "TFLite / OpenVINO / Core ML", "rationale": "TFLite cho Android/iOS mobile; OpenVINO cho Intel industrial hardware Việt Nam." }
+    },
+    "vector_store": {
+      "recommended": { "recommended": "Qdrant 1.9+", "rationale": "Qdrant: Rust-based, Docker-deployable, HNSW index, miễn phí self-hosted. Milvus tốt hơn ở scale >100M vectors." },
+      "alternatives": { "recommended": "Weaviate / Milvus / pgvector / Pinecone", "rationale": "pgvector cho projects đã dùng PostgreSQL; Pinecone cho managed cloud-only." }
+    },
+    "monitoring": {
+      "recommended": { "recommended": "Prometheus + Grafana", "rationale": "Self-hosted, miễn phí. Grafana dashboards cho latency P99, GPU utilization, prediction drift." },
+      "alternatives": { "recommended": "Datadog / Arize AI / Evidently AI", "rationale": "Arize AI chuyên biệt cho ML observability; Evidently AI tốt cho data/model drift detection." }
+    },
+    "dataset_versioning": {
+      "recommended": { "recommended": "DVC 3.x", "rationale": "Git-like CLI cho large file versioning; works với S3/GCS remote; integrates với MLflow." },
+      "alternatives": { "recommended": "LakeFS / Pachyderm", "rationale": "LakeFS tốt cho data lake versioning ở scale; Pachyderm cho data pipeline orchestration." }
+    }
+  },
+  "feasibility_score": {
+    "overall_score": 6.8,
+    "overall": 6.8,
+    "verdict": "CONDITIONAL GO",
+    "verdict_vi": "Tiến hành có điều kiện",
+    "summary": "Computer Vision là CONDITIONAL GO tại thị trường Việt Nam năm 2026. Kỹ thuật đã chín muồi (TRL 8) và nhu cầu thị trường rõ ràng, nhưng rào cản chính là dữ liệu: thiếu dataset có nhãn theo domain Việt Nam và rủi ro pháp lý với nhận diện khuôn mặt (Nghị định 13/2023/NĐ-CP). Ưu tiên các vertical use cases (manufacturing QC, shelf analytics, LPR) thay vì horizontal platform.",
+    "dimensions": {
+      "technical_feasibility": { "score": 8, "rationale": "Ecosystem mature, pretrained models sẵn có (YOLO, ViT, SAM), PyTorch 2.x + ONNX Runtime production-tested rộng rãi." },
+      "market_demand": { "score": 7, "rationale": "Nhu cầu rõ ràng tại manufacturing, retail, finance và logistics. Tăng trưởng ~20% YoY tại SEA." },
+      "data_availability": { "score": 5, "rationale": "Vietnamese-domain labeled datasets khan hiếm. Annotation cost $5K-$50K/project. Western benchmarks không represent Việt Nam." },
+      "implementation_risk": { "score": 6, "rationale": "Domain shift từ benchmark sang production môi trường Việt Nam 5-25 điểm. Edge hardware deployment phức tạp." },
+      "vietnam_market_fit": { "score": 6, "rationale": "Manufacturing và fintech sẵn sàng cao. Face recognition bị hạn chế bởi Nghị định 13/2023/NĐ-CP." }
+    },
+    "conditions": [
+      "Định vị như vertical solution provider (manufacturing QC, retail analytics, LPR), không phải horizontal CV platform",
+      "Budget $10K-$50K annotation cost cho mỗi domain-specific Vietnamese dataset",
+      "Chạy evaluation trên dữ liệu Việt Nam đại diện trước khi ký hợp đồng — không dùng COCO mAP để báo giá",
+      "Không triển khai face recognition nơi công cộng cho đến khi có regulatory clarity (Nghị định 13/2023/NĐ-CP)",
+      "Không cạnh tranh trực tiếp với Hikvision/Dahua về hardware-embedded AI surveillance"
+    ]
+  },
+  "industry_applications": [
+    {
+      "industry": "Sản xuất (Manufacturing)",
+      "use_case": "Kiểm tra chất lượng sản phẩm bằng thị giác (Visual Quality Control)",
+      "description": "Phát hiện khiếm khuyết (vết xước, lỗi bề mặt, lỗi lắp ráp) trên dây chuyền sản xuất. Nhà máy Samsung, LG, Garmin, Nike tại Việt Nam đang mua. Tier-2 và SME factories chưa được phục vụ đầy đủ. YOLOv8 + custom dataset từ nhà máy client.",
+      "priority": "P1",
+      "market_size_vn": "USD 8-15M/năm",
+      "technical_complexity": "Medium",
+      "vietnam_readiness": "High"
+    },
+    {
+      "industry": "Bán lẻ (Retail)",
+      "use_case": "Phân tích kệ hàng và kiểm tra planogram (Shelf Analytics)",
+      "description": "Tự động phát hiện out-of-stock (OOS), sản phẩm đặt sai vị trí, và vi phạm planogram. WinMart/WinMart+ (2,000+ cửa hàng, Masan Group) là deployment target lớn nhất. CPG brands (Unilever, P&G, Masan) trả phí đáng kể để đo tần suất này.",
+      "priority": "P1",
+      "market_size_vn": "USD 4-8M/năm",
+      "technical_complexity": "Medium",
+      "vietnam_readiness": "High"
+    },
+    {
+      "industry": "Giao thông & Hậu cần (Traffic & Logistics)",
+      "use_case": "Nhận dạng biển số xe (License Plate Recognition — LPR)",
+      "description": "Nhận dạng biển số xe Việt Nam cho bãi đỗ xe, cổng logistics, bệnh viện. Nhiều thành phố và khu công nghiệp đang mua. PaddleOCR với fine-tuning trên biển số Việt Nam là stack khuyến nghị.",
+      "priority": "P1",
+      "market_size_vn": "USD 5-10M/năm",
+      "technical_complexity": "Low-Medium",
+      "vietnam_readiness": "High"
+    },
+    {
+      "industry": "Tài chính & Ngân hàng (Finance & Banking)",
+      "use_case": "OCR và Xác minh giấy tờ tùy thân (Document OCR & KYC Verification)",
+      "description": "Tự động hóa KYC: trích xuất thông tin từ CCCD/CMND/hộ chiếu Việt Nam, xác minh khuôn mặt selfie với ảnh trên giấy tờ. Ngân hàng và fintech đang mua ngay bây giờ.",
+      "priority": "P1",
+      "market_size_vn": "USD 6-12M/năm",
+      "technical_complexity": "Low",
+      "vietnam_readiness": "Very High"
+    },
+    {
+      "industry": "Kho vận & Thương mại điện tử (Warehouse & E-commerce)",
+      "use_case": "CV trong kho hàng (Barcode backup, Pallet counting, Damage detection)",
+      "description": "Nhận dạng barcode khi scan lỗi; đếm pallet từ overhead camera; phát hiện hư hỏng bao bì trước giao hàng. Giao Hang Nhanh, VNPost, GHTK là potential clients.",
+      "priority": "P2",
+      "market_size_vn": "USD 3-6M/năm",
+      "technical_complexity": "Medium",
+      "vietnam_readiness": "High"
+    },
+    {
+      "industry": "Y tế (Healthcare)",
+      "use_case": "AI X-quang ngực và tầm soát bệnh võng mạc tiểu đường",
+      "description": "Phát hiện TB, viêm phổi, nốt phổi trên X-quang; tầm soát diabetic retinopathy tại phòng khám tuyến cơ sở. Việt Nam có 0.3 radiologist/10,000 dân — structural shortage. VinDr-CXR (VinAI) là dataset Việt Nam quan trọng nhất.",
+      "priority": "P3",
+      "market_size_vn": "USD 2-5M/năm",
+      "technical_complexity": "High",
+      "vietnam_readiness": "Low-Medium"
+    },
+    {
+      "industry": "Nông nghiệp (Agriculture)",
+      "use_case": "Phát hiện bệnh cây trồng bằng ảnh drone/smartphone",
+      "description": "CNN classifier trên ảnh lá cây hoặc cánh đồng từ drone để phát hiện bệnh đạo ôn, rầy nâu, vàng lùn. MARD đang pilot; cần Vietnamese crop + disease dataset cụ thể.",
+      "priority": "P3",
+      "market_size_vn": "USD 1-3M/năm",
+      "technical_complexity": "Medium",
+      "vietnam_readiness": "Medium"
+    },
+    {
+      "industry": "An toàn lao động (Construction & Industrial Safety)",
+      "use_case": "Phát hiện PPE và vi phạm vùng an toàn công trình",
+      "description": "Phát hiện công nhân không đội mũ bảo hộ, không mặc áo phản quang; cảnh báo khi người vào vùng nguy hiểm. Nhu cầu tăng sau các vụ tai nạn lao động. YOLOv8 với custom PPE classes.",
+      "priority": "P3",
+      "market_size_vn": "USD 1-3M/năm",
+      "technical_complexity": "Medium",
+      "vietnam_readiness": "Medium"
+    }
+  ],
+  "case_studies": [
+    {
+      "title": "WinMart Planogram Compliance — Phân tích kệ hàng tự động",
+      "industry": "Retail",
+      "company": "WinMart/WinMart+ (Masan Group)",
+      "problem": "CPG brands phải cử field reps audit planogram thủ công 1 lần/tháng — tốn kém và không đủ tần suất để phát hiện OOS nhanh.",
+      "solution": "Camera cố định gắn kệ + YOLOv10 fine-tuned trên danh mục WinMart + real-time OOS alerting dashboard. Dữ liệu train: 3D rendering planogram + ảnh thực tế cửa hàng pilot (10-20 stores).",
+      "results": "Tần suất audit từ 1 lần/tháng lên daily reporting. Ước tính OOS reduction 20-30%. CPG brands trả phí subscription per-store.",
+      "tech_stack": "YOLOv10, FastAPI, WebSocket dashboard, PostgreSQL cho compliance history",
+      "lessons": "Dataset synthetic + real hybrid là key. Product packaging thay đổi theo promotion cần pipeline retraining tự động khi ERP cập nhật SKU."
+    },
+    {
+      "title": "VinDr-CXR AI Radiology — Hỗ trợ đọc X-quang ngực",
+      "industry": "Healthcare",
+      "company": "VinAI Research / VinBrain",
+      "problem": "Thiếu hụt radiologist nghiêm trọng (dưới 2,000 cho 100 triệu dân). Backlog đọc X-quang tại bệnh viện tuyến tỉnh là 3-5 ngày.",
+      "solution": "Deep learning model phát hiện 28 bệnh lý ngực X-quang từ VinDr-CXR (18,000 ca, 17 Vietnamese radiologists). Triage tool: xử lý ca bình thường tự động (60-70% volume), ưu tiên ca bất thường.",
+      "results": "Giảm reporting backlog 40%. AI-assisted read cost ~$0.50-1.50/ca vs $3-8 manual. Tiết kiệm $2-6M/năm tại quy mô 1M ca/năm.",
+      "tech_stack": "DenseNet-121, MONAI, pydicom, AUC-ROC evaluation tại clinician-selected operating points",
+      "lessons": "Multi-site validation bắt buộc — model train trên Bach Mai underperform tại tỉnh dùng equipment khác. Clinical workflow integration phức tạp hơn model accuracy."
+    },
+    {
+      "title": "Shopee Visual Search — Tìm kiếm sản phẩm bằng hình ảnh",
+      "industry": "E-commerce / Retail",
+      "company": "Shopee Vietnam",
+      "problem": "1 tỷ+ product listings. Người dùng muốn tìm sản phẩm tương tự khi nhìn thấy ở ngoài nhưng không biết tên.",
+      "solution": "OpenCLIP ViT-L/14 fine-tuned trên Shopee product catalog. Vector database Milvus tại scale 100M+ vectors. Mobile camera → CLIP embedding → ANN search → ranked results trong < 2 giây.",
+      "results": "Conversion rate tăng với visual search sessions. Giảm friction cho product discovery. Vietnamese product variants vẫn là challenge.",
+      "tech_stack": "OpenCLIP, Milvus, FastAPI, mobile SDK iOS + Android, Redis caching",
+      "lessons": "Long-tail SKU: top 1000 SKUs đạt 90%+ accuracy; recall drop đột ngột cho regional brands. Few-shot learning cần thiết cho long tail."
+    }
+  ],
+  "key_papers": [
+    {
+      "title": "Deep Residual Learning for Image Recognition",
+      "authors": "Kaiming He, Xiangyu Zhang, Shaoqing Ren, Jian Sun",
+      "year": 2016,
+      "venue": "CVPR 2016 (Best Paper)",
+      "contribution": "Giới thiệu residual skip connections cho phép training mạng 100–1000+ lớp không bị vanishing gradients. ResNet trở thành backbone vision thống trị nửa thập kỷ.",
+      "url": "https://arxiv.org/abs/1512.03385"
+    },
+    {
+      "title": "An Image is Worth 16x16 Words: Transformers for Image Recognition at Scale",
+      "authors": "Alexey Dosovitskiy et al.",
+      "year": 2020,
+      "venue": "ICLR 2021",
+      "contribution": "Chứng minh pure Transformer không cần convolutional inductive bias có thể match CNN performance ở scale. Mở ra kỷ nguyên Vision Transformer.",
+      "url": "https://arxiv.org/abs/2010.11929"
+    },
+    {
+      "title": "Learning Transferable Visual Models From Natural Language Supervision (CLIP)",
+      "authors": "Alec Radford et al.",
+      "year": 2021,
+      "venue": "ICML 2021",
+      "contribution": "Contrastive image-text pretraining trên 400M web pairs tạo shared embedding space cho zero-shot classification và visual search.",
+      "url": "https://arxiv.org/abs/2103.00020"
+    },
+    {
+      "title": "Segment Anything",
+      "authors": "Alexander Kirillov et al. (Meta AI)",
+      "year": 2023,
+      "venue": "ICCV 2023",
+      "contribution": "Foundation model phân đoạn bất kỳ vật thể zero-shot qua prompt. Train trên SA-1B (1 tỷ masks). Paradigm shift cho annotation và segmentation.",
+      "url": "https://arxiv.org/abs/2304.02643"
+    },
+    {
+      "title": "Swin Transformer: Hierarchical Vision Transformer using Shifted Windows",
+      "authors": "Ze Liu et al. (Microsoft Research)",
+      "year": 2021,
+      "venue": "ICCV 2021 (Best Paper)",
+      "contribution": "Hierarchical window attention giảm ViT complexity từ O(N²) xuống linear. SOTA trên detection và segmentation.",
+      "url": "https://arxiv.org/abs/2103.14030"
+    },
+    {
+      "title": "DINOv2: Learning Robust Visual Features without Supervision",
+      "authors": "Maxime Oquab et al. (Meta AI)",
+      "year": 2023,
+      "venue": "TMLR 2024",
+      "contribution": "Self-supervised ViT train trên 142M curated images. Features transfer đến depth, segmentation, classification, retrieval mà không cần fine-tuning.",
+      "url": "https://arxiv.org/abs/2304.07193"
+    },
+    {
+      "title": "RAFT: Recurrent All-Pairs Field Transforms for Optical Flow",
+      "authors": "Zachary Teed & Jia Deng",
+      "year": 2020,
+      "venue": "ECCV 2020",
+      "contribution": "All-pairs 4D correlation volume + GRU iterative update cho dense optical flow estimation. SOTA trên Sintel và KITTI.",
+      "url": "https://arxiv.org/abs/2003.12039"
+    },
+    {
+      "title": "End-to-End Object Detection with Transformers (DETR)",
+      "authors": "Nicolas Carion et al. (Facebook AI)",
+      "year": 2020,
+      "venue": "ECCV 2020",
+      "contribution": "Detection như set prediction problem: learnable object queries attend đến image features, loại bỏ NMS. End-to-end paradigm mới.",
+      "url": "https://arxiv.org/abs/2005.12872"
+    },
+    {
+      "title": "NeRF: Representing Scenes as Neural Radiance Fields for View Synthesis",
+      "authors": "Ben Mildenhall et al.",
+      "year": 2020,
+      "venue": "ECCV 2020",
+      "contribution": "Biểu diễn cảnh 3D như MLP ngầm. Novel view synthesis từ posed 2D images. Paradigm shift cho 3D scene representation.",
+      "url": "https://arxiv.org/abs/2003.08934"
+    },
+    {
+      "title": "Focal Loss for Dense Object Detection (RetinaNet)",
+      "authors": "Tsung-Yi Lin et al.",
+      "year": 2017,
+      "venue": "ICCV 2017 (Best Student Paper)",
+      "contribution": "Focal Loss giải quyết class imbalance trong one-stage detection. Cho phép one-stage detector match accuracy của two-stage.",
+      "url": "https://arxiv.org/abs/1708.02002"
+    }
+  ],
+  "cross_domain_connections": [
+    {
+      "target": "B02",
+      "connection_type": "closely_related",
+      "description": "B03 và B02 chia sẻ OCR pipeline, layout parsing và Document Visual Understanding. PaddleOCR và TrOCR là CV technologies cốt lõi trong Document Intelligence. CLIP-based document embeddings kết nối cả hai modules."
+    },
+    {
+      "target": "B04",
+      "connection_type": "converging",
+      "description": "Multimodal foundation models (CLIP, LLaVA, GPT-4V, InternVL2) hợp nhất CV và NLP. Vision encoder (ViT/CLIP) kết hợp với language decoder tạo visual instruction following. B03 và B04 đang hội tụ trong một foundation model layer."
+    },
+    {
+      "target": "B07",
+      "connection_type": "complementary",
+      "description": "Visual anomaly detection (phát hiện khiếm khuyết hình ảnh) là intersection quan trọng. B07 cung cấp one-class learning và anomaly scoring; B03 cung cấp visual feature extraction. Manufacturing QC use case thuộc cả hai modules."
+    },
+    {
+      "target": "B09",
+      "connection_type": "sibling",
+      "description": "Diffusion models và GANs là generative counterpart của discriminative CV. Synthetic data từ diffusion models ngày càng quan trọng để tăng cường training datasets. Text-to-image generation dùng CLIP text encoder."
+    },
+    {
+      "target": "B01",
+      "connection_type": "enhances",
+      "description": "Video analytics time series (lưu lượng người, inventory trends từ shelf cameras) cần time series forecasting. Demand forecasting (B01) kết hợp với visual shelf analytics (B03) cho retail intelligence hoàn chỉnh."
+    },
+    {
+      "target": "I05",
+      "connection_type": "applies_to",
+      "description": "Shelf analytics, visual search, checkout automation, customer analytics là các CV applications P1/P2 cho retail Việt Nam. WinMart, Shopee, Circle K là target clients."
+    },
+    {
+      "target": "I06",
+      "connection_type": "applies_to",
+      "description": "LPR cho cổng logistics, barcode backup OCR, pallet counting, package damage detection. Giao Hang Nhanh, VNPost, GHTK là potential clients."
+    }
+  ],
+  "bestPractices": [
+    "Luôn chạy evaluation trên dữ liệu Việt Nam đại diện trước khi báo giá cho khách hàng — không dùng COCO mAP hoặc ImageNet accuracy như proxy performance. Domain shift từ benchmark sang production môi trường Việt Nam thường 5-25 điểm phần trăm tùy domain.",
+    "Áp dụng Hybrid Edge-Cloud architecture mặc định cho deployments Việt Nam: edge device chạy lightweight model cho coarse detection/triggering, cloud xử lý model lớn hơn chỉ cho flagged frames — resilient với kết nối internet không ổn định và tiết kiệm chi phí.",
+    "Version toàn bộ model weights, preprocessing code và postprocessing logic cùng nhau như một unit không thể tách rời — thay đổi ở bất kỳ phần nào đều yêu cầu retest toàn bộ pipeline.",
+    "Implement embedding-space drift detection (cosine similarity trên feature vectors) cho mọi production CV system — distribution shift trong ảnh đầu vào (thay đổi camera, thay đổi lighting mùa vụ) sẽ erode accuracy trước khi metrics báo động.",
+    "Build annotation pipeline bán tự động từ đầu: pre-annotate bằng SAM2 hoặc base YOLO model (giảm 60-70% human effort), human review & correct, enforce Inter-Annotator Agreement Kappa > 0.8. Annotation cost là capital expense lớn nhất trong production CV.",
+    "Luôn include confidence thresholding và defined fallback behavior trong mọi inference endpoint — fail-safe by design. Khi model không chắc chắn, hệ thống phải có hành động dự phòng rõ ràng (alert human, log for review, default to safe state).",
+    "Benchmark latency trên target hardware thực tế trước khi chọn model architecture — FLOP counts và parameter counts là proxy, không phải ground truth. Đo trực tiếp trên Jetson Orin NX, T4 hoặc CPU target của deployment."
+  ],
+  "antiPatterns": [
+    "Trích dẫn benchmark COCO/ImageNet cho client mà không có cảnh báo domain shift. COCO và ImageNet là Western-centric distribution, không chứa sản phẩm Việt Nam, cảnh đường phố hay nhà máy Việt Nam.",
+    "Triển khai Triton Inference Server hoặc A100 GPU stack cho MVP. Triton cần DevOps expertise khan hiếm tại Việt Nam; A100 spot ~$3/hr tốn kém với budget hạn chế. Default stack FastAPI + ONNX Runtime trên T4 đủ cho hầu hết production và rẻ hơn 60-70%.",
+    "Báo giá project chỉ dựa trên GPU compute cost. Annotation labor ($0.05-$0.30/image × 1,000-5,000 images), data collection và engineering overhead thường gấp 10-20× GPU cost. Total cost thực tế cho production-ready Vietnamese classifier: $5,000-$20,000.",
+    "Training mô hình từ scratch cho use cases Việt Nam năm 2026. Không có business case justify việc training from scratch — pretrained models (CLIP, DINOv2, YOLOv8 COCO weights) là điểm xuất phát đúng cho gần như mọi tác vụ.",
+    "Triển khai face recognition nơi công cộng hoặc mass surveillance mà không có legal review đầy đủ. Nghị định 13/2023/NĐ-CP phân loại facial geometry là sensitive personal data với yêu cầu explicit consent và strict storage controls.",
+    "Bỏ qua robustness testing cho corruption types đặc thù Việt Nam: motion blur (camera cầm tay), noise (camera IoT rẻ), JPEG artifacts (mobile upload băng thông thấp). Model 92% clean accuracy nhưng 60% mPC (mean Performance under Corruption) không production-ready.",
+    "Coi annotation cost như one-time project cost. Vietnamese domain datasets cần refresh khi sản phẩm thay đổi bao bì, camera thay đổi, điều kiện ánh sáng thay đổi theo mùa. Build annotation pipeline có thể operate ongoing."
+  ],
+  "resources": [
+    {
+      "title": "CS231n: Deep Learning for Computer Vision (Stanford)",
+      "type": "course",
+      "url": "https://cs231n.stanford.edu/",
+      "level": "Intermediate",
+      "description": "Khóa học CV nền tảng nhất, bao gồm CNN, detection, segmentation với mathematical rigor. Lecture videos và notes miễn phí."
+    },
+    {
+      "title": "Ultralytics YOLOv8 Documentation",
+      "type": "documentation",
+      "url": "https://docs.ultralytics.com/",
+      "level": "Beginner to Intermediate",
+      "description": "Tài liệu chính thức cho YOLOv8/v11: training, fine-tuning, export ONNX, deployment. Điểm bắt đầu tốt nhất cho detection/segmentation production."
+    },
+    {
+      "title": "HuggingFace Transformers — Vision Models",
+      "type": "documentation",
+      "url": "https://huggingface.co/docs/transformers/index",
+      "level": "Intermediate",
+      "description": "Hàng trăm pretrained ViT, CLIP, DINO, SAM models với unified API. Cần thiết cho multimodal và foundation model work."
+    },
+    {
+      "title": "timm: PyTorch Image Models",
+      "type": "library",
+      "url": "https://github.com/huggingface/pytorch-image-models",
+      "level": "Intermediate",
+      "description": "700+ classification backbones với pretrained weights và unified training API. Chuẩn mực cho image classification và feature extraction."
+    },
+    {
+      "title": "Practical Deep Learning for Coders (fast.ai)",
+      "type": "course",
+      "url": "https://course.fast.ai/",
+      "level": "Beginner",
+      "description": "Top-down approach: code trước, theory sau. Rất phù hợp cho Vietnamese practitioners mới bắt đầu với CV."
+    },
+    {
+      "title": "Papers With Code — Computer Vision",
+      "type": "resource",
+      "url": "https://paperswithcode.com/area/computer-vision",
+      "level": "All levels",
+      "description": "SOTA leaderboards cho mọi CV benchmark kèm code implementations. Cách nhanh nhất để tìm SOTA model cho một task cụ thể."
+    },
+    {
+      "title": "Label Studio Documentation",
+      "type": "documentation",
+      "url": "https://labelstud.io/",
+      "level": "Beginner",
+      "description": "Annotation tool open-source: setup, labeling interfaces, ML-assisted labeling, export formats. Cần thiết cho bất kỳ team nào build Vietnamese CV dataset."
+    },
+    {
+      "title": "NVIDIA Deep Learning Institute — Computer Vision",
+      "type": "course",
+      "url": "https://www.nvidia.com/en-us/training/",
+      "level": "Intermediate to Advanced",
+      "description": "Hands-on courses về TensorRT, Triton Inference Server, JetPack cho Jetson. Chứng chỉ được công nhận."
+    },
+    {
+      "title": "Albumentations Documentation & Tutorials",
+      "type": "documentation",
+      "url": "https://albumentations.ai/docs/",
+      "level": "Beginner to Intermediate",
+      "description": "Augmentation strategies cho từng loại task (classification, detection, segmentation). Essential cho training pipeline."
+    },
+    {
+      "title": "VinDr-CXR Dataset — Vietnamese Chest X-ray",
+      "type": "dataset",
+      "url": "https://physionet.org/content/vindr-cxr/",
+      "level": "Advanced",
+      "description": "18,000 chest X-rays có nhãn của 17 Vietnamese radiologists — dataset medical AI Việt Nam quan trọng nhất. Public trên PhysioNet."
+    },
+    {
+      "title": "OpenCV Documentation",
+      "type": "documentation",
+      "url": "https://docs.opencv.org/",
+      "level": "Beginner to Intermediate",
+      "description": "Computer vision library cơ bản: image I/O, preprocessing, video capture, camera calibration. Cần thiết cho mọi production CV pipeline."
+    },
+    {
+      "title": "Qdrant Documentation — Vector Search for CV",
+      "type": "documentation",
+      "url": "https://qdrant.tech/documentation/",
+      "level": "Intermediate",
+      "description": "Deploy vector database cho visual search: indexing image embeddings, ANN search, filtering. Bao gồm CLIP integration examples."
+    }
+  ],
+  "pipeline": {
+    "description": "CV production system bao gồm ba pipelines chính: Training Pipeline (từ raw images đến ONNX/TensorRT model), Inference Pipeline (từ client request đến structured JSON response), và Real-time Video Pipeline (từ RTSP stream đến event alerts).",
+    "training_stages": [
+      "Data Ingestion & Validation (Label Studio export, schema checks, MD5 dedup)",
+      "Preprocessing & Augmentation (resize 640×640 hoặc 224×224, Albumentations)",
+      "DataLoader (PyTorch, num_workers=4-8, pin_memory=True, stratified split)",
+      "Model Init (pretrained weights từ HuggingFace Hub hoặc Ultralytics)",
+      "Training Loop (mixed precision torch.amp, OneCycleLR scheduler)",
+      "Evaluation (mAP50/50-95 cho detection; top-1/5 cho classification)",
+      "MLflow Logging (params, metrics, artifacts, model registry)",
+      "Export (torch.onnx → ONNX → trtexec TensorRT FP16)"
+    ],
+    "inference_stages": [
+      "FastAPI Gateway (input validation, auth token, rate limiting)",
+      "Preprocessing Microservice (decode bytes → NumPy → resize → normalize)",
+      "Triton Inference Server (dynamic batching, TensorRT FP16 / ONNX Runtime)",
+      "Postprocessing (NMS cho detection, argmax cho classification)",
+      "Response Serialization (JSON: boxes, scores, labels)"
+    ]
+  },
+  "effort_estimate": {
+    "mvp": {
+      "duration": "6–10 weeks",
+      "engineers": "2 ML engineers + 1 backend engineer"
+    },
+    "production": {
+      "duration": "3–5 months",
+      "engineers": "3–4 ML engineers + 1 DevOps + 1 annotation lead"
+    },
+    "annotation": {
+      "duration": "2–4 weeks per domain dataset",
+      "engineers": "1 annotation manager + 3–5 annotators"
+    }
+  },
+  "risks": [
+    {
+      "description": "Domain shift: mô hình trained trên COCO/ImageNet underperform trên data thực tế Việt Nam (sản phẩm, đường phố, nhà máy) — có thể giảm 5–25 điểm phần trăm accuracy.",
+      "severity": "high",
+      "mitigation": "Luôn đánh giá trên Vietnamese representative data trước khi báo giá. Fine-tune trên ít nhất 500–1,000 Vietnamese domain images."
+    },
+    {
+      "description": "Chi phí annotation cao và liên tục: dataset không phải one-time cost — cần refresh khi sản phẩm thay đổi bao bì, camera mới hoặc điều kiện ánh sáng thay đổi.",
+      "severity": "high",
+      "mitigation": "Build semi-automated annotation pipeline với SAM2 pre-annotation (giảm 60–70% effort). Budget $5K–$50K/domain/project."
+    },
+    {
+      "description": "Rủi ro pháp lý: Nghị định 13/2023/NĐ-CP phân loại dữ liệu khuôn mặt là sensitive personal data, yêu cầu explicit consent và kiểm soát lưu trữ nghiêm ngặt.",
+      "severity": "critical",
+      "mitigation": "Không triển khai face recognition nơi công cộng hoặc mass surveillance trước khi có legal review đầy đủ. Ưu tiên use cases không liên quan khuôn mặt."
+    },
+    {
+      "description": "Edge hardware latency: FLOP counts và parameter counts không phản ánh latency thực tế trên target hardware (Jetson Orin NX, CPU edge).",
+      "severity": "medium",
+      "mitigation": "Benchmark trực tiếp trên target hardware trước khi commit kiến trúc. Dùng TensorRT FP16 và model quantization."
+    },
+    {
+      "description": "Distribution shift trong production: embedding space drift khi camera thay đổi, ánh sáng thay đổi theo mùa vụ có thể erode accuracy mà không trigger alert thông thường.",
+      "severity": "medium",
+      "mitigation": "Implement cosine similarity drift detection trên feature vectors. Monitor embedding distribution với Grafana + Evidently AI."
+    }
+  ],
+  "metadata": {
+    "createdAt": "2026-03-31",
+    "updatedAt": "2026-03-31",
+    "version": "1.0.0",
+    "status": "reviewed",
+    "researchedBy": [
+      "R-alpha",
+      "R-beta",
+      "R-gamma",
+      "R-CVE",
+      "R-MLE",
+      "R-DLE",
+      "R-DE",
+      "R-BE",
+      "R-DO",
+      "R-QA",
+      "R-SA",
+      "R-D03",
+      "R-D01",
+      "R-sigma"
+    ],
+    "normalizedAt": "2026-03-31",
+    "normalizedBy": "R-BE",
+    "phase": "Phase 1 — Module B03",
+    "review_required": false
+  }
+}

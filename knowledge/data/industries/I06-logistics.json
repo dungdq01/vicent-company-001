@@ -1,0 +1,342 @@
+{
+  "id": "I06",
+  "name": "Logistics & Supply Chain",
+  "slug": "logistics-supply-chain",
+  "category": "industry",
+  "icon": "Truck",
+  "color": "#F97316",
+  "depthLevel": 2,
+  "overview": {
+    "description": "Logistics và chuỗi cung ứng tại Việt Nam là một trong những ngành tăng trưởng nhanh nhất Đông Nam Á, được thúc đẩy bởi dòng vốn FDI sản xuất, hệ sinh thái thương mại điện tử bùng nổ (đặc biệt TikTok Shop tăng 69% năm 2025), và hội nhập ngày càng sâu vào chuỗi cung ứng toàn cầu. Thị trường đạt ~80,65 tỷ USD (2024) và dự báo tăng lên 149,98 tỷ USD vào 2034 với CAGR 6,4%.\n\nThách thức cấu trúc lớn nhất của ngành là chi phí logistics chiếm 16–17% GDP Việt Nam — cao hơn đáng kể so với mức trung bình toàn cầu 11,6% và benchmark Mỹ/Singapore (7,5–8,5%). Sự thiếu hiệu quả này xuất phát từ hạ tầng đa phương thức kém phát triển, hệ thống địa chỉ không chuẩn hóa, mạng lưới vi nhà vận chuyển phân mảnh, và độ thấm nhập ERP/WMS thấp trong phân khúc SME (>90% doanh nghiệp logistics là SME).\n\nAI tạo ra cơ hội ROI đặc biệt hấp dẫn trong bối cảnh này: ngay cả việc giảm 2–3 điểm phần trăm chi phí logistics/GDP cũng giải phóng hàng tỷ USD giá trị kinh tế. Các ứng dụng ưu tiên cao nhất là xử lý tài liệu thông minh (Document AI), tối ưu tuyến đường (Route Optimization), và dự báo nhu cầu (Demand Forecasting) — ba lĩnh vực mà Smartlog có dữ liệu và quan hệ khách hàng để triển khai ngay.",
+    "marketSizeVietnam": "~80,65 tỷ USD (2024), tăng lên ~149,98 tỷ USD (2034), CAGR 6,4%; chi phí logistics chiếm 16–17% GDP; thị trường giao hàng chặng cuối 1,3 tỷ USD (2024) → 3,0 tỷ USD (2034); thị trường 3PL tăng trưởng CAGR ~8% đến 2030",
+    "marketSizeSEA": "211,5 tỷ USD (2024), dự báo 349,0 tỷ USD (2033), CAGR 5,72%; logistics thương mại điện tử xuyên biên giới SEA 8,07 tỷ USD (2024), CAGR 11,14% đến 2030; Singapore xếp hạng LPI số 1 thế giới",
+    "aiMaturity": "L2",
+    "aiAppetite": "high",
+    "keyQuestions": [
+      "AI có thể giảm chi phí vận chuyển và nhiên liệu bao nhiêu phần trăm, và chứng minh ROI trong bao lâu?",
+      "Làm thế nào để tích hợp AI với hệ thống TMS/WMS/ERP hiện tại mà không cần thay thế hoàn toàn?",
+      "AI có thể cải thiện độ chính xác dự báo nhu cầu như thế nào trong bối cảnh biến động Tết và TikTok Shop viral?",
+      "Làm thế nào để tự động hóa xử lý tài liệu hải quan và vận đơn phù hợp với quy định VNACCS và Thông tư 121/2025/TT-BTC?",
+      "AI có thể giải quyết bài toán giao hàng thất bại (15–25% tỷ lệ thất bại) và tối ưu COD như thế nào?"
+    ],
+    "whenToUse": [
+      "Khi doanh nghiệp có ít nhất 12–24 tháng lịch sử giao hàng/tồn kho có cấu trúc để huấn luyện mô hình dự báo",
+      "Khi khối lượng xử lý tài liệu (vận đơn, hóa đơn, chứng từ hải quan) đủ lớn để biện minh cho đầu tư tự động hóa (>500 tài liệu/tháng)",
+      "Khi đội xe giao hàng có hơn 10 phương tiện và dữ liệu GPS/telematics có thể truy cập được",
+      "Khi doanh nghiệp đang gặp phải tỷ lệ giao hàng thất bại >10% hoặc chi phí nhiên liệu chiếm >30% chi phí vận hành",
+      "Khi khách hàng yêu cầu hiển thị lô hàng thời gian thực và báo cáo SLA mà hệ thống thủ công không thể đáp ứng"
+    ]
+  },
+  "domainKnowledge": {
+    "keyEntities": [
+      "Lô hàng (Shipment) — đơn vị consignment từ điểm xuất phát đến đích",
+      "Phương tiện (Vehicle) — xe tải, xe máy, xe van, container",
+      "Tuyến đường (Route) — lộ trình vận chuyển theo kế hoạch hoặc thực tế",
+      "Kho bãi (Warehouse) — địa điểm lưu trữ và fulfillment",
+      "Đơn hàng (Order) — mua hàng của khách tạo ra một hoặc nhiều lô hàng",
+      "Tài xế (Driver) — nhân viên vận hành phương tiện được phân công",
+      "SKU — đơn vị lưu trữ hàng hóa đại diện cho biến thể sản phẩm",
+      "Nhà vận chuyển (Carrier) — đơn vị thực hiện dịch vụ vận chuyển",
+      "Nhà cung cấp (Supplier) — đơn vị cung cấp hàng hóa đầu vào chuỗi cung ứng",
+      "Hub phân loại (Sorting Hub) — trung tâm tập kết và phân loại hàng hóa",
+      "Vận đơn (Bill of Lading — BOL) — tài liệu hợp đồng vận chuyển chính",
+      "Chứng từ hải quan (Customs Declaration) — tờ khai nhập/xuất khẩu VNACCS",
+      "Bằng chứng giao hàng (POD — Proof of Delivery) — xác nhận giao hàng thành công",
+      "COD (Cash on Delivery) — thanh toán khi nhận hàng (~60–70% giao dịch TMĐT)"
+    ],
+    "keyProcesses": [
+      "Tiếp nhận đơn hàng (Order Intake) — nhận đơn từ ERP/TMĐT → WMS tạo lệnh nhập kho",
+      "Nhặt hàng và đóng gói (Pick & Pack) — nhặt SKU theo lệnh, đóng gói, dán nhãn, tạo tài liệu giao hàng",
+      "Thu gom (Pickup / First-mile) — tài xế thu gom từ người gửi hàng",
+      "Phân loại (Sorting) — phân loại thủ công hoặc băng chuyền tự động tại hub",
+      "Vận chuyển đường dài (Linehaul) — vận chuyển liên tỉnh (TPHCM ↔ Hà Nội: 24–36 giờ bằng xe tải)",
+      "Giao hàng chặng cuối (Last-mile Delivery) — tài xế xe máy giao 30–80 bưu kiện/ngày tại nội đô",
+      "Thông quan hải quan (Customs Clearance) — khai báo VNACCS, kiểm tra chứng từ, nộp thuế",
+      "Xử lý COD (COD Collection) — thu tiền mặt và đối soát thanh toán",
+      "Quản lý hàng trả lại (Reverse Logistics) — tiếp nhận, kiểm tra, xử lý lại hàng hoàn trả",
+      "Quản lý chuỗi lạnh (Cold Chain Management) — kiểm soát nhiệt độ từ kho đến điểm giao",
+      "Lập kế hoạch tải trọng (Load Planning) — phân bổ hàng hóa lên phương tiện theo trọng tải/thể tích",
+      "Giám sát SLA (SLA Monitoring) — theo dõi và cảnh báo vi phạm cam kết dịch vụ"
+    ],
+    "dataTypes": [
+      "Dữ liệu GPS/Telematics — vị trí xe, tốc độ, hướng di chuyển (ping 30 giây/lần)",
+      "Sự kiện lô hàng (Shipment Events) — PICKUP, IN_TRANSIT, DELIVERED, FAILED, RETURNED với timestamp",
+      "Hình ảnh tài liệu (Document Images) — vận đơn, hóa đơn, chứng từ hải quan dạng PDF/ảnh",
+      "Dữ liệu cảm biến IoT — nhiệt độ, độ ẩm, va chạm (chuỗi lạnh, hàng dễ vỡ)",
+      "Dữ liệu lệnh kho (WMS Events) — nhặt, đặt, đếm kiểm kê, điều chỉnh tồn kho",
+      "Dữ liệu vận chuyển TMS — lịch trình, phân công tài xế, chi phí vận tải, SLA",
+      "Tín hiệu nhu cầu ERP — đơn đặt hàng mua, dự báo bán hàng, biến động khuyến mãi",
+      "Dữ liệu thành tích nhà vận chuyển — tỷ lệ đúng hạn, tỷ lệ hư hỏng, theo tuyến/theo tháng",
+      "Bằng chứng giao hàng POD — chữ ký người nhận, ảnh chụp, timestamp thực tế",
+      "Dữ liệu COD — số tiền, trạng thái thu, lịch sử đối soát"
+    ],
+    "typicalDataVolume": "Cao — hàng triệu lô hàng/tháng cho 3PL lớn; GPS pings: đội xe 1.000 phương tiện = ~2,88 triệu sự kiện/ngày; hàng nghìn tài liệu hải quan/vận đơn xử lý hàng tháng; dữ liệu cảm biến IoT chuỗi lạnh: mỗi cảm biến 1 reading/phút",
+    "dataQuality": "Thấp đến trung bình — 40–60% hồ sơ TMS thiếu timestamp, cập nhật nhà vận chuyển, hoặc trạng thái cuối; GPS thường bị vô hiệu hóa hoặc mất tín hiệu; dữ liệu trọng lượng/kích thước thiếu cho 50%+ SKU; dữ liệu thành tích nhà vận chuyển nằm trong email/Excel không thể truy vấn; timestamp nhập thủ công trễ 2–4 giờ so với sự kiện thực tế"
+  },
+  "painPoints": [
+    {
+      "problem": "Chi phí logistics quá cao (16–17% GDP) so với mức trung bình toàn cầu 11,6% — do hạ tầng đa phương thức kém, nhiều trung gian, và lộ trình không được tối ưu hóa",
+      "severity": 9,
+      "aiSolvable": true,
+      "mapsToBaseline": ["B03", "B09"]
+    },
+    {
+      "problem": "Dữ liệu nhà vận chuyển và chủ hàng phân mảnh — không có khả năng hiển thị thống nhất; hàng trăm vi nhà vận chuyển không có API/EDI tiêu chuẩn; dữ liệu cô lập giữa WMS, TMS, hệ thống nhà vận chuyển",
+      "severity": 9,
+      "aiSolvable": true,
+      "mapsToBaseline": ["B08", "B12"]
+    },
+    {
+      "problem": "Dự báo nhu cầu không chính xác — đột biến theo mùa và khuyến mãi khó dự đoán; đặc biệt nhu cầu viral TikTok Shop và biến động Tết không nắm bắt được trong mô hình truyền thống",
+      "severity": 8,
+      "aiSolvable": true,
+      "mapsToBaseline": ["B01", "B06"]
+    },
+    {
+      "problem": "Kém hiệu quả giao hàng chặng cuối tại đô thị loại 2/3 và nông thôn — hệ thống địa chỉ không chuẩn hóa (không có mã ZIP+4 tương đương), mật độ giao hàng thấp, đường sá xấu",
+      "severity": 8,
+      "aiSolvable": true,
+      "mapsToBaseline": ["B03", "B08"]
+    },
+    {
+      "problem": "Khoảng trống chuỗi lạnh — tổn thất sau thu hoạch thực phẩm 25–30%; mật độ kho lạnh cực thấp (132 pallet/10.000 dân so với Nhật Bản 1.592); áp dụng cảm biến IoT còn sơ khai",
+      "severity": 8,
+      "aiSolvable": true,
+      "mapsToBaseline": ["B06", "B08"]
+    },
+    {
+      "problem": "Phụ thuộc lao động kho bãi và tỷ lệ lỗi nhặt hàng cao (~2–5%) — chi phí lao động tăng hàng năm; tỷ lệ tự động hóa thấp; không có tối ưu hóa lộ trình nhặt hàng",
+      "severity": 7,
+      "aiSolvable": true,
+      "mapsToBaseline": ["B05", "B07"]
+    },
+    {
+      "problem": "Xử lý tài liệu thủ công (hải quan, vận đơn, hóa đơn) — tỷ lệ lỗi nhập liệu thủ công cao; VNACCS tồn tại nhưng OCR/AI chưa được áp dụng rộng rãi; Thông tư 121/2025 tạo ra yêu cầu tài liệu mới",
+      "severity": 7,
+      "aiSolvable": true,
+      "mapsToBaseline": ["B11", "B14"]
+    },
+    {
+      "problem": "Quản lý đội xe kém hiệu quả — đội xe lão hóa không có bảo trì dự đoán; thói quen định tuyến phi chính thức; chi phí nhiên liệu biến động; không tích hợp Traffic API thời gian thực",
+      "severity": 7,
+      "aiSolvable": true,
+      "mapsToBaseline": ["B03", "B06", "B08"]
+    }
+  ],
+  "regulations": [
+    {
+      "name": "Luật Bảo vệ Dữ liệu Cá nhân (PDPL 2025)",
+      "description": "Luật bảo vệ dữ liệu cá nhân của Việt Nam có hiệu lực từ 01/01/2026 (thay thế Nghị định 13/2023). Quy định yêu cầu đồng ý rõ ràng khi xử lý dữ liệu giao hàng của khách (tên, địa chỉ, điện thoại); quy tắc xử lý dữ liệu tự động tương đương GDPR Điều 22; hạn chế chuyển dữ liệu xuyên biên giới khi sử dụng nền tảng AI quốc tế (AWS, Azure, Google Vertex) để xử lý dữ liệu logistics Việt Nam; thông báo vi phạm trong 72 giờ.",
+      "impact": "high"
+    },
+    {
+      "name": "Thông tư 121/2025/TT-BTC (Thủ tục Hải quan)",
+      "description": "Có hiệu lực từ 01/02/2026, quy định các sửa đổi lớn về thủ tục hải quan: kiểm tra định giá, yêu cầu tài liệu, nhập/xuất khẩu tại chỗ. Tạo ra yêu cầu tuân thủ mới cho công cụ xử lý tài liệu AI — đồng thời tạo cơ hội tự động hóa tuân thủ khẩn cấp.",
+      "impact": "high"
+    },
+    {
+      "name": "VNACCS/VCIS — Hải quan Điện tử",
+      "description": "Tất cả khai báo nhập/xuất khẩu phải nộp điện tử qua VNACCS; yêu cầu phân loại mã HS. Trích xuất tài liệu AI và gợi ý mã HS có thể áp dụng trực tiếp. Hạn chế: dữ liệu hải quan do chính phủ kiểm soát — cần tư vấn pháp lý trước khi dùng để huấn luyện mô hình thương mại.",
+      "impact": "high"
+    },
+    {
+      "name": "Luật Giao thông Đường bộ (sửa đổi)",
+      "description": "Quy định giới hạn trọng tải xe tải, yêu cầu bằng lái, giấy phép tuyến đường. AI quản lý đội xe phải tích hợp ràng buộc tuân thủ. Vùng cấm xe tải nội đô TPHCM/Hà Nội (6am–9pm tại Quận 1, Quận 3, Hoàn Kiếm) phải được mã hóa trong engine định tuyến.",
+      "impact": "medium"
+    },
+    {
+      "name": "Nghị quyết số 01/NQ-CP (2024) — Số hóa 80% Thủ tục Hành chính",
+      "description": "Chính phủ đặt mục tiêu 80% thủ tục hành chính được số hóa đến 2025. Tạo động lực chính sách thuận lợi cho ứng dụng AI trong tự động hóa hải quan/tài liệu logistics.",
+      "impact": "medium"
+    },
+    {
+      "name": "EU Carbon Border Adjustment Mechanism (CBAM)",
+      "description": "Nhà xuất khẩu Việt Nam sang EU cần dữ liệu carbon footprint chuỗi cung ứng. Hệ thống AI không cung cấp được dữ liệu theo dõi carbon có thể trở thành bất lợi cạnh tranh cho khách hàng xuất khẩu. Đây là use case ESG cần xây dựng trong Giai đoạn 3.",
+      "impact": "low"
+    }
+  ],
+  "priorityBaselines": {
+    "high": ["B01", "B03", "B06", "B11"],
+    "medium": ["B08", "B09", "B12", "B14"],
+    "low": ["B05", "B07", "B10", "B13", "B15"]
+  },
+  "competitiveLandscape": [
+    {
+      "competitor": "Project44 (Mỹ) — Gartner Magic Quadrant Leader 5 năm liên tiếp",
+      "strengths": "250.000+ kết nối nhà vận chuyển toàn cầu; Intelligent TMS (08/2025): cải thiện 17% đúng hạn, tiết kiệm 60% thời gian báo giá; AI Freight Procurement Agent tự động; đã vào tuyến Trung Quốc–Việt Nam (04/2025); ROI đã được chứng minh (giảm 4,1% chi phí vận tải)",
+      "weaknesses": "Mạng lưới nhà vận chuyển nội địa Việt Nam rất hạn chế (vi nhà vận chuyển không được bao phủ); định giá doanh nghiệp loại trừ 3PL SME Việt Nam; chủ yếu là lớp visibility — không phải TMS/WMS đầy đủ thay thế"
+    },
+    {
+      "competitor": "Flexport (Mỹ) — Nền tảng giao nhận hàng hóa kỹ thuật số + AI",
+      "strengths": "Flexport Intelligence: Q&A chuỗi cung ứng bằng NLP không cần kỹ năng kỹ thuật; 20+ sản phẩm AI ra mắt 02/2025; mục tiêu 80% tự động hóa thủ tục hải quan; mạng giao nhận quốc tế mạnh (đường biển, đường không, hải quan)",
+      "weaknesses": "Mạnh về giao nhận quốc tế, không phải 3PL nội địa; cạnh tranh với khách hàng của mình; AI tiếng Anh trước tiên — không có khả năng tiếng Việt; không phải nền tảng TMS/WMS nội địa"
+    },
+    {
+      "competitor": "DHL Supply Chain (Đức) — 3PL toàn cầu với AI nhúng",
+      "strengths": "Phân loại vision AI tại cửa khẩu Hà Nội (tỷ lệ lỗi 0,01%); robot hóa + bảo trì dự đoán quy mô lớn; digital twin mô hình hóa chuỗi cung ứng; mạng lưới vật lý mạnh tại Việt Nam",
+      "weaknesses": "Định giá cao cấp — không tiếp cận được 3PL thị trường trung cấp Việt Nam; tính năng AI độc quyền, không cung cấp dưới dạng SaaS cho bên thứ ba; tích hợp với mạng nhà vận chuyển nội địa Việt Nam hạn chế"
+    },
+    {
+      "competitor": "GHN (Giao Hàng Nhanh) — Lãnh đạo CEP nội địa tech-native",
+      "strengths": "Công nghệ native với AI route suggestion; dự đoán xác suất giao hàng thành công cho COD rủi ro cao; cân bằng thông lượng hub AI; thống trị fulfillment thương mại điện tử đại trà; thí điểm đội xe điện",
+      "weaknesses": "Tập trung vào thương mại điện tử tiêu dùng — không cạnh tranh trực tiếp với B2B công nghiệp 3PL Smartlog; nếu GHN xây dựng TMS/WMS doanh nghiệp, tình hình sẽ thay đổi"
+    },
+    {
+      "competitor": "Maersk (Đan Mạch) — Logistics tích hợp (đường biển + nội địa + kho bãi)",
+      "strengths": "Tích hợp chuỗi cung ứng end-to-end (cửa đến cửa); quan hệ đối tác project44 cho visibility đường biển thời gian thực; hiện diện Việt Nam đang tăng (vận hành cảng, kho bãi)",
+      "weaknesses": "Thế mạnh chính là đường biển; coverage nội địa/chặng cuối Việt Nam hạn chế; tích hợp với logistics TMĐT nội địa phân mảnh; tập trung doanh nghiệp lớn"
+    }
+  ],
+  "aiUseCases": [
+    {
+      "useCase": "Xử lý tài liệu thông minh — trích xuất tự động vận đơn, hóa đơn, chứng từ hải quan (Document AI / OCR / LLM)",
+      "baseline": "B11",
+      "feasibility": "high",
+      "roiEstimate": "ROI năm đầu 150–300%; giảm chi phí xử lý từ $15 → $2–4/tài liệu; giảm thời gian từ 7 phút → <30 giây; hoàn vốn 3–6 tháng",
+      "implementationMonths": "4–5 tháng (MVP); 20 tuần đến giảm 60%+ xử lý thủ công",
+      "vietnamContext": "Thông tư 121/2025/TT-BTC (hiệu lực 02/2026) tạo nhu cầu khẩn cấp. VNACCS điện tử là điểm tiếp cận. Sử dụng PaddleOCR cho nội dung tiếng Việt/song ngữ. Ưu tiên: POD số hóa → hóa đơn → chứng từ hải quan → BOL → Giấy C/O"
+    },
+    {
+      "useCase": "Tối ưu tuyến đường giao hàng AI (AI-Powered Route Optimization — VRPTW)",
+      "baseline": "B03",
+      "feasibility": "high",
+      "roiEstimate": "Tiết kiệm 8–18% chi phí nhiên liệu; cải thiện 15–30% thời gian giao hàng; giảm 15–20% tổng chi phí vận chuyển",
+      "implementationMonths": "5–8 tháng (MVP 20–100 phương tiện)",
+      "vietnamContext": "Phải tích hợp Google Maps/HERE Traffic API thời gian thực. Mã hóa vùng cấm xe tải (Quận 1, 3, Hoan Kiem 6am–9pm). Mô hình riêng cho xe máy. Thêm 5–8 phút/điểm COD so với giao hàng đã thanh toán trước. Xử lý geocoding thất bại tại địa chỉ nông thôn/khu đô thị mới"
+    },
+    {
+      "useCase": "Dự báo nhu cầu AI/ML (Demand Forecasting)",
+      "baseline": "B01",
+      "feasibility": "high",
+      "roiEstimate": "Cải thiện MAPE 15–35%; giảm tồn kho 15–25%; giảm mất doanh thu do hết hàng; hoàn vốn 6–12 tháng",
+      "implementationMonths": "4–6 tháng (dữ liệu sạch) + 2–3 tháng data pipeline nếu chất lượng dữ liệu kém",
+      "vietnamContext": "Mã hóa chu kỳ Tết bắt buộc (T-21 đến T+7 ngày) như regime shift nhu cầu, không phải đỉnh theo mùa. Loại trừ/giảm trọng số năm COVID (2020–2022). Xử lý đột biến TikTok Shop như ngoại lệ trong dữ liệu huấn luyện. Bắt đầu với B2B công nghiệp (Baconco, Phú Mỹ) trước TMĐT"
+    },
+    {
+      "useCase": "Tối ưu hóa tồn kho AI (Inventory Optimization & Slotting)",
+      "baseline": "B09",
+      "feasibility": "medium",
+      "roiEstimate": "Giảm mức tồn kho 15–25%; cải thiện mức độ phục vụ khách hàng lên 65%; giảm thời gian nhặt hàng 20–30%",
+      "implementationMonths": "3–5 tháng (phân tích ABC và tối ưu điểm đặt hàng lại)",
+      "vietnamContext": "Bắt đầu với phân tích ABC/XYZ động và tối ưu điểm đặt hàng lại theo mùa. Slotting dựa trên vận tốc và co-pick affinity. Khách hàng phân bón/hóa chất nông nghiệp (Baconco) có chu kỳ nhu cầu mùa vụ phù hợp nhất"
+    },
+    {
+      "useCase": "Hiển thị lô hàng thời gian thực + Dự đoán ETA (Real-time Visibility & ETA Prediction)",
+      "baseline": "B08",
+      "feasibility": "medium",
+      "roiEstimate": "Cải thiện 17% hiệu suất đúng hạn; giảm chi phí dịch vụ khách hàng; tránh phạt vi phạm SLA",
+      "implementationMonths": "6–10 tháng (bao gồm xây dựng tích hợp nhà vận chuyển)",
+      "vietnamContext": "Thách thức chính: mạng lưới vi nhà vận chuyển Việt Nam không có API/EDI tiêu chuẩn. Smartlog có lợi thế quan hệ nhà vận chuyển hiện có. Project44 mạnh về xuyên biên giới nhưng yếu nội địa — cơ hội cho Smartlog xây dựng hub carrier visibility nội địa"
+    },
+    {
+      "useCase": "Giám sát chuỗi lạnh IoT + AI (Cold Chain Monitoring)",
+      "baseline": "B06",
+      "feasibility": "medium",
+      "roiEstimate": "Giảm 15–20% tổn thất sau thu hoạch (cơ sở hiện tại 25–30%); tránh rủi ro tuân thủ dược phẩm",
+      "implementationMonths": "4–6 tháng (triển khai phần cứng IoT là bước giới hạn)",
+      "vietnamContext": "Mật độ kho lạnh Việt Nam cực thấp (132 pallet/10.000 dân vs. Nhật Bản 1.592). Thị trường dược phẩm và xuất khẩu thực phẩm tạo nhu cầu quy định. Giao thức MQTT qua TLS cho thiết bị IoT; EMQX self-hosted tối ưu chi phí cho >10.000 thiết bị"
+    },
+    {
+      "useCase": "Trợ lý AI Logistics Tiếng Việt (Vietnamese Logistics Copilot)",
+      "baseline": "B11",
+      "feasibility": "medium",
+      "roiEstimate": "Giảm chi phí dịch vụ khách hàng; giải quyết ngoại lệ nhanh hơn; hài lòng người dùng >4/5 (mục tiêu beta)",
+      "implementationMonths": "3–4 tháng (prototype RAG-based)",
+      "vietnamContext": "Flexport Intelligence là tiếng Anh trước tiên — copilot logistics tiếng Việt sản xuất là khoảng trống không có đối thủ cạnh tranh. Kiến trúc RAG trên dữ liệu TMS/WMS. Hỗ trợ Q&A trạng thái lô hàng, cảnh báo ngoại lệ, truy vấn tài liệu bằng tiếng Việt"
+    },
+    {
+      "useCase": "Bảo trì dự đoán đội xe (Predictive Fleet Maintenance)",
+      "baseline": "B06",
+      "feasibility": "medium",
+      "roiEstimate": "Giảm 15–25% chi phí bảo trì; giảm 70–85% sự cố hỏng hóc không lên kế hoạch; hoàn vốn 6–12 tháng",
+      "implementationMonths": "8–12 tháng (bao gồm triển khai IoT OBD-II)",
+      "vietnamContext": "Phù hợp nhất với PTSC (thiết bị nặng ngoài khơi — thiệt hại ngừng hoạt động cực lớn). Đội xe 3PL tiêu chuẩn: bắt đầu với dongle OBD-II nhẹ + mô hình ML dựa trên số km trước khi xây dựng stack dự đoán đầy đủ"
+    }
+  ],
+  "dataReadiness": {
+    "overallScore": 4,
+    "strengths": [
+      "Khối lượng lô hàng lớn (hàng triệu bản ghi) có sẵn trong TMS/WMS của các 3PL lớn",
+      "Tài liệu (vận đơn, hóa đơn, chứng từ) tồn tại ở khối lượng cao — sẵn sàng cho Document AI ngay",
+      "Dữ liệu GPS/Telematics có sẵn cho phần lớn đội xe có lắp thiết bị",
+      "Lịch sử đơn hàng WMS đủ cho phân tích ABC và dự báo cơ bản nếu WMS có >90 ngày lịch sử giao dịch",
+      "Khách hàng B2B công nghiệp (Baconco, Phú Mỹ) có chu kỳ nhu cầu có cấu trúc tốt hơn — phù hợp nhất để bắt đầu"
+    ],
+    "gaps": [
+      "40–60% hồ sơ TMS thiếu timestamp, cập nhật nhà vận chuyển, hoặc trạng thái cuối — mô hình ETA không đáng tin cậy",
+      "Dữ liệu GPS thường do nhà cung cấp telematics bên thứ ba giữ trong silo — không thể truy cập qua API vào TMS",
+      "Trọng lượng/kích thước thiếu cho 50%+ SKU trong WMS — phá vỡ tối ưu hóa tải trọng trước khi bắt đầu",
+      "Dữ liệu thành tích nhà vận chuyển nằm trong email/Excel — không thể truy vấn, không có cấu trúc",
+      "Mã lý do giao hàng thất bại là văn bản tự do hoặc mã sai — không thể dùng để huấn luyện mô hình dự đoán thành công giao hàng",
+      "Timestamp nhập thủ công trễ 2–4 giờ so với sự kiện thực tế — mô hình ETA học các mẫu sai",
+      "Mùa cao điểm Tết và back-to-school cũng là thời điểm chất lượng dữ liệu tệ nhất — mô hình học mẫu sai chính xác ở thời điểm quan trọng nhất"
+    ],
+    "quickWins": [
+      "Thực thi mã lý do giao hàng thất bại có cấu trúc trong app tài xế (8–10 mã cố định, không phải văn bản tự do) — ngay lập tức, chi phí thấp",
+      "Triển khai thu thập timestamp tự động tại sự kiện quét mã (loại bỏ nhập thủ công) — bước đơn giản nhất để cải thiện chất lượng dữ liệu",
+      "Bắt đầu thu thập trọng lượng/kích thước thực tế khi nhận hàng cho mỗi SKU — xây dựng bảng kích thước SKU master",
+      "Tích hợp API GPS telematics vào TMS — lưu trữ dữ liệu vị trí thô với liên kết shipment_id",
+      "Xây dựng bảng theo dõi thành tích nhà vận chuyển (tỷ lệ đúng hạn, tỷ lệ hư hỏng, theo tuyến theo tháng)"
+    ]
+  },
+  "implementationRoadmap": {
+    "phase1": {
+      "duration": "0–6 tháng",
+      "initiatives": [
+        "MVP Trích Xuất Tài Liệu AI — BOL, hóa đơn, chứng từ hải quan; độ chính xác >80%; tích hợp TMS",
+        "Chuẩn bị tuân thủ Thông tư 121/2025/TT-BTC — tự động điền biểu mẫu VNACCS",
+        "Nâng cấp Route Optimization TMS với Traffic API thời gian thực — mục tiêu tiết kiệm nhiên liệu 8–15%",
+        "Thí điểm Dự báo Nhu cầu (1 khách hàng B2B công nghiệp) — thiết lập mức chuẩn MAPE",
+        "Xây dựng nền tảng Schema Dữ liệu MAESTRO I06 — 3 khách hàng đóng góp dữ liệu thời gian thực",
+        "Ưu tiên Data Quality: thực thi timestamp tự động, mã giao hàng thất bại có cấu trúc, thu thập trọng lượng/kích thước SKU"
+      ]
+    },
+    "phase2": {
+      "duration": "6–18 tháng",
+      "initiatives": [
+        "Sản phẩm hóa Document AI — hỗ trợ đa loại tài liệu (khai báo DG, packing lists, đối soát COD)",
+        "Triển khai toàn bộ Dự báo Nhu cầu cho tất cả khách hàng WMS Smartlog với tín hiệu bên ngoài",
+        "Mô-đun Tối ưu hóa Tồn kho — khuyến nghị safety stock + điểm đặt hàng lại; mục tiêu giảm 15–20%",
+        "Trợ lý AI Logistics Tiếng Việt (Beta) — RAG trên dữ liệu TMS/WMS",
+        "Thí điểm Bảo trì Dự đoán Đội xe PTSC — triển khai cảm biến OBD-II, mô hình dự đoán lỗi",
+        "MVP Giám sát Chuỗi Lạnh — IoT cho 1–2 khách hàng dược phẩm/thực phẩm",
+        "Mở rộng mạng lưới Nhà vận chuyển — tích hợp 20+ nhà vận chuyển nội địa Việt Nam vào hub theo dõi thời gian thực"
+      ]
+    },
+    "phase3": {
+      "duration": "18+ tháng",
+      "initiatives": [
+        "Mua hàng hóa vận chuyển tự động Agentic (Agentic Freight Procurement) — lựa chọn nhà vận chuyển tự động, đối sánh giá, đàm phán tải trọng",
+        "Mô hình hóa Chuỗi Cung ứng Digital Twin — lập kế hoạch kịch bản; mô phỏng gián đoạn; phân tích what-if cho khách hàng doanh nghiệp",
+        "Phát hiện Gian lận & Bất thường COD (đặc thù Việt Nam) — phát hiện gian lận đối soát COD; cờ bất thường hóa đơn quy mô lớn",
+        "Lớp Thị giác Máy tính Kho bãi — phát hiện hư hỏng AI tại bến nhận kho; hỗ trợ độ chính xác nhặt hàng",
+        "Theo dõi Carbon ESG — tính toán carbon footprint cấp lô hàng; dữ liệu tuân thủ EU CBAM cho khách hàng xuất khẩu",
+        "Mở rộng Đa ngành MAESTRO — áp dụng học từ đồ thị tri thức I06 logistics cho các ngành lân cận (I01 Nông nghiệp, I04 Bán lẻ)"
+      ]
+    }
+  },
+  "relatedNodes": [
+    {
+      "nodeId": "I05",
+      "relationship": "supply_chain",
+      "description": "Logistics là xương sống fulfillment cho bán lẻ và thương mại điện tử — tích hợp WMS/TMS trực tiếp với nền tảng TMĐT (Shopee, TikTok Shop, Lazada)"
+    },
+    {
+      "nodeId": "I01",
+      "relationship": "supply_chain",
+      "description": "Chuỗi cung ứng nông nghiệp phụ thuộc vào logistics chuỗi lạnh — khách hàng phân bón (Baconco) kết nối trực tiếp hai ngành; 25–30% tổn thất sau thu hoạch thực phẩm là cơ hội chuỗi lạnh AI chung"
+    },
+    {
+      "nodeId": "I03",
+      "relationship": "customer",
+      "description": "Sản xuất và xuất khẩu là khách hàng logistics công nghiệp lớn nhất (Hyundai Thanh Công, PTSC) — logistics phục vụ vận chuyển nguyên vật liệu đầu vào và phân phối thành phẩm"
+    }
+  ],
+  "metadata": {
+    "createdAt": "2026-03-30",
+    "updatedAt": "2026-04-03T00:00:00Z",
+    "version": "2.0",
+    "status": "draft",
+    "researchAgents": ["R-α", "R-β", "R-γ", "R-D06", "R-DE", "R-PM", "R-σ"]
+  }
+}

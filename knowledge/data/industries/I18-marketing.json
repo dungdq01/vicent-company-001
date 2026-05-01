@@ -1,0 +1,112 @@
+{
+  "id": "I18",
+  "name": "Marketing & Advertising",
+  "slug": "marketing-advertising",
+  "category": "industry",
+  "icon": "Megaphone",
+  "color": "#FFB300",
+  "depthLevel": 1,
+  "overview": {
+    "description": "Digital marketing in Vietnam is maturing rapidly, driven by social commerce and mobile-first consumers. AI use cases include programmatic advertising, customer segmentation, campaign optimization, and attribution modeling.",
+    "marketSizeVietnam": "~$1.5B digital advertising market; social commerce growing 40%+ YoY",
+    "marketSizeSEA": "~$12B digital ad market; influencer marketing and programmatic AI adoption growing",
+    "aiMaturity": "L2",
+    "aiAppetite": "high"
+  },
+  "domainKnowledge": {
+    "keyEntities": [
+      "Customers",
+      "Campaigns",
+      "Ads",
+      "Channels",
+      "Segments",
+      "Conversions"
+    ],
+    "keyProcesses": [
+      "Audience segmentation",
+      "Campaign planning",
+      "Ad serving",
+      "Performance measurement",
+      "Attribution"
+    ],
+    "dataTypes": [
+      "Click streams",
+      "Ad impressions",
+      "Customer profiles",
+      "Social signals",
+      "Conversion events"
+    ],
+    "typicalDataVolume": "High — digital ad platforms generate billions of events per day",
+    "dataQuality": "Medium — first-party data good; third-party cookies deprecating creates gaps"
+  },
+  "painPoints": [
+    {
+      "problem": "Customer segmentation is manual and based on simple demographics",
+      "severity": 8,
+      "aiSolvable": true,
+      "mapsToBaseline": [
+        "B13",
+        "B05"
+      ]
+    },
+    {
+      "problem": "Ad creative optimization and personalization is slow and costly",
+      "severity": 7,
+      "aiSolvable": true,
+      "mapsToBaseline": [
+        "B09",
+        "B13"
+      ]
+    },
+    {
+      "problem": "Attribution modeling across multiple channels is inaccurate",
+      "severity": 8,
+      "aiSolvable": true,
+      "mapsToBaseline": [
+        "B13"
+      ]
+    },
+    {
+      "problem": "Content discovery and search for branded content is poor",
+      "severity": 6,
+      "aiSolvable": true,
+      "mapsToBaseline": [
+        "B12",
+        "B05"
+      ]
+    }
+  ],
+  "regulations": [],
+  "priorityBaselines": {
+    "high": [
+      "B13",
+      "B12"
+    ],
+    "medium": [
+      "B09",
+      "B05"
+    ],
+    "low": [
+      "B08"
+    ]
+  },
+  "competitiveLandscape": [],
+  "relatedNodes": [
+    {
+      "nodeId": "I01",
+      "relationship": "adjacent",
+      "description": "Retail and marketing share customer segmentation and personalization."
+    },
+    {
+      "nodeId": "I12",
+      "relationship": "adjacent",
+      "description": "Media and marketing share audience targeting and ad technology."
+    }
+  ],
+  "metadata": {
+    "createdAt": "2026-04-03",
+    "updatedAt": "2026-04-03",
+    "version": "0.1",
+    "status": "skeleton"
+  }
+}

@@ -1,0 +1,663 @@
+{
+  "id": "B15",
+  "name": "Simulation & Digital Twin",
+  "type": "baseline",
+  "slug": "simulation-digital-twin",
+  "tagline": "Xây dựng hệ thống mô phỏng và bản sao số sử dụng SimPy, Mesa, FEniCSx, DeepXDE, NVIDIA Omniverse và Azure Digital Twins — phục vụ tối ưu hoá quy trình sản xuất, quản lý năng lượng, logistics và bảo trì dự đoán tại thị trường Việt Nam",
+  "category": "baseline",
+  "icon": "Cpu",
+  "color": "#78909C",
+  "depthLevel": 3,
+  "selectedAgents": ["R-alpha", "R-beta", "R-gamma", "R-MLE", "R-DE", "R-DLE", "R-PE", "R-BE", "R-FE", "R-DO", "R-SE", "R-QA", "R-SA", "R-D04", "R-D07", "R-sigma"],
+  "description": "Simulation & Digital Twin (Mô phỏng và Bản sao số) là lĩnh vực xây dựng bản sao ảo của hệ thống vật lý — từ dây chuyền sản xuất, lưới điện, kho vận đến toà nhà thông minh — được đồng bộ với thế giới thực qua dữ liệu IoT, cho phép giám sát, mô phỏng what-if và tối ưu hoá. B15 bao gồm Discrete Event Simulation (DES), Agent-Based Modeling (ABM), Monte Carlo Simulation, Physics-Based Simulation (FEM/CFD), Physics-Informed Neural Networks (PINNs), Surrogate Modeling và Sim-to-Real Transfer. B15 kết nối B06 (Optimization — vòng lặp simulation-optimization), B01 (Forecasting — phân tích kịch bản what-if), B07 (Anomaly Detection — phát hiện sai lệch so với twin), B10 (Agentic AI — môi trường mô phỏng cho huấn luyện agent), B03 (Computer Vision — synthetic data generation), B13 (Tabular Data — surrogate model inputs). Thị trường digital twin toàn cầu ước tính $17B (2025), dự kiến $50-110B vào 2028-2030. TRL 6, emerging — công nghệ open-source sẵn sàng nhưng Việt Nam chưa đủ trưởng thành Industry 4.0 để hấp thụ giải pháp digital twin đầy đủ.",
+  "description_paragraphs": [
+    "Simulation & Digital Twin bao gồm các sub-fields chính: Discrete Event Simulation — DES (mô phỏng hệ thống qua chuỗi sự kiện rời rạc, dùng cho sản xuất, logistics, healthcare), Agent-Based Modeling — ABM (mô phỏng hành vi nổi trội từ các agent tự trị), System Dynamics (mô hình phản hồi stock-flow cho hành vi vĩ mô), Monte Carlo Simulation (lấy mẫu ngẫu nhiên cho lượng tử hoá bất định), Physics-Based Simulation — FEM/CFD/FEA (giải phương trình vi phân riêng cho hệ thống vật lý), Digital Twin (bản sao ảo đồng bộ thời gian thực với thực thể vật lý), Physics-Informed Neural Networks — PINNs (mạng neural ràng buộc bởi luật vật lý), Surrogate Modeling (xấp xỉ nhanh thay thế mô phỏng tốn kém), RL in Simulation (huấn luyện agent trong môi trường mô phỏng), và Synthetic Data Generation (tạo dữ liệu huấn luyện từ engine mô phỏng). Nền tảng toán học bao gồm ODE/PDE solving (Runge-Kutta, FEM weak formulation), Monte Carlo variance reduction (importance sampling, antithetic variates), queuing theory (Little's Law, M/M/c), Neural ODEs (adjoint method), và Gaussian Process surrogates.",
+    "Tại Việt Nam, B15 có điểm khả thi 5.6/10 (CONDITIONAL GO) — dưới ngưỡng GO thông thường. Technical Feasibility khá (7/10): công cụ open-source sẵn sàng (SimPy, Mesa, FEniCSx, DeepXDE) nhưng độ phức tạp tích hợp cao — kết nối MQTT → InfluxDB → SimPy → dashboard là bài toán full-stack IoT + simulation. Market Readiness trung bình (6/10): thị trường toàn cầu tăng trưởng mạnh nhưng 'market exists' và 'market exists for us in Vietnam' là hai tuyên bố rất khác nhau. Data Availability yếu (5/10): digital twin cần dòng dữ liệu IoT liên tục chất lượng cao — đa số nhà máy Việt Nam thiếu cơ sở hạ tầng cảm biến cơ bản. Risk Profile cao (5/10): phức tạp đa chiều (physics + ML + domain + IoT + 3D), chu kỳ triển khai dài (6-18 tháng), ROI khó lượng hoá. Vietnam Market Fit yếu (5/10): khoảng cách trưởng thành Industry 4.0 là thách thức trung tâm — không thể bán Step 5 cho công ty đang ở Step 1.",
+    "Chiến lược triển khai: BẮT ĐẦU với SimPy-based DES cho tối ưu hoá quy trình, KHÔNG phải physics-based twin toàn diện. Tier 1 — DES Process Optimization: SimPy + pandas + Grafana, nhắm FDI factories (Samsung, Foxconn, LG), PoC 4-6 tuần, $20K-50K/engagement. Tier 2 — IoT-Connected Process Twin (sau 6-12 tháng): MQTT + InfluxDB + SimPy + FastAPI + React, subscription model. Tier 3 — Physics-Augmented Twin (sau 18+ tháng, chỉ khi Tier 1-2 thành công): FEniCSx/DeepXDE cho physics domains cụ thể, enterprise contracts $100K+. KHÔNG xây dựng generic 'digital twin platform' — Azure và AWS đã bán. KHÔNG bắt đầu với 3D visualization (Omniverse/Three.js) — ấn tượng trong demo nhưng không thêm giá trị mô phỏng. KHÔNG nhắm SME sản xuất Việt Nam — họ chưa sẵn sàng. Nhắm FDI factories tại Bắc Ninh, Hải Phòng, Bình Dương có ngân sách và hạ tầng. Hợp tác FPT/Viettel cho tầng IoT."
+  ],
+  "aliases": [
+    "Mô phỏng và Bản sao số",
+    "Digital Twin",
+    "Bản sao kỹ thuật số",
+    "Discrete Event Simulation",
+    "Mô phỏng sự kiện rời rạc",
+    "Physics-Informed Neural Networks",
+    "Surrogate Modeling",
+    "Agent-Based Modeling",
+    "Sim-to-Real Transfer",
+    "Process Simulation"
+  ],
+  "maturity_level": "emerging",
+  "trl": 6,
+  "core_concepts": [
+    {
+      "name": "Digital Twin — Định nghĩa và Mức độ trưởng thành (Definition & Maturity Levels)",
+      "definition": "Digital twin là bản sao ảo của thực thể vật lý (tài sản, quy trình hoặc hệ thống) được đồng bộ với thế giới thực qua dòng dữ liệu, cho phép giám sát, mô phỏng và tối ưu hoá. Khái niệm do Michael Grieves đề xuất (2002). Mức trưởng thành theo Gartner/ISO 23247: L0 Digital Model (CAD/BIM tĩnh, không kết nối dữ liệu), L1 Digital Shadow (một chiều: vật lý → ảo, chỉ giám sát), L2 Digital Twin (hai chiều: vật lý ↔ ảo, closed-loop), L3 Autonomous Twin (tự học, tự tối ưu, hành động không cần người), L4 Cognitive Twin (suy luận, giải thích, hợp tác với người và twin khác). Ngành đang chuyển từ L1/L2 sang L3 với tích hợp AI (2025-2026). Mô hình năm chiều (Tao et al., 2019): Physical Entity, Virtual Entity, Services, Data, Connections.",
+      "difficulty": "Beginner",
+      "prerequisites": ["IoT cơ bản", "Khái niệm Industry 4.0"]
+    },
+    {
+      "name": "Discrete Event Simulation — DES (Mô phỏng sự kiện rời rạc)",
+      "definition": "DES mô hình hoá hệ thống như chuỗi sự kiện xảy ra tại các điểm thời gian rời rạc. Giữa các sự kiện, trạng thái hệ thống không đổi — DES rất hiệu quả cho hệ thống thay đổi theo từng đợt. Mô hình formal: tuple (S, E, T, δ) với S = tập trạng thái, E = tập sự kiện, T = đồng hồ mô phỏng, δ: S × E → S là hàm chuyển trạng thái. Future Event List (FEL) là hàng đợi ưu tiên sắp xếp theo thời gian. Thành phần: entities (đối tượng luân chuyển), resources (đối tượng phục vụ), queues (khu chờ), events (thay đổi trạng thái), accumulators (thống kê). Nền tảng queuing theory: Little's Law L = λW, M/M/c queue, điều kiện ổn định ρ = λ/(cμ) < 1. Mạnh cho sản xuất, logistics, healthcare, call center.",
+      "difficulty": "Intermediate",
+      "prerequisites": ["Xác suất thống kê cơ bản", "Python cơ bản"]
+    },
+    {
+      "name": "Agent-Based Modeling — ABM (Mô hình hoá dựa trên tác tử)",
+      "definition": "ABM mô phỏng hệ thống từ dưới lên bằng cách định nghĩa các tác tử tự trị với quy tắc riêng, quan sát hành vi nổi trội (emergent) ở mức vĩ mô. Mỗi agent có: state (biến nội tại), rules (hành vi if-then hoặc ML policies), environment (không gian hoặc mạng), interaction protocols (tin nhắn, tiếp cận). Hiện tượng nổi trội: tắc nghẽn giao thông từ quyết định lái xe cá nhân, lây lan dịch bệnh từ tiếp xúc, sụp đổ thị trường từ hành vi bầy đàn, mở rộng đô thị từ lựa chọn hộ gia đình. Phân biệt với DES: DES tập trung vào luồng quy trình; ABM tập trung vào tự trị và nổi trội. Nhiều mô phỏng hiện đại kết hợp cả hai.",
+      "difficulty": "Intermediate",
+      "prerequisites": ["Lập trình hướng đối tượng", "Hệ thống phức tạp cơ bản"]
+    },
+    {
+      "name": "Monte Carlo Simulation (Mô phỏng Monte Carlo)",
+      "definition": "Sử dụng lấy mẫu ngẫu nhiên để ước lượng đại lượng xác định hoặc mô phỏng hệ thống ngẫu nhiên. Phát triển bởi Ulam và von Neumann (Manhattan Project, 1940s). Ước lượng cơ bản: E[g(X)] ≈ (1/N) Σ g(Xᵢ), Xᵢ ~ p(x). Tốc độ hội tụ O(1/√N) không phụ thuộc chiều — lợi thế chủ chốt cho bài toán chiều cao nơi phương pháp xác định bị lời nguyền chiều. Kỹ thuật giảm phương sai: importance sampling (lấy mẫu từ proposal q(x)), stratified sampling, antithetic variates, control variates. MCMC (Metropolis-Hastings, HMC, NUTS) cho phân phối hậu nghiệm phức tạp. Ứng dụng: Value at Risk tài chính, kỹ thuật độ tin cậy, quản lý dự án (PERT/Monte Carlo), suy diễn Bayesian.",
+      "difficulty": "Intermediate",
+      "prerequisites": ["Xác suất thống kê", "Lấy mẫu ngẫu nhiên"]
+    },
+    {
+      "name": "Physics-Based Simulation — FEM/CFD (Mô phỏng dựa trên vật lý)",
+      "definition": "Finite Element Method (FEM) chia miền thành phần tử (tam giác, tứ diện, lục diện), xấp xỉ nghiệm trong mỗi phần tử bằng hàm cơ sở đa thức, lắp ghép hệ phương trình toàn cục K·U = F. Weak formulation: nhân phương trình PDE với test function v, tích phân từng phần → dạng biến phân. Computational Fluid Dynamics (CFD) giải phương trình Navier-Stokes cho dòng chảy: Finite Volume (OpenFOAM), Finite Element (FEniCS), Lattice Boltzmann. Mô hình hoá rối (RANS, LES, DNS) tăng độ phức tạp. Một lần chạy CFD high-fidelity mất hàng giờ đến hàng ngày trên HPC — động lực cho surrogate models. FEM là phương pháp chuẩn cho mô phỏng cấu trúc, nhiệt và điện từ trong digital twin kỹ thuật.",
+      "difficulty": "Advanced",
+      "prerequisites": ["Phương trình vi phân riêng (PDE)", "Đại số tuyến tính", "Giải tích số"]
+    },
+    {
+      "name": "Physics-Informed Neural Networks — PINNs (Mạng neural thông tin vật lý)",
+      "definition": "PINNs nhúng luật vật lý (PDE) trực tiếp vào hàm mất mát huấn luyện: L_total = w_data·L_data + w_physics·L_physics + w_bc·L_bc + w_ic·L_ic, trong đó L_physics = (1/N_r) Σ ||F[u_θ](xⱼ,tⱼ)||² là residual PDE. Gradient tính qua automatic differentiation. Không cần mesh (mesh-free) — giải quyết bước tốn thời gian nhất trong setup mô phỏng truyền thống. Xử lý: forward problems (giải PDE với tham số đã biết), inverse problems (suy luận tham số PDE chưa biết từ quan sát thưa), data assimilation (kết hợp dữ liệu cảm biến nhiễu với ràng buộc vật lý). Thách thức (2026): training instability cho PDE stiff, spectral bias, scaling lên 3D phức tạp. Giải pháp: adaptive weighting, Fourier feature embeddings, domain decomposition. Raissi et al. (2019) — hơn 10,000 trích dẫn.",
+      "difficulty": "Advanced",
+      "prerequisites": ["Deep learning", "PDE cơ bản", "Automatic differentiation"]
+    },
+    {
+      "name": "Surrogate Models / Meta-models (Mô hình thay thế)",
+      "definition": "Surrogate (meta-model, emulator) là xấp xỉ nhanh thay thế mô phỏng tốn kém. Quy trình: (1) Design of Experiments (Latin Hypercube, Sobol sequence) chọn điểm đầu vào; (2) chạy mô phỏng high-fidelity tại các điểm DoE; (3) huấn luyện surrogate (Gaussian Process, neural network, polynomial chaos expansion); (4) validation trên simulation runs giữ lại; (5) deploy surrogate trong vòng lặp tối ưu hoá, phân tích nhạy hoặc digital twin thời gian thực. Active learning / adaptive sampling: dùng uncertainty của surrogate chọn điểm mô phỏng tiếp theo, tối đa hoá information gain mỗi lần chạy tốn kém. GP surrogates cung cấp không chỉ dự đoán mà còn ước lượng bất định calibrated — biết khi nào surrogate không tin cậy.",
+      "difficulty": "Advanced",
+      "prerequisites": ["Machine learning cơ bản", "Gaussian Processes", "Design of Experiments"]
+    },
+    {
+      "name": "Neural ODEs (Phương trình vi phân thường neural)",
+      "definition": "Neural ODEs (Chen et al., NeurIPS 2018 Best Paper) thay thế các lớp residual rời rạc bằng dynamics liên tục: dh/dt = f_θ(h(t), t), h(T) = h(0) + ∫₀ᵀ f_θ(h(t), t) dt. Adjoint method cho backpropagation: thay vì lan truyền ngược qua các bước ODE solver (tốn bộ nhớ), giải adjoint ODE ngược thời gian → O(1) memory bất kể số bước solver. Mô hình độ sâu liên tục điều chỉnh tính toán theo độ phức tạp bài toán (adaptive step size). Cho phép học dynamics thời gian liên tục từ chuỗi thời gian lấy mẫu không đều — quan trọng cho digital twin hệ thống vật lý với tần suất lấy mẫu khác nhau. Ứng dụng: continuous normalizing flows, latent ODE cho chuỗi thời gian lâm sàng, học hệ động lực thông tin vật lý.",
+      "difficulty": "Advanced",
+      "prerequisites": ["Deep learning", "Phương trình vi phân thường", "Tính toán số"]
+    },
+    {
+      "name": "What-If Scenario Analysis (Phân tích kịch bản What-If)",
+      "definition": "Mô phỏng cho phép khám phá kịch bản phản thực: 'Nếu nhu cầu tăng 30%?', 'Nếu máy này hỏng?', 'Nếu thêm dây chuyền sản xuất thứ hai?' — khác biệt cơ bản với dự báo (B01) vốn dự đoán tương lai khả dĩ nhất; mô phỏng khám phá không gian tương lai khả dĩ. Phương pháp: định nghĩa tham số kịch bản → chạy ensemble mô phỏng (thường hàng nghìn lần với Monte Carlo sampling trên đầu vào bất định) → tổng hợp kết quả thành metrics ra quyết định (chi phí kỳ vọng, trễ trường hợp xấu nhất, xác suất thất bại). Pattern: dùng mô hình forecasting đặt tham số baseline, chạy mô phỏng với nhiễu loạn tạo phong bì kịch bản (best/worst/stress test).",
+      "difficulty": "Intermediate",
+      "prerequisites": ["Mô phỏng cơ bản", "Thống kê mô tả"]
+    },
+    {
+      "name": "Sim-to-Real Transfer (Chuyển giao từ mô phỏng sang thực tế)",
+      "definition": "Huấn luyện policy hoặc mô hình trong mô phỏng rồi triển khai trên thế giới thực. Thách thức cốt lõi: reality gap — khác biệt giữa vật lý mô phỏng và vật lý thực tế. Chiến lược giảm gap: Domain Randomization — ngẫu nhiên hoá tham số mô phỏng (ma sát, ánh sáng, nhiễu) để policy robust với biến thiên thực tế; System Identification — hiệu chỉnh tham số mô phỏng khớp đo lường thực; Progressive Transfer — huấn luyện trong mô phỏng, fine-tune trên dữ liệu thực ít; Digital Twin Calibration — cập nhật liên tục tham số twin từ dữ liệu cảm biến thực. Thành công nổi bật: OpenAI huấn luyện tay robot giải Rubik's cube hoàn toàn trong mô phỏng (2019), chuyển thành công sang robot vật lý nhờ Automatic Domain Randomization.",
+      "difficulty": "Advanced",
+      "prerequisites": ["Reinforcement Learning", "Mô phỏng vật lý", "Domain adaptation"]
+    },
+    {
+      "name": "Real-Time Data Integration — IoT to Twin (Tích hợp dữ liệu thời gian thực)",
+      "definition": "Digital twin chỉ tốt bằng kết nối dữ liệu của nó. Stack tích hợp: Physical Asset → Sensors/IoT → Edge Processing (lọc, cờ bất thường) → Data Pipeline → Twin Platform (cập nhật trạng thái, trigger mô phỏng) → Visualization/Control. Giao thức: MQTT (nhẹ, pub/sub), OPC-UA (công nghiệp), AMQP, REST/WebSocket. Yêu cầu độ trễ: process twins (giây), asset monitoring (phút), system twins (giờ). Loại dữ liệu: chuỗi thời gian telemetry, event logs, hình ảnh/video, hồ sơ bảo trì. Tại Việt Nam, đây là nút thắt lớn nhất — đa số nhà máy thiếu hạ tầng cảm biến cơ bản; không thể xây digital twin cho nhà máy theo dõi sản lượng trên bảng trắng.",
+      "difficulty": "Intermediate",
+      "prerequisites": ["IoT protocols", "Time-series databases", "Data engineering"]
+    },
+    {
+      "name": "Simulation-Optimization Loop (Vòng lặp mô phỏng-tối ưu hoá)",
+      "definition": "Kết nối chặt chẽ mô phỏng với thuật toán tối ưu hoá: minimize f(x) = E[C(x, ξ)] subject to g(x) ≤ 0, trong đó C(x, ξ) là output mô phỏng cho biến thiết kế x và đầu vào ngẫu nhiên ξ. Pattern: Optimizer đề xuất x → Simulation đánh giá f(x) → Optimizer cập nhật → lặp. Phương pháp: Bayesian optimization (GP surrogate + acquisition function) — sample-efficient khi mô phỏng tốn kém; evolutionary algorithms (genetic algorithms, CMA-ES) — khi mô phỏng rẻ; gradient-based — nếu mô phỏng khả vi; ranking and selection — so sánh phương án rời rạc. Ứng dụng: tối ưu layout nhà máy, thiết kế chuỗi cung ứng, tối ưu hình dáng khí động học, tối ưu liều thuốc.",
+      "difficulty": "Advanced",
+      "prerequisites": ["Tối ưu hoá (B06)", "Mô phỏng cơ bản", "Bayesian Optimization"]
+    }
+  ],
+  "algorithms": [
+    {
+      "name": "SimPy / Salabim (Discrete Event Simulation in Python)",
+      "category": "Framework DES process-based viết bằng Python generator functions sử dụng yield chờ sự kiện",
+      "complexity": "SimPy: lightweight, thuần Python, process-based. Mô hình viết bằng generator functions: yield env.timeout() cho chờ, yield resource.request() cho yêu cầu tài nguyên. Salabim mở rộng SimPy với animation, monitoring tích hợp, queue visualization — hữu ích cho truyền thông stakeholders.",
+      "pros": ["Thuần Python — dễ tích hợp với pandas, scikit-learn, ML pipelines", "Lightweight, dễ học, ít boilerplate", "Phù hợp nhất cho Tier 1 DES tại Việt Nam", "Salabim thêm visualization cho stakeholder demos"],
+      "cons": ["Không có GUI kéo thả — barrier cho non-programmers", "Không có built-in optimization engine", "Không xử lý continuous phenomena (cần co-simulation)", "Performance giới hạn cho mô hình rất lớn (triệu entities)"],
+      "use_cases": ["Mô phỏng dây chuyền sản xuất", "Tối ưu hoá kho vận và logistics", "Healthcare patient flow", "Call center capacity planning"],
+      "key_papers": ["Matloff, N. (2008). Introduction to Discrete-Event Simulation and the SimPy Language."]
+    },
+    {
+      "name": "Mesa / NetLogo (Agent-Based Modeling)",
+      "category": "Framework ABM với kiến trúc model-agent-scheduler-space cho hành vi nổi trội",
+      "complexity": "Mesa (Python): model-agent-scheduler-space architecture. Mỗi Agent có step() method, Model quản lý agents và environment, Scheduler quyết định thứ tự kích hoạt. MultiGrid/ContinuousSpace cho không gian. DataCollector thu thập metrics. NetLogo (Logo-based): phổ biến trong khoa học xã hội và sinh thái, GUI và visualization tích hợp.",
+      "pros": ["Mesa thuần Python — tích hợp dễ với ML ecosystem", "NetLogo có cộng đồng lớn và model library phong phú", "Bắt hành vi nổi trội không thể mô hình hoá top-down", "Visualize dynamics phức tạp cho stakeholders"],
+      "cons": ["Performance kém cho agent lớn (>100K agents)", "Khó validate và calibrate — nhiều tham số", "Thiếu kết nối IoT cho digital twin", "Kết quả nhạy cảm với quy tắc agent — cần domain expertise"],
+      "use_cases": ["Mô phỏng lây lan dịch bệnh", "Traffic và urban dynamics", "Market và supply chain dynamics", "Ecology và quản lý tài nguyên"],
+      "key_papers": ["Kazil, J. et al. (2020). Utilizing Python for Agent-Based Modeling: The Mesa Framework. SBP-BRiMS."]
+    },
+    {
+      "name": "FEniCSx / OpenFOAM (FEM/CFD)",
+      "category": "Giải phương trình vi phân riêng bằng phương pháp phần tử hữu hạn và thể tích hữu hạn",
+      "complexity": "FEniCSx: Python high-level interface cho FEM. Định nghĩa variational problem (TrialFunction, TestFunction), mesh, boundary conditions → giải tự động hệ phương trình K·U = F. OpenFOAM (C++): CFD open-source chuẩn, finite volume method, giải Navier-Stokes. Turbulence models: k-ε, k-ω SST, LES. Ứng dụng: khí động, HVAC, cháy nổ, dòng chảy đa pha.",
+      "pros": ["FEniCSx: interface Python dễ tiếp cận cho FEM nghiên cứu", "OpenFOAM: CFD open-source mạnh nhất, cộng đồng lớn", "Giải bài toán physics-based mà DES không xử lý được", "Tích hợp với PINNs cho hybrid physics-ML"],
+      "cons": ["Cần PhD-level kiến thức PDE, thermodynamics, fluid dynamics", "Mesh generation tốn thời gian và expertise", "Một lần chạy CFD mất giờ đến ngày trên HPC", "OpenFOAM learning curve dốc (C++ config files)"],
+      "use_cases": ["Mô phỏng cấu trúc và nhiệt cho digital twin", "Thiết kế HVAC toà nhà thông minh", "Tối ưu hoá khí động lực học", "Phân tích ứng suất và biến dạng"],
+      "key_papers": ["Alnæs, M. et al. (2015). The FEniCS Project Version 1.5. Archive of Numerical Software.", "Weller, H. et al. (1998). A Tensorial Approach to CFD using Object-Oriented Techniques. Computers in Physics."]
+    },
+    {
+      "name": "DeepXDE / NVIDIA Modulus (PINNs Frameworks)",
+      "category": "Framework mạng neural thông tin vật lý cho giải PDE và inverse problems",
+      "complexity": "DeepXDE (Python/TensorFlow/PyTorch): định nghĩa PDE residual qua auto-diff, geometry, boundary/initial conditions → train neural network thoả mãn cả dữ liệu và vật lý. NVIDIA Modulus mở rộng với Fourier Neural Operators (FNO), graph neural networks cho mesh bất quy tắc, multi-GPU training quy mô công nghiệp.",
+      "pros": ["Mesh-free — không cần mesh generation tốn thời gian", "Giải cả forward và inverse problems", "DeepXDE dễ sử dụng — ít mã cho PDE phức tạp", "Modulus hỗ trợ quy mô công nghiệp với multi-GPU"],
+      "cons": ["Training instability cho PDE stiff", "Spectral bias — khó học thành phần tần số cao", "Chưa thay thế FEM/CFD cho bài toán chuẩn", "Cần hiểu PDE và deep learning đồng thời"],
+      "use_cases": ["Giải inverse problems (suy luận tham số từ dữ liệu thưa)", "Real-time digital twin inference", "Data assimilation kết hợp cảm biến và vật lý", "Thay thế mô phỏng tốn kém trong vòng lặp tối ưu"],
+      "key_papers": ["Lu, L. et al. (2021). DeepXDE: A Deep Learning Library for Solving Differential Equations. SIAM Review."]
+    },
+    {
+      "name": "Azure Digital Twins / AWS IoT TwinMaker",
+      "category": "Nền tảng đám mây cho mô hình hoá, tích hợp và quản lý digital twin",
+      "complexity": "Azure Digital Twins: DTDL (Digital Twins Definition Language, JSON-LD schemas) định nghĩa twin models, twin graphs (quan hệ giữa twins), event routing, tích hợp Azure IoT Hub, Time Series Insights, Synapse Analytics. AWS IoT TwinMaker: kết nối IoT data, 3D models, knowledge graphs; tích hợp IoT SiteWise, S3, Grafana. Cả hai cung cấp: twin modeling, data integration, query APIs, visualization — nhưng KHÔNG bao gồm simulation engine.",
+      "pros": ["Managed platform — giảm overhead vận hành", "Tích hợp sẵn IoT, storage, analytics", "Twin graph modeling cho hệ thống phức tạp", "Pay-as-you-go pricing"],
+      "cons": ["Không có simulation engine — chỉ là nền tảng twin", "Cloud cost tăng theo scale", "Vendor lock-in (Azure hoặc AWS)", "Phức tạp setup cho first-time users"],
+      "use_cases": ["Enterprise digital twin platform", "Smart building management", "Manufacturing asset monitoring", "Supply chain visibility"],
+      "key_papers": ["Microsoft (2024). Azure Digital Twins Documentation.", "AWS (2024). AWS IoT TwinMaker Developer Guide."]
+    },
+    {
+      "name": "NVIDIA Omniverse / Isaac Sim",
+      "category": "Nền tảng mô phỏng 3D GPU-accelerated với physics engine và tạo dữ liệu tổng hợp",
+      "complexity": "Omniverse: Universal Scene Description (USD), Nucleus (3D asset database), Replicator (synthetic data generation), PhysX 5 (GPU physics). Isaac Sim: mô phỏng robot với physics và sensor simulation, hàng nghìn environments song song trên GPU cho RL training. Modulus: physics-ML framework (PINNs, FNOs, GNNs). Ray tracing photorealistic (RTX), multi-user collaboration.",
+      "pros": ["GPU-accelerated physics (PhysX 5) và rendering (RTX)", "Isaac Sim: nghìn environments song song cho RL", "Omniverse Replicator: synthetic data với labels tự động", "Modulus: physics-ML quy mô công nghiệp"],
+      "cons": ["Yêu cầu RTX GPUs — hardware $10K-50K/workstation", "Impractical cho 95% công ty Việt Nam", "Learning curve dốc", "Overkill cho DES process optimization"],
+      "use_cases": ["Robot simulation và sim-to-real transfer", "Factory layout optimization 3D", "Synthetic data generation cho computer vision", "Climate và weather digital twin (Earth-2)"],
+      "key_papers": ["NVIDIA (2024-2025). Building Digital Twins with Omniverse and Modulus. GTC."]
+    },
+    {
+      "name": "Gaussian Process Surrogate (GPy, BoTorch)",
+      "category": "Mô hình thay thế Bayesian cung cấp dự đoán và ước lượng bất định cho mô phỏng tốn kém",
+      "complexity": "GP định nghĩa phân phối trên hàm: f(x) ~ GP(m(x), k(x,x')). Posterior prediction: μ(x*) = k(x*,X)[K(X,X)+σ²I]⁻¹y, σ²(x*) = k(x*,x*) - k(x*,X)[K(X,X)+σ²I]⁻¹k(X,x*). Kernels phổ biến: Squared Exponential (RBF), Matérn 5/2. BoTorch (trên GPyTorch): Bayesian optimization với GP surrogates, acquisition functions (Expected Improvement, Knowledge Gradient).",
+      "pros": ["Cung cấp uncertainty estimates calibrated — biết khi nào không tin cậy", "Sample-efficient — ít lần chạy simulation tốn kém", "BoTorch chuẩn cho simulation optimization", "Tự nhiên hỗ trợ active learning / adaptive sampling"],
+      "cons": ["Scale O(n³) với số điểm quan sát — giới hạn vài nghìn điểm", "Chọn kernel cần domain knowledge", "Chiều cao (>20 biến) gây khó khăn", "Cần dữ liệu simulation chất lượng cho training"],
+      "use_cases": ["Thay thế FEM/CFD trong vòng lặp tối ưu", "Bayesian optimization cho thiết kế kỹ thuật", "Sensitivity analysis nhanh", "Real-time digital twin inference"],
+      "key_papers": ["Rasmussen, C.E. & Williams, C.K.I. (2006). Gaussian Processes for Machine Learning. MIT Press."]
+    },
+    {
+      "name": "Neural ODEs (torchdiffeq)",
+      "category": "Học dynamics liên tục thời gian từ dữ liệu với O(1) memory backpropagation",
+      "complexity": "ODEFunc: neural network f_θ(h, t). Forward: odeint(func, y0, t, method='dopri5') — adaptive RK45. Backward: adjoint method → O(1) memory. Augmented Neural ODEs cho biểu diễn richer. Latent ODEs cho chuỗi thời gian bất quy tắc: encoder → z0 → ODE flow → decoder.",
+      "pros": ["O(1) memory backpropagation — hiệu quả cho trajectories dài", "Adaptive step size — tính toán phù hợp độ phức tạp", "Tự nhiên xử lý irregular time series", "Kết nối deep learning với dynamical systems theory"],
+      "cons": ["Training chậm hơn ResNets rời rạc", "ODE solver có thể gặp stiffness", "Khó debug — dynamics liên tục", "Chưa phổ biến rộng trong production"],
+      "use_cases": ["Học dynamics hệ thống vật lý từ cảm biến", "Continuous normalizing flows", "Latent ODE cho chuỗi thời gian y tế", "Physics-informed learning"],
+      "key_papers": ["Chen, R.T.Q. et al. (2018). Neural Ordinary Differential Equations. NeurIPS 2018 (Best Paper)."]
+    },
+    {
+      "name": "Fourier Neural Operator — FNO (Li et al., 2021)",
+      "category": "Neural operator học ánh xạ giữa không gian hàm trong miền Fourier, đạt speedup 1000x so với PDE solvers",
+      "complexity": "FNO hoạt động trong Fourier space: Fourier layer áp dụng linear transform trên Fourier modes thấp rồi inverse FFT. Khác PINNs (giải một instance PDE), FNO học solution operator cho họ PDE. Một khi trained, tạo nghiệm trong milliseconds. GINO (2023): Geometry-Informed Neural Operator mở rộng cho 3D.",
+      "pros": ["1000x speedup so với traditional PDE solvers trên Navier-Stokes", "Học solution operator — generalise cho nhiều PDE instances", "Real-time inference cho digital twin", "NVIDIA Modulus tích hợp FNO như kiến trúc core"],
+      "cons": ["Cần dữ liệu simulation lớn để train", "Giới hạn cho geometry đơn giản (regular grids)", "GINO cho 3D vẫn đang phát triển", "Accuracy chưa matching high-fidelity solvers cho mọi bài toán"],
+      "use_cases": ["Real-time CFD cho digital twin", "Weather/climate simulation (FourCastNet)", "Parametric PDE solving cho engineering design", "Fast surrogate cho mô phỏng nhiệt/dòng chảy"],
+      "key_papers": ["Li, Z. et al. (2021). Fourier Neural Operator for Parametric Partial Differential Equations. ICLR 2021."]
+    },
+    {
+      "name": "Monte Carlo Methods (Basic, MCMC, Importance Sampling)",
+      "category": "Phương pháp lấy mẫu ngẫu nhiên cho ước lượng, lượng tử hoá bất định và mô phỏng ngẫu nhiên",
+      "complexity": "Basic MC: sample inputs từ distributions, chạy model, tổng hợp outputs. MCMC: Metropolis-Hastings, HMC, NUTS (Stan, PyMC) cho posterior phức tạp. Importance Sampling: quan trọng cho rare event simulation (ước lượng P(failure) = 10⁻⁶ mà không cần 10⁸ samples). Convergence O(1/√N).",
+      "pros": ["Hoạt động ở mọi chiều — không bị curse of dimensionality", "Đơn giản implement cho basic MC", "NUTS/HMC cho Bayesian inference mạnh", "Rare event simulation với importance sampling"],
+      "cons": ["Convergence chậm O(1/√N) — cần nhiều samples", "MCMC cần tuning và convergence diagnostics", "Variance reduction techniques cần expertise", "Computationally intensive cho mô hình phức tạp"],
+      "use_cases": ["Value at Risk tài chính", "Uncertainty quantification cho mô phỏng", "Reliability engineering (xác suất hỏng)", "Bayesian inference cho calibration parameters"],
+      "key_papers": ["Robert, C.P. & Casella, G. (2004). Monte Carlo Statistical Methods. Springer."]
+    },
+    {
+      "name": "AnyLogic / Arena (Commercial DES/Multi-method)",
+      "category": "Phần mềm mô phỏng thương mại hỗ trợ DES, ABM và System Dynamics với GUI",
+      "complexity": "AnyLogic: Java-based, hỗ trợ cả 3 paradigm (DES + ABM + System Dynamics) trong một mô hình — duy nhất. GUI graphical IDE, drag-and-drop modeling. Arena (Rockwell Automation): chuẩn công nghiệp cho manufacturing DES, SIMAN language, Output Analyzer, OptQuest optimization.",
+      "pros": ["AnyLogic: multi-method duy nhất, GUI trực quan", "Arena: chuẩn công nghiệp, built-in optimization", "Visualization tốt cho stakeholder communication", "Support và đào tạo chính thức"],
+      "cons": ["Chi phí license cao ($10K-100K+)", "Vendor lock-in", "Khó tích hợp với ML/AI pipelines", "Không open-source — hạn chế customisation"],
+      "use_cases": ["Supply chain và logistics simulation", "Manufacturing line optimization", "Healthcare capacity planning", "Defense và transportation modeling"],
+      "key_papers": ["Borshchev, A. (2013). The Big Book of Simulation Modeling: Multimethod Modeling with AnyLogic 6."]
+    },
+    {
+      "name": "RL in Simulated Environments (Gymnasium, Isaac Sim)",
+      "category": "Huấn luyện agent RL trong môi trường mô phỏng trước khi triển khai thực tế",
+      "complexity": "Gymnasium (kế thừa OpenAI Gym): API chuẩn step(action) → (obs, reward, done, info). Custom environments implement phương thức reset() và step(). NVIDIA Isaac Sim: physics simulation GPU-accelerated cho robotics, nghìn environments song song trên một GPU, domain randomization cho sim-to-real. Workflow: define env → train RL (PPO, SAC) → domain randomization → sim-to-real → deploy.",
+      "pros": ["Isaac Sim: nghìn envs song song tăng tốc RL training cực mạnh", "Gymnasium: API chuẩn, ecosystem rộng", "Domain randomization cho sim-to-real robust", "An toàn — thử nghiệm trong mô phỏng trước thực tế"],
+      "cons": ["Reality gap — simulation ≠ thực tế", "Domain randomization cần tuning cẩn thận", "Isaac Sim cần GPU mạnh (RTX)", "Reward shaping là nghệ thuật, không khoa học"],
+      "use_cases": ["Robot manipulation training", "Autonomous driving (CARLA, DRIVE Sim)", "Warehouse logistics agent", "Factory scheduling agent"],
+      "key_papers": ["OpenAI (2019). Solving Rubik's Cube with a Robot Hand. arXiv."]
+    }
+  ],
+  "tech_stack": {
+    "des_simulation": {
+      "recommended": {"recommended": "SimPy + pandas + Grafana", "rationale": "SimPy cho DES process-based thuần Python — điểm khởi đầu đúng cho Tier 1 tại Việt Nam. pandas cho data analysis và scenario comparison. Grafana cho dashboard visualization. Kết hợp tạo công cụ what-if scenario cho tối ưu hoá dây chuyền sản xuất, deliverable trong 4-6 tuần PoC. Chi phí thấp, rào cản gia nhập thấp."},
+      "alternatives": {"recommended": "Salabim / AnyLogic / Arena", "rationale": "Salabim cho animation tích hợp (stakeholder demos). AnyLogic cho multi-method (DES+ABM+SD) khi cần. Arena cho chuẩn công nghiệp manufacturing nếu khách hàng yêu cầu."}
+    },
+    "iot_integration": {
+      "recommended": {"recommended": "MQTT (Mosquitto) + InfluxDB + Telegraf", "rationale": "MQTT: giao thức pub/sub nhẹ, chuẩn IoT. Mosquitto: broker open-source ổn định. InfluxDB: time-series database tối ưu cho sensor data, query language mạnh. Telegraf: agent thu thập metrics. Stack nhẹ, chạy trên edge device hoặc cloud. Tích hợp tự nhiên với Grafana."},
+      "alternatives": {"recommended": "OPC-UA / Azure IoT Hub / AWS IoT Core", "rationale": "OPC-UA cho protocol chuẩn công nghiệp (Siemens, Beckhoff). Azure/AWS IoT cho managed cloud IoT nếu khách hàng đã dùng cloud provider đó."}
+    },
+    "physics_simulation": {
+      "recommended": {"recommended": "FEniCSx + DeepXDE", "rationale": "FEniCSx: giải PDE qua FEM với Python interface dễ tiếp cận. DeepXDE: PINNs framework cho forward/inverse problems, mesh-free. Kết hợp: FEniCSx cho validation, DeepXDE cho real-time inference. Chỉ cần khi đến Tier 3 (18+ tháng)."},
+      "alternatives": {"recommended": "OpenFOAM / NVIDIA Modulus / COMSOL", "rationale": "OpenFOAM cho CFD open-source mạnh. Modulus cho physics-ML quy mô công nghiệp (FNO, GNN). COMSOL cho multi-physics thương mại nếu budget cho phép."}
+    },
+    "twin_platform": {
+      "recommended": {"recommended": "FastAPI + React + InfluxDB + Three.js/R3F", "rationale": "FastAPI: backend Python hiệu năng cao, tích hợp tự nhiên với SimPy, pandas, ML models. React: frontend dashboard. InfluxDB: time-series storage. Three.js/R3F: 3D visualization web-based khi cần (Tier 2+), nhẹ hơn Omniverse. Full-stack self-hosted, không vendor lock-in."},
+      "alternatives": {"recommended": "Azure Digital Twins / AWS IoT TwinMaker / Grafana", "rationale": "Azure/AWS cho enterprise managed platform nếu khách hàng yêu cầu. Grafana cho dashboard nhanh tại Tier 1 — tích hợp sẵn InfluxDB, không cần custom frontend."}
+    },
+    "ml_surrogate": {
+      "recommended": {"recommended": "BoTorch (GPyTorch) + scikit-learn", "rationale": "BoTorch: Bayesian optimization với GP surrogates — chuẩn cho simulation optimization khi mỗi run tốn kém. GPyTorch backend cho GP flexible. scikit-learn cho surrogate đơn giản (Random Forest, XGBoost trên tabular simulation data). Kết hợp cho multi-fidelity optimization."},
+      "alternatives": {"recommended": "GPy / PyMC / XGBoost", "rationale": "GPy cho GP standalone. PyMC cho Bayesian inference (MCMC calibration). XGBoost cho surrogate nhanh khi dữ liệu simulation nhiều."}
+    },
+    "abm_framework": {
+      "recommended": {"recommended": "Mesa + NetworkX", "rationale": "Mesa: ABM framework Python với model-agent-scheduler-space architecture. NetworkX cho mô hình mạng (supply chain, social networks). Kết hợp cho ABM trên topology mạng phức tạp. Python-native tích hợp dễ với ML pipelines."},
+      "alternatives": {"recommended": "NetLogo / GAMA / Repast", "rationale": "NetLogo cho accessibility và visualization. GAMA cho GIS-integrated ABM. Repast cho large-scale Java ABM."}
+    },
+    "visualization_3d": {
+      "recommended": {"recommended": "Three.js / React Three Fiber (R3F)", "rationale": "Web-based 3D rendering — chạy trên browser, không cần GPU workstation đắt. R3F tích hợp React declarative. Phù hợp cho Tier 2 visualization: factory layout, asset positioning, sensor data overlay. Nhẹ hơn Omniverse, accessible cho mọi khách hàng Việt Nam."},
+      "alternatives": {"recommended": "NVIDIA Omniverse / Unity / Unreal Engine", "rationale": "Omniverse cho photorealistic + physics nếu có RTX GPU. Unity cho ML-Agents + synthetic data. Unreal cho visual fidelity cao nhất. Tất cả yêu cầu hardware mạnh."}
+    },
+    "deployment": {
+      "recommended": {"recommended": "Docker + FastAPI + Grafana + MQTT broker", "rationale": "Docker containerise toàn bộ stack (simulation engine + API + dashboard + broker). FastAPI cho REST/WebSocket API. Grafana cho monitoring và dashboard. Triển khai on-premise tại nhà máy (yêu cầu phổ biến tại Việt Nam — dữ liệu nhạy cảm không ra cloud). Edge deployment trên Linux server tiêu chuẩn."},
+      "alternatives": {"recommended": "Kubernetes / Azure IoT Edge / AWS Greengrass", "rationale": "Kubernetes cho orchestration khi nhiều deployments. Azure/AWS IoT Edge cho edge computing managed. AWS Greengrass cho edge ML inference."}
+    }
+  },
+  "feasibility_score": {
+    "overall_score": 5.6,
+    "verdict": "CONDITIONAL GO",
+    "verdict_vi": "Tiến hành có điều kiện",
+    "summary": "Simulation & Digital Twin là lĩnh vực kỹ thuật phong phú với tiềm năng dài hạn tại Việt Nam, nhưng đánh giá trung thực là thị trường Việt Nam chưa sẵn sàng cho tầm nhìn digital twin đầy đủ. Khoảng cách trưởng thành Industry 4.0, thiếu hụt hạ tầng IoT, khan hiếm chuyên gia domain, và văn hoá ưa ROI nhanh đều chống lại triển khai tham vọng. CONDITIONAL GO chỉ hợp lý nếu scope thu hẹp tàn nhẫn vào DES process optimization cho FDI factories — không phải physics-based, real-time, NVIDIA Omniverse vision. Bắt đầu SimPy, chứng minh giá trị trong tuần không phải năm, xây dựng lên chỉ khi khách hàng kéo.",
+    "dimensions": {
+      "technical_feasibility": {"score": 7, "rationale": "Công cụ open-source sẵn sàng: SimPy, Mesa, FEniCSx, DeepXDE. Tech stack vững chắc. Nhưng độ phức tạp tích hợp thực tế — kết nối MQTT → InfluxDB → SimPy → dashboard là full-stack IoT + simulation play, không phải ML deployment đơn giản."},
+      "market_demand": {"score": 6, "rationale": "Thị trường digital twin toàn cầu dự kiến $50B+ đến 2028. Nhưng 'market exists' và 'market exists for us in Vietnam' là hai tuyên bố rất khác. Nhu cầu tập trung ở nhà sản xuất lớn, năng lượng, toà nhà thông minh. FDI factories mua từ Siemens/PTC, không phải startup Việt."},
+      "data_availability": {"score": 5, "rationale": "Đây là killer. Digital twins cần dòng dữ liệu IoT liên tục chất lượng cao. Đa số nhà máy Việt Nam thiếu hạ tầng cảm biến cơ bản. Không thể xây digital twin cho nhà máy theo dõi sản lượng trên bảng tính Excel. Dữ liệu mô phỏng cần thu thập thủ công hoặc từ quan sát hiện trường."},
+      "implementation_risk": {"score": 5, "rationale": "Phức tạp đa chiều (physics + ML + domain + IoT + 3D), chu kỳ triển khai dài (6-18 tháng), ROI khó lượng hoá trước. Mỗi deployment về bản chất là dự án engineering tuỳ chỉnh. Đây là services business nguỵ trang product business."},
+      "vietnam_market_fit": {"score": 5, "rationale": "Đánh giá trung thực: phù hợp kém hiện tại cho tầm nhìn digital twin đầy đủ. Digital twin là Step 5 trên bậc thang Industry 4.0 — đa số nhà sản xuất Việt Nam đang ở Step 1 (digitization cơ bản). Không thể bán Step 5 cho công ty ở Step 1. Việt Nam chậm 3-5 năm so với đường cong Industry 4.0 toàn cầu."}
+    },
+    "conditions": [
+      "Bắt đầu với SimPy-based DES, KHÔNG physics-based twins — DES không cần domain physics expertise",
+      "Khách hàng đầu tiên phải là FDI manufacturers (Samsung, Foxconn, LG) đã có hạ tầng IoT — KHÔNG nhắm SME sản xuất Việt Nam",
+      "KHÔNG thử autonomous closed-loop control trong Phase 1 — chỉ what-if analysis và recommendation",
+      "Dự trù 12+ tháng trước khi chứng minh ROI có thể đo lường",
+      "Xác minh hạ tầng IoT tại site khách hàng TRƯỚC khi hứa hẹn 'real-time' bất cứ thứ gì",
+      "Hợp tác FPT/Viettel cho tầng IoT — KHÔNG tự xây dựng hạ tầng cảm biến",
+      "Tuyển từ ĐHBK Hà Nội (HUST) Khoa Cơ khí và ĐHBK TP.HCM — chỉ các trường đào tạo kỹ sư có khả năng simulation",
+      "Định vị là 'AI-powered process optimization' KHÔNG PHẢI 'digital twin' — thuật ngữ sau kích hoạt kỳ vọng phi thực tế tại thị trường Việt Nam"
+    ]
+  },
+  "industry_applications": [
+    {
+      "industry": "Mô phỏng quy trình sản xuất (Manufacturing Process Simulation)",
+      "use_case": "Tối ưu hoá dây chuyền sản xuất bằng DES — phân tích bottleneck, what-if scenarios, capacity planning cho nhà máy FDI",
+      "description": "Manufacturing DES là ứng dụng khả thi nhất tại Việt Nam: SimPy mô phỏng dây chuyền sản xuất với stochastic arrivals, machine breakdowns, setup times, shift patterns. What-if scenarios: 'Nếu thêm máy?', 'Nếu giảm setup time 20%?', 'Nếu đơn hàng tăng 50%?'. Nhắm FDI factories (Samsung Bắc Ninh/Thái Nguyên, Foxconn Bắc Giang, LG Hải Phòng) — đã có MES, IoT và ngân sách. Deliverable: công cụ scenario 4-6 tuần PoC, $20K-50K/engagement. KHÔNG cần physics simulation — thuần DES với dữ liệu lịch sử. Differentiate qua tích hợp dữ liệu MES thực và AI-powered root cause analysis cho bottlenecks.",
+      "priority": "P0",
+      "market_size_vn": "USD 30-60M (manufacturing optimization AI VN, chủ yếu FDI)",
+      "technical_complexity": "Medium",
+      "vietnam_readiness": "Medium (FDI: High, SME: Low)"
+    },
+    {
+      "industry": "Digital twin lưới điện (Energy Grid Twin)",
+      "use_case": "Mô phỏng lưới điện, tối ưu hoá vận hành nhà máy điện, và tích hợp năng lượng tái tạo cho EVN",
+      "description": "EVN (Tập đoàn Điện lực Việt Nam) cần mô phỏng grid để tối ưu phân phối, tích hợp điện mặt trời/gió (biến động), và lên kế hoạch bảo trì nhà máy. Monte Carlo simulation cho scenario analysis: 'Nếu nhà máy nhiệt điện #3 ngừng?', 'Nếu công suất mặt trời tăng 30%?'. DES cho scheduling bảo trì. Dài hạn: physics twin cho nhà máy nhiệt điện (nhiệt động lực học). Thách thức: chu kỳ mua sắm chính phủ 2-3 năm, data sensitivity. Tiềm năng hợp tác với ĐHBK Hà Nội cho domain expertise lưới điện.",
+      "priority": "P1",
+      "market_size_vn": "USD 20-40M (energy optimization AI VN)",
+      "technical_complexity": "High",
+      "vietnam_readiness": "Low-Medium"
+    },
+    {
+      "industry": "Mô phỏng logistics (Logistics Simulation)",
+      "use_case": "DES cho tối ưu hoá kho vận, lập kế hoạch tuyến đường, và quản lý đội xe — scenario planning cho chuỗi cung ứng",
+      "description": "DES mô phỏng warehouse operations: receiving, putaway, picking, packing, shipping với resource constraints (nhân viên, xe nâng, docks). What-if: 'Nếu đổi layout kho?', 'Nếu peak season demand tăng 2x?'. Vehicle routing simulation với Monte Carlo cho demand uncertainty. ABM cho fleet management: mỗi xe là agent với quy tắc routing. Nhắm logistics companies lớn và 3PL (Gemadept, Vietnam Post, Lazada/Shopee fulfillment). Thách thức: đa số công ty logistics Việt Nam vẫn tối ưu thủ công — họ không biết mình cần mô phỏng.",
+      "priority": "P1",
+      "market_size_vn": "USD 15-30M (logistics optimization AI VN)",
+      "technical_complexity": "Medium",
+      "vietnam_readiness": "Low-Medium"
+    },
+    {
+      "industry": "Toà nhà thông minh (Smart Building Digital Twin)",
+      "use_case": "Digital twin cho quản lý năng lượng toà nhà, HVAC optimization, và predictive maintenance BMS",
+      "description": "BMS (Building Management System) integration là điểm vào. IoT sensors (nhiệt độ, độ ẩm, CO2, chiếu sáng) → digital twin toà nhà → tối ưu HVAC (giảm 15-30% energy cost). Physics-based: FEM/CFD cho thermal comfort simulation. Data-driven: ML trên sensor data cho predictive maintenance (elevator, HVAC compressor). Nhắm khu đô thị mới (Vinhomes, Ecopark) và toà nhà thương mại cao cấp. BIM integration (Revit → twin). Thách thức: thị trường smart building Việt Nam mới nổi, BMS legacy systems fragmented.",
+      "priority": "P2",
+      "market_size_vn": "USD 10-25M (smart building AI VN)",
+      "technical_complexity": "High",
+      "vietnam_readiness": "Low"
+    },
+    {
+      "industry": "Mô phỏng y tế (Healthcare Simulation)",
+      "use_case": "DES cho tối ưu hoá luồng bệnh nhân, capacity planning khoa cấp cứu, và lên kế hoạch tài nguyên bệnh viện",
+      "description": "DES mô phỏng luồng bệnh nhân: arrival (Poisson process) → triage → examination → treatment → discharge/admission. Resources: bác sĩ, y tá, giường, phòng mổ. What-if: 'Nếu thêm 2 bác sĩ trực đêm?', 'Nếu epidemic tăng ED arrivals 3x?'. Monte Carlo cho uncertainty trong length-of-stay distributions. Nhắm bệnh viện lớn (Chợ Rẫy, Bạch Mai, Vinmec) với ngân sách IT. Thách thức: bệnh viện công quy trình mua sắm chậm, dữ liệu bệnh nhân nhạy cảm (HIPAA-equivalent), văn hoá quản lý bệnh viện chưa data-driven.",
+      "priority": "P2",
+      "market_size_vn": "USD 5-15M (healthcare operations AI VN)",
+      "technical_complexity": "Medium",
+      "vietnam_readiness": "Low"
+    }
+  ],
+  "case_studies": [
+    {
+      "title": "Siemens Xcelerator — Digital twin công nghiệp quy mô toàn cầu",
+      "industry": "Sản xuất / Manufacturing",
+      "problem": "Nhà sản xuất ô tô, hàng không cần tối ưu hoá toàn bộ vòng đời sản phẩm — từ thiết kế, mô phỏng, sản xuất đến vận hành — giảm thời gian và chi phí phát triển.",
+      "solution": "Siemens Xcelerator tích hợp PLM (Teamcenter) + simulation (Simcenter) + manufacturing (Tecnomatix) + IoT (MindSphere). Digital twin từ CAD/CAE đến factory layout optimization. Physics simulation (FEM, CFD, multibody dynamics) cho virtual prototyping. Real-time IoT data sync cho operational twin.",
+      "results": "BMW giảm 30% thời gian lập kế hoạch sản xuất bằng factory digital twin. Airbus tối ưu thiết kế cánh máy bay qua CFD twin. Maserati giảm 50% thời gian phát triển xe mới. Siemens là incumbment dominant — chi phí $100K+ mỗi deployment.",
+      "tech_stack": "Siemens NX, Simcenter, Tecnomatix, MindSphere, Parasolid",
+      "lessons": "Digital twin industrial đòi hỏi hệ sinh thái toàn diện (PLM + simulation + IoT). Cạnh tranh trực tiếp với Siemens là không thể — họ có 30+ năm R&D và enterprise distribution. Cơ hội chỉ tồn tại ở mid-market và niches mà Siemens quá đắt hoặc quá cồng kềnh."
+    },
+    {
+      "title": "GE Predix / NVIDIA Omniverse — Factory digital twin",
+      "industry": "Sản xuất & Năng lượng / Manufacturing & Energy",
+      "problem": "Nhà máy turbine và sản xuất cần giám sát tài sản real-time, predictive maintenance, và tối ưu hiệu suất nhà máy.",
+      "solution": "GE Predix: IoT platform cho industrial digital twin, asset performance management. NVIDIA Omniverse: 3D factory digital twin với PhysX physics, Isaac Sim cho robot simulation, Modulus cho physics-ML. BMW Regensburg factory twin trong Omniverse cho layout optimization và logistics flow.",
+      "results": "GE giảm 5-20% downtime cho turbine qua digital twin predictive maintenance. BMW tối ưu layout nhà máy, giảm 30% thời gian planning. NVIDIA demo Earth-2 climate twin, GenCast weather simulation. Tuy nhiên, GE Predix đã pivot — quá tham vọng, quá sớm cho nhiều khách hàng.",
+      "tech_stack": "GE Predix, NVIDIA Omniverse, PhysX 5, Isaac Sim, Modulus",
+      "lessons": "Bài học GE Predix: digital twin platform quá tham vọng có thể thất bại thương mại dù kỹ thuật ấn tượng. Bắt đầu nhỏ, chứng minh giá trị cụ thể, mở rộng dần. NVIDIA Omniverse đẹp nhưng cần hardware $10K-50K — impractical cho Việt Nam."
+    },
+    {
+      "title": "SimPy DES cho tối ưu hoá dây chuyền sản xuất — tiếp cận khả thi cho Việt Nam",
+      "industry": "Sản xuất / Manufacturing",
+      "problem": "Nhà máy FDI cần phân tích bottleneck và what-if scenarios cho dây chuyền sản xuất mà không cần đầu tư lớn vào phần mềm thương mại.",
+      "solution": "SimPy-based DES mô phỏng dây chuyền: machines, conveyors, operators, buffers với stochastic parameters (MTBF, MTTR, setup times). pandas xử lý dữ liệu lịch sử từ MES. Grafana dashboard cho visualization. PoC 4-6 tuần: thu thập dữ liệu → xây mô hình → validate → chạy scenarios → báo cáo recommendations.",
+      "results": "Typical results từ DES projects: xác định bottleneck chính xác (thường khác trực giác management), đề xuất cải thiện throughput 10-25% qua rebalancing, giảm WIP inventory 15-30%. PoC cost $20K-50K — ROI positive trong 3-6 tháng nếu recommendations được implement.",
+      "tech_stack": "SimPy, pandas, Grafana, Python, FastAPI",
+      "lessons": "DES là điểm khởi đầu đúng cho Việt Nam: không cần IoT sensors (dùng historical data), không cần physics expertise, deliverable trong tuần không phải năm. 'Boring but works' beats 'impressive but undeliverable'. Mỗi DES project thành công mở cửa cho IoT-connected twin (Tier 2)."
+    }
+  ],
+  "key_papers": [
+    {
+      "title": "Digital Twin: Manufacturing Excellence through Virtual Factory Replication",
+      "authors": "Michael Grieves",
+      "year": 2014,
+      "venue": "White Paper (concept presented 2002, published 2014)",
+      "contribution": "Đặt tên và thiết lập khái niệm nền tảng 'Digital Twin': sản phẩm vật lý, bản sao ảo, và kết nối dữ liệu/thông tin giữa chúng. Trình bày lần đầu tại Đại học Michigan (2002). Mô hình ba thành phần (physical, virtual, connection) vẫn là định nghĩa chuẩn. Được NASA, GE, Siemens và toàn bộ phong trào Industry 4.0 áp dụng.",
+      "url": "https://www.researchgate.net/publication/275211047"
+    },
+    {
+      "title": "Physics-Informed Neural Networks: A Deep Learning Framework for Solving Forward and Inverse Problems Involving Nonlinear PDEs",
+      "authors": "Maziar Raissi, Paris Perdikaris, George Em Karniadakis",
+      "year": 2019,
+      "venue": "Journal of Computational Physics",
+      "contribution": "Hình thức hoá framework PINN — nhúng PDE residuals vào neural network training loss qua automatic differentiation. Chứng minh trên phương trình Schrödinger, Navier-Stokes. Một neural network giải đồng thời forward và inverse problems. Physics loss hoạt động như regularizer cho phép nghiệm chính xác từ dữ liệu thưa và nhiễu. Hơn 10,000 trích dẫn, sinh ra cả subfield.",
+      "url": "https://doi.org/10.1016/j.jcp.2018.10.045"
+    },
+    {
+      "title": "Neural Ordinary Differential Equations",
+      "authors": "Ricky T.Q. Chen, Yulia Rubanova, Jesse Bettencourt, David Duvenaud",
+      "year": 2018,
+      "venue": "NeurIPS 2018 (Best Paper)",
+      "contribution": "Đề xuất giới hạn liên tục của residual networks như ODE, dùng black-box ODE solvers cho forward pass và adjoint method cho backpropagation với O(1) memory. Mô hình độ sâu liên tục, adaptive step size, framework tự nhiên cho chuỗi thời gian bất quy tắc. Cho phép continuous normalizing flows, latent ODE models, kết nối deep learning với lý thuyết hệ động lực.",
+      "url": "https://arxiv.org/abs/1806.07366"
+    },
+    {
+      "title": "Gaussian Processes for Machine Learning",
+      "authors": "Carl Edward Rasmussen, Christopher K.I. Williams",
+      "year": 2006,
+      "venue": "MIT Press",
+      "contribution": "Sách giáo khoa definitive về lý thuyết và thực hành GP. Bao gồm kernel design, tối ưu hyperparameters (marginal likelihood), sparse approximations, kết nối với neural networks. GP là surrogate model chuẩn cho computer experiments tốn kém — cung cấp dự đoán và ước lượng bất định calibrated cho adaptive sampling và Bayesian optimization.",
+      "url": "http://www.gaussianprocess.org/gpml/"
+    },
+    {
+      "title": "Solving Rubik's Cube with a Robot Hand",
+      "authors": "OpenAI, Ilge Akkaya, Marcin Andrychowicz, Maciek Chociej, et al.",
+      "year": 2019,
+      "venue": "arXiv",
+      "contribution": "Huấn luyện policy tay robot hoàn toàn trong mô phỏng dùng Automatic Domain Randomization (ADR) quy mô lớn, chuyển thành công sang Shadow Hand vật lý. Với đủ randomization tham số mô phỏng (ma sát, kích thước, nhiễu cảm biến), policies đủ robust vượt reality gap mà không cần dữ liệu training thực tế. Chứng minh sim-to-real transfer khả thi cho manipulation phức tạp.",
+      "url": "https://arxiv.org/abs/1910.07113"
+    },
+    {
+      "title": "Fourier Neural Operator for Parametric Partial Differential Equations",
+      "authors": "Zongyi Li, Nikola Kovachki, Kamyar Azizzadenesheli, Burigede Liu, Kaushik Bhattacharya, Andrew Stuart, Anima Anandkumar",
+      "year": 2021,
+      "venue": "ICLR 2021",
+      "contribution": "Đề xuất Fourier Neural Operator (FNO) học ánh xạ giữa không gian hàm trong Fourier space. Khác PINNs (giải một PDE instance), FNO học solution operator cho họ PDE. Speedup 1000x so với PDE solvers truyền thống trên Navier-Stokes benchmarks. NVIDIA Modulus áp dụng FNO như kiến trúc core. Mở rộng: GINO (Geometry-Informed, 2023).",
+      "url": "https://arxiv.org/abs/2010.08895"
+    },
+    {
+      "title": "Digital Twin in Industry: State-of-the-Art",
+      "authors": "Fei Tao, Jiangfeng Cheng, Qinglin Qi, Meng Zhang, He Zhang, Fangyuan Sui",
+      "year": 2019,
+      "venue": "IEEE Transactions on Industrial Informatics",
+      "contribution": "Survey toàn diện thiết lập mô hình digital twin năm chiều: Physical Entity, Virtual Entity, Services, Data, Connections. Đánh giá ứng dụng qua manufacturing, healthcare, smart cities, aerospace. Bài survey digital twin được trích dẫn nhiều nhất. Mô hình năm chiều trở thành framework tham chiếu phổ biến cho thiết kế kiến trúc digital twin.",
+      "url": "https://doi.org/10.1109/TII.2018.2873186"
+    },
+    {
+      "title": "Physics-Informed Machine Learning",
+      "authors": "George Em Karniadakis, Ioannis G. Kevrekidis, Lu Lu, Paris Perdikaris, Sifan Wang, Liu Yang",
+      "year": 2021,
+      "venue": "Nature Reviews Physics",
+      "contribution": "Review toàn diện đặt PINNs trong landscape rộng hơn của physics-informed ML: kiến trúc thông tin vật lý (equivariant networks, Hamiltonian NNs), hàm loss thông tin vật lý (PINNs), dữ liệu thông tin vật lý (synthetic data từ simulation). Thiết lập phân loại mà lĩnh vực tiếp tục sử dụng.",
+      "url": "https://doi.org/10.1038/s42254-021-00314-5"
+    },
+    {
+      "title": "Data-Driven Science and Engineering: Machine Learning, Dynamical Systems, and Control",
+      "authors": "Steven L. Brunton, J. Nathan Kutz",
+      "year": 2022,
+      "venue": "Cambridge University Press (2nd Edition)",
+      "contribution": "Sách giáo khoa kết nối hệ động lực, machine learning và mô phỏng. Bao gồm Dynamic Mode Decomposition (DMD), SINDy (Sparse Identification of Nonlinear Dynamics), neural network approaches khám phá phương trình governing từ dữ liệu. Toolkit toán học cho data-driven simulation khi physics first-principles chưa biết hoặc không đầy đủ — kịch bản phổ biến trong digital twin.",
+      "url": "https://databookuw.com/"
+    }
+  ],
+  "cross_domain_connections": [
+    {
+      "target": "B06",
+      "connection_type": "critical_integration",
+      "description": "Optimization (B06) kết nối chặt chẽ nhất với B15. Simulation làm hàm mục tiêu trong vòng lặp tối ưu hoá: optimizer đề xuất tham số → simulation đánh giá → optimizer cập nhật. Bayesian optimization với GP surrogates cho sample-efficient simulation optimization. Ứng dụng: factory layout optimization, supply chain design, aerodynamic shape optimization, drug dosing. Mọi ứng dụng simulation-optimization chạm cả B06 và B15."
+    },
+    {
+      "target": "B01",
+      "connection_type": "complementary",
+      "description": "Forecasting (B01) bổ trợ B15: forecasting dự đoán tương lai khả dĩ nhất, simulation khám phá không gian tương lai khả dĩ. Pattern: dùng mô hình forecasting đặt baseline parameters → chạy simulation với nhiễu loạn tạo scenario envelopes (best/worst/stress test). Ứng dụng: demand planning (dự báo nhu cầu + simulate phản ứng chuỗi cung ứng), financial stress testing, capacity planning."
+    },
+    {
+      "target": "B07",
+      "connection_type": "synergy",
+      "description": "Anomaly Detection (B07): digital twin cung cấp hành vi kỳ vọng, anomaly detection phát hiện sai lệch. Pattern: twin dự đoán trạng thái kỳ vọng → so sánh với dữ liệu cảm biến thực → |actual - expected| > threshold → Anomaly. Ưu điểm so với anomaly detection chỉ dữ liệu: twin cung cấp kỳ vọng physics-based, phát hiện bất thường thống kê hiếm nhưng có ý nghĩa vật lý. Predictive maintenance là use case chính."
+    },
+    {
+      "target": "B10",
+      "connection_type": "integration",
+      "description": "Agentic AI (B10): simulation cung cấp môi trường huấn luyện và đánh giá cho autonomous agents. Pattern: xây environment mô phỏng → train RL agent → evaluate → domain randomization → deploy. 2025-2026 trend: LLM-based agents đánh giá trong environment mô phỏng trước khi deploy — simulation như safety sandbox cho agentic AI. Isaac Sim cho robotics, CARLA cho autonomous driving."
+    },
+    {
+      "target": "B03",
+      "connection_type": "data_generation",
+      "description": "Computer Vision (B03): simulation tạo dữ liệu huấn luyện labeled cho CV models. 3D simulation engine → render hình ảnh với randomized conditions → auto-generate labels (segmentation, depth, bounding boxes) → train CV model → fine-tune trên dữ liệu thực. NVIDIA Omniverse Replicator, Unity Perception, BlenderProc. Ứng dụng: defect detection sản xuất, autonomous driving, satellite imagery."
+    },
+    {
+      "target": "B13",
+      "connection_type": "surrogate_input",
+      "description": "Tabular/Structured Data (B13): dữ liệu tabular làm input/output cho surrogate models thay thế simulation tốn kém. Chạy simulation tại điểm DoE → thu thập input-output pairs dạng tabular → train surrogate (GP, XGBoost, neural network) → dùng surrogate cho dự đoán nhanh. Engineering design space exploration, process optimization, sensitivity analysis."
+    }
+  ],
+  "bestPractices": [
+    "BẮT ĐẦU với SimPy DES, KHÔNG physics-based twin — DES không cần domain physics expertise, deliverable trong 4-6 tuần PoC, cost $20K-50K. Chỉ khi Tier 1 thành công mới tiến lên IoT-connected twin (Tier 2) và physics twin (Tier 3). Mỗi bước phải được kéo bởi nhu cầu khách hàng, không đẩy bởi tham vọng kỹ thuật.",
+    "Dùng approach 'simulation-first': mô hình hoá quy trình từ dữ liệu lịch sử và quan sát thủ công TRƯỚC khi yêu cầu IoT. Nhiều nhà máy Việt Nam có dữ liệu MES/Excel đủ cho DES. Không đợi IoT deployment hoàn hảo để bắt đầu — bắt đầu với dữ liệu có sẵn.",
+    "Xây dựng ROI calculator và documentation case study tích cực — khách hàng Việt Nam cần thấy giá trị trước khi mua. Target quy trình nơi lãng phí/downtime đã được đo lường (để cải thiện visible). PoC phải demo ROI cụ thể: 'giảm 15% WIP', 'tăng 20% throughput'.",
+    "Định vị là 'AI-powered process optimization' KHÔNG PHẢI 'digital twin'. Thuật ngữ 'digital twin' kích hoạt kỳ vọng 3D-rendered, real-time, physics-based vision — ấn tượng trong pitch deck nhưng chết trên sàn nhà máy Việt Nam. 'Mô phỏng quy trình' thực tế và deliverable hơn.",
+    "Validate mô hình simulation TRƯỚC khi chạy scenarios — mô hình chưa validated cho kết quả sai confidence. So sánh simulation output với dữ liệu lịch sử thực (throughput, cycle time, utilization). Chỉ khi validation pass mới tin tưởng what-if results.",
+    "Package PoC deliverables rõ ràng: (1) mô hình simulation validated, (2) báo cáo bottleneck analysis, (3) 3-5 what-if scenarios với recommendations, (4) ROI estimate. Deliverable cụ thể trong 4-6 tuần, KHÔNG mở timeline mà không có scope boundaries.",
+    "KHÔNG thuê physicists cho đến khi revenue Tier 1 đủ trả lương họ. Mỗi industry vertical (thermal, fluid, structural) cần domain expertise riêng — scaling qua industries cực kỳ đắt. Xây physics capability dần qua hợp tác ĐHBK."
+  ],
+  "antiPatterns": [
+    "Xây dựng generic 'digital twin platform' — Azure Digital Twins và AWS IoT TwinMaker đã bán cái này. Không thể cạnh tranh platform với cloud giants có R&D budget hàng tỷ USD. Tập trung vào vertical solutions cụ thể cho thị trường Việt Nam.",
+    "Bắt đầu với 3D visualization (Omniverse/Three.js) — ấn tượng trong demo nhưng không thêm giá trị simulation. 3D rendering là chi phí kỹ thuật lớn cho zero simulation value. Chỉ thêm 3D khi khách hàng sẵn sàng trả thêm và mô hình simulation đã proven.",
+    "Nhắm SME sản xuất Việt Nam cho digital twin — 90%+ nhà sản xuất Việt Nam chạy trên Excel, giấy, và kinh nghiệm. Họ cần ERP cơ bản trước khi cần digital twin. Bán Step 5 cho công ty ở Step 1 là lãng phí thời gian.",
+    "Hứa hẹn 'real-time' bất cứ thứ gì mà không xác minh hạ tầng IoT tại site khách hàng. Nhà máy theo dõi sản lượng trên bảng trắng không có 'real-time' data để đồng bộ. Xác minh TRƯỚC khi hứa.",
+    "Scope creep hướng 'full digital twin' vision — khách hàng và sales sẽ đẩy hướng 3D-rendered, real-time, physics-based vision. Kháng cự. Định nghĩa ranh giới tier rõ ràng (DES → IoT Twin → Physics Twin). Pricing mỗi tier phản ánh phức tạp thực tế.",
+    "Coi mỗi deployment như product deployment — thực tế mỗi digital twin deployment là custom engineering project: custom data ingestion, custom process modeling, custom validation, custom dashboards. Đây là services business nguỵ trang product business. Margins bị nén cho đến khi platform layer tái sử dụng nổi lên sau 5-10 deployments."
+  ],
+  "pipeline": {
+    "stages": [
+      {
+        "name": "Data Collection & Process Understanding (Thu thập dữ liệu và hiểu quy trình)",
+        "description": "Thu thập dữ liệu từ nhiều nguồn: MES exports, Excel/CSV lịch sử, IoT sensors (nếu có), quan sát hiện trường, phỏng vấn operators. Hiểu quy trình: process mapping, xác định entities, resources, queues, decision points. Đánh giá data quality: completeness, consistency, temporal resolution. Nếu thiếu data, dùng phương pháp simulation-first: ước lượng tham số từ quan sát và expert judgment. Baseline metrics: throughput hiện tại, cycle time, utilization, WIP, downtime.",
+        "tools": ["pandas", "Excel/CSV parsers", "Process mapping tools", "MQTT/OPC-UA (nếu IoT)"],
+        "inputs": "Dữ liệu lịch sử sản xuất/vận hành, process maps, expert interviews",
+        "outputs": "Dataset sạch + process model conceptual + baseline KPIs + tham số mô phỏng ước lượng"
+      },
+      {
+        "name": "Simulation Model Development (Phát triển mô hình mô phỏng)",
+        "description": "Xây dựng mô hình simulation trong SimPy (DES) hoặc Mesa (ABM): định nghĩa entities, resources, processes, routing logic, stochastic parameters (inter-arrival times, processing times, MTBF/MTTR). Input distributions: fit data lịch sử vào phân phối (exponential, lognormal, Weibull) hoặc dùng empirical distributions. Warm-up period analysis: loại bỏ transient bias. Replication strategy: chạy đủ replications cho statistical significance.",
+        "tools": ["SimPy", "Mesa", "scipy.stats (distribution fitting)", "pandas", "NumPy"],
+        "inputs": "Process model conceptual + tham số ước lượng + distributions fitted",
+        "outputs": "Mô hình simulation code + configuration + initial results"
+      },
+      {
+        "name": "Validation & Calibration (Xác nhận và hiệu chỉnh)",
+        "description": "So sánh simulation output với dữ liệu thực để validate: throughput, cycle time, utilization, queue lengths phải match trong sai số chấp nhận (thường ±10%). Nếu không match: calibrate tham số, kiểm tra logic, thêm factors bỏ sót. Sensitivity analysis: xác định tham số nào ảnh hưởng output nhiều nhất. Statistical tests: confidence intervals, t-tests so sánh means. Animation/visualization cho domain experts review logic. Chỉ khi validation pass mới tin tưởng scenarios.",
+        "tools": ["pandas", "scipy.stats", "matplotlib/plotly", "Grafana", "Salabim (animation)"],
+        "inputs": "Simulation outputs + dữ liệu thực cùng khoảng thời gian",
+        "outputs": "Validation report + calibrated model + sensitivity analysis"
+      },
+      {
+        "name": "Scenario Analysis & Optimization (Phân tích kịch bản và tối ưu hoá)",
+        "description": "Chạy what-if scenarios: thay đổi tham số (capacity, demand, layout, schedules) → so sánh KPIs. Monte Carlo simulation cho uncertainty: sampling tham số từ distributions → chạy ensemble → tổng hợp (expected value, percentiles, worst case). Simulation-optimization: kết hợp với BoTorch/evolutionary algorithms tìm configuration tối ưu. Scenario reporting: ranked alternatives với confidence intervals, trade-off analysis, risk assessment.",
+        "tools": ["SimPy", "BoTorch", "NumPy/SciPy", "pandas", "plotly/matplotlib"],
+        "inputs": "Validated simulation model + scenario definitions + optimization objectives",
+        "outputs": "Scenario comparison report + optimized configurations + recommendations"
+      },
+      {
+        "name": "IoT Integration & Live Twin (Tích hợp IoT và Twin trực tiếp — Tier 2)",
+        "description": "Kết nối simulation với dữ liệu thời gian thực: MQTT broker thu thập sensor data → InfluxDB lưu time-series → trigger simulation updates khi tham số thay đổi hoặc events xảy ra. Dashboard live: Grafana hoặc React + Three.js hiển thị trạng thái hiện tại và dự đoán simulation. Alerting: khi actual deviate khỏi simulated expected → cảnh báo (kết hợp B07). Edge processing cho latency-sensitive applications. Chỉ triển khai khi khách hàng đã có IoT infrastructure verified.",
+        "tools": ["MQTT (Mosquitto)", "InfluxDB", "Telegraf", "FastAPI", "Grafana", "React + Three.js/R3F"],
+        "inputs": "Validated simulation model + IoT sensor streams + dashboard requirements",
+        "outputs": "Live digital twin dashboard + real-time alerts + continuous predictions"
+      },
+      {
+        "name": "Physics Enhancement & ML Surrogate (Nâng cấp vật lý và surrogate ML — Tier 3)",
+        "description": "Thêm physics-based simulation cho domains cụ thể: FEniCSx cho thermal/structural, OpenFOAM cho CFD. PINNs (DeepXDE) cho inverse problems và real-time inference. Surrogate models: GP (BoTorch) hoặc neural network thay thế expensive physics simulation trong vòng lặp tối ưu. Neural ODEs cho học dynamics liên tục. FNO cho real-time PDE solving. Chỉ tiến hành khi Tier 1-2 đã thành công và revenue cover chi phí domain expertise.",
+        "tools": ["FEniCSx", "DeepXDE", "NVIDIA Modulus", "BoTorch", "torchdiffeq", "OpenFOAM"],
+        "inputs": "Physics domain requirements + sensor data + simulation results for surrogate training",
+        "outputs": "Physics-augmented twin + ML surrogates + real-time physics inference"
+      }
+    ]
+  },
+  "learning_resources": [
+    {
+      "title": "Data-Driven Science and Engineering (Brunton & Kutz, 2nd Ed.)",
+      "type": "book",
+      "url": "https://databookuw.com/",
+      "level": "Intermediate to Advanced",
+      "description": "Sách giáo khoa kết nối dynamical systems, ML và simulation. DMD, SINDy, neural network approaches cho khám phá governing equations từ dữ liệu. Toolkit toán học cho data-driven simulation. Video lectures miễn phí trên YouTube. KHỞI ĐẦU TỐT NHẤT cho phần AI-meets-simulation."
+    },
+    {
+      "title": "SimPy Documentation & Tutorials",
+      "type": "documentation",
+      "url": "https://simpy.readthedocs.io/",
+      "level": "Beginner to Intermediate",
+      "description": "Official SimPy documentation: process-based DES, resources, events, monitoring. Tutorials từ basic queue đến manufacturing line. Điểm khởi đầu bắt buộc cho DES trong Python — Tier 1 tech stack."
+    },
+    {
+      "title": "Mesa ABM Framework Documentation",
+      "type": "documentation",
+      "url": "https://mesa.readthedocs.io/",
+      "level": "Beginner to Intermediate",
+      "description": "Agent-Based Modeling framework Python: model-agent-scheduler-space architecture, tutorials, built-in visualization. Phù hợp cho supply chain, epidemiology, traffic simulation."
+    },
+    {
+      "title": "Gaussian Processes for Machine Learning (Rasmussen & Williams)",
+      "type": "book",
+      "url": "http://www.gaussianprocess.org/gpml/",
+      "level": "Intermediate to Advanced",
+      "description": "Sách giáo khoa definitive về GP: kernel design, hyperparameter optimization, sparse approximations. Free online. Essential cho surrogate modeling và Bayesian optimization trong simulation."
+    },
+    {
+      "title": "DeepXDE Documentation & Tutorials",
+      "type": "documentation",
+      "url": "https://deepxde.readthedocs.io/",
+      "level": "Intermediate to Advanced",
+      "description": "PINNs framework: giải PDE qua neural networks với physics constraints. Tutorials từ basic Poisson equation đến Navier-Stokes. Dễ sử dụng nhất trong các PINNs frameworks."
+    },
+    {
+      "title": "FEniCSx Tutorial",
+      "type": "documentation",
+      "url": "https://jsdokken.com/dolfinx-tutorial/",
+      "level": "Intermediate to Advanced",
+      "description": "Tutorial FEniCSx (successor FEniCS): giải PDE qua FEM với Python. Poisson, elasticity, heat equation, Navier-Stokes. Cần cho Tier 3 physics-based twin."
+    },
+    {
+      "title": "Azure Digital Twins Documentation",
+      "type": "documentation",
+      "url": "https://learn.microsoft.com/azure/digital-twins/",
+      "level": "Intermediate",
+      "description": "DTDL modeling, twin graphs, event routing, integration IoT Hub. Hiểu enterprise digital twin platform architecture. Useful nếu khách hàng dùng Azure."
+    },
+    {
+      "title": "NVIDIA Modulus Documentation",
+      "type": "documentation",
+      "url": "https://docs.nvidia.com/modulus/",
+      "level": "Advanced",
+      "description": "Physics-ML framework: PINNs, FNOs, GNNs cho physics simulation. Multi-GPU training, industrial-scale. Cho Tier 3 physics-augmented twin."
+    },
+    {
+      "title": "BoTorch Documentation (Bayesian Optimization)",
+      "type": "documentation",
+      "url": "https://botorch.org/",
+      "level": "Intermediate to Advanced",
+      "description": "Bayesian optimization với GP surrogates trên PyTorch. Acquisition functions, multi-objective optimization. Chuẩn cho simulation optimization khi mỗi run tốn kém."
+    },
+    {
+      "title": "Simulation Modeling and Analysis (Averill Law, 6th Ed.)",
+      "type": "book",
+      "url": "https://www.mhprofessional.com/simulation-modeling-and-analysis",
+      "level": "Beginner to Intermediate",
+      "description": "Sách giáo khoa chuẩn về simulation methodology: input modeling, output analysis, variance reduction, validation & verification. Nền tảng lý thuyết vững chắc cho DES practitioners."
+    },
+    {
+      "title": "Hugging Face — Neural ODE & Dynamical Systems Tutorials",
+      "type": "tutorial",
+      "url": "https://github.com/rtqichen/torchdiffeq",
+      "level": "Intermediate to Advanced",
+      "description": "torchdiffeq library: Neural ODEs, adjoint method, adaptive ODE solvers. Examples từ simple dynamics đến latent ODEs cho irregular time series. Kết nối deep learning với dynamical systems."
+    }
+  ],
+  "risks": [
+    {
+      "id": "R1",
+      "name": "Nghẽn chuyên gia domain — physics simulation cần kiến thức PhD về nhiệt động, fluid dynamics hoặc structural mechanics theo từng vertical",
+      "description": "Mỗi industry vertical (thermal, fluid, structural) cần domain expertise riêng ở mức PhD — thermodynamics, Navier-Stokes, elasticity, mesh generation, numerical stability (CFL conditions, convergence). Team phần mềm không thể 'học trên việc'. Scaling qua industries cực kỳ đắt vì mỗi vertical cần chuyên gia riêng. Rất ít kỹ sư Việt Nam kết hợp simulation + IoT + ML — giao điểm 3 chiều gần như không ai chiếm.",
+      "severity": "Critical",
+      "probability": "High",
+      "mitigation": "Bắt đầu DES (không cần physics). Xây physics capability dần qua hợp tác ĐHBK Hà Nội, ĐHBK TP.HCM. KHÔNG thuê physicists cho đến khi Tier 1 revenue cover lương. Train internally — chấp nhận team scaling chậm."
+    },
+    {
+      "id": "R2",
+      "name": "Khoảng cách hạ tầng IoT — khách hàng mục tiêu thiếu sensor deployment cơ bản",
+      "description": "Digital twin cần dòng dữ liệu IoT liên tục chất lượng cao. Đa số nhà máy Việt Nam thiếu hạ tầng cảm biến cơ bản. Không thể xây digital twin cho nhà máy theo dõi sản lượng trên bảng tính hoặc bảng trắng. Kể cả FDI factories, sensor coverage thường chỉ MES level — không đủ cho full physics twin.",
+      "severity": "Critical",
+      "probability": "High",
+      "mitigation": "Dùng 'simulation-first': mô hình hoá từ dữ liệu lịch sử và quan sát trước khi cần IoT. Hợp tác Viettel IoT cho sensor deployment. Xác minh hạ tầng TRƯỚC khi hứa 'real-time'."
+    },
+    {
+      "id": "R3",
+      "name": "Chu kỳ bán hàng và triển khai dài — 6-18 tháng từ hợp đồng đến giá trị giao nhận",
+      "description": "Digital twin project timeline: tháng 1-2 sensor audit + data collection setup, tháng 3-4 process modeling + calibration, tháng 5-6 validation, tháng 7-12 what-if optimization + cải thiện lặp lại, tháng 12-18 cải thiện vận hành đo lường được. Timeline này cơ bản không tương thích với văn hoá doanh nghiệp Việt Nam ưa ROI visible trong một quý.",
+      "severity": "High",
+      "probability": "High",
+      "mitigation": "Package DES PoCs cho kết quả trong 4-6 tuần. Dùng PoC thành công để justify project lớn hơn. Quick wins trước, twin đầy đủ sau."
+    },
+    {
+      "id": "R4",
+      "name": "Khó lượng tử hoá ROI — khách hàng không thấy giá trị cho đến nhiều tháng sau triển khai",
+      "description": "ROI digital twin khó đo: 'giảm 15% downtime' khó attribute cho twin vs. cải tiến khác đồng thời. Khách hàng Việt Nam muốn số cụ thể trước khi mua. Nhiều benefits intangible (hiểu quy trình tốt hơn, quyết định nhanh hơn). So với SaaS đơn giản, digital twin ROI chậm và ambiguous.",
+      "severity": "High",
+      "probability": "Medium",
+      "mitigation": "Xây ROI calculator tool. Document case studies tích cực với số cụ thể. Target quy trình nơi waste/downtime đã được đo (improvement visible). PoC phải demo ROI ước tính."
+    },
+    {
+      "id": "R5",
+      "name": "Khan hiếm nhân tài — rất ít kỹ sư Việt Nam kết hợp simulation + IoT + ML",
+      "description": "Giao điểm 3 chiều: simulation expertise + IoT/data engineering + ML/AI — gần như không ai tại Việt Nam chiếm. Kỹ sư ML không biết queuing theory hay FEM. Kỹ sư cơ khí không biết Python ML. IoT engineers không biết simulation methodology. Tuyển dụng cực khó, đào tạo chậm.",
+      "severity": "High",
+      "probability": "High",
+      "mitigation": "Train internally — accept slow scaling. Tuyển từ ĐHBK Hà Nội Cơ khí (simulation background) + dạy ML. Hoặc tuyển ML engineer + dạy simulation methodology. Hợp tác đại học cho research interns."
+    },
+    {
+      "id": "R6",
+      "name": "Scope creep hướng 'full digital twin' — khách hàng và sales đẩy vision 3D real-time physics-based",
+      "description": "Khoảng cách giữa 'chạy Python scripts mô phỏng dây chuyền sản xuất' và 'digital twin 3D real-time nhà máy' tạo tension liên tục. Cái bán được (full vision) và cái deliver được (SimPy DES) rất khác nhau. Sales hứa vision, delivery phải giải thích tại sao chưa có 3D. Mỗi khách hàng muốn thêm features: 'thêm 3D view', 'thêm real-time', 'thêm AI tự động'.",
+      "severity": "High",
+      "probability": "Medium",
+      "mitigation": "Kháng cự. Định nghĩa ranh giới tier rõ ràng (DES → IoT Twin → Physics Twin). Pricing mỗi tier phản ánh complexity thực tế. Educate khách hàng về staircase approach. Nói 'no' cho features ngoài scope."
+    }
+  ],
+  "related_nodes": ["B06", "B01", "B07", "B10", "B03", "B13"],
+  "metadata": {
+    "status": "reviewed",
+    "version": "1.0",
+    "createdAt": "2026-03-31",
+    "updatedAt": "2026-03-31",
+    "researchedBy": ["R-alpha", "R-beta", "R-gamma", "R-MLE", "R-DE", "R-DLE", "R-PE", "R-BE", "R-FE", "R-DO", "R-SE", "R-QA", "R-SA", "R-D04", "R-D07", "R-sigma"],
+    "consolidatedBy": "R-sigma (Ms. Scribe)",
+    "normalizedAt": "2026-03-31",
+    "normalizedBy": "R-sigma",
+    "phase": "Phase 0",
+    "module": "B15",
+    "reviewedBy": null,
+    "approvedBy": null,
+    "notes": "Consolidated bởi R-sigma (Ms. Scribe). Overall feasibility 5.6/10 CONDITIONAL GO — dưới ngưỡng GO thông thường. JSON field names English, values Vietnamese (có dấu) per language rule. Technical terms giữ English. 16 agents nghiên cứu. Chiến lược: BẮT ĐẦU với SimPy DES cho FDI factories, KHÔNG physics-based twin toàn diện. Tier 1 DES ($20K-50K PoC, 4-6 tuần) → Tier 2 IoT Twin (6-12 tháng) → Tier 3 Physics Twin (18+ tháng). Khoảng cách Industry 4.0 là thách thức trung tâm — Việt Nam chậm 3-5 năm so với toàn cầu. Data availability (5/10) là killer — thiếu IoT infrastructure. Domain expertise bottleneck — physics sim cần PhD-level knowledge per vertical. Định vị 'process optimization' KHÔNG 'digital twin'. Nhắm FDI factories Bắc Ninh, Hải Phòng, Bình Dương. Hợp tác FPT/Viettel cho IoT, ĐHBK cho domain expertise."
+  }
+}

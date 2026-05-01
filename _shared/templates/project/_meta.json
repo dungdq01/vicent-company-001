@@ -1,0 +1,209 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema#",
+  "title": "Project Meta",
+  "description": "Static project identity and configuration. Filled at intake (00-intake) and updated only via formal change request (CR).",
+  "type": "object",
+  "_instructions": "Replace all <PLACEHOLDER> values. Do not delete keys; if not applicable, set to null and add a note in 'notes'.",
+
+  "framework_version": "v1.1",
+  "_framework_version_note": "MANDATORY pin. Project locked to this framework version regardless of subsequent v1.x release. Upgrade requires explicit migration ADR per versioning-pinning.md.",
+
+  "harness_profile": "<L0 | L1 | L2>",
+  "_harness_profile_note": "Per R-HRN-01. L0=Sandbox, L1=Standard, L2=Critical (production/regulated). Drives mandatory components in harness/ folder.",
+
+  "project": {
+    "id": "<PROJECT-SLUG>",
+    "name": "<Human-readable project name>",
+    "code_name": "<Optional internal codename>",
+    "client": {
+      "name": "<Client legal name>",
+      "industry": "<e.g., logistics, ecommerce, mmo, fintech>",
+      "size": "<SMB | Mid-market | Enterprise>",
+      "primary_contact": {
+        "name": "<Name>",
+        "role": "<Role>",
+        "email": "<email>",
+        "phone": "<phone>"
+      }
+    },
+    "vertical_owner": "<P1 (MMO) | P2 (E-commerce) | P3 (Logistic)>",
+    "scope_tier": "<MMO | SMB | Mid | Enterprise>",
+    "engagement_model": "<Outsource POC | Subscription | SaaS pilot | Internal>",
+    "start_date": "<YYYY-MM-DD>",
+    "target_end_date": "<YYYY-MM-DD>",
+    "budget": {
+      "currency": "USD",
+      "fixed_fee": null,
+      "monthly_fee": null,
+      "hourly_rate": null,
+      "estimated_total": null
+    },
+    "llm_cost_cap": {
+      "per_request_usd": null,
+      "monthly_usd": null,
+      "project_total_usd": null
+    }
+  },
+
+  "knowledge_match": {
+    "baselines": ["<e.g., B01, B07>"],
+    "industries": ["<e.g., I06>"],
+    "matrix_cells": ["<e.g., B01-I06>"],
+    "memory_paths": ["<knowledge/docs/memory/B01-learnings.md>", "<knowledge/docs/memory/I06-learnings.md>"],
+    "depth": {"<B01>": "<L1 | L2 | L3>"},
+    "fresh_research_needed": ["<e.g., I-MMO.tg-bot-context if cell missing>"],
+    "matched_at": "<ISO 8601>",
+    "matcher_agent": "R-Match",
+    "confidence": null,
+    "_note": "Populated at P0.2 by R-Match (tier-1 classifier) per A4 schema. R-Match owns classification (NOT R-BA). Subsequent agents read this index — no re-discovery. See _shared/.agents/tier-1-research/R-Match-classifier.md."
+  },
+
+  "knowledge_pinning": {
+    "_note": "Snapshot at P0. Project locked to these node versions; framework knowledge upgrade does NOT affect this project mid-flight (versioning-pinning.md §3).",
+    "<B01>": "<L3-r1-2026-04-15>",
+    "<I06>": "<L2-r2-2026-04-20>"
+  },
+
+  "skill_overrides": {
+    "_note": "Format: \"R-{id}\": \"v{semver}\" — EXACT pin, NOT range. Engine errors if skill card version doesn't match (no auto-upgrade per R-MAS-08).",
+    "<R-alpha>": "<v1.0>",
+    "<R-eval>": "<v1.0>"
+  },
+
+  "phase_overrides": {
+    "_note": "Per-phase tuning. Override default budget/timing/parallelism. Empty = use framework default per pipeline phase doc.",
+    "<P1>": {"time_budget_min": 90, "parallel": true}
+  },
+
+  "attachments": {
+    "_note": "Per-project attachments per project-attachments.md. 3 cases: agent skill addon, docs/codebase, github repo ref. Engine loads filtered by load_for_agents × load_for_phases. PII scan + license + size + sha256 pin checked at P0.2c attachment intake.",
+    "agent_addons": [
+      {
+        "base_agent": "<R-MLE>",
+        "addon_file": "<.agents/R-MLE-recsys-addon.md>",
+        "strategy": "<append | replace_sections | new_persona>",
+        "parent_version_pin": "<v1.2>",
+        "load_for_phases": ["<P1>", "<P4c>"]
+      }
+    ],
+    "docs": [
+      {
+        "id": "<client-spec-v2>",
+        "path": "<_attachments/docs/client-spec-v2.pdf>",
+        "extracted": "<_attachments/docs/client-spec-v2.txt>",
+        "sha256": "<hash>",
+        "size_bytes": null,
+        "load_for_agents": ["<R-BA>", "<R-SA>"],
+        "load_for_phases": ["<P0>", "<P1>"],
+        "pii_scan_passed": "<YYYY-MM-DD>"
+      }
+    ],
+    "repos": [
+      {
+        "id": "<auth-reference>",
+        "refs_yaml": "<_attachments/repos/_refs.yaml>",
+        "load_for_agents": ["<R-MLE>"],
+        "load_for_phases": ["<P1>", "<P4c>"]
+      }
+    ]
+  },
+
+  "voice": {
+    "_note": "Per R-ORC-08 voice contract. Client-facing voice locked at P3. Bot voice (if client product has bot) defined in harness/manifest.yaml.voice.",
+    "client_facing": "<voice_a_technical | voice_b_business | voice_c_energetic>",
+    "bot_voice": "<per-project-define-in-manifest>"
+  },
+
+  "team": {
+    "human": {
+      "ceo": "<name>",
+      "coo": "<name>",
+      "cto": "<name>",
+      "lead": "<name of project lead>"
+    },
+    "agents_assigned": [
+      "<e.g., T1-discovery>",
+      "<T2-architect>",
+      "<T3-prd>",
+      "<T4-dev-backend>",
+      "<T4-dev-frontend>",
+      "<T4-dev-ml>",
+      "<T6-qa>",
+      "<T7-deploy>"
+    ]
+  },
+
+  "pipeline": {
+    "type": "<delivery | sales | content | cs | hiring | finance>",
+    "phases": [
+      "00-intake",
+      "01-discovery",
+      "02-proposal",
+      "02-sow",
+      "03-architecture",
+      "03-tech-stack",
+      "04-prd",
+      "04a-api",
+      "04b-db",
+      "04c-ml",
+      "04d-ui",
+      "04e-integration",
+      "05-planning",
+      "06-dev-guides",
+      "07-qa",
+      "08-deploy",
+      "09-final",
+      "99-retro"
+    ],
+    "skipped_phases": [],
+    "skip_rationale": ""
+  },
+
+  "stack": {
+    "frontend": "<e.g., Next.js 14>",
+    "backend": "<e.g., FastAPI 0.110>",
+    "db": "<e.g., Postgres 16>",
+    "llm_primary": "<e.g., claude-sonnet-4>",
+    "llm_fallback": "<e.g., gpt-4o-mini>",
+    "hosting": "<e.g., Vercel + Railway>",
+    "ref": "@_shared/rules/10-stack-rules.md"
+  },
+
+  "compliance": {
+    "data_classification": "<Public | Internal | Confidential | Restricted>",
+    "pii": false,
+    "phi": false,
+    "pci": false,
+    "regulations": [],
+    "data_residency": "<e.g., US, EU, VN>"
+  },
+
+  "links": {
+    "repo": "<git URL>",
+    "tracker": "<Linear/Jira/GitHub Projects URL>",
+    "design": "<Figma URL>",
+    "docs_root": "<path or URL>",
+    "slack_channel": "<#channel>",
+    "shared_drive": "<URL>"
+  },
+
+  "rules_version": {
+    "master": "1.1",
+    "stack": "1.0",
+    "code": "1.0",
+    "execution": "1.0",
+    "docs": "1.0",
+    "communication": "1.0",
+    "security": "1.0",
+    "quality": "1.0",
+    "harness": "1.0",
+    "lifecycle": "1.0",
+    "orchestration": "1.0"
+  },
+
+  "created_at": "<YYYY-MM-DD>",
+  "created_by": "<intake agent or human>",
+  "last_updated": "<YYYY-MM-DD>",
+  "last_updated_by": "<who>",
+  "notes": ""
+}

@@ -1,0 +1,39 @@
+# _overrides.yaml — Project-scoped skill addons for studio agents
+# Spec: _shared/standards/project-attachments.md §1
+# Each addon = R-{base}-{addon-id}.md in this folder, declared here + in _meta.json.attachments.agent_addons[]
+
+version: v1.0
+project_id: <PROJECT-SLUG>
+last_updated: <YYYY-MM-DD>
+
+overrides:
+  # ═════════════════════════════════════════════════════════════
+  # TEMPLATE — copy block per addon. Delete this comment after.
+  # ═════════════════════════════════════════════════════════════
+  - base_agent: <R-MLE>                      # must exist in _shared/.agents/
+    addon_file: <R-MLE-recsys-addon.md>      # in this same folder (.agents/)
+    addon_id: <R-MLE-recsys>                 # short slug
+    strategy: append                         # append | replace_sections | new_persona
+
+    # ── if strategy=replace_sections ────────────────
+    target_sections: []                      # e.g., ["Few-Shot Examples", "Output Format"]
+
+    # ── version gate ────────────────────────────────
+    parent_version_pin: <v1.2>               # base agent must equal this version (W04 §2.6 step 2)
+
+    # ── load filter ─────────────────────────────────
+    load_for_phases: [<P1>, <P4c>, <P6>]
+
+    # ── audit ───────────────────────────────────────
+    reason: "<why studio-level agent doesn't cover this; project-specific need>"
+    created_at: <YYYY-MM-DD>
+    created_by: <P3 | CEO>
+    new_persona_signoff: null                # MANDATORY {CEO} if strategy=new_persona
+
+# ═════════════════════════════════════════════════════════════
+# Anti-patterns (BLOCK at W04 dispatch):
+#   ❌ parent_version_pin doesn't match _shared/.agents/{base}.md current version
+#   ❌ strategy=new_persona without new_persona_signoff
+#   ❌ addon_file not present in .agents/ folder
+#   ❌ load_for_phases empty (= never loaded — orphan)
+# ═════════════════════════════════════════════════════════════
