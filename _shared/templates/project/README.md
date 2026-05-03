@@ -121,7 +121,7 @@ Khi filling:
 - DoD per deliverable: [`@../../standards/dod-per-deliverable.md`](../../standards/dod-per-deliverable.md)
 - Skill cards: [`@../../.agents/`](../../.agents/)
 - Rules system: [`@../../rules/`](../../rules/) (11 rules)
-- Harness rules: [`@../../rules/80-harness-rules.md`](../../rules/80-harness-rules.md) (R-HRN-01..12)
+- Harness rules: [`@../../rules/80-harness-rules.md`](../../rules/80-harness-rules.md) (R-HRN-01..17, v1.2)
 - Harness folder: [`@./harness/README.md`](./harness/README.md)
 - Versioning + project pin: [`@../../standards/versioning-pinning.md`](../../standards/versioning-pinning.md)
 - ADR conventions: [`@../../standards/decision-log-index.md`](../../standards/decision-log-index.md)

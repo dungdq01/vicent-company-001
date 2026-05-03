@@ -1,7 +1,7 @@
 ---
 file: 80-harness-rules
-version: v1.0
-last_updated: 2026-04-27
+version: v1.2
+last_updated: 2026-05-02
 owner: CTO
 status: production
 ---
@@ -283,6 +283,8 @@ Mọi turn của mọi agent MUST emit:
 ```yaml
 turn_id: {uuid}
 run_id: {uuid}
+parent_run_id: {uuid|null}      # null = root dispatch; populated for sub-agent (R-HRN-14)
+delegation_depth: {0|1|2|3}     # 0 = root; max 3 per R-HRN-14
 project_id: {id}
 agent_id: {id}
 timestamp: {iso8601}
@@ -293,13 +295,143 @@ cache_write_tokens: {n}
 cost_usd: {n}
 latency_ms: {n}
 tools_called: [{name, success, latency_ms}]
+tool_loop_iterations: {n}       # current count vs R-HRN-13 cap
 state_before: {state_id}
 state_after: {state_id}
+sampling: {temperature, top_p, seed}  # per R-HRN-15
+self_check_passed: {true|false}       # per R-HRN-16
 ```
 
 Sink: `projects/{id}/harness/traces/{run_id}.jsonl` + Helicone (per [`@../standards/cost-budgets.md`]).
 
 Missing field = trace incomplete = R-SRE alert.
+
+---
+
+## R-HRN-13 — Tool-Use Loop Iteration Cap *(v1.2)*
+
+R-HRN-03 cap **calls per turn**. R-HRN-13 cap **total turns** trong 1 dispatch (tool-use loop: model → tool call → tool result → model → ...).
+
+| Profile | Max iterations / dispatch | Rationale |
+|---|---|---|
+| L0 Sandbox | 15 | Allow exploration |
+| L1 Standard | 10 | Default |
+| L2 Critical | 5 | Tight production guardrail |
+
+Override per skill card via `manifest.yaml.tool_loop.max_iterations`.
+
+**Halt behavior**:
+- Reach cap → halt + emit Sev-2 + structured error per R-HRN-08 + log to `permanent-fixes.md` candidate
+- Pattern lặp 3 dispatches cùng skill card → propose new permanent-fix rule (R-HRN-06 loop)
+
+**Anti-pattern**: tăng cap thay vì refactor. Loop sâu = signal task chưa decompose đúng → workflow split, không bump cap.
+
+> Cross-ref: R-HRN-03 tool budget per turn · R-HRN-06 permanent-fix loop · `_shared/standards/incident-severity.md` Sev-2.
+
+---
+
+## R-HRN-14 — Sub-Agent Delegation Pattern *(v1.2)*
+
+Khi agent A dispatch agent B (orchestrator-worker, evaluator-optimizer, R-CoS routing):
+
+| Field | Rule |
+|---|---|
+| **Profile inheritance** | Sub-dispatch inherits parent profile (L0/L1/L2) — không "downgrade" |
+| **Tool whitelist** | Sub gets **intersection** of parent whitelist ∩ B's skill card whitelist |
+| **Cost attribution** | Cumulative `cost_usd` rolls up to parent `run_id` (parent's project budget) |
+| **Trace lineage** | Sub trace MUST emit `parent_run_id` field per R-HRN-12 |
+| **Max delegation depth** | 3 levels (parent → sub → sub-sub). Exceed = abort + Sev-2 |
+| **Voice contract** | Preserved across hops per R-ORC-08; sub cannot switch voice |
+| **Approval gates** | If sub triggers approval gate, BUBBLE UP to parent's human-in-loop |
+
+**Pattern map** (Anthropic primitives):
+- **Routing** (R-CoS, R-Match): A picks B based on classification → 1 hop
+- **Parallel** (P1 R-α + R-β + R-D{N}): A invokes N siblings concurrently → 1 hop, fan-out
+- **Orchestrator-workers** (R-σ consolidates): A invokes N, then aggregates → 1 hop + 1 aggregation
+- **Evaluator-optimizer** (R-eval reviews R-α): A invokes B, B returns, A re-invokes if eval fail → 1 hop with retry
+
+**Anti-pattern**: A invokes B invokes A (recursion) → block at depth 3 OR cycle detection on `parent_run_id` chain.
+
+> Cross-ref: R-ORC-01 dispatcher · R-ORC-08 voice · R-HRN-12 observability lineage.
+
+---
+
+## R-HRN-15 — Determinism Control *(v1.2)*
+
+Mọi agent skill card MUST declare:
+
+```yaml
+sampling:
+  temperature: 0.3            # default per role; required field
+  top_p: null                 # optional
+  seed: null                  # null = random; mandatory NUMBER for golden set runs
+```
+
+**Default per role tier**:
+
+| Role tier | Temperature | Why |
+|---|---|---|
+| Classifier (R-Match) | 0.0 | Deterministic routing |
+| Research (R-α, R-β) | 0.3 | Slight variation, factual |
+| Analysis (R-γ, R-eval) | 0.2 | Stable judgment |
+| Synthesis (R-σ) | 0.4 | Coherent prose |
+| Creative (R-CONTENT, R-MKT) | 0.7 | Variation desired |
+
+**Eval golden set runs**: `seed: <fixed-int>` MANDATORY → reproducibility per R-MAS-08 eval delta verification.
+
+**Skill card override**: must include rationale + ADR if departing from tier default.
+
+> Cross-ref: `_shared/eval/SPEC.md` golden set protocol · R-MAS-08 eval delta · skill card frontmatter.
+
+---
+
+## R-HRN-16 — Self-Check Before External Eval *(v1.2)*
+
+Trước khi commit output, agent MUST self-check 4 layer per `output-validation.md`:
+
+1. **Frontmatter** present + R-COM-01 fields filled
+2. **Citation count** ≥ skill card threshold (default 3 cho research output)
+3. **Structure** match phase output contract (anchors, sections)
+4. **Banned words** scan per R-DOC
+
+**Loop**:
+```
+Output drafted
+  → Self-check 4 layer
+  → Pass → emit + handoff to R-eval Layer 2 (external semantic eval)
+  → Fail → retry (max 2 retries) → still fail → escalate Sev-3
+```
+
+**KHÔNG bypass**:
+- External R-eval Layer 2 luôn chạy. Self-check không thay thế R-eval (semantic correctness).
+- Layer 3 harness compliance check (R-HRN-12 trace fields) cũng độc lập.
+
+**Anti-pattern**: agent self-eval semantic ("output này hay") → unreliable bias → MUST defer R-eval external.
+
+> Cross-ref: `output-validation.md` 4-layer detail · R-eval skill card · R-MAS-09 eval gate.
+
+---
+
+## R-HRN-17 — Recall + Version Migration *(v1.2)*
+
+Khi rule/skill/knowledge node bị bug critical hoặc deprecated:
+
+| Type | Trigger | Action |
+|---|---|---|
+| **Hard recall** | Sev-0/1 bug (security · data corruption · eval drop > 1.0) | All projects pinned to affected version PAUSE + receive forced migration guide. CEO notify. |
+| **Soft recall** | Deprecation · superseded · vendor drift | Notify pinned projects via `_state.json.advisories[]`. No force pause. Migrate at next phase advance. |
+| **Hot patch** | Minor bug, no behavior change | Bump patch version (v1.1.0 → v1.1.1). Pinned projects optionally pull. |
+
+**Migration playbook MUST exist**:
+- ADR `_shared/decisions/ADR-{recall-id}.md` per `decision-log-index.md`
+- Migration steps in `_shared/standards/versioning-pinning.md` §recall-procedures
+- Sub-step entries in affected projects' `harness/permanent-fixes.md` (R-HRN-06)
+
+**Recall sender**: only CTO + CEO can trigger HARD recall. CTO solo for SOFT.
+
+**Audit trail**: recall event emits to `_shared/decisions/INDEX.md` with tag `recall:{type}` + impacted project list.
+
+> Cross-ref: `versioning-pinning.md` · `decision-log-index.md` · 90-lifecycle-rules R-LCY-04 vendor drift.
 
 ---
 
@@ -316,9 +448,14 @@ HARNESS RULES (R-HRN):
 07 Drift checkpoint every 20 turns, eval re-check every 50
 08 Structured error envelope (no bare strings)
 09 Sandbox by default for code execution
-10 KV-cache hit rate ≥ 70%
+10 KV-cache hit rate ≥ 70% (4-tier build order)
 11 Approval gate matrix stakes-aware
 12 Observability triple (trace + cost + latency)
+13 Tool-use loop iteration cap (L0=15, L1=10, L2=5)                  [v1.2]
+14 Sub-agent delegation pattern (depth ≤ 3, lineage trace)            [v1.2]
+15 Determinism control (temp per tier, seed for golden set)           [v1.2]
+16 Self-check before external R-eval (4 layer pre-eval gate)          [v1.2]
+17 Recall + version migration (hard/soft/hot-patch)                   [v1.2]
 ```
 
 ---

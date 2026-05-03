@@ -161,6 +161,51 @@ For ≥ 70% cache hit rate:
 - Track per-turn spend
 - Hard block at 100% cap — do not soft-warn yourself into overage
 
+### 4.8 Tool-use loop iteration cap (R-HRN-13, v1.2)
+
+- Per dispatch: max iterations = profile-based (L0=15, L1=10, L2=5)
+- Reach cap → halt, emit Sev-2, log permanent-fix candidate
+- Anti-pattern: bumping cap instead of decomposing task. Loop sâu = task chưa split đúng.
+
+### 4.9 Sub-agent delegation (R-HRN-14, v1.2)
+
+If you invoke another agent (orchestrator-worker / evaluator-optimizer pattern):
+- Pass `parent_run_id` (your run_id) for trace lineage
+- Sub inherits your profile (L0/L1/L2)
+- Tool whitelist = intersection (parent ∩ sub's skill card)
+- Cumulative cost rolls up to your project budget
+- Max delegation depth: 3. Recursion (A→B→A) blocked by cycle detection
+- Voice contract preserved across hops (R-ORC-08)
+
+### 4.10 Determinism control (R-HRN-15, v1.2)
+
+- Read sampling from your skill card frontmatter: `temperature`, `top_p`, `seed`
+- Default temperature per role tier:
+  - Classifier (R-Match): 0.0 — deterministic routing
+  - Research (R-α, R-β): 0.3 — slight variation, factual
+  - Analysis (R-γ, R-eval): 0.2 — stable judgment
+  - Synthesis (R-σ): 0.4 — coherent prose
+  - Creative (R-CONTENT, R-MKT): 0.7 — variation desired
+- Eval golden set runs MUST use `seed: <int>` for reproducibility — Layer 3 blocks runs without seed
+
+### 4.11 Self-check before R-eval (R-HRN-16, v1.2)
+
+Before committing output, run 4-layer self-check per `output-validation.md`:
+1. Frontmatter present + R-COM-01 fields filled
+2. Citation count ≥ skill card threshold (default 3 for research)
+3. Structure matches phase output contract
+4. Banned-words scan per R-DOC
+
+Fail → retry max 2x → still fail → escalate Sev-3.
+**KHÔNG bypass external R-eval Layer 2** (semantic eval) — self-check ≠ R-eval.
+
+### 4.12 Recall handling (R-HRN-17, v1.2)
+
+At dispatch start, check `_state.json.advisories[]`:
+- HARD recall flag → halt + await migration guide (don't process)
+- SOFT recall → log advisory, proceed; migrate at next phase advance
+- HOT patch (vX.Y.Z+1) → optional pull, no behavior change
+
 ---
 
 ## 5. HANDOFF — Cross-Tier Communication

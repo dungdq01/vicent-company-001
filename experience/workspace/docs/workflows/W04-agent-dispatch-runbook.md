@@ -154,6 +154,27 @@ Step 6 — Build T1-T4 cache layout per §2.5
 
 Failure modes per `project-attachments.md` §8.
 
+### 2.7 Runtime Guardrails (R-HRN-13..17, v1.2)
+
+Áp dụng MỖI dispatch — không bỏ qua ngay cả khi prompt đã build xong:
+
+| Step | Rule | Enforcement |
+|---|---|---|
+| **Iteration cap** | R-HRN-13 | Đếm tool-use loop turns. Reach cap (L0=15, L1=10, L2=5) → halt + Sev-2. Engine reads `manifest.yaml.tool_loop.max_iterations`. |
+| **Sub-agent delegation** | R-HRN-14 | Nếu dispatch này là sub-call (parent_run_id ≠ null): inherit profile, tool whitelist intersection, cost roll up parent. Verify `delegation_depth ≤ 3` else abort. Cycle detection on parent chain. |
+| **Determinism params** | R-HRN-15 | Read sampling từ skill card frontmatter (`temperature`, `top_p`, `seed`). Golden set runs MUST have seed. Write to API call params. |
+| **Self-check pre-emit** | R-HRN-16 | Sau khi LLM trả về output, BEFORE save to file: run 4-layer self-check (frontmatter, citations, structure, banned-words). Fail → retry max 2x → still fail → Sev-3. |
+| **Recall check** | R-HRN-17 | Đầu mỗi dispatch: read `_meta.json.framework_version` + check `_state.json.advisories[]` for HARD recall flag. If HARD → halt + await migration. SOFT → log advisory, proceed. |
+
+**Trace emit** (R-HRN-12 schema v1.2): mỗi dispatch trace MUST include:
+- `parent_run_id` (R-HRN-14)
+- `delegation_depth` (R-HRN-14)
+- `tool_loop_iterations` (R-HRN-13)
+- `sampling: {temperature, top_p, seed}` (R-HRN-15)
+- `self_check_passed: true|false` (R-HRN-16)
+
+→ Schema fields trống = trace incomplete = R-SRE alert.
+
 ### Context budget rule
 
 - Tổng context ≤ **60% context window** của model. Còn lại cho response.
@@ -527,7 +548,7 @@ Trong EOD commit (W01 §10):
 - Context loading rule: `@../agents/CONTEXT-LOADING.md`
 - Execution rules: `@../../../../_shared/rules/30-execution-rules.md`
 - Quality rules: `@../../../../_shared/rules/70-quality-rules.md`
-- **Harness rules**: `@../../../../_shared/rules/80-harness-rules.md` (R-HRN-01..12)
+- **Harness rules**: `@../../../../_shared/rules/80-harness-rules.md` (R-HRN-01..17, v1.2)
 - **Lifecycle rules** (priority, demote, vendor): `@../../../../_shared/rules/90-lifecycle-rules.md` (R-LCY-01..09)
 - **Orchestration rules** (dispatcher, tiebreak, handoff QA, rewind): `@../../../../_shared/rules/100-orchestration-rules.md` (R-ORC-01..09)
 - **Harness template**: `@../../../../_shared/templates/project/harness/` (manifest.yaml + guardrails.yaml + permanent-fixes.md)

@@ -102,6 +102,11 @@ You operate inside a **harness** (control loop, tools, memory, guardrails). You 
 - **Failure → rule**: if you fail and retry, write the lesson to `projects/{id}/harness/permanent-fixes.md` with prescriptive rule. Do not retry blindly.
 - **Approval gates**: for any action with blast radius ≥ "write to shared / external call / destructive", check `harness/guardrails.yaml` matrix. Default DENY unless explicitly allowed for project profile.
 - **Cache discipline**: do NOT inject timestamps, request IDs, or random data near the start of your prompt — KV-cache prefix matching breaks. Stable prefix = ≥70% cache hit target.
+- **Tool-use loop iteration cap** (R-HRN-13): max turns of tool→model→tool cycle per dispatch — L0=15, L1=10, L2=5. Reach cap = halt + Sev-2.
+- **Sub-agent delegation** (R-HRN-14): when invoking another agent, pass `parent_run_id` for trace lineage; cumulative cost rolls up; max depth 3; voice contract preserved.
+- **Determinism control** (R-HRN-15): temperature per role tier (classifier 0.0, research 0.3, synthesis 0.4, creative 0.7); MANDATORY seed for golden-set runs.
+- **Self-check before R-eval** (R-HRN-16): 4-layer self-check (frontmatter, citations, structure, banned-words) before commit; max 2 self-retry; do NOT bypass external R-eval Layer 2.
+- **Recall behavior** (R-HRN-17): if framework version you're pinned to receives HARD recall → halt + await migration guide; SOFT recall → continue, migrate at next phase.
 
 Full spec: `_shared/rules/80-harness-rules.md`.
 

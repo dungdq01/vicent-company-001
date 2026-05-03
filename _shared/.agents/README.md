@@ -152,4 +152,26 @@ Per `@../standards/change-management.md` **§1 Add/Remove Agent Role** — concr
 
 ---
 
-*Last updated: 2026-04-27 — v1.1 (added W09 onboarding ref + CHANGELOG)*
+## Skill Card Frontmatter — Required Fields (v1.2)
+
+Per R-HRN-15 (determinism control), every skill card MUST declare:
+
+```yaml
+---
+agent_id: R-{id}
+tier: {0|1|2|3|4|5}
+version: vX.Y
+sampling:
+  temperature: 0.3        # per role tier (R-HRN-15 default table)
+  top_p: null
+  seed: null              # MANDATORY number for golden-set runs
+tool_loop:
+  max_iterations: 10      # override R-HRN-13 default if needed
+---
+```
+
+**Backfill policy**: existing skill cards add `sampling` + `tool_loop` block khi card được touch next time (R-HRN-17 SOFT recall — not forced migration). Eval golden runs without seed = blocked at R-eval Layer 3.
+
+---
+
+*Last updated: 2026-05-02 — v1.2 (sampling + tool_loop frontmatter required per R-HRN-13/15)*

@@ -36,6 +36,24 @@ tools:
   schema_validation: pydantic        # mandatory
   envelope_required: true            # R-HRN-08 structured error envelope
 
+# --- Tool-use loop iteration cap (R-HRN-13, v1.2) --------------------------
+tool_loop:
+  max_iterations: 10                 # L0=15, L1=10 (default), L2=5
+  on_cap_exceeded: "halt_sev2"       # halt + emit Sev-2 + permanent-fix candidate
+
+# --- Sub-agent delegation (R-HRN-14, v1.2) ---------------------------------
+delegation:
+  max_depth: 3                       # parent → sub → sub-sub; deeper = abort
+  cost_attribution: "rollup_to_parent"
+  voice_inheritance: true            # voice contract preserved across hops
+  cycle_detection: true              # detect A→B→A via parent_run_id chain
+
+# --- Determinism (R-HRN-15, v1.2) ------------------------------------------
+sampling:
+  # Defaults; per-agent overrides come from skill card frontmatter
+  temperature_default: 0.3
+  golden_set_seed_required: true     # R-eval Layer 3 blocks runs without seed
+
 # --- Memory tiers (R-HRN-04) -----------------------------------------------
 memory:
   scratchpad:

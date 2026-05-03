@@ -100,6 +100,24 @@ Failure = artifact drift even at pinned version (e.g., model provider silently u
 
 ---
 
+## 5.5 Recall Procedures *(per R-HRN-17, v1.2)*
+
+| Type | Trigger | Action on pinned projects | Authority |
+|---|---|---|---|
+| **Hard recall** | Sev-0/1 bug (security · data corruption · eval drop > 1.0) | PAUSE all pinned projects + emit `_state.json.advisories[]` flag + forced migration guide. Resume only after migration ADR completed. | CTO + CEO |
+| **Soft recall** | Deprecation · vendor drift · superseded | Notify pinned projects via advisory; continue running; migrate at next phase advance. | CTO |
+| **Hot patch** | Minor bug, no behavior change | Bump patch version (v1.1.0 → v1.1.1). Pinned projects optionally pull. | CTO |
+
+**Migration playbook** required for every recall:
+1. ADR `_shared/decisions/ADR-{YYYYMM}-recall-{slug}.md` — root cause, impact, migration steps
+2. Update `_unlearn-list.md` if rule/pattern was harmful
+3. For each pinned project: append entry to `projects/{id}/harness/permanent-fixes.md` (R-HRN-06 loop)
+4. Notify channel: `_shared/decisions/INDEX.md` tagged `recall:{type}` + impacted project list
+
+**Audit**: recall events sampled in W08 framework retro to identify systemic causes.
+
+---
+
 ## 6. Anti-Patterns
 
 - ❌ "Just use latest" — silent breakage of pinned projects
@@ -112,6 +130,7 @@ Failure = artifact drift even at pinned version (e.g., model provider silently u
 
 ## 7. Cross-References
 
+- **Recall + iteration cap + sub-agent + determinism + self-check**: [`@../rules/80-harness-rules.md`](../rules/80-harness-rules.md) §R-HRN-13..17 (v1.2)
 - Promote gate: [`@../rules/00-MASTER-RULES.md`](../rules/00-MASTER-RULES.md) §R-MAS-08, [`@../rules/70-quality-rules.md`](../rules/70-quality-rules.md) §R-QAL-07
 - Lifecycle (demote): [`@../rules/90-lifecycle-rules.md`](../rules/90-lifecycle-rules.md)
 - Knowledge curation: [`@./knowledge-curation.md`](knowledge-curation.md)

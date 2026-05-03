@@ -37,7 +37,7 @@ Rules ≠ Suggestions. Vi phạm rule = **eval fail** (tự động retry hoặc
 | [`50-communication-rules.md`](50-communication-rules.md) | Agent ↔ agent · agent ↔ human | Mix | COO |
 | [`60-security-rules.md`](60-security-rules.md) | Security + LLM safety | All MUST | CTO |
 | [`70-quality-rules.md`](70-quality-rules.md) | Eval & DoD as rules | Strong | CTO |
-| [`80-harness-rules.md`](80-harness-rules.md) | Agent runtime: control loop, tool budget, memory tiers, drift, permanent-fix, sandbox, KV-cache, approval gates | All MUST | CTO |
+| [`80-harness-rules.md`](80-harness-rules.md) | Agent runtime (17 rules v1.2): control loop, tool budget, memory tiers, drift, permanent-fix, sandbox, KV-cache, approval gates, observability, **iteration cap, sub-agent delegation, determinism, self-check, recall** | All MUST | CTO |
 | [`90-lifecycle-rules.md`](90-lifecycle-rules.md) | Demote · sunset · vendor drift · multi-path priority · framework retro · long-term client | All MUST | CTO |
 | [`100-orchestration-rules.md`](100-orchestration-rules.md) | Dispatcher · tiebreak · handoff QA · agent onboarding · phase rewind · voice contract | All MUST | COO |
 

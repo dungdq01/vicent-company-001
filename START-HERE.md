@@ -219,7 +219,7 @@ Anh KHÔNG cần nhớ tất cả 16 invariants + 11 rule files. Chỉ 5 này qu
 
 ```
 ☐ Step 11  ONBOARDING.md (Day 1-5 plan technical track)      30'
-☐ Step 12  _shared/rules/80-harness-rules.md                  30'  ← R-HRN-01..12
+☐ Step 12  _shared/rules/80-harness-rules.md                  30'  ← R-HRN-01..17 (v1.2)
 ☐ Step 13  _shared/rules/90-lifecycle-rules.md                20'  ← demote/sunset/multi-path
 ☐ Step 14  _shared/rules/100-orchestration-rules.md           20'  ← tiebreak/handoff QA
 ☐ Step 15  _shared/standards/learning-system.md               20'  ← framework continuous evolve

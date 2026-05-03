@@ -41,7 +41,7 @@
 | `50-communication-rules` | R-COM | Output header, handoff, escalation |
 | `60-security-rules` | R-SEC | Secrets, auth, prompt injection, PII |
 | `70-quality-rules` | R-QAL | Eval thresholds, DoD, golden sets, drift |
-| `80-harness-rules` | R-HRN | Agent runtime: control loop, tool budget, memory tier, drift, permanent-fix, KV-cache, approval gate |
+| `80-harness-rules` | R-HRN | Agent runtime (17 rules v1.2): control loop, tool budget, memory tier, drift, permanent-fix, KV-cache, approval gate, observability, **iteration cap, sub-agent delegation, determinism, self-check, recall** |
 | `90-lifecycle-rules` | R-LCY | Demote · sunset · vendor drift · multi-path priority · framework retro · long-term client |
 | `100-orchestration-rules` | R-ORC | Dispatcher · tiebreak · handoff QA · agent onboarding · phase rewind · voice contract |
 
