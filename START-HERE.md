@@ -103,9 +103,10 @@ Day 1  DISCOVERY CALL (30')
        P3 chạy BANT+Fit → SQL ✅, đề xuất Sprint A $1,500
 
 Day 2  P0 INTAKE (manual HOẶC R-CoS automation)
-       ⭐ Shortcut: gõ "Đóng vai R-CoS theo `_shared/.agents/tier-0-executive/R-CoS-chief-of-staff.md`"
-          → R-CoS sẽ làm thay user các bước thủ công bên dưới
-          (intent recognition · file ops · sub-agent dispatch · status report)
+       ⭐ R-CoS auto-active nếu mở Claude Code session ở root project
+          (CLAUDE.md auto-load → R-CoS reading order 3 phase active)
+          Manual fallback: gõ "Đóng vai R-CoS theo `_shared/.agents/tier-0-executive/R-CoS-chief-of-staff.md`"
+          → R-CoS Interview Mode: nói tiếng người, R-CoS extract → draft BRIEF → dispatch
        1. mkdir projects/D-202604-001-{slug}/
        2. cp ../BRIEF-INTAKE.md (root template) → projects/{id}/BRIEF-INTAKE.md
        3. CEO/khách điền 6 block trong BRIEF-INTAKE.md (5–15')

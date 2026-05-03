@@ -35,7 +35,7 @@ Update this file when:
 
 ## Folder → README Map (43 files)
 
-### ROOT (1 file + 7 entry docs)
+### ROOT (1 file + 8 entry docs)
 
 | Path | Purpose | Read when |
 |---|---|---|

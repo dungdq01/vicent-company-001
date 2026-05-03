@@ -137,7 +137,8 @@ Mỗi PATH có entry file + workflow riêng. Section §3 chi tiết.
 [SQL — Discovery call 30 min] (file 12 §3)
     ↓ scope
 [BRIEF-INTAKE.md] CEO/khách điền 6 block (root template → projects/{id}/BRIEF-INTAKE.md)
-    ↓ "Dispatch P0.1 với BRIEF-INTAKE.md"
+    ↓ HOẶC R-CoS Interview Mode: CEO nói tiếng người → R-CoS extract → draft BRIEF
+    ↓ Dispatch trigger: "Dispatch P0.1 với BRIEF-INTAKE.md"
 [P0 Intake] (file 13 §3, parse BRIEF → fill 00-intake.md)
     ├─ P0.1 Sanitize + parse
     ├─ P0.2 R-Match classify (baseline × industry)

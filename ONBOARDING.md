@@ -44,7 +44,8 @@ Send qua email:
 | 4 | `experience/workspace/docs/workflows/README.md` | 1K | Workflow index (W01-W12) |
 | 5 | `experience/workspace/docs/pipeline/README.md` | 1K | Pipeline index (P0-P10 + Path A/B/C/D) |
 | 6 | `_shared/rules/README.md` | 1K | 11 rules overview |
-| 7 | `_shared/.agents/tier-0-executive/R-CoS-chief-of-staff.md` | 2K | Concierge agent — automation lễ tân, dùng từ Day 2+ |
+| 7 | `HOW-TO.md` | 4K | Cookbook 40 use cases × 8 nhóm — daily lookup khi gặp task |
+| 8 | `_shared/.agents/tier-0-executive/R-CoS-chief-of-staff.md` | 2K | Concierge agent — automation lễ tân, dùng từ Day 2+ |
 
 **Stop khi xong các file trên**. Không nhảy sang `business-strategy/01-08` ở day 1 (overflow).
 
