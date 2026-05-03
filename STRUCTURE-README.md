@@ -68,7 +68,7 @@ Update this file when:
 |---|---|---|
 | `_shared/README.md` | L2 toolbox overview | First time L2 |
 | `_shared/.agents/README.md` | 44 cards across 6 tiers + dispatch contract | Agent dispatch decision |
-| `_shared/.agents/tier-0-executive/README.md` | CEO/COO/CTO charters | Authority decision |
+| `_shared/.agents/tier-0-executive/README.md` | CEO/COO/CTO charters + **R-CoS concierge** | Authority decision OR automation lễ tân |
 | `_shared/.agents/tier-1-research/README.md` | 6 cards: α/β/γ/σ/Match/eval | Research phase |
 | `_shared/.agents/tier-2-engineering/README.md` | 20 build + ops-stream roles | Engineering phase |
 | `_shared/.agents/tier-3-domain/README.md` | R-Dxx template (parameterized 20 industries) | Domain context load |

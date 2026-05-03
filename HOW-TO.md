@@ -16,6 +16,8 @@ audience: All — humans (CEO/COO/CTO/PM/Dev/Sales/...) + agents need lookup
 > **Khác `START-HERE.md`**: START-HERE = onboard 30' học framework. **HOW-TO này = tra cứu khi đã biết framework, đang chạy việc.**
 >
 > **Quy tắc đọc**: tìm row khớp → đọc CANONICAL doc đầu tiên → nếu cần sâu thêm → mở DEEPER doc. Đừng đọc hết.
+>
+> ⭐ **Shortcut automation**: nếu dùng Claude Code → gọi **R-CoS** (Chief of Staff concierge) thay vì tự thao tác. Nói tiếng người ("tạo project recsys", "dispatch P0", "show status"), R-CoS map intent → action chain auto. Skill: `_shared/.agents/tier-0-executive/R-CoS-chief-of-staff.md`. Bootstrap: gõ "Đóng vai R-CoS" đầu session.
 
 ---
 

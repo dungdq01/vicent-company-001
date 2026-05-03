@@ -11,15 +11,16 @@
 
 ## Section I — Full Agent Catalog
 
-### Tier 0 — Executive (3 founder hats — human-owned, NOT agents)
+### Tier 0 — Executive (3 founder hats — human-owned + 1 concierge agent)
 
 | Hat | Owner | Charter file | Phạm vi |
 |-----|-------|--------------|---------|
 | **CEO** | P1 (bạn) | `tier-0-executive/CEO-charter.md` | Vision · LLMOps moat · pricing · brand · final tech sign-off |
 | **COO** | P3 | `tier-0-executive/COO-charter.md` | Delivery · client · finance ops · vendor · hiring follow-through |
 | **CTO** | P1 (kiêm) hoặc P2 | `tier-0-executive/CTO-charter.md` | Tech stack · agent maturity · eval framework · security · infra cost |
+| **R-CoS** *(agent v1.0)* | Auto (Claude Code) | `tier-0-executive/R-CoS-chief-of-staff.md` | Front-desk concierge — intent → action mapper · dispatch orchestrator · status reporter. KHÔNG approve gates / mod rules / write deliverables |
 
-→ Tier 0 không phải agent. Đây là charter để define accountability + decision rights cho 3 founders. Mọi agent escalate vào Tier 0 khi vượt quyền.
+→ Tier 0 = 3 charters (founders) + 1 concierge agent (R-CoS). Charters define authority. R-CoS = automation lễ tân giúp founder đỡ thao tác thủ công.
 
 ### Tier 1 — Research (6 agents)
 

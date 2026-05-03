@@ -13,7 +13,7 @@
 | Folder | Vai trò | Critical Path? |
 |---|---|---|
 | `rules/` | **Studio constitution** — **11 rule files** (00 master + 10 stack + 20 code + 30 exec + 40 docs + 50 comms + 60 sec + 70 qual + 80 harness + 90 lifecycle + 100 orchestration) | 🔴 **Yes — agent constitution** |
-| `.agents/` | 25+ skill cards across 6 tiers (T0 charter / T1 research / T2 engineering / T3 domain / T4 delivery / T5 business) | 🔴 Yes — agents không chạy nếu thiếu |
+| `.agents/` | 57 skill cards across 6 tiers (T0 charters + **R-CoS concierge** / T1 research / T2 engineering / T3 domain / T4 delivery / T5 business) | 🔴 Yes — agents không chạy nếu thiếu |
 | `prompts/` | **RULES-PREAMBLE** (auto-inject 11 rules + harness contract + orchestration contract) + KICKOFF + RE-RESEARCH + PROJECT-INTAKE + RETRO | 🔴 Yes — preamble mandatory |
 | `eval/` | LLM-judge framework + golden sets + scoring rubric + Layer 3 harness compliance | 🔴 Yes — moat của studio |
 | `standards/` | **8 standards**: DoD, memory hygiene, cost budgets, **knowledge curation, versioning-pinning, external dependencies, decision-log index, boundaries** | 🟡 Important |

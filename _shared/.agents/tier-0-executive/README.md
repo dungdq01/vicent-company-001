@@ -6,26 +6,24 @@
 
 ## Mục đích
 
-Tier 0 **không phải agent**. Đây là **charter doc** cho 3 vai trò người (founder) ở exec layer — định nghĩa rõ:
+Tier 0 = **3 charter doc** (founder hats — human-owned) **+ 1 concierge agent** (R-CoS — automation lễ tân).
 
-- Ai chịu trách nhiệm gì (accountability)
-- Ai có quyền quyết cuối (decision authority)
-- Ai signs off ở mỗi quality gate
-- Ai own KPI nào
+**Charter docs** định nghĩa accountability / authority / sign-off / KPI cho 3 founders. Mọi agent T1–T5 escalate về Tier 0 charters khi vượt quyền.
 
-→ Mọi agent (T1–T5) escalate về Tier 0 khi vượt quyền.
+**R-CoS agent** giúp founder đỡ thao tác thủ công — invoke qua Claude Code, dispatch sub-agents per W04.
 
 ---
 
-## Roster (3 founders → 3 hats)
+## Roster (3 founder hats + 1 agent)
 
-| Hat | File | Owner đề xuất | Phạm vi |
+| Role | File | Owner | Phạm vi |
 |---|---|---|---|
 | **CEO** | [`CEO-charter.md`](CEO-charter.md) | bạn (P1) | Vision · LLMOps moat · pricing · final tech sign-off · external face |
 | **COO** | [`COO-charter.md`](COO-charter.md) | P3 | Delivery · operations · client success · finance ops · vendor mgmt |
 | **CTO** | [`CTO-charter.md`](CTO-charter.md) | bạn / co-founder | Tech stack · agent maturity · eval framework · security · infra cost |
+| **R-CoS** *(agent v1.0)* | [`R-CoS-chief-of-staff.md`](R-CoS-chief-of-staff.md) | Auto (Claude Code) | Front-desk concierge: intent → action mapper, dispatch orchestrator, status reporter. KHÔNG approve / mod rules / write deliverables |
 
-> *Triumvirate Model* — 3 người chia 3 hat nhưng **shared engine + shared knowledge matrix**. Mỗi người sở hữu 1 vertical (P1 MMO, P2 E-commerce, P3 Logistic) song song với hat exec.
+> *Triumvirate Model* — 3 người chia 3 hat nhưng **shared engine + shared knowledge matrix**. Mỗi người sở hữu 1 vertical (P1 MMO, P2 E-commerce, P3 Logistic) song song với hat exec. R-CoS phục vụ cả 3.
 
 ---
 

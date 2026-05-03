@@ -163,6 +163,7 @@ W → E → S = promotion path. Spec đầy đủ: `_shared/standards/memory-run
 |---|---|---|
 | **`BRIEF-INTAKE.md`** | **⭐ ROOT TEMPLATE — đề bài project. Copy ra `projects/{id}/BRIEF-INTAKE.md` mỗi project mới, CEO/khách điền 6 block, engine consume ở P0.1** | **CEO / Client / Engine** |
 | **`HOW-TO.md`** | **⭐ Task-indexed cookbook — "tôi muốn làm X" → đọc file Y. 40 use cases / 8 nhóm.** | **All — daily lookup** |
+| **`_shared/.agents/tier-0-executive/R-CoS-chief-of-staff.md`** | **⭐ R-CoS concierge agent — automation lễ tân thay user thao tác mkdir/cp/dispatch/track. Bootstrap "Đóng vai R-CoS" đầu Claude Code session** | **CEO / CTO daily driver** |
 | **`START-HERE.md`** | **Người mới — đọc 30' hiểu toàn bộ + reading order + project start steps** | **Human (mới)** |
 | `PROJECT.md` (this) | Token-optimal wrapper, nhanh hơn START-HERE | Human + AI |
 | `ONBOARDING.md` | 5-day plan role-specific (Dev/Sales/Designer/COO) | Human |

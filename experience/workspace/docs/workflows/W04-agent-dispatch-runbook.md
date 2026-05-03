@@ -9,6 +9,7 @@
 1 agent call = 1 giao dịch có chi phí ($ + thời gian + risk hallucination). File này quy định **13 bước** phải theo mỗi lần, từ lúc quyết định gọi đến lúc commit output. Áp dụng cho:
 
 - Manual dispatch (founder mở CLI/UI, gõ prompt)
+- **R-CoS concierge dispatch** (Claude Code, founder gõ tiếng người → R-CoS execute W04 — `_shared/.agents/tier-0-executive/R-CoS-chief-of-staff.md`)
 - Orchestrator automated dispatch (P0-P9 scheduler)
 - Retry sau eval fail
 

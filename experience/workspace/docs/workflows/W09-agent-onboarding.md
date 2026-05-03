@@ -114,6 +114,14 @@ Update `_shared/.agents/CHANGELOG.md`. Bump skill card status to `production`.
 
 ---
 
+## Active Probations
+
+| Agent | Started | Author | Status | Sign target |
+|---|---|---|---|---|
+| **R-CoS** (T0 concierge) | 2026-05-03 | CTO | Stage 1 — skill card v1.0 shipped, status=development | 30-day probation: 1 project test pass + CEO sign → status=production |
+
+---
+
 ## Cross-References
 
 - Onboarding rule: [`@../../../../_shared/rules/100-orchestration-rules.md`](../../../../_shared/rules/100-orchestration-rules.md) §R-ORC-04

@@ -1,7 +1,7 @@
 # _shared/.agents/ — Agent Skill Cards Registry
 
 **Parent**: [`@../README.md`](../README.md) (L2 toolbox)
-**Authoritative roster**: [`TEAM-CONFIG.md`](./TEAM-CONFIG.md) — 56 agent roles + 3 exec hats, 6 tiers (T0-T5)
+**Authoritative roster**: [`TEAM-CONFIG.md`](./TEAM-CONFIG.md) — 57 agent roles + 3 exec hats, 6 tiers (T0-T5) — incl R-CoS concierge (T0)
 
 **Mục đích**: nơi chứa **skill card** (system prompt + I/O contract + cost target + eval criteria) cho từng agent. Đây là **tác nhân thực thi** dùng cho mọi project, mọi quy mô.
 
@@ -31,14 +31,14 @@ Không inject preamble = agent refuse + emit `RULES_MISSING` event (per preamble
 
 | Tier | Count | Mục đích | Files |
 |---|---|---|---|
-| **T0 — Executive** | 3 | CEO · COO · CTO charters (human-owned) | `tier-0-executive/` |
+| **T0 — Executive** | 3 + 1 | CEO · COO · CTO charters (human) + **R-CoS concierge agent** | `tier-0-executive/` |
 | **T1 — Research** | 5 | R-α Archon, R-β Praxis, R-γ Sentinel, R-σ Scribe, R-eval Judge | `tier-1-research/` |
 | **T2 — Engineering** | 20 | Build-time (17): DE, DA, DBE, MLE, DLE, NLP, CVE, AE, BE, FE, FS, ME, DO, CE, SE, QA, PE · Ops-stream (3): R-LLMOps, R-SRE, R-DataOps | `tier-2-engineering/` |
 | **T3 — Domain** | 20 | R-D01 (Retail) ... R-D20 (Cybersecurity) | `tier-3-domain/` |
 | **T4 — Delivery (Product)** | 5 | PM, SA, BA, UX, TC | `tier-4-delivery/` |
 | **T5 — Business (Studio Ops)** | 10 | SDR, AM, MKT, CONTENT, CS, FIN, LEG, HR, OPS, BIZ | `tier-5-business/` |
 
-**Total: 3 (T0 charters) + 4 (T1) + 17 (T2) + 20 (T3) + 5 (T4) + 10 (T5) = 56 agent roles + 3 exec hats**
+**Total: 3 (T0 charters) + 1 (R-CoS) + 4 (T1) + 17 (T2) + 20 (T3) + 5 (T4) + 10 (T5) = 57 agent roles + 3 exec hats**
 
 ---
 

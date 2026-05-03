@@ -51,6 +51,30 @@
 
 ---
 
+## v1.1 — 2026-05-03 — R-CoS Chief of Staff (Tier 0 concierge)
+
+**Added**:
+- `tier-0-executive/R-CoS-chief-of-staff.md` v1.0 — front-desk concierge agent
+
+**Why**: user pain mỗi action manual 5-10 bước (mkdir + cp + edit + paste + save). R-CoS = conversational layer convert "user nói tiếng người" → chuỗi file-ops + sub-agent dispatches đúng W04 SOP.
+
+**Boundaries enforced**:
+- KHÔNG approve phase gates (R-HRN-09 + R-MAS-09)
+- KHÔNG mod `_shared/`, knowledge, experience, business-strategy, studio/wisdom (R-MAS-16)
+- KHÔNG bypass cost cap, sandbox, tool whitelist
+- Sub-agent depth ≤ 3 (R-HRN-14)
+- Profile L1, temperature 0.2
+
+**Tools whitelist**: Read, Write, Edit (chỉ projects/{id}/ + studio/.cos/), Bash (no destructive), Grep, Glob.
+
+**Eval golden set**: TODO — `_shared/eval/golden-sets/R-CoS.yaml` (10 sample dialogs, build sau khi probation).
+
+**Probation**: 30-day per W09 §3 — status=development → production sau 1 project test pass + CEO sign.
+
+**Signed**: CTO (P1) — 2026-05-03
+
+---
+
 ## Cross-References
 
 - Promote rule: [`@../rules/00-MASTER-RULES.md`](../rules/00-MASTER-RULES.md) §R-MAS-08

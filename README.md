@@ -102,6 +102,8 @@ Operating procedure khi 1 input mới đến: [`00-OPERATING-MANUAL.md`](./00-OP
 
 **Project entry**: copy root `BRIEF-INTAKE.md` template → `projects/{id}/BRIEF-INTAKE.md`, fill 6 block, dispatch P0.1. Engine reads BRIEF + auto-fills `00-intake.md`. Per-project attachments (skill addon · doc · GitHub repo) per `_shared/standards/project-attachments.md`.
 
+**⭐ Automation shortcut**: Claude Code session → invoke **R-CoS** (Chief of Staff concierge) — `_shared/.agents/tier-0-executive/R-CoS-chief-of-staff.md`. Nói tiếng người, R-CoS map intent → action chain (mkdir/cp/dispatch/track) auto. Đỡ thao tác thủ công 5-10 bước/dispatch.
+
 ---
 
 ## ⚙️ Quy Tắc Vận Hành (rút gọn từ 01-FRAMEWORK)
