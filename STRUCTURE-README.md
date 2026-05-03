@@ -47,6 +47,7 @@ Update this file when:
 | `ONBOARDING.md` | 5-day onboard plan | Newcomer Day 1+ |
 | **`BRIEF-INTAKE.md`** | **⭐ Project entry template — đề bài CEO/khách điền 6 block. Copy → `projects/{id}/BRIEF-INTAKE.md` mỗi project mới** | **Khởi tạo project mới (Path A/B/C/D)** |
 | **`HOW-TO.md`** | **⭐ Task-indexed cookbook — "tôi muốn làm X" → đọc file Y. 8 nhóm × 40 use cases.** | **Đã biết framework, cần lookup nhanh khi chạy việc** |
+| **`CLAUDE.md`** | **⭐ Claude Code session bootstrap — auto-loaded mỗi session. R-CoS reading order 3 phase + activation. AI agent only.** | **Auto, AI agent (KHÔNG cần human đọc)** |
 
 ### L1 — knowledge/ (7 READMEs)
 

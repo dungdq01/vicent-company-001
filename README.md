@@ -46,6 +46,7 @@ Operating procedure khi 1 input mới đến: [`00-OPERATING-MANUAL.md`](./00-OP
 | **`START-HERE.md`** | **Người mới đọc 30' — philosophy + reading order + project start** | All | ✅ v1.0 |
 | **`BRIEF-INTAKE.md`** | **⭐ Project entry template — đề bài CEO/khách điền 6 block. Copy → `projects/{id}/BRIEF-INTAKE.md` mỗi project mới** | CEO + Client | ✅ v1.0 |
 | **`HOW-TO.md`** | **⭐ Task-indexed cookbook — "tôi muốn làm X" → đọc file Y. 40 use cases / 8 nhóm.** | All | ✅ v1.0 |
+| **`CLAUDE.md`** | **⭐ Claude Code session bootstrap — auto-load R-CoS reading order. AI agent only.** | AI agent | ✅ v1.0 |
 | `PROJECT.md` | Token-optimal wrapper (~4K) | All | ✅ v1.1 |
 | `ONBOARDING.md` | Lộ trình 5 ngày role-specific (Dev/Sales/Designer/COO) | All | ✅ |
 | `00-OPERATING-MANUAL.md` | Master flow: input → 5 paths (A/B/C/D/E) → output | All | ✅ |

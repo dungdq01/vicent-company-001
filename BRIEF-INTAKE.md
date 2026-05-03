@@ -18,17 +18,39 @@ version: 1.0
 
 ## Cách dùng
 
+### Path A — Via R-CoS Concierge (recommended, ~5')
+
+```
+1. Mở Claude Code session, invoke R-CoS:
+   "Đóng vai R-CoS theo `_shared/.agents/tier-0-executive/R-CoS-chief-of-staff.md`."
+
+2. CEO nói tiếng người: "Tạo project recsys affiliate, ngành ecommerce VN,
+   budget $20k, deadline 8 tuần, client VietLog"
+
+3. R-CoS Interview Mode:
+   - Extract info từ message → fill block đã có
+   - Hỏi block còn thiếu (Problem · Current state · KPI · Out-of-scope)
+   - Validate (no fabrication, KPI measurable)
+
+4. R-CoS draft projects/{id}/BRIEF-INTAKE.md → show preview
+
+5. CEO confirm/edit/cancel
+
+6. R-CoS auto: mkdir + cp templates + init _meta/_state + dispatch P0.1
+```
+
+### Path B — Manual (15')
+
 ```
 1. Tạo folder projects/P-{YYYYMM}-{NNN}-{slug}/
 2. Copy file ROOT/BRIEF-INTAKE.md → projects/{id}/BRIEF-INTAKE.md (giữ NGUYÊN tên)
 3. CEO / khách điền 6 block (10–15 phút) trong BẢN COPY
 4. Lưu file
 5. Ra lệnh: "Dispatch P0.1 với projects/{id}/BRIEF-INTAKE.md"
-   → Engine parse → fill 00-intake.md + fire R-Match
 6. Sau R-Match xong, CEO duyệt §11 trong 00-intake.md → P1 start
+```
 
 ⚠️ KHÔNG điền vào file root — root là template read-only. Vi phạm = R-MAS-16 framework read-only.
-```
 
 ---
 

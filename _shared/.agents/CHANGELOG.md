@@ -73,6 +73,19 @@
 
 **Signed**: CTO (P1) — 2026-05-03
 
+### v1.1 — same day patch — Interview + Monitor mode
+
+**Added**:
+- Interview Mode: R-CoS extract info từ CEO conversation → draft BRIEF-INTAKE.md → preview + confirm. CEO không phải fill BRIEF tay.
+- Monitor Mode: R-CoS proactive surface blockers/pending/ready khi user vào session
+- "CEO Authority Retained" section — clarify 5 việc CEO vẫn giữ (talk, confirm BRIEF, sign gates, approve cost exceed, strategic decision)
+
+**Why**: pattern thực tế = CEO chỉ nói chuyện, R-CoS phụ trách extract + structure. Tránh CEO phải open BRIEF-INTAKE.md edit tay.
+
+**Boundary unchanged**: KHÔNG fabricate (R-MAS-06), KHÔNG sign gates, KHÔNG mod rules.
+
+**Signed**: CTO (P1) — 2026-05-03
+
 ---
 
 ## Cross-References
